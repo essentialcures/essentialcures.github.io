@@ -57,6 +57,8 @@
     width: auto;
     display: block;
     object-fit: contain;
+    position: relative;
+    top: 6px;
   }
 
   .header-divider {
@@ -143,6 +145,25 @@
     text-transform: uppercase;
     color: var(--lime);
     margin-bottom: 16px;
+  }
+
+  .callout {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 6px;
+    border-left: 4px solid;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+  .callout-blue {
+    background: #E8F1FB;
+    border-left-color: var(--medical-blue);
+    color: var(--deep-blue);
+  }
+  .callout-green {
+    background: #EDF6E4;
+    border-left-color: var(--leaf-green);
+    color: var(--leaf-green);
   }
 
   .hero h1 {
@@ -268,6 +289,9 @@
     color: var(--medical-blue);
     margin-bottom: 12px;
   }
+
+  .section-label.callout-blue { color: var(--deep-blue); }
+  .section-label.callout-green { color: var(--leaf-green); }
 
   .about-text h2 {
     font-size: 36px;
@@ -521,7 +545,7 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-text">
-    <p class="hero-eyebrow">Canadian Healthcare Supply</p>
+    <p class="hero-eyebrow callout callout-blue">Canadian Healthcare Supply</p>
     <h1>Compliant Solutions.<br/>Confident Care.</h1>
     <p>Essential Cures is a Winnipeg-based healthcare supply company delivering compliant, high-quality medical consumables and PPE to healthcare facilities across Canada.</p>
     <div class="hero-actions">
@@ -605,7 +629,7 @@
 <!-- WHY EC -->
 <section class="why">
   <div class="why-header">
-    <p class="section-label" style="color: var(--lime);">Our Commitment</p>
+    <p class="section-label callout callout-green">Our Commitment</p>
     <h2>Built on Compliance. Delivered with Care.</h2>
     <p>Every decision at Essential Cures is made through a compliance-first lens.</p>
   </div>
