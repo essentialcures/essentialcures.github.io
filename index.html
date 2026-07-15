@@ -42,12 +42,13 @@
   .header-left {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
   }
 
   header img.logo {
     height: 90px;
     width: auto;
+    display: block;
   }
 
   .header-divider {
@@ -55,10 +56,11 @@
     height: 70px;
     background: var(--cool-gray);
     opacity: 0.4;
+    align-self: center;
   }
 
   .header-brand {
-    text-align: center;
+    text-align: left;
   }
   .header-brand .company-name {
     font-size: 22px;
@@ -77,6 +79,9 @@
   .header-stripes {
     height: 5px;
     width: 100%;
+    position: sticky;
+    top: 120px;
+    z-index: 99;
   }
   .header-stripes .stripe-blue { height: 3px; background: var(--deep-blue); }
   .header-stripes .stripe-lime { height: 2px; background: var(--lime); }
@@ -417,9 +422,9 @@
     padding: 32px 5%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    text-align: center;
+    text-align: left;
     gap: 6px;
   }
 
