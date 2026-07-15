@@ -28,7 +28,6 @@
   /* ── HEADER ── */
   header {
     background: var(--white);
-    border-bottom: 3px solid var(--deep-blue);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -36,12 +35,19 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 72px;
+    height: 88px;
     box-shadow: 0 2px 8px rgba(0,80,144,0.08);
   }
 
+  .header-stripes {
+    height: 5px;
+    width: 100%;
+  }
+  .header-stripes .stripe-blue { height: 3px; background: var(--deep-blue); }
+  .header-stripes .stripe-lime { height: 2px; background: var(--lime); }
+
   header img.logo {
-    height: 48px;
+    height: 64px;
     width: auto;
   }
 
@@ -441,6 +447,10 @@
     <a href="#contact" class="cta-btn">Get in Touch</a>
   </nav>
 </header>
+<div class="header-stripes">
+  <div class="stripe-blue"></div>
+  <div class="stripe-lime"></div>
+</div>
 
 <!-- HERO -->
 <section class="hero">
