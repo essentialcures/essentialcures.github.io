@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Essential Cures — Compliant Solutions. Confident Care.</title>
+<style>
+  :root {
+    --deep-blue: #005090;
+    --medical-blue: #0070B0;
+    --leaf-green: #4A8B2C;
+    --lime: #8FC23C;
+    --slate: #2C3E50;
+    --cool-gray: #6B7C8C;
+    --light-bg: #F4F7FA;
+    --white: #ffffff;
+    --navy: #003060;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Calibri, 'Segoe UI', sans-serif;
+    color: var(--slate);
+    background: var(--white);
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--white);
+    border-bottom: 3px solid var(--deep-blue);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    box-shadow: 0 2px 8px rgba(0,80,144,0.08);
+  }
+
+  header img.logo {
+    height: 48px;
+    width: auto;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: var(--slate);
+    font-size: 15px;
+    font-weight: 600;
+    margin-left: 32px;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--medical-blue); }
+  nav a.active {
+    color: var(--deep-blue);
+    border-bottom: 2px solid var(--lime);
+    padding-bottom: 2px;
+  }
+
+  nav a.cta-btn {
+    background: var(--deep-blue);
+    color: var(--white);
+    padding: 8px 20px;
+    border-radius: 4px;
+    margin-left: 32px;
+  }
+  nav a.cta-btn:hover { background: var(--medical-blue); color: var(--white); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--deep-blue) 60%, var(--medical-blue) 100%);
+    color: var(--white);
+    padding: 90px 5% 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 48px;
+    min-height: 520px;
+  }
+
+  .hero-text { flex: 1; max-width: 580px; }
+
+  .hero-eyebrow {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 24px;
+    font-family: 'Calibri Light', Calibri, sans-serif;
+  }
+
+  .hero h1 span { color: var(--lime); }
+
+  .hero p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 36px;
+    max-width: 480px;
+  }
+
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--lime);
+    color: var(--navy);
+    padding: 14px 32px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--leaf-green); color: var(--white); }
+
+  .btn-outline {
+    border: 2px solid rgba(255,255,255,0.6);
+    color: var(--white);
+    padding: 14px 32px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.1); }
+
+  .hero-badge {
+    flex: 0 0 320px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 36px 32px;
+    backdrop-filter: blur(8px);
+  }
+
+  .hero-badge h3 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 20px;
+  }
+
+  .hero-badge ul { list-style: none; }
+  .hero-badge ul li {
+    font-size: 15px;
+    color: rgba(255,255,255,0.9);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-badge ul li:last-child { border-bottom: none; }
+  .hero-badge ul li::before {
+    content: '✓';
+    color: var(--lime);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── STRIPE ── */
+  .stripe {
+    height: 4px;
+    background: linear-gradient(90deg, var(--deep-blue) 60%, var(--lime) 100%);
+  }
+
+  /* ── WHO WE ARE ── */
+  .about {
+    padding: 80px 5%;
+    background: var(--white);
+    display: flex;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .about-text { flex: 1; }
+  .section-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--medical-blue);
+    margin-bottom: 12px;
+  }
+
+  .about-text h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--deep-blue);
+    margin-bottom: 20px;
+    line-height: 1.2;
+    font-family: 'Calibri Light', Calibri, sans-serif;
+  }
+
+  .about-text p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--slate);
+    margin-bottom: 16px;
+  }
+
+  .about-stats {
+    flex: 0 0 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .stat-card {
+    background: var(--light-bg);
+    border-left: 4px solid var(--deep-blue);
+    padding: 24px 20px;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .stat-card .number {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--deep-blue);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-card .label {
+    font-size: 14px;
+    color: var(--cool-gray);
+    font-weight: 600;
+  }
+
+  /* ── SERVICES ── */
+  .services {
+    background: var(--light-bg);
+    padding: 80px 5%;
+  }
+
+  .services-header { text-align: center; margin-bottom: 48px; }
+  .services-header h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--deep-blue);
+    margin-bottom: 12px;
+    font-family: 'Calibri Light', Calibri, sans-serif;
+  }
+  .services-header p { font-size: 16px; color: var(--cool-gray); max-width: 520px; margin: 0 auto; }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+  }
+
+  .service-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 32px 28px;
+    border-top: 3px solid var(--deep-blue);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .service-card:hover {
+    box-shadow: 0 8px 24px rgba(0,80,144,0.12);
+    transform: translateY(-2px);
+  }
+
+  .service-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--light-bg);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+
+  .service-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--deep-blue);
+    margin-bottom: 12px;
+  }
+
+  .service-card p { font-size: 15px; color: var(--cool-gray); line-height: 1.7; }
+
+  /* ── WHY EC ── */
+  .why {
+    background: var(--navy);
+    color: var(--white);
+    padding: 80px 5%;
+  }
+
+  .why-header { text-align: center; margin-bottom: 48px; }
+  .why-header h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 12px;
+    font-family: 'Calibri Light', Calibri, sans-serif;
+  }
+  .why-header p { font-size: 16px; color: rgba(255,255,255,0.7); }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 32px;
+  }
+
+  .why-item { text-align: center; padding: 20px; }
+  .why-item .icon {
+    font-size: 36px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .why-item h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--lime);
+    margin-bottom: 10px;
+  }
+  .why-item p { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.7; }
+
+  /* ── CONTACT / FORM ── */
+  .contact {
+    padding: 80px 5%;
+    background: var(--white);
+    display: flex;
+    gap: 64px;
+    align-items: flex-start;
+  }
+
+  .contact-info { flex: 1; max-width: 420px; }
+  .contact-info h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--deep-blue);
+    margin-bottom: 16px;
+    font-family: 'Calibri Light', Calibri, sans-serif;
+  }
+  .contact-info p {
+    font-size: 16px;
+    color: var(--cool-gray);
+    line-height: 1.8;
+    margin-bottom: 32px;
+  }
+
+  .contact-detail {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: 15px;
+    color: var(--slate);
+  }
+  .contact-detail .icon {
+    width: 36px;
+    height: 36px;
+    background: var(--light-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+
+  .contact-form-wrap { flex: 1; min-width: 0; }
+  .contact-form-wrap iframe {
+    width: 100%;
+    height: 600px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.7);
+    padding: 40px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  footer img { height: 36px; width: auto; opacity: 0.9; }
+
+  footer p { font-size: 13px; }
+
+  footer .footer-links { display: flex; gap: 24px; }
+  footer .footer-links a {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+  }
+  footer .footer-links a:hover { color: var(--lime); }
+
+  .footer-stripe {
+    height: 3px;
+    background: linear-gradient(90deg, var(--deep-blue), var(--lime));
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .hero { flex-direction: column; padding: 60px 5%; min-height: auto; }
+    .hero-badge { flex: none; width: 100%; }
+    .hero h1 { font-size: 32px; }
+    .about { flex-direction: column; }
+    .about-stats { flex: none; width: 100%; flex-direction: row; flex-wrap: wrap; }
+    .contact { flex-direction: column; }
+    nav a { margin-left: 16px; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <img class="logo" src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures" />
+  <nav>
+    <a href="#about">About Us</a>
+    <a href="#services">Services</a>
+    <a href="#contact" class="cta-btn">Get in Touch</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <p class="hero-eyebrow">Canadian Healthcare Supply</p>
+    <h1>Compliant Solutions.<br/><span>Confident Care.</span></h1>
+    <p>Essential Cures is a Winnipeg-based healthcare supply company delivering compliant, high-quality medical consumables and PPE to healthcare facilities across Canada. Drop-ship fulfilled. Regulatory-ready.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Request a Quote</a>
+      <a href="#services" class="btn-outline">Our Services</a>
+    </div>
+  </div>
+  <div class="hero-badge">
+    <h3>Why Healthcare Teams Choose EC</h3>
+    <ul>
+      <li>ISO 13485-aligned quality systems</li>
+      <li>Health Canada compliant supply chain</li>
+      <li>CASL-compliant client communications</li>
+      <li>Drop-ship direct to your facility</li>
+      <li>Transparent pricing &amp; fast lead times</li>
+      <li>Dedicated account support</li>
+    </ul>
+  </div>
+</section>
+<div class="stripe"></div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-text">
+    <p class="section-label">Who We Are</p>
+    <h2>A Lean, Compliant Healthcare Supply Partner Built for Canadian Facilities</h2>
+    <p>Essential Cures Inc. was founded in Winnipeg, Manitoba with one purpose: to make compliant, high-quality healthcare supplies accessible to Canadian facilities without the friction of large-volume minimums, complex procurement, or regulatory uncertainty.</p>
+    <p>We operate a zero-inventory drop-ship model — meaning your orders ship directly from vetted suppliers to your facility. No warehousing markups. No stock delays. Just reliable, traceable supply with full documentation.</p>
+    <p>Our quality management approach is aligned with ISO 13485:2016, and every supplier in our network is qualified against EC's internal standards before a single product is offered.</p>
+  </div>
+  <div class="about-stats">
+    <div class="stat-card">
+      <div class="number">Phase 1</div>
+      <div class="label">Non-regulated PPE &amp; IPC consumables — available now</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">ISO</div>
+      <div class="label">13485:2016-aligned quality management system</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">100%</div>
+      <div class="label">Drop-ship fulfilled — direct to your facility</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-header">
+    <p class="section-label">What We Supply</p>
+    <h2>Products &amp; Services</h2>
+    <p>Starting with non-regulated consumables and scaling to Class I &amp; II medical devices as we grow.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🧤</div>
+      <h3>PPE &amp; Infection Control</h3>
+      <p>Gloves, masks, gowns, face shields, and infection prevention consumables sourced from qualified suppliers.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🩺</div>
+      <h3>Medical Consumables</h3>
+      <p>Wound care, diagnostic consumables, patient care products — fully traceable with batch and lot documentation.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📦</div>
+      <h3>Drop-Ship Fulfilment</h3>
+      <p>Orders fulfilled directly to your facility from vetted suppliers. No minimum order quantities for qualified accounts.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📋</div>
+      <h3>Compliance Documentation</h3>
+      <p>Full regulatory documentation package with every order — COAs, SDS sheets, supplier qualifications on request.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY EC -->
+<section class="why">
+  <div class="why-header">
+    <p class="section-label" style="color: var(--lime);">Our Commitment</p>
+    <h2>Built on Compliance. Delivered with Care.</h2>
+    <p>Every decision at Essential Cures is made through a compliance-first lens.</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-item">
+      <span class="icon">🏥</span>
+      <h3>Healthcare-First</h3>
+      <p>Every product and supplier selected specifically for Canadian healthcare settings and standards.</p>
+    </div>
+    <div class="why-item">
+      <span class="icon">📜</span>
+      <h3>Regulatory Ready</h3>
+      <p>Health Canada MDR-aware processes and ISO 13485-aligned QMS from day one.</p>
+    </div>
+    <div class="why-item">
+      <span class="icon">🔗</span>
+      <h3>Full Traceability</h3>
+      <p>Batch and lot tracking on every shipment. Complete audit trail available on request.</p>
+    </div>
+    <div class="why-item">
+      <span class="icon">🇨🇦</span>
+      <h3>Canadian Operations</h3>
+      <p>Winnipeg-based. Canadian data residency. CASL-compliant communications.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-info">
+    <p class="section-label">Get in Touch</p>
+    <h2>Request a Quote or Product Inquiry</h2>
+    <p>Tell us what you need and we'll respond within one business day with product availability, pricing, and lead times.</p>
+    <div class="contact-detail">
+      <div class="icon">📧</div>
+      <span>sales@essentialcures.com</span>
+    </div>
+    <div class="contact-detail">
+      <div class="icon">🌐</div>
+      <span>essentialcures.com</span>
+    </div>
+    <div class="contact-detail">
+      <div class="icon">📍</div>
+      <span>Winnipeg, Manitoba, Canada</span>
+    </div>
+    <div class="contact-detail">
+      <div class="icon">⏱</div>
+      <span>Response within 1 business day</span>
+    </div>
+  </div>
+  <div class="contact-form-wrap">
+    <iframe
+      aria-label="EC-MKT-FRM-001 — Client Inquiry Form"
+      frameborder="0"
+      style="height:600px;width:99%;border:none;"
+      src="https://forms.zohopublic.com/faisalkhanessenti1/form/ECMKTFRMo01ClientInquiryForm1/formperma/t7s-9zYKm1WanQM_WW-oVvjzaAnBsQtFr479kHou-LQ">
+    </iframe>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer-stripe"></div>
+<footer>
+  <img src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures" />
+  <p>© 2026 Essential Cures Inc. — Winnipeg, Manitoba, Canada. BN: 768552978</p>
+  <div class="footer-links">
+    <a href="mailto:sales@essentialcures.com">Contact</a>
+    <a href="#">Privacy Policy</a>
+  </div>
+</footer>
+
+</body>
+</html>
