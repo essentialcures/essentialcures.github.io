@@ -35,8 +35,43 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 88px;
+    height: 120px;
     box-shadow: 0 2px 8px rgba(0,80,144,0.08);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  header img.logo {
+    height: 90px;
+    width: auto;
+  }
+
+  .header-divider {
+    width: 1px;
+    height: 70px;
+    background: var(--cool-gray);
+    opacity: 0.4;
+  }
+
+  .header-brand {
+    text-align: center;
+  }
+  .header-brand .company-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--medical-blue);
+    letter-spacing: 0.5px;
+  }
+  .header-brand .tagline {
+    font-size: 15px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--leaf-green);
+    margin-top: 2px;
   }
 
   .header-stripes {
@@ -366,26 +401,6 @@
     margin-bottom: 32px;
   }
 
-  .contact-detail {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-    font-size: 15px;
-    color: var(--slate);
-  }
-  .contact-detail .icon {
-    width: 36px;
-    height: 36px;
-    background: var(--light-bg);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 16px;
-  }
-
   .contact-form-wrap { flex: 1; min-width: 0; }
   .contact-form-wrap iframe {
     width: 100%;
@@ -398,26 +413,31 @@
   /* ── FOOTER ── */
   footer {
     background: var(--navy);
-    color: rgba(255,255,255,0.7);
-    padding: 40px 5%;
+    color: rgba(255,255,255,0.85);
+    padding: 32px 5%;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
   }
 
-  footer img { height: 36px; width: auto; opacity: 0.9; }
-
-  footer p { font-size: 13px; }
-
-  footer .footer-links { display: flex; gap: 24px; }
-  footer .footer-links a {
-    font-size: 13px;
-    color: rgba(255,255,255,0.6);
+  footer .footer-domains {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  footer .footer-domains a {
+    color: rgba(255,255,255,0.9);
     text-decoration: none;
   }
-  footer .footer-links a:hover { color: var(--lime); }
+  footer .footer-domains a:hover { color: var(--lime); }
+
+  footer .footer-copyright {
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(255,255,255,0.6);
+  }
 
   .footer-stripe {
     height: 3px;
@@ -433,6 +453,12 @@
     .about-stats { flex: none; width: 100%; flex-direction: row; flex-wrap: wrap; }
     .contact { flex-direction: column; }
     nav a { margin-left: 16px; font-size: 14px; }
+    header { height: auto; padding: 16px 5%; flex-direction: column; gap: 12px; }
+    .header-left { flex-direction: column; gap: 8px; }
+    .header-divider { display: none; }
+    header img.logo { height: 60px; }
+    .header-brand .company-name { font-size: 17px; }
+    .header-brand .tagline { font-size: 12px; }
   }
 </style>
 </head>
@@ -440,7 +466,14 @@
 
 <!-- HEADER -->
 <header>
-  <img class="logo" src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures" />
+  <div class="header-left">
+    <img class="logo" src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures" />
+    <div class="header-divider"></div>
+    <div class="header-brand">
+      <div class="company-name">ESSENTIAL CURES INC.</div>
+      <div class="tagline">Compliant Solutions. Confident Care.</div>
+    </div>
+  </div>
   <nav>
     <a href="#about">About Us</a>
     <a href="#services">Services</a>
@@ -457,19 +490,18 @@
   <div class="hero-text">
     <p class="hero-eyebrow">Canadian Healthcare Supply</p>
     <h1>Compliant Solutions.<br/><span>Confident Care.</span></h1>
-    <p>Essential Cures is a Winnipeg-based healthcare supply company delivering compliant, high-quality medical consumables and PPE to healthcare facilities across Canada. Drop-ship fulfilled. Regulatory-ready.</p>
+    <p>Essential Cures is a Winnipeg-based healthcare supply company delivering compliant, high-quality medical consumables and PPE to healthcare facilities across Canada.</p>
     <div class="hero-actions">
       <a href="#contact" class="btn-primary">Request a Quote</a>
       <a href="#services" class="btn-outline">Our Services</a>
     </div>
   </div>
   <div class="hero-badge">
-    <h3>Why Healthcare Teams Choose EC</h3>
+    <h3>Why Healthcare Teams Choose Essential Cures</h3>
     <ul>
       <li>ISO 13485-aligned quality systems</li>
       <li>Health Canada compliant supply chain</li>
       <li>CASL-compliant client communications</li>
-      <li>Drop-ship direct to your facility</li>
       <li>Transparent pricing &amp; fast lead times</li>
       <li>Dedicated account support</li>
     </ul>
@@ -483,8 +515,8 @@
     <p class="section-label">Who We Are</p>
     <h2>A Lean, Compliant Healthcare Supply Partner Built for Canadian Facilities</h2>
     <p>Essential Cures Inc. was founded in Winnipeg, Manitoba with one purpose: to make compliant, high-quality healthcare supplies accessible to Canadian facilities without the friction of large-volume minimums, complex procurement, or regulatory uncertainty.</p>
-    <p>We operate a zero-inventory drop-ship model — meaning your orders ship directly from vetted suppliers to your facility. No warehousing markups. No stock delays. Just reliable, traceable supply with full documentation.</p>
-    <p>Our quality management approach is aligned with ISO 13485:2016, and every supplier in our network is qualified against EC's internal standards before a single product is offered.</p>
+    <p>Our distribution model ships orders directly from qualified suppliers to your facility, keeping overhead low and lead times short — without compromising on documentation or accountability.</p>
+    <p>Our quality management approach is aligned with ISO 13485:2016, and every supplier in our network is qualified against Essential Cures' internal standards before a single product is offered.</p>
   </div>
   <div class="about-stats">
     <div class="stat-card">
@@ -497,7 +529,7 @@
     </div>
     <div class="stat-card">
       <div class="number">100%</div>
-      <div class="label">Drop-ship fulfilled — direct to your facility</div>
+      <div class="label">Fulfilled direct to your facility, every order</div>
     </div>
   </div>
 </section>
@@ -522,8 +554,8 @@
     </div>
     <div class="service-card">
       <div class="service-icon">📦</div>
-      <h3>Drop-Ship Fulfilment</h3>
-      <p>Orders fulfilled directly to your facility from vetted suppliers. No minimum order quantities for qualified accounts.</p>
+      <h3>Direct Facility Fulfilment</h3>
+      <p>Orders fulfilled directly to your facility from qualified suppliers. No minimum order quantities for qualified accounts.</p>
     </div>
     <div class="service-card">
       <div class="service-icon">📋</div>
@@ -570,22 +602,6 @@
     <p class="section-label">Get in Touch</p>
     <h2>Request a Quote or Product Inquiry</h2>
     <p>Tell us what you need and we'll respond within one business day with product availability, pricing, and lead times.</p>
-    <div class="contact-detail">
-      <div class="icon">📧</div>
-      <span>sales@essentialcures.com</span>
-    </div>
-    <div class="contact-detail">
-      <div class="icon">🌐</div>
-      <span>essentialcures.com</span>
-    </div>
-    <div class="contact-detail">
-      <div class="icon">📍</div>
-      <span>Winnipeg, Manitoba, Canada</span>
-    </div>
-    <div class="contact-detail">
-      <div class="icon">⏱</div>
-      <span>Response within 1 business day</span>
-    </div>
   </div>
   <div class="contact-form-wrap">
     <iframe
@@ -600,12 +616,10 @@
 <!-- FOOTER -->
 <div class="footer-stripe"></div>
 <footer>
-  <img src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures" />
-  <p>© 2026 Essential Cures Inc. — Winnipeg, Manitoba, Canada. BN: 768552978</p>
-  <div class="footer-links">
-    <a href="mailto:sales@essentialcures.com">Contact</a>
-    <a href="#">Privacy Policy</a>
+  <div class="footer-domains">
+    <a href="https://essentialcures.com">essentialcures.com</a> | <a href="https://essentialcures.ca">essentialcures.ca</a>
   </div>
+  <div class="footer-copyright">© 2026 Essential Cures Inc.</div>
 </footer>
 
 </body>
