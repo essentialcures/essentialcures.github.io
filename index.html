@@ -42,13 +42,21 @@
   .header-left {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 24px;
+  }
+
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
   }
 
   header img.logo {
-    height: 90px;
+    height: 100px;
     width: auto;
     display: block;
+    object-fit: contain;
   }
 
   .header-divider {
@@ -61,6 +69,9 @@
 
   .header-brand {
     text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .header-brand .company-name {
     font-size: 22px;
@@ -85,11 +96,6 @@
   }
   .header-stripes .stripe-blue { height: 3px; background: var(--deep-blue); }
   .header-stripes .stripe-lime { height: 2px; background: var(--lime); }
-
-  header img.logo {
-    height: 64px;
-    width: auto;
-  }
 
   nav a {
     text-decoration: none;
@@ -492,7 +498,9 @@
 <!-- HEADER -->
 <header>
   <div class="header-left">
-    <img class="logo" src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures" />
+    <div class="logo-wrap">
+      <img class="logo" src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures" />
+    </div>
     <div class="header-divider"></div>
     <div class="header-brand">
       <div class="company-name">ESSENTIAL CURES INC.</div>
