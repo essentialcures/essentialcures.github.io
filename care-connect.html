@@ -7,6 +7,8 @@
     <meta name="robots" content="noindex, nofollow">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+    <!-- Cloudflare Turnstile widget script -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         :root {
             --deep-blue: #005090;
@@ -102,8 +104,14 @@
             margin-top: 8px;
         }
         .zf-submitColor:hover { background: var(--dark-navy) !important; transform: translateY(-1px); }
+        .zf-submitColor:disabled { background: #A9B7C4 !important; cursor: not-allowed; transform: none; }
         .zf-fmFooter { list-style: none; padding: 0; }
         .zf-gridLabelCont label, .zfgridLabelCont label { font-size: 13px; font-weight: 700; color: var(--med-blue); text-transform: uppercase; letter-spacing: 1px; margin: 24px 0 12px; display: block; padding-bottom: 6px; border-bottom: 1px solid #E8ECF0; }
+
+        .turnstile-group { margin: 8px 0 24px; display: flex; flex-direction: column; align-items: flex-start; }
+        .turnstile-group label { display: block; font-size: 13px; font-weight: 600; color: var(--dark-navy); margin-bottom: 8px; }
+        .turnstile-error { display: none; font-size: 12.5px; color: #C0392B; margin-top: 6px; }
+        .turnstile-error.show { display: block; }
 
         /* Thank you overlay */
         .thankyou-overlay {
@@ -175,7 +183,7 @@
     <div class="form-card">
 
         <!-- EC-SAL-FRM-002 Client Profile Form -->
-        <form action='https://forms.zohopublic.com/faisalkhanessenti1/form/CustomerProfiling/formperma/SGqPC4XhVAegbOCZFEp5nKsT6GeOVCFNLLyPZvGd57M/htmlRecords/submit' name='form' id='form' method='POST' accept-charset='UTF-8' enctype='multipart/form-data' onsubmit='handleSubmit(event)'>
+        <form action='https://forms.zohopublic.com/faisalkhanessenti1/form/CustomerProfiling/formperma/SGqPC4XhVAegbOCZFEp5nKsT6GeOVCFNLLyPZvGd57M/htmlRecords/submit' name='form' id='form' method='POST' accept-charset='UTF-8' enctype='multipart/form-data' onsubmit='return handleSubmit(event)'>
         <input type="hidden" name="zf_referrer_name" value="">
         <input type="hidden" name="zf_redirect_url" value="">
         <input type="hidden" name="zc_gad" value="">
@@ -420,10 +428,17 @@
             <div class='zf-tempContDiv'><span><textarea name='MultiLine4' maxlength='65535' placeholder=''></textarea></span></div>
         </div>
 
+        <!-- Cloudflare Turnstile CAPTCHA -->
+        <div class="turnstile-group">
+            <label>Verify you're human <em style="color:#C0392B;">*</em></label>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAEFjJFkYOcO5d-uj" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired"></div>
+            <p class="turnstile-error" id="turnstileError">Please complete the verification above before submitting.</p>
+        </div>
+
         </div>
         </div>
 
-        <ul><li class='zf-fmFooter'><button type='submit' class='zf-submitColor'>Submit Profile</button></li></ul>
+        <ul><li class='zf-fmFooter'><button type='submit' class='zf-submitColor' id='submitBtn'>Submit Profile</button></li></ul>
         </form>
 
     </div>
@@ -459,10 +474,32 @@
         if (emailField) emailField.value = decodeURIComponent(email);
     }
 
+    let turnstileVerified = false;
+
+    function onTurnstileSuccess(token) {
+        turnstileVerified = true;
+        document.getElementById('turnstileError').classList.remove('show');
+    }
+
+    function onTurnstileExpired() {
+        turnstileVerified = false;
+    }
+
     // Intercept form submit — show thank you overlay instead of Zoho redirect
     function handleSubmit(e) {
         e.preventDefault();
+
+        if (!turnstileVerified) {
+            document.getElementById('turnstileError').classList.add('show');
+            document.querySelector('.turnstile-group').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return false;
+        }
+
         const form = document.getElementById('form');
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+
         const data = new FormData(form);
         fetch(form.action, { method: 'POST', body: data, mode: 'no-cors' })
             .then(() => {
@@ -470,6 +507,10 @@
             })
             .catch(() => {
                 document.getElementById('thankyouOverlay').classList.add('show');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Profile';
             });
         return false;
     }
