@@ -29,26 +29,29 @@
         .page-hero h2 { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--white); font-weight: 600; margin-bottom: 12px; }
         .page-hero p { font-size: 16px; color: rgba(255,255,255,0.75); max-width: 560px; margin: 0 auto; }
         .main { flex: 1; max-width: 900px; margin: 0 auto; width: 100%; padding: 56px 40px; }
-        .form-card { background: var(--white); border-radius: 12px; box-shadow: 0 4px 24px rgba(0,48,96,0.08); border: 1px solid #E8ECF0; padding: 48px; }
         .back-link { display: inline-block; font-size: 13px; color: var(--cool-gray); text-decoration: none; margin-bottom: 32px; transition: color 0.2s; }
         .back-link:hover { color: var(--deep-blue); }
         .back-link::before { content: '← '; }
-        .form-section-title { font-size: 13px; font-weight: 700; color: var(--med-blue); text-transform: uppercase; letter-spacing: 1px; margin: 28px 0 16px; padding-bottom: 8px; border-bottom: 1px solid #E8ECF0; }
+        .form-card { background: var(--white); border-radius: 12px; box-shadow: 0 4px 24px rgba(0,48,96,0.08); border: 1px solid #E8ECF0; padding: 48px; }
+        .form-section { margin-bottom: 36px; padding-bottom: 36px; border-bottom: 1px solid #E8ECF0; }
+        .form-section:last-of-type { border-bottom: none; margin-bottom: 0; }
+        .form-section-title { font-size: 13px; font-weight: 700; color: var(--med-blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .form-group { margin-bottom: 16px; }
+        .form-group.full { grid-column: 1 / -1; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--dark-navy); margin-bottom: 6px; }
         .form-group label em { font-style: normal; color: var(--leaf-green); }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 11px 14px; border: 1.5px solid #D4DAE0; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--slate); background: var(--off-white); transition: border-color 0.2s; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--deep-blue); box-shadow: 0 0 0 3px rgba(0,80,144,0.08); background: var(--white); }
-        .form-group textarea { resize: vertical; min-height: 100px; }
+        .form-group textarea { resize: vertical; min-height: 120px; }
         .form-group select[multiple] { height: 130px; }
         .field-note { font-size: 11px; color: var(--cool-gray); margin-top: 5px; font-style: italic; }
-.submit-btn { width: 100%; padding: 14px; background: var(--deep-blue); color: var(--white); border: none; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-top: 24px; }
+        .submit-btn { width: 100%; padding: 14px; background: var(--deep-blue); color: var(--white); border: none; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-top: 24px; }
         .submit-btn:hover { background: var(--dark-navy); transform: translateY(-1px); }
         .thankyou-overlay { display: none; position: fixed; inset: 0; background: rgba(0,48,96,0.7); z-index: 1000; align-items: center; justify-content: center; }
         .thankyou-overlay.show { display: flex; }
         .thankyou-card { background: var(--white); border-radius: 16px; padding: 56px 48px; max-width: 520px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
-        .thankyou-card .icon { font-size: 48px; margin-bottom: 20px; }
+        .ty-icon { width: 64px; height: 64px; background: rgba(74,139,44,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: var(--leaf-green); }
         .thankyou-card h3 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--dark-navy); margin-bottom: 16px; }
         .thankyou-card p { font-size: 15px; color: var(--cool-gray); line-height: 1.8; margin-bottom: 32px; }
         .thankyou-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
@@ -93,130 +96,170 @@
         <input type="hidden" name="zc_gad" value="">
         <input type="hidden" name="SingleLine5" value="Supplier/Distributor">
 
-        <div class="form-section-title">Business Information</div>
-        <div class="form-grid">
-            <div class="form-group">
-                <label>Business Name <em>*</em></label>
-                <input type="text" name="SingleLine" maxlength="255" required placeholder="Company or organization name" />
-            </div>
-            <div class="form-group">
-                <label>Website</label>
-                <input type="url" name="Website" maxlength="255" placeholder="https://" />
-            </div>
-            <div class="form-group">
-                <label>City</label>
-                <select name="Dropdown1">
-                    <option value="-Select-">-Select-</option>
-                    <option>Calgary</option><option>Edmonton</option><option>Vancouver</option>
-                    <option>Victoria</option><option>Winnipeg</option><option>Brandon</option>
-                    <option>Fredericton</option><option>Moncton</option><option>Saint John</option>
-                    <option>St. John's</option><option>Halifax</option><option>Sydney</option>
-                    <option>Yellowknife</option><option>Truro</option><option>Iqaluit</option>
-                    <option>Toronto</option><option>Ottawa</option><option>Hamilton</option>
-                    <option>London</option><option>Mississauga</option><option>Brampton</option>
-                    <option>Charlottetown</option><option>Montreal</option><option>Quebec City</option>
-                    <option>Laval</option><option>Gatineau</option><option>Regina</option>
-                    <option>Saskatoon</option><option>Whitehorse</option><option>Other</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Province / Territory</label>
-                <select name="Dropdown3">
-                    <option value="-Select-">-Select-</option>
-                    <option>Alberta</option><option>British Columbia</option><option>Manitoba</option>
-                    <option>New Brunswick</option><option>Newfoundland and Labrador</option>
-                    <option>Northwest Territories</option><option>Nova Scotia</option>
-                    <option>Nunavut</option><option>Ontario</option><option>Prince Edward Island</option>
-                    <option>Quebec</option><option>Saskatchewan</option><option>Yukon</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Country</label>
-                <select name="Dropdown2">
-                    <option value="-Select-">-Select-</option>
-                    <option>Canada</option><option>United States</option><option>Mexico</option>
-                </select>
+        <!-- SECTION 1: Business Information -->
+        <div class="form-section">
+            <div class="form-section-title">Business Information</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Business Name <em>*</em></label>
+                    <input type="text" name="SingleLine" maxlength="255" required placeholder="Company or organization name" />
+                </div>
+                <div class="form-group">
+                    <label>Business Type</label>
+                    <input type="text" name="SingleLine5" maxlength="255" placeholder="e.g. Manufacturer, Distributor, Wholesaler" />
+                </div>
+                <div class="form-group">
+                    <label>Distribution Territory</label>
+                    <select name="Dropdown4">
+                        <option value="-Select-">-Select-</option>
+                        <option>Canada (All Provinces)</option>
+                        <option>British Columbia</option>
+                        <option>Alberta</option>
+                        <option>Saskatchewan</option>
+                        <option>Manitoba</option>
+                        <option>Ontario</option>
+                        <option>Quebec</option>
+                        <option>Atlantic Canada</option>
+                        <option>Northern Canada</option>
+                        <option>United States</option>
+                        <option>Western US</option>
+                        <option>Eastern US</option>
+                        <option>Central US</option>
+                        <option>Mexico</option>
+                        <option>Global</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Website</label>
+                    <input type="url" name="Website" maxlength="255" placeholder="https://" />
+                </div>
             </div>
         </div>
 
-        <div class="form-section-title">Contact Person</div>
-        <div class="form-grid">
-            <div class="form-group">
-                <label>First Name</label>
-                <input type="text" id="firstName" name="SingleLine2" maxlength="255" placeholder="First name" />
+        <!-- SECTION 2: Business Address -->
+        <div class="form-section">
+            <div class="form-section-title">Business Address</div>
+            <div class="form-group full">
+                <label>Street Address</label>
+                <input type="text" name="AddressLine1" maxlength="255" placeholder="Street address" />
             </div>
-            <div class="form-group">
-                <label>Last Name</label>
-                <input type="text" name="SingleLine3" maxlength="255" placeholder="Last name" />
+            <div class="form-group full">
+                <label>Address Line 2</label>
+                <input type="text" name="AddressLine2" maxlength="255" placeholder="Suite, unit, building (optional)" />
             </div>
-            <div class="form-group">
-                <label>Job Title</label>
-                <input type="text" name="SingleLine4" maxlength="255" placeholder="" />
-            </div>
-            <div class="form-group">
-                <label>Email <em>*</em></label>
-                <input type="email" id="emailField" name="Email" maxlength="255" required placeholder="you@company.com" />
-            </div>
-            <div class="form-group">
-                <label>Phone</label>
-                <input type="tel" name="PhoneNumber" maxlength="20" placeholder="" />
-            </div>
-            <div class="form-group">
-                <label>Preferred Contact Method</label>
-                <select name="Dropdown">
-                    <option value="-Select-">-Select-</option>
-                    <option>Email</option><option>Phone</option><option>Either</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-section-title">What You Offer</div>
-        <div class="form-grid">
-            <div class="form-group">
-                <label>Business Type</label>
-                <select name="SingleLine5" multiple>
-                    <option>Manufacturer</option><option>Distributor</option>
-                    <option>Wholesaler</option><option>Importer</option>
-                    <option>Agent</option><option>Other</option>
-                </select>
-                <p class="field-note">* Select all that apply. Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
-            </div>
-            <div class="form-group">
-                <label>Product Categories Offered</label>
-                <select name="MultipleChoice" multiple>
-                    <option>PPE / IPC</option><option>Exam Consumables</option>
-                    <option>Wound Care</option><option>Facility Supplies</option>
-                    <option>Class I Medical Devices</option><option>Class II Medical Devices</option>
-                    <option>NHP</option><option>Surgical Instruments</option><option>Other</option>
-                </select>
-                <p class="field-note">* Select all that apply. Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
-            </div>
-            <div class="form-group">
-                <label>Provinces Served</label>
-                <select name="Dropdown4" multiple>
-                    <option>Alberta</option><option>British Columbia</option><option>Manitoba</option>
-                    <option>New Brunswick</option><option>Newfoundland and Labrador</option>
-                    <option>Northwest Territories</option><option>Nova Scotia</option>
-                    <option>Nunavut</option><option>Ontario</option><option>Prince Edward Island</option>
-                    <option>Quebec</option><option>Saskatchewan</option><option>Yukon</option>
-                </select>
-                <p class="field-note">* Select all that apply. Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
-            </div>
-            <div class="form-group">
-                <label>How Did You Hear About Us</label>
-                <select name="SingleLine6">
-                    <option value="-Select-">-Select-</option>
-                    <option>LinkedIn</option><option>Web Search</option>
-                    <option>Referral</option><option>Trade Show</option>
-                    <option>Cold Outreach</option><option>Other</option>
-                </select>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" name="City" maxlength="255" placeholder="City" />
+                </div>
+                <div class="form-group">
+                    <label>State / Region / Province</label>
+                    <input type="text" name="State" maxlength="255" placeholder="State, region or province" />
+                </div>
+                <div class="form-group">
+                    <label>Postal / Zip Code</label>
+                    <input type="text" name="Zip" maxlength="20" placeholder="Postal or zip code" />
+                </div>
+                <div class="form-group">
+                    <label>Country</label>
+                    <select name="Country">
+                        <option value="-Select-">-Select-</option>
+                        <option>Canada</option><option>United States</option><option>Mexico</option>
+                        <option>United Kingdom</option><option>Australia</option><option>Germany</option>
+                        <option>France</option><option>Italy</option><option>Spain</option>
+                        <option>Netherlands</option><option>Belgium</option><option>Switzerland</option>
+                        <option>Sweden</option><option>Norway</option><option>Denmark</option>
+                        <option>Finland</option><option>Poland</option><option>Czech Republic</option>
+                        <option>Austria</option><option>Portugal</option><option>Ireland</option>
+                        <option>Japan</option><option>South Korea</option><option>China</option>
+                        <option>India</option><option>Singapore</option><option>Malaysia</option>
+                        <option>Thailand</option><option>Vietnam</option><option>Indonesia</option>
+                        <option>Philippines</option><option>Taiwan</option><option>Hong Kong</option>
+                        <option>Brazil</option><option>Argentina</option><option>Chile</option>
+                        <option>Colombia</option><option>Peru</option><option>South Africa</option>
+                        <option>Nigeria</option><option>Kenya</option><option>Egypt</option>
+                        <option>UAE</option><option>Saudi Arabia</option><option>Israel</option>
+                        <option>Turkey</option><option>New Zealand</option><option>Other</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <div class="form-section-title">Tell Us More</div>
-        <div class="form-group">
-            <label>Tell us about your business and what you are looking to achieve</label>
-            <textarea name="SingleLine7" maxlength="65535" placeholder="Brief overview of your company, what you supply, and how you see working with Essential Cures."></textarea>
+        <!-- SECTION 3: Contact Information -->
+        <div class="form-section">
+            <div class="form-section-title">Contact Information</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" name="SingleLine2" maxlength="255" placeholder="First name" />
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" name="SingleLine3" maxlength="255" placeholder="Last name" />
+                </div>
+                <div class="form-group">
+                    <label>Job Title</label>
+                    <input type="text" name="SingleLine4" maxlength="255" placeholder="Your role or title" />
+                </div>
+                <div class="form-group">
+                    <label>Email <em>*</em></label>
+                    <input type="email" id="emailField" name="Email" maxlength="255" required placeholder="you@company.com" />
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" name="PhoneNumber" maxlength="20" placeholder="Including country code" />
+                </div>
+                <div class="form-group">
+                    <label>Preferred Contact Method</label>
+                    <select name="Dropdown">
+                        <option value="-Select-">-Select-</option>
+                        <option>Email</option><option>Phone</option><option>Either</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 4: Products Offered -->
+        <div class="form-section">
+            <div class="form-section-title">Products Offered</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Product Categories Offered</label>
+                    <select name="MultipleChoice" multiple>
+                        <option>PPE / IPC</option>
+                        <option>Exam Consumables</option>
+                        <option>Wound Care</option>
+                        <option>Facility Supplies</option>
+                        <option>Class I Medical Devices</option>
+                        <option>Class II Medical Devices</option>
+                        <option>NHP</option>
+                        <option>Surgical Instruments</option>
+                        <option>Other</option>
+                    </select>
+                    <p class="field-note">* Select all that apply. Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
+                </div>
+                <div class="form-group">
+                    <label>How Did You Hear About Us</label>
+                    <select name="SingleLine6">
+                        <option value="-Select-">-Select-</option>
+                        <option>LinkedIn</option>
+                        <option>Web Search</option>
+                        <option>Referral</option>
+                        <option>Trade Show</option>
+                        <option>Cold Outreach</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 5: Tell Us More -->
+        <div class="form-section">
+            <div class="form-section-title">Tell Us More</div>
+            <div class="form-group">
+                <label>Tell us about your business and what you are looking to achieve</label>
+                <textarea name="SingleLine7" maxlength="65535" placeholder="Brief overview of your company, what you supply, and how you see working with Essential Cures."></textarea>
+            </div>
         </div>
 
         <button type="submit" class="submit-btn">Submit Interest</button>
@@ -226,7 +269,11 @@
 
 <div class="thankyou-overlay" id="thankyouOverlay">
     <div class="thankyou-card">
-        <div class="icon">✅</div>
+        <div class="ty-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+        </div>
         <h3>Thank you for your interest.</h3>
         <p>We have received your submission. Our team will review your information and follow up within five business days to discuss next steps.</p>
         <div class="thankyou-actions">
