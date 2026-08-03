@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Facility Connect | Essential Cures Inc.</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-blue: #005090;
+            --med-blue: #0070B0;
+            --dark-navy: #003060;
+            --leaf-green: #4A8B2C;
+            --lime: #8FC23C;
+            --slate: #2C3E50;
+            --cool-gray: #6B7C8C;
+            --light-bg: #F7F9FB;
+            --white: #FFFFFF;
+            --off-white: #FAFBFC;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--slate); line-height: 1.7; background: var(--light-bg); min-height: 100vh; display: flex; flex-direction: column; }
+
+        header { background: var(--dark-navy); border-bottom: 3px solid var(--leaf-green); }
+        .header-inner { max-width: 1440px; margin: 0 auto; padding: 12px 40px; display: flex; align-items: center; justify-content: space-between; }
+        .header-brand { display: flex; align-items: center; gap: 18px; text-decoration: none; }
+        .header-brand img { height: 52px; width: 52px; }
+        .header-text h1 { font-weight: 700; font-size: 20px; color: var(--white); letter-spacing: 0.5px; }
+        .header-text p { font-size: 11.5px; color: var(--lime); font-style: italic; font-weight: 500; margin-top: 1px; }
+        nav a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13.5px; font-weight: 500; transition: color 0.2s; }
+        nav a:hover { color: var(--lime); }
+
+        .page-hero {
+            background: linear-gradient(135deg, var(--dark-navy) 0%, var(--deep-blue) 100%);
+            padding: 56px 40px;
+            text-align: center;
+            position: relative;
+        }
+        .page-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--leaf-green), var(--lime)); }
+        .page-hero .label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--lime); margin-bottom: 14px; }
+        .page-hero h2 { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--white); font-weight: 600; margin-bottom: 12px; }
+        .page-hero p { font-size: 16px; color: rgba(255,255,255,0.75); max-width: 560px; margin: 0 auto; }
+
+        .main { flex: 1; max-width: 900px; margin: 0 auto; width: 100%; padding: 56px 40px; }
+
+        .form-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,48,96,0.08);
+            border: 1px solid #E8ECF0;
+            padding: 48px;
+        }
+
+        .back-link { display: inline-block; font-size: 13px; color: var(--cool-gray); text-decoration: none; margin-bottom: 32px; transition: color 0.2s; }
+        .back-link:hover { color: var(--deep-blue); }
+        .back-link::before { content: '← '; }
+
+        /* Override Zoho form default styles to match EC brand */
+        .zf-templateWidth { width: 100% !important; }
+        .zf-tempHeadBdr { display: none !important; }
+        .zf-backgroundBg { background: transparent !important; }
+        .zf-frmTitle { display: none !important; }
+        .zf-subContWrap { padding: 0 !important; }
+        .zf-tempFrmWrapper label.zf-labelName { font-size: 13px; font-weight: 600; color: var(--dark-navy); margin-bottom: 6px; letter-spacing: 0.3px; }
+        .zf-tempContDiv input[type="text"],
+        .zf-tempContDiv input[type="email"],
+        .zf-tempContDiv select,
+        .zf-tempContDiv textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #D4DAE0;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--slate);
+            background: var(--off-white);
+            transition: border-color 0.2s;
+        }
+        .zf-tempContDiv input:focus,
+        .zf-tempContDiv select:focus,
+        .zf-tempContDiv textarea:focus {
+            outline: none;
+            border-color: var(--deep-blue);
+            box-shadow: 0 0 0 3px rgba(0,80,144,0.08);
+            background: var(--white);
+        }
+        .zf-submitColor {
+            width: 100%;
+            padding: 14px;
+            background: var(--deep-blue) !important;
+            color: var(--white) !important;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+        .zf-submitColor:hover { background: var(--dark-navy) !important; transform: translateY(-1px); }
+        .zf-fmFooter { list-style: none; padding: 0; }
+        .zf-gridLabelCont label, .zfgridLabelCont label { font-size: 13px; font-weight: 700; color: var(--med-blue); text-transform: uppercase; letter-spacing: 1px; margin: 24px 0 12px; display: block; padding-bottom: 6px; border-bottom: 1px solid #E8ECF0; }
+
+        /* Thank you overlay */
+        .thankyou-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,48,96,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .thankyou-overlay.show { display: flex; }
+        .thankyou-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 56px 48px;
+            max-width: 520px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .thankyou-card .icon { font-size: 48px; margin-bottom: 20px; }
+        .thankyou-card h3 { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--dark-navy); margin-bottom: 16px; }
+        .thankyou-card p { font-size: 15px; color: var(--cool-gray); line-height: 1.8; margin-bottom: 32px; }
+        .thankyou-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn-home { padding: 11px 28px; background: var(--deep-blue); color: var(--white); border: none; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.3s; }
+        .btn-home:hover { background: var(--dark-navy); }
+        .btn-close { padding: 11px 28px; background: transparent; color: var(--cool-gray); border: 1.5px solid #D4DAE0; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-close:hover { border-color: var(--slate); color: var(--slate); }
+
+        footer { background: var(--white); padding: 0 60px 24px; margin-top: auto; }
+        .footer-inner { max-width: 1440px; margin: 0 auto; }
+        .footer-line { height: 3px; background: linear-gradient(90deg, var(--deep-blue) 60%, var(--cool-gray) 100%); margin-bottom: 12px; }
+        .footer-urls { font-size: 13px; color: var(--cool-gray); margin-bottom: 2px; }
+        .footer-copy { font-size: 12px; color: #B0B8C0; font-style: italic; }
+
+        @media (max-width: 700px) {
+            .form-card { padding: 28px 20px; }
+            .header-inner { padding: 12px 24px; }
+            .main { padding: 32px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <a href="https://essentialcures.com" class="header-brand">
+            <img src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures">
+            <div class="header-text">
+                <h1>ESSENTIAL CURES INC.</h1>
+                <p>Compliant Solutions. Confident Care.</p>
+            </div>
+        </a>
+        <nav>
+            <a href="https://essentialcures.com">Back to Home</a>
+        </nav>
+    </div>
+</header>
+
+<div class="page-hero">
+    <div class="label">Healthcare Facility Connect</div>
+    <h2>Tell us about your facility.</h2>
+    <p>Complete the profile below and our team will follow up within one business day with information tailored to your needs.</p>
+</div>
+
+<main class="main">
+    <a href="https://essentialcures.com" class="back-link">Back to essentialcures.com</a>
+    <div class="form-card">
+
+        <!-- EC-SAL-FRM-002 Client Profile Form -->
+        <form action='https://forms.zohopublic.com/faisalkhanessenti1/form/CustomerProfiling/formperma/SGqPC4XhVAegbOCZFEp5nKsT6GeOVCFNLLyPZvGd57M/htmlRecords/submit' name='form' id='form' method='POST' accept-charset='UTF-8' enctype='multipart/form-data' onsubmit='handleSubmit(event)'>
+        <input type="hidden" name="zf_referrer_name" value="">
+        <input type="hidden" name="zf_redirect_url" value="">
+        <input type="hidden" name="zc_gad" value="">
+        <!-- Hidden: CASL Consent Type -->
+        <input type="hidden" name="SingleLine4" value="Implied-Inquiry">
+
+        <div class='zf-templateWidth'>
+        <div class='zf-subContWrap zf-topAlign'>
+
+        <div class='zfgrid_Wrapper'>
+        <div class='zfgridLabelCont'><label>Business Details</label></div>
+        <div class='zftwoColumn zfMultiColGrid'>
+        <div class='zfCol'>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Business Name <em class='zf-important'>*</em></label>
+            <div class='zf-tempContDiv'><span><input type='text' name='SingleLine' maxlength='255' placeholder='Company or Facility Name' required /></span></div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Facility Type</label>
+            <div class='zf-tempContDiv'>
+                <select name='Dropdown2'>
+                    <option value='-Select-'>-Select-</option>
+                    <option value='Hospital - WRHA'>Hospital - WRHA</option>
+                    <option value='Hospital - Independent'>Hospital - Independent</option>
+                    <option value='Long-Term Care'>Long-Term Care</option>
+                    <option value='Community Health'>Community Health</option>
+                    <option value='Dental'>Dental</option>
+                    <option value='Private Clinic'>Private Clinic</option>
+                    <option value='Pharmacy'>Pharmacy</option>
+                    <option value='Government'>Government</option>
+                    <option value='Other'>Other</option>
+                </select>
+            </div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>No. of Employees</label>
+            <div class='zf-tempContDiv'><span><input type='text' name='Number' maxlength='255' placeholder='Approximate number' /></span></div>
+        </div>
+        </div>
+        <div class='zfCol'>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Website</label>
+            <div class='zf-tempContDiv'><span><input type='text' name='Website' maxlength='255' placeholder='https://' /></span></div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Facility Size (Bed Count, if applicable)</label>
+            <div class='zf-tempContDiv'>
+                <select name='Dropdown'>
+                    <option value='-Select-'>-Select-</option>
+                    <option value='Under 25'>Under 25</option>
+                    <option value='25-50'>25-50</option>
+                    <option value='51-100'>51-100</option>
+                    <option value='101-250'>101-250</option>
+                    <option value='251-500'>251-500</option>
+                    <option value='500+'>500+</option>
+                </select>
+            </div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Existing Essential Cures Customer</label>
+            <div class='zf-tempContDiv'>
+                <select name='Dropdown1'>
+                    <option value='-Select-'>-Select-</option>
+                    <option value='Yes'>Yes</option>
+                    <option value='No'>No</option>
+                </select>
+            </div>
+        </div>
+        </div>
+        </div>
+        </div>
+
+        <div class='zfgrid_Wrapper'>
+        <div class='zfgridLabelCont'><label>Contact Point</label></div>
+        <div class='zftwoColumn zfMultiColGrid'>
+        <div class='zfCol'>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Last Name <em class='zf-important'>*</em></label>
+            <div class='zf-tempContDiv'><span><input type='text' id='lastName' name='SingleLine1' maxlength='255' placeholder='Contact Last Name' required /></span></div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Job Title</label>
+            <div class='zf-tempContDiv'><span><input type='text' name='SingleLine3' maxlength='255' placeholder='' /></span></div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Phone</label>
+            <div class='zf-tempContDiv'><span><input type='text' name='PhoneNumber' maxlength='20' placeholder='' /></span></div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Preferred Contact Method</label>
+            <div class='zf-tempContDiv'>
+                <select name='Dropdown3'>
+                    <option value='-Select-'>-Select-</option>
+                    <option value='Email'>Email</option>
+                    <option value='Phone'>Phone</option>
+                    <option value='Mobile'>Mobile</option>
+                </select>
+            </div>
+        </div>
+        </div>
+        <div class='zfCol'>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>First Name</label>
+            <div class='zf-tempContDiv'><span><input type='text' id='firstName' name='SingleLine2' maxlength='255' placeholder='Contact First Name' /></span></div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Email <em class='zf-important'>*</em></label>
+            <div class='zf-tempContDiv'><span><input type='text' id='emailField' name='Email' maxlength='255' placeholder='you@organization.com' required /></span></div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Mobile</label>
+            <div class='zf-tempContDiv'><span><input type='text' name='PhoneNumber1' maxlength='20' placeholder='' /></span></div>
+        </div>
+        </div>
+        </div>
+        </div>
+
+        <div class='zfgrid_Wrapper'>
+        <div class='zfgridLabelCont'><label>Requirements</label></div>
+        <div class='zftwoColumn zfMultiColGrid'>
+        <div class='zfCol'>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Current Primary Healthcare Supplier(s)</label>
+            <div class='zf-tempContDiv'><span><textarea name='MultiLine' maxlength='65535' placeholder=''></textarea></span></div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Product Categories <em class='zf-important'>*</em></label>
+            <div class='zf-tempContDiv'>
+                <select name='Dropdown4' required>
+                    <option value='-Select-'>-Select-</option>
+                    <option value='PPE / IPC'>PPE / IPC</option>
+                    <option value='Exam Consumables'>Exam Consumables</option>
+                    <option value='Wound Care'>Wound Care</option>
+                    <option value='Facility Supplies'>Facility Supplies</option>
+                    <option value='Class I Medical Devices'>Class I Medical Devices</option>
+                    <option value='Class II Medical Devices'>Class II Medical Devices</option>
+                    <option value='NHP'>NHP</option>
+                    <option value='Other'>Other</option>
+                </select>
+            </div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Priority Level</label>
+            <div class='zf-tempContDiv'>
+                <select name='Dropdown5'>
+                    <option value='-Select-'>-Select-</option>
+                    <option value='Urgent'>Urgent</option>
+                    <option value='High'>High</option>
+                    <option value='Medium'>Medium</option>
+                    <option value='Low'>Low</option>
+                </select>
+            </div>
+        </div>
+        </div>
+        <div class='zfCol'>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Specific Brands You Currently Use</label>
+            <div class='zf-tempContDiv'><span><textarea name='MultiLine1' maxlength='65535' placeholder=''></textarea></span></div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Approximate Monthly Volume</label>
+            <div class='zf-tempContDiv'>
+                <select name='Dropdown6'>
+                    <option value='-Select-'>-Select-</option>
+                    <option value='Under CA$5,000'>Under CA$5,000</option>
+                    <option value='CA$5,000 - CA$20,000'>CA$5,000 - CA$20,000</option>
+                    <option value='CA$20,000 - CA$50,000'>CA$20,000 - CA$50,000</option>
+                    <option value='CA$50,000 - CA$100,000'>CA$50,000 - CA$100,000</option>
+                    <option value='Over CA$100,000'>Over CA$100,000</option>
+                </select>
+            </div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Current challenges or areas of improvement</label>
+            <div class='zf-tempContDiv'><span><textarea name='MultiLine2' maxlength='65535' placeholder='Key Pain Point Discussed'></textarea></span></div>
+        </div>
+        </div>
+        </div>
+        </div>
+
+        <div class='zfgrid_Wrapper'>
+        <div class='zfgridLabelCont'><label>Business Address</label></div>
+        <div class='zftwoColumn zfMultiColGrid'>
+        <div class='zfCol'>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Address</label>
+            <div class='zf-tempContDiv'><span><input type='text' name='SingleLine5' maxlength='255' placeholder='Street Address' /></span></div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Province / Territory</label>
+            <div class='zf-tempContDiv'>
+                <select name='Dropdown12'>
+                    <option value='-Select-'>-Select-</option>
+                    <option value='Alberta'>Alberta</option>
+                    <option value='British Columbia'>British Columbia</option>
+                    <option value='Manitoba'>Manitoba</option>
+                    <option value='New Brunswick'>New Brunswick</option>
+                    <option value='Newfoundland and Labrador'>Newfoundland and Labrador</option>
+                    <option value='Northwest Territories'>Northwest Territories</option>
+                    <option value='Nova Scotia'>Nova Scotia</option>
+                    <option value='Nunavut'>Nunavut</option>
+                    <option value='Ontario'>Ontario</option>
+                    <option value='Prince Edward Island'>Prince Edward Island</option>
+                    <option value='Quebec'>Quebec</option>
+                    <option value='Saskatchewan'>Saskatchewan</option>
+                    <option value='Yukon'>Yukon</option>
+                </select>
+            </div>
+        </div>
+        </div>
+        <div class='zfCol'>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>City</label>
+            <div class='zf-tempContDiv'><span><input type='text' name='MultiLine4' maxlength='255' placeholder='City' /></span></div>
+        </div>
+        <div class='zf-tempFrmWrapper zf-large'>
+            <label class='zf-labelName'>Country</label>
+            <div class='zf-tempContDiv'>
+                <select name='Dropdown7'>
+                    <option value='Canada'>Canada</option>
+                    <option value='United States'>United States</option>
+                    <option value='Mexico'>Mexico</option>
+                </select>
+            </div>
+        </div>
+        </div>
+        </div>
+        </div>
+
+        <div class='zfgrid_Wrapper'>
+        <div class='zfgridLabelCont'><label>Consent and Compliance (CASL)</label></div>
+        <div style='padding: 16px 0;'>
+            <label style='display:flex;gap:12px;align-items:flex-start;font-weight:400;font-size:13px;color:var(--cool-gray);cursor:pointer;'>
+                <input type='checkbox' name='Checkbox' value='I consent to Essential Cures Inc. using this information to assess my needs and contact me. See essentialcures.com for privacy.' required style='margin-top:3px;width:16px;height:16px;flex-shrink:0;accent-color:var(--deep-blue);' />
+                <span>I consent to Essential Cures Inc. using this information to assess my needs and contact me. See essentialcures.com for privacy.</span>
+            </label>
+        </div>
+        </div>
+
+        <div class='zf-tempFrmWrapper zf-large' style='margin-top:8px;'>
+            <label class='zf-labelName'>Anything Else We Should Know?</label>
+            <div class='zf-tempContDiv'><span><textarea name='MultiLine4' maxlength='65535' placeholder=''></textarea></span></div>
+        </div>
+
+        </div>
+        </div>
+
+        <ul><li class='zf-fmFooter'><button type='submit' class='zf-submitColor'>Submit Profile</button></li></ul>
+        </form>
+
+    </div>
+</main>
+
+<!-- Thank You Overlay -->
+<div class="thankyou-overlay" id="thankyouOverlay">
+    <div class="thankyou-card">
+        <div class="icon">✅</div>
+        <h3>Profile received. Thank you.</h3>
+        <p>Our team will review your information and follow up within one business day. We look forward to supporting your facility.</p>
+        <div class="thankyou-actions">
+            <a href="https://essentialcures.com" class="btn-home">Back to Home</a>
+            <button class="btn-close" onclick="window.close()">Close</button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-line"></div>
+        <p class="footer-urls">essentialcures.com  |  essentialcures.ca</p>
+        <p class="footer-copy">&copy; 2026 Essential Cures Inc.</p>
+    </div>
+</footer>
+
+<script>
+    // Pre-fill email from URL parameter
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get('email');
+    if (email) {
+        const emailField = document.getElementById('emailField');
+        if (emailField) emailField.value = decodeURIComponent(email);
+    }
+
+    // Intercept form submit — show thank you overlay instead of Zoho redirect
+    function handleSubmit(e) {
+        e.preventDefault();
+        const form = document.getElementById('form');
+        const data = new FormData(form);
+        fetch(form.action, { method: 'POST', body: data, mode: 'no-cors' })
+            .then(() => {
+                document.getElementById('thankyouOverlay').classList.add('show');
+            })
+            .catch(() => {
+                document.getElementById('thankyouOverlay').classList.add('show');
+            });
+        return false;
+    }
+</script>
+
+</body>
+</html>

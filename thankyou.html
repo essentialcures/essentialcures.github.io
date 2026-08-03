@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You | Essential Cures Inc.</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-blue: #005090;
+            --med-blue: #0070B0;
+            --dark-navy: #003060;
+            --leaf-green: #4A8B2C;
+            --lime: #8FC23C;
+            --slate: #2C3E50;
+            --cool-gray: #6B7C8C;
+            --light-bg: #F7F9FB;
+            --white: #FFFFFF;
+            --off-white: #FAFBFC;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; color: var(--slate); line-height: 1.7; background: var(--light-bg); min-height: 100vh; display: flex; flex-direction: column; }
+
+        header { background: var(--dark-navy); border-bottom: 3px solid var(--leaf-green); }
+        .header-inner { max-width: 1440px; margin: 0 auto; padding: 12px 40px; display: flex; align-items: center; justify-content: space-between; }
+        .header-brand { display: flex; align-items: center; gap: 18px; text-decoration: none; }
+        .header-brand img { height: 52px; width: 52px; }
+        .header-text h1 { font-weight: 700; font-size: 20px; color: var(--white); letter-spacing: 0.5px; }
+        .header-text p { font-size: 11.5px; color: var(--lime); font-style: italic; font-weight: 500; margin-top: 1px; }
+        nav a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13.5px; font-weight: 500; transition: color 0.2s; }
+        nav a:hover { color: var(--lime); }
+
+        .main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 80px 40px; }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(0,48,96,0.10);
+            border: 1px solid #E8ECF0;
+            max-width: 900px;
+            width: 100%;
+            padding: 60px 56px;
+            text-align: center;
+        }
+
+        .check-icon {
+            width: 72px;
+            height: 72px;
+            background: rgba(74,139,44,0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+            color: var(--leaf-green);
+        }
+
+        .card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--dark-navy);
+            margin-bottom: 16px;
+        }
+
+        .card p {
+            font-size: 16px;
+            color: var(--cool-gray);
+            line-height: 1.8;
+            max-width: 520px;
+            margin: 0 auto 40px;
+        }
+
+        .divider {
+            height: 1px;
+            background: #E8ECF0;
+            margin: 0 0 36px;
+        }
+
+        .route-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--leaf-green);
+            margin-bottom: 24px;
+        }
+
+        .route-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 36px;
+        }
+
+        .route-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 24px 16px;
+            border-radius: 10px;
+            border: 1.5px solid #D4DAE0;
+            background: var(--off-white);
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .route-btn:hover {
+            border-color: var(--deep-blue);
+            background: var(--white);
+            box-shadow: 0 6px 20px rgba(0,80,144,0.10);
+            transform: translateY(-2px);
+        }
+
+        .route-btn .icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: rgba(0,80,144,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--deep-blue);
+            transition: background 0.3s, color 0.3s;
+        }
+        .route-btn:hover .icon {
+            background: rgba(0,80,144,0.12);
+            color: var(--dark-navy);
+        }
+
+        .route-btn .label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--dark-navy);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .route-btn .sublabel {
+            font-size: 11px;
+            color: var(--cool-gray);
+            text-align: center;
+        }
+
+        .home-link {
+            font-size: 13px;
+            color: var(--cool-gray);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .home-link:hover { color: var(--deep-blue); }
+        .home-link::before { content: '← '; }
+
+        footer { background: var(--white); padding: 0 60px 24px; }
+        .footer-inner { max-width: 1440px; margin: 0 auto; }
+        .footer-line { height: 3px; background: linear-gradient(90deg, var(--deep-blue) 60%, var(--cool-gray) 100%); margin-bottom: 12px; }
+        .footer-urls { font-size: 13px; color: var(--cool-gray); margin-bottom: 2px; }
+        .footer-copy { font-size: 12px; color: #B0B8C0; font-style: italic; }
+
+        @media (max-width: 700px) {
+            .card { padding: 40px 24px; }
+            .route-grid { grid-template-columns: 1fr; }
+            .header-inner { padding: 12px 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <a href="https://essentialcures.com" class="header-brand">
+            <img src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures">
+            <div class="header-text">
+                <h1>ESSENTIAL CURES INC.</h1>
+                <p>Compliant Solutions. Confident Care.</p>
+            </div>
+        </a>
+        <nav>
+            <a href="https://essentialcures.com">Back to Home</a>
+        </nav>
+    </div>
+</header>
+
+<main class="main">
+    <div class="card">
+        <div class="check-icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+        </div>
+        <h2>Welcome to Essential Cures.</h2>
+        <p>Tell us how you are connecting with us so we can point you in the right direction.</p>
+        <div class="divider"></div>
+        <div class="route-label">I am connecting as a</div>
+        <div class="route-grid">
+            <a class="route-btn" id="btn-facility" href="https://essentialcures.com/care-connect">
+                <span class="icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                        <line x1="12" y1="6" x2="12" y2="10"/>
+                        <line x1="10" y1="8" x2="14" y2="8"/>
+                    </svg>
+                </span>
+                <span class="label">Healthcare Facility</span>
+                <span class="sublabel">Clinic, LTC, Hospital</span>
+            </a>
+            <a class="route-btn" id="btn-supplier" href="https://essentialcures.com/partner-with-us">
+                <span class="icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="3" width="15" height="13" rx="1"/>
+                        <path d="M16 8h4l3 5v3h-7V8z"/>
+                        <circle cx="5.5" cy="18.5" r="2.5"/>
+                        <circle cx="18.5" cy="18.5" r="2.5"/>
+                    </svg>
+                </span>
+                <span class="label">Supplier or Distributor</span>
+                <span class="sublabel">Distribution partner</span>
+            </a>
+            <a class="route-btn" id="btn-brand" href="https://essentialcures.com/brand-connect">
+                <span class="icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </span>
+                <span class="label">Manufacturer or Brand</span>
+                <span class="sublabel">Product or brand owner</span>
+            </a>
+            <a class="route-btn" id="btn-general" href="https://essentialcures.com/enquire">
+                <span class="icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </span>
+                <span class="label">Not Sure</span>
+                <span class="sublabel">General enquiry</span>
+            </a>
+        </div>
+        <a href="https://essentialcures.com" class="home-link">Return to essentialcures.com</a>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-line"></div>
+        <p class="footer-urls">essentialcures.com  |  essentialcures.ca</p>
+        <p class="footer-copy">&copy; 2026 Essential Cures Inc.</p>
+    </div>
+</footer>
+
+<script>
+    // Read email parameter from URL and append to all routing links
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get('email');
+    if (email) {
+        const encoded = encodeURIComponent(email);
+        document.getElementById('btn-facility').href += '?email=' + encoded;
+        document.getElementById('btn-supplier').href += '?email=' + encoded;
+        document.getElementById('btn-brand').href += '?email=' + encoded;
+    }
+</script>
+
+</body>
+</html>
