@@ -42,7 +42,8 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--deep-blue); box-shadow: 0 0 0 3px rgba(0,80,144,0.08); background: var(--white); }
         .form-group textarea { resize: vertical; min-height: 100px; }
         .form-group select[multiple] { height: 130px; }
-        .submit-btn { width: 100%; padding: 14px; background: var(--deep-blue); color: var(--white); border: none; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-top: 24px; }
+        .field-note { font-size: 11px; color: var(--cool-gray); margin-top: 5px; font-style: italic; }
+.submit-btn { width: 100%; padding: 14px; background: var(--deep-blue); color: var(--white); border: none; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; margin-top: 24px; }
         .submit-btn:hover { background: var(--dark-navy); transform: translateY(-1px); }
         .thankyou-overlay { display: none; position: fixed; inset: 0; background: rgba(0,48,96,0.7); z-index: 1000; align-items: center; justify-content: center; }
         .thankyou-overlay.show { display: flex; }
@@ -178,6 +179,7 @@
                     <option>Wholesaler</option><option>Importer</option>
                     <option>Agent</option><option>Other</option>
                 </select>
+                <p class="field-note">* Select all that apply. Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
             </div>
             <div class="form-group">
                 <label>Product Categories Offered</label>
@@ -187,6 +189,7 @@
                     <option>Class I Medical Devices</option><option>Class II Medical Devices</option>
                     <option>NHP</option><option>Surgical Instruments</option><option>Other</option>
                 </select>
+                <p class="field-note">* Select all that apply. Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
             </div>
             <div class="form-group">
                 <label>Provinces Served</label>
@@ -197,6 +200,7 @@
                     <option>Nunavut</option><option>Ontario</option><option>Prince Edward Island</option>
                     <option>Quebec</option><option>Saskatchewan</option><option>Yukon</option>
                 </select>
+                <p class="field-note">* Select all that apply. Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</p>
             </div>
             <div class="form-group">
                 <label>How Did You Hear About Us</label>
@@ -224,7 +228,7 @@
     <div class="thankyou-card">
         <div class="icon">✅</div>
         <h3>Thank you for your interest.</h3>
-        <p>We have received your submission. Our team will review your information and follow up within two business days to discuss next steps.</p>
+        <p>We have received your submission. Our team will review your information and follow up within five business days to discuss next steps.</p>
         <div class="thankyou-actions">
             <a href="https://essentialcures.com" class="btn-home">Back to Home</a>
             <button class="btn-close" onclick="window.close()">Close</button>
