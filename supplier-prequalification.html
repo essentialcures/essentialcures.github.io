@@ -717,7 +717,21 @@ async function verifyGate() {
             body: JSON.stringify({ companyName: company, contactEmail: email, submissionReason: reason })
         });
 
-        const result = await response.json();
+        const rawText = await response.text();
+        let result;
+        try {
+            result = JSON.parse(rawText);
+            // Handle double-encoded JSON (string containing JSON string)
+            if (typeof result === 'string') {
+                result = JSON.parse(result);
+            }
+        } catch (parseErr) {
+            spinner.classList.remove('show');
+            document.querySelector('#screen1 .btn-primary').disabled = false;
+            errEl.textContent = 'Debug - raw response: ' + rawText.substring(0, 300);
+            errEl.style.display = 'block';
+            return;
+        }
 
         spinner.classList.remove('show');
         document.querySelector('#screen1 .btn-primary').disabled = false;
@@ -738,7 +752,7 @@ async function verifyGate() {
         } else if (result.status === 'block') {
             showBlock(result.reason, result.reviewDate, result.vendorName);
         } else {
-            errEl.textContent = result.reason || 'Verification error. Please try again.';
+            errEl.textContent = 'Debug - status: ' + JSON.stringify(result);
             errEl.style.display = 'block';
         }
 
