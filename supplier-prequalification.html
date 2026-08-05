@@ -7,6 +7,7 @@
     <meta name="robots" content="noindex, nofollow">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         :root {
             --deep-blue: #005090; --med-blue: #0070B0; --dark-navy: #003060;
@@ -52,6 +53,10 @@
         .form-group label em { font-style: normal; color: var(--leaf-green); }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 11px 14px; border: 1.5px solid #D4DAE0; border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 14px; color: var(--slate); background: var(--off-white); transition: border-color 0.2s; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--deep-blue); box-shadow: 0 0 0 3px rgba(0,80,144,0.08); background: var(--white); }
+        .turnstile-group { margin: 22px 0; display: flex; flex-direction: column; align-items: flex-start; }
+        .turnstile-group label { display: block; font-size: 13px; font-weight: 600; color: var(--dark-navy); margin-bottom: 8px; }
+        .turnstile-error { display: none; font-size: 12.5px; color: var(--red); margin-top: 6px; }
+        .turnstile-error.show { display: block; }
         .form-group textarea { resize: vertical; min-height: 100px; }
         .form-group select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7C8C' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -182,6 +187,12 @@
                     <option value="renewal">Annual Renewal — our review date is approaching</option>
                     <option value="category">Adding New Product or Service Category</option>
                 </select>
+            </div>
+
+            <div class="turnstile-group">
+                <label>Verify you're human <em style="color:var(--red);">*</em></label>
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAAEFjJFkYOcO5d-uj" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired"></div>
+                <p class="turnstile-error" id="turnstileError">Please complete the verification above before continuing.</p>
             </div>
 
             <div class="spinner" id="verifySpinner"></div>
@@ -656,6 +667,19 @@
 let gateData = { vendorId: '', vendorName: '', reason: '', reviewDate: '', submissionReason: '' };
 let currentScreen = 1;
 
+// Tracks whether the visitor has completed the Turnstile challenge
+let turnstileVerified = false;
+
+function onTurnstileSuccess(token) {
+    turnstileVerified = true;
+    document.getElementById('turnstileError').classList.remove('show');
+}
+
+function onTurnstileExpired() {
+    // Token expires after a few minutes; require re-verification before submit
+    turnstileVerified = false;
+}
+
 // ── GATE VERIFICATION ─────────────────────────────────────
 async function verifyGate() {
     const company = document.getElementById('gateCompany').value.trim();
@@ -669,6 +693,13 @@ async function verifyGate() {
     if (!company || !email || !reason) {
         errEl.textContent = 'Please complete all fields before verifying.';
         errEl.style.display = 'block';
+        return;
+    }
+
+    // Block verification until the visitor completes the Turnstile widget
+    if (!turnstileVerified) {
+        document.getElementById('turnstileError').classList.add('show');
+        document.querySelector('.turnstile-group').scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
     }
 
