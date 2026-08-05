@@ -682,7 +682,7 @@ async function verifyGate() {
 
         const response = await fetch(webhookUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({ companyName: company, contactEmail: email, submissionReason: reason })
         });
 
@@ -894,7 +894,7 @@ async function submitForm() {
 
         await fetch(webhookUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify(payload),
             mode: 'no-cors'
         });
