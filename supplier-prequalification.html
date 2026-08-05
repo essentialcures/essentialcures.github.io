@@ -678,11 +678,11 @@ async function verifyGate() {
     try {
         // ── REPLACE THIS URL WITH YOUR ZOHO WEBHOOK URL ──
         // This webhook calls the Deluge function cm27_validate_prequalification_gate
-        const webhookUrl = 'https://flow.zoho.com/921410058/flow/webhook/incoming?zapikey=1001.f7fce3f2b651529c695c618994d21c59.d4cb1b2e76802a12f62534625c41895b&isdebug=false';
+        const webhookUrl = 'https://essentialcures.com/api/cm27/gate';
 
         const response = await fetch(webhookUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'text/plain' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ companyName: company, contactEmail: email, submissionReason: reason })
         });
 
@@ -890,11 +890,11 @@ async function submitForm() {
     try {
         // ── REPLACE THIS URL WITH YOUR ZOHO WEBHOOK URL ──
         // This webhook calls a Deluge function that creates/updates the CM-27 record
-        const webhookUrl = 'YOUR_ZOHO_CM27_SUBMIT_WEBHOOK_URL_HERE';
+        const webhookUrl = 'https://essentialcures.com/api/cm27/submit';
 
         await fetch(webhookUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'text/plain' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
             mode: 'no-cors'
         });
