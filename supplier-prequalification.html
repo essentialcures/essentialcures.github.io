@@ -1165,14 +1165,14 @@
         </div>
 
         <!-- TAGLINE BAR ABOVE FOOTER -->
-        <div style="margin-top:40px;margin-bottom:0;">
+        <div style="margin-top:24px;margin-bottom:0;">
             <table style="width:100%;border-collapse:collapse;">
                 <tr>
-                    <td style="width:50%;background-color:#4A8B2C;padding:14px 0;text-align:center;">
-                        <span style="font-size:13px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span>
+                    <td style="width:50%;background-color:#4A8B2C;padding:8px 0;text-align:center;">
+                        <span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span>
                     </td>
-                    <td style="width:50%;background-color:#0070B0;padding:14px 0;text-align:center;">
-                        <span style="font-size:13px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Quality Built In. Not Bolted On.</span>
+                    <td style="width:50%;background-color:#0070B0;padding:8px 0;text-align:center;">
+                        <span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Quality Built In. Not Bolted On.</span>
                     </td>
                 </tr>
             </table>
@@ -1798,7 +1798,7 @@ function updateSteps(active) {
         if (!num) continue;
         num.className = 'step-num' + (i < active ? ' done' : i === active ? ' active' : '');
         lbl.className = 'step-label' + (i === active ? ' active' : '');
-        num.textContent = i < active ? '' : i;
+        num.innerHTML = i < active ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : String(i);
     }
 }
 
