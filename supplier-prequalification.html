@@ -215,7 +215,13 @@
         .review-table .cat-approved { color: var(--leaf-green); font-weight: 600; }
         .file-review-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--success); margin-bottom: 4px; }
 
-        /* EXPIRY WARNING */
+        /* ERROR SUMMARY BOX */
+        .error-summary { display: none; background: #FFF0F0; border: 2px solid var(--red); border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; }
+        .error-summary.show { display: block; }
+        .error-summary h4 { font-size: 13px; font-weight: 700; color: var(--red); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .error-summary ul { list-style: none; padding: 0; margin: 0; }
+        .error-summary ul li { font-size: 13px; color: var(--red); padding: 4px 0; padding-left: 16px; position: relative; line-height: 1.5; }
+        .error-summary ul li::before { content: '•'; position: absolute; left: 0; font-weight: 700; }
         .expiry-warning { display: none; background: #FFF5F5; border: 1px solid rgba(192,57,43,0.3); border-radius: 6px; padding: 10px 12px; margin-top: 6px; font-size: 12px; color: var(--red); }
         .expiry-warning.show { display: block; }
 
@@ -301,6 +307,16 @@
                     <p>If you hold an ISO 9001 certificate, you may upload it. Not required to complete this application.</p>
                 </div>
             </div>
+
+            <div class="preflight-item">
+                <div class="preflight-icon required">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="preflight-text">
+                    <h4>Trade References <span style="color:var(--red);">— Minimum 1 Required (ISO 7.4)</span></h4>
+                    <p>Company name, contact name, and relationship description for at least one organisation you currently or have previously supplied. This is an ISO 7.4 supplier evaluation requirement.</p>
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
             <button class="btn-success" onclick="dismissPreflight()">I Have the Required Documents — Begin Application</button>
@@ -345,9 +361,9 @@
 </header>
 
 <div class="page-hero">
-    <div class="label">Supplier Qualification</div>
-    <h2>Supplier Pre-Qualification Form</h2>
-    <p>Complete this form to begin or renew your qualification as an Essential Cures supply partner. All submissions are reviewed by our Procurement team within 5 business days.</p>
+    <div class="label">Essential Cures Inc. — Procurement Programme</div>
+    <h2>Vendor and Manufacturer Pre-Qualification</h2>
+    <p>Complete this form to apply for qualification as an Essential Cures supply partner. Our structured assessment evaluates regulatory compliance, product alignment, commercial viability, and operational capability. All submissions are reviewed by our Procurement team within 5 business days.</p>
 </div>
 
 <main class="main">
@@ -428,6 +444,10 @@
 
         <!-- SCREEN 2 — ORGANISATION -->
         <div class="screen" id="screen2">
+            <div class="error-summary" id="screen2Errors">
+                <h4>Please correct the following before continuing</h4>
+                <ul id="screen2ErrorList"></ul>
+            </div>
             <p class="section-title">Organisation Profile</p>
             <div class="form-grid">
                 <div class="form-group">
@@ -437,8 +457,8 @@
                 <div class="form-group">
                     <label>Website <em>*</em></label>
                     <input type="text" id="f_website" placeholder="https://yourcompany.com" onblur="validateWebsite()" />
-                    <p class="field-hint">Include https:// — e.g. https://yourcompany.com</p>
-                    <div class="field-error" id="websiteError">Please enter a valid website URL (e.g. https://yourcompany.com)</div>
+                    <p class="field-hint">e.g. essentialcures.com or https://essentialcures.com</p>
+                    <div class="field-error" id="websiteError">Please enter a valid website address (e.g. yourcompany.com)</div>
                 </div>
             </div>
             <div class="form-grid">
@@ -645,17 +665,20 @@
 
             <div class="form-grid" style="margin-top:20px;">
                 <div class="form-group">
-                    <label>Drop Ship Capable?</label>
+                    <label>Drop Ship Capable? <em>*</em></label>
                     <select id="f_dropShip">
                         <option value="">Select</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                         <option value="In Progress">In Progress</option>
                     </select>
+                    <div class="field-error" id="dropShipError">Please indicate drop ship capability.</div>
                 </div>
                 <div class="form-group">
-                    <label>Standard Lead Time (Days)</label>
+                    <label>Standard Lead Time (Days) <em>*</em></label>
                     <input type="number" id="f_leadTime" placeholder="e.g. 3" min="0" max="365" />
+                    <p class="field-hint">Average days from order to delivery.</p>
+                    <div class="field-error" id="leadTimeError">Please enter your standard lead time in days.</div>
                 </div>
             </div>
             <div class="form-group">
@@ -673,6 +696,10 @@
 
         <!-- SCREEN 3 — COMPLIANCE -->
         <div class="screen" id="screen3">
+            <div class="error-summary" id="screen3Errors">
+                <h4>Please correct the following before continuing</h4>
+                <ul id="screen3ErrorList"></ul>
+            </div>
             <div class="info-box" id="complianceSummaryBox">
                 <p id="complianceSummaryText">Loading compliance requirements for your selected categories...</p>
             </div>
@@ -682,7 +709,7 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label>ISO 13485 Certified? <em id="iso13485Label">*</em></label>
-                    <select id="f_iso13485">
+                    <select id="f_iso13485" onchange="updateCertRequirements()">
                         <option value="">Select</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
@@ -691,14 +718,16 @@
                 </div>
                 <div class="form-group">
                     <label>ISO 13485 Certificate Number <span id="iso13485NumLabel" class="opt">(if applicable)</span></label>
-                    <input type="text" id="f_iso13485Num" placeholder="Certificate number" />
+                    <input type="text" id="f_iso13485Num" placeholder="e.g. CA-MD-123456" maxlength="30" oninput="this.value=this.value.toUpperCase()" />
+                    <p class="field-hint">Alphanumeric — max 30 characters. As shown on your certificate.</p>
+                    <div class="field-error" id="iso13485NumError">Certificate number is required when ISO 13485 is certified. Max 30 alphanumeric characters.</div>
                 </div>
             </div>
             <div class="form-group">
                 <label>ISO 13485 Certificate Expiry <span id="iso13485ExpiryLabel" class="opt">(if applicable)</span></label>
                 <input type="date" id="f_iso13485Expiry" onchange="checkExpiry('f_iso13485Expiry', 'iso13485ExpiryWarning')" />
                 <div class="expiry-warning" id="iso13485ExpiryWarning">
-                    This certificate expires within 30 days. You must obtain a renewed certificate before submitting this application.
+                    This certificate expires within 30 days of today and cannot be accepted for qualification purposes. Please obtain a renewed ISO 13485 certificate before submitting your application. If your renewal is currently in progress, you may return to complete this form once the renewed certificate has been issued.
                 </div>
             </div>
             <div class="form-grid">
@@ -724,7 +753,9 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label>MDEL Number <span id="mdelNumLabel" class="opt">(if applicable)</span></label>
-                    <input type="text" id="f_mdelNum" placeholder="MDEL number" />
+                    <input type="text" id="f_mdelNum" placeholder="e.g. 123456" maxlength="7" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+                    <p class="field-hint">Health Canada 5 to 7 digit numeric MDEL number.</p>
+                    <div class="field-error" id="mdelNumError">MDEL number must be 5 to 7 digits when MDEL holder is selected.</div>
                 </div>
                 <div class="form-group">
                     <label>GMP Compliant?</label>
@@ -743,13 +774,15 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label>NHP Licence Number <em>*</em></label>
-                        <input type="text" id="f_nhpLicenceNum" placeholder="NHP licence number" />
+                        <input type="text" id="f_nhpLicenceNum" placeholder="e.g. 80012345" maxlength="8" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+                        <p class="field-hint">8-digit Natural Product Number (NPN) as issued by Health Canada.</p>
+                        <div class="field-error" id="nhpNumError">NPN must be exactly 8 digits as shown on your Health Canada product licence.</div>
                     </div>
                     <div class="form-group">
                         <label>NHP Licence Expiry <em>*</em></label>
                         <input type="date" id="f_nhpExpiry" onchange="checkExpiry('f_nhpExpiry', 'nhpExpiryWarning')" />
                         <div class="expiry-warning" id="nhpExpiryWarning">
-                            This licence expires within 30 days. You must obtain a renewed licence before submitting.
+                            This licence expires within 30 days of today and cannot be accepted for qualification purposes. Please obtain a renewed NHP licence before submitting your application. If your renewal is currently in progress, you may return to complete this form once the renewed licence has been issued.
                         </div>
                     </div>
                 </div>
@@ -776,7 +809,7 @@
                 <label>Insurance Expiry Date <em>*</em></label>
                 <input type="date" id="f_insuranceExpiry" onchange="checkExpiry('f_insuranceExpiry', 'insuranceExpiryWarning')" />
                 <div class="expiry-warning" id="insuranceExpiryWarning">
-                    This certificate expires within 30 days. You must obtain a renewed certificate of insurance before submitting this application.
+                    This certificate expires within 30 days of today and cannot be accepted for qualification purposes. Please obtain a renewed certificate of insurance before submitting your application. If your renewal is in progress with your insurer, you may return to complete this form once the renewed certificate has been issued.
                 </div>
             </div>
 
@@ -903,7 +936,6 @@
                 <div class="file-error" id="nhpFileError"></div>
             </div>
 
-            <p id="screen3Error" style="color:var(--red);font-size:13px;margin-bottom:12px;display:none;"></p>
             <button class="btn-primary" onclick="validateAndProceedScreen3()">Continue to Commercial Terms</button>
             <button class="btn-secondary" onclick="goToScreen(2)">Back</button>
         </div>
@@ -1012,26 +1044,31 @@
 
         <!-- SCREEN 5 — REFERENCES -->
         <div class="screen" id="screen5">
+            <div class="error-summary" id="screen5Errors">
+                <h4>Please correct the following before continuing</h4>
+                <ul id="screen5ErrorList"></ul>
+            </div>
             <div class="info-box">
-                <p><strong>Trade References:</strong> Please provide up to three organisations you currently supply. We may contact these references as part of our qualification assessment. All three references are optional but strengthen your application significantly.</p>
+                <p><strong>Trade References (ISO 7.4 Requirement):</strong> As part of our supplier qualification process, we require a minimum of one trade reference from an organisation you currently or have previously supplied. References allow us to independently verify your operational claims and supply history. At least one reference is mandatory. All three strengthen your application significantly.</p>
             </div>
 
-            <p class="section-title">Reference 1</p>
+            <p class="section-title">Reference 1 <em style="color:var(--red);font-style:normal;">— Required</em></p>
             <div class="reference-block">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Company Name</label>
+                        <label>Company Name <em>*</em></label>
                         <input type="text" id="f_ref1Company" placeholder="Organisation name" />
                     </div>
                     <div class="form-group">
-                        <label>Contact Name</label>
+                        <label>Contact Name <em>*</em></label>
                         <input type="text" id="f_ref1Contact" placeholder="Contact person" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Relationship</label>
+                    <label>Relationship <em>*</em></label>
                     <input type="text" id="f_ref1Relationship" placeholder="e.g. Current Customer, Long-Term Partner" />
                 </div>
+                <p class="field-hint" style="margin-top:-12px;">ISO 7.4 requirement — at least one trade reference is mandatory</p>
             </div>
 
             <p class="section-title">Reference 2</p>
@@ -1070,7 +1107,7 @@
                 </div>
             </div>
 
-            <button class="btn-primary" onclick="goToScreen(6)">Review and Submit</button>
+            <button class="btn-primary" onclick="validateAndGoToScreen6()">Review and Submit</button>
             <button class="btn-secondary" onclick="goToScreen(4)">Back</button>
         </div>
 
@@ -1099,11 +1136,11 @@
                 <div class="status-icon green">
                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
-                <div class="status-badge badge-green">Submitted Successfully</div>
-                <h3 class="status-title">Thank You, <span id="successName"></span></h3>
-                <p class="status-body">Your pre-qualification submission has been received. Our Procurement team will review your application and be in touch within <strong>5 business days</strong> via your preferred contact method.</p>
-                <p style="font-size:13px;color:var(--cool-gray);margin-bottom:24px;">For questions, reference your submission and contact <a href="mailto:procurement@essentialcures.com" style="color:var(--deep-blue)">procurement@essentialcures.com</a></p>
-                <a href="https://essentialcures.com" class="btn-primary" style="display:inline-block;width:auto;padding:12px 32px;text-decoration:none;">Return to Essential Cures</a>
+                <div class="status-badge badge-green">Submission Received</div>
+                <h3 class="status-title">Pre-Qualification Submitted Successfully</h3>
+                <p class="status-body">Your supplier pre-qualification application has been received by Essential Cures Inc. and is now under review. Our Procurement team will assess your submission against our qualification framework and be in touch within <strong>5 business days</strong> via your preferred contact method.</p>
+                <p class="status-body" style="font-size:13px;">For any questions or to provide additional documentation, please contact our Procurement team at <a href="mailto:procurement@essentialcures.com" style="color:var(--deep-blue);font-weight:600;">procurement@essentialcures.com</a> and reference your submission details.</p>
+                <a href="https://essentialcures.com" class="btn-primary" style="display:inline-block;width:auto;padding:12px 32px;text-decoration:none;margin-top:8px;">Return to Essential Cures</a>
             </div>
         </div>
 
@@ -1409,37 +1446,103 @@ function checkInsuranceCoverage() {
 // ── SCREEN 3 VALIDATION WITH SUGGESTION ENGINE ───────────────
 function validateAndProceedScreen3() {
     const req = getRequirements();
-    const selected = getSelectedCategories();
-    const errEl = document.getElementById('screen3Error');
-    errEl.style.display = 'none';
+    const errors = [];
+    const today = new Date();
+    const thirtyDays = new Date();
+    thirtyDays.setDate(today.getDate() + 30);
 
-    // Always required: insurance cert and coverage
+    // ISO 13485
+    const iso13485Val = document.getElementById('f_iso13485').value;
+    if (req.iso13485 && !iso13485Val) {
+        errors.push('ISO 13485 certification status is required for your selected categories.');
+        document.getElementById('f_iso13485').classList.add('error');
+    } else document.getElementById('f_iso13485').classList.remove('error');
+
+    // ISO cert number mandatory when certified = Yes
+    if (iso13485Val === 'Yes') {
+        const certNum = document.getElementById('f_iso13485Num').value.trim();
+        if (!certNum) {
+            errors.push('ISO 13485 Certificate Number is required when certified.');
+            document.getElementById('iso13485NumError').classList.add('show');
+        } else if (certNum.length > 30 || !/^[A-Za-z0-9\-\/]+$/.test(certNum)) {
+            errors.push('ISO 13485 Certificate Number must be alphanumeric, max 30 characters.');
+            document.getElementById('iso13485NumError').classList.add('show');
+        } else {
+            document.getElementById('iso13485NumError').classList.remove('show');
+        }
+
+        // Expiry date required and must be valid
+        const isoExpiry = document.getElementById('f_iso13485Expiry').value;
+        if (!isoExpiry) {
+            errors.push('ISO 13485 Certificate expiry date is required.');
+        } else if (new Date(isoExpiry) <= thirtyDays) {
+            errors.push('ISO 13485 Certificate expires within 30 days and cannot be accepted. Please obtain a renewed certificate.');
+        }
+    } else if (req.iso13485 && iso13485Val !== 'Yes') {
+        errors.push('ISO 13485 certification is required for your selected categories. You must hold a current ISO 13485 certificate to qualify for those categories.');
+    }
+
+    // MDEL
+    const mdelVal = document.getElementById('f_mdel').value;
+    if (req.mdel && (!mdelVal || mdelVal === 'No')) {
+        errors.push('MDEL is required for your selected regulated categories.');
+    }
+    if (mdelVal === 'Yes') {
+        const mdelNum = document.getElementById('f_mdelNum').value.trim();
+        if (!mdelNum || !/^\d{5,7}$/.test(mdelNum)) {
+            errors.push('MDEL Number must be 5 to 7 digits when MDEL holder is selected.');
+            document.getElementById('mdelNumError').classList.add('show');
+        } else document.getElementById('mdelNumError').classList.remove('show');
+    }
+
+    // NHP
+    if (req.nhp) {
+        const nhpNum = document.getElementById('f_nhpLicenceNum').value.trim();
+        const nhpExpiry = document.getElementById('f_nhpExpiry').value;
+        if (!nhpNum || !/^\d{8}$/.test(nhpNum)) {
+            errors.push('NHP Natural Product Number must be exactly 8 digits.');
+            document.getElementById('nhpNumError').classList.add('show');
+        } else document.getElementById('nhpNumError').classList.remove('show');
+        if (!nhpExpiry) {
+            errors.push('NHP Licence expiry date is required.');
+        } else if (new Date(nhpExpiry) <= thirtyDays) {
+            errors.push('NHP Licence expires within 30 days and cannot be accepted.');
+        }
+        if (!document.getElementById('f_nhpFile').files[0]) {
+            errors.push('NHP Product Licence certificate file is required.');
+        }
+    }
+
+    // Insurance — always required
     const hasInsurance = document.getElementById('f_insuranceFile').files[0];
     const insuranceExpiry = document.getElementById('f_insuranceExpiry').value;
+    const insuranceVal = document.getElementById('f_insurance').value;
     const coverageOk = checkInsuranceCoverage();
 
-    if (!hasInsurance) { errEl.textContent = 'Liability Insurance Certificate is required. Please upload your current certificate.'; errEl.style.display = 'block'; window.scrollTo(0,0); return; }
-    if (!coverageOk) { errEl.textContent = 'Insurance coverage must be at least CAD $2,000,000.'; errEl.style.display = 'block'; return; }
-    if (!insuranceExpiry) { errEl.textContent = 'Please enter your insurance expiry date.'; errEl.style.display = 'block'; return; }
-
-    const insuranceExpDate = new Date(insuranceExpiry);
-    const thirtyDays = new Date(); thirtyDays.setDate(thirtyDays.getDate() + 30);
-    if (insuranceExpDate <= thirtyDays) {
-        errEl.textContent = 'Your Liability Insurance Certificate expires within 30 days. Please obtain a renewed certificate before applying.';
-        errEl.style.display = 'block';
-        return;
+    if (!insuranceVal) errors.push('Liability Insurance status is required.');
+    if (!hasInsurance) errors.push('Liability Insurance Certificate file is required. Please upload your current certificate of insurance.');
+    if (!coverageOk) errors.push('Insurance coverage must be at least CAD $2,000,000.');
+    if (!insuranceExpiry) {
+        errors.push('Insurance certificate expiry date is required.');
+    } else if (new Date(insuranceExpiry) <= thirtyDays) {
+        errors.push('Insurance Certificate expires within 30 days and cannot be accepted. Please obtain a renewed certificate before submitting.');
     }
 
-    // Check NHP if required
-    if (req.nhp) {
-        const nhpExpiry = document.getElementById('f_nhpExpiry').value;
-        if (!document.getElementById('f_nhpFile').files[0]) { errEl.textContent = 'NHP Product Licence certificate is required for Natural Health Products.'; errEl.style.display = 'block'; return; }
-        if (!nhpExpiry) { errEl.textContent = 'Please enter your NHP licence expiry date.'; errEl.style.display = 'block'; return; }
-        const nhpDate = new Date(nhpExpiry);
-        if (nhpDate <= thirtyDays) { errEl.textContent = 'Your NHP Licence expires within 30 days. Please obtain a renewed licence before applying.'; errEl.style.display = 'block'; return; }
+    // ISO file upload
+    if (req.iso13485 && iso13485Val === 'Yes' && !document.getElementById('f_isoFile').files[0]) {
+        errors.push('ISO 13485 Certificate file upload is required.');
     }
 
-    // Smart suggestion engine — check what each category needs vs what was provided
+    // MDEL file upload
+    if (req.mdel && mdelVal === 'Yes' && !document.getElementById('f_mdelFile').files[0]) {
+        errors.push('MDEL Certificate file upload is required.');
+    }
+
+    if (errors.length > 0) { showErrorSummary('screen3', errors); return; }
+    document.getElementById('screen3Errors').classList.remove('show');
+
+    // Run suggestion engine
+    const selected = getSelectedCategories();
     const hasISO = !!document.getElementById('f_isoFile').files[0];
     const isoExpiry = document.getElementById('f_iso13485Expiry').value;
     const isoExpiryOk = isoExpiry ? new Date(isoExpiry) > thirtyDays : false;
@@ -1452,55 +1555,47 @@ function validateAndProceedScreen3() {
     selected.forEach(cat => {
         const rule = COMPLIANCE_RULES[cat];
         if (!rule) return;
-
         let catEligible = true;
         const catMissing = [];
-
-        if (rule.iso13485) {
-            if (!hasISO || !isoExpiryOk) {
-                catEligible = false;
-                catMissing.push(!hasISO ? 'ISO 13485 Certificate (not uploaded)' : 'ISO 13485 Certificate (expires within 30 days)');
-                missingDocs.add(!hasISO ? 'ISO 13485 Certificate' : 'ISO 13485 Certificate (valid, with 30+ days remaining)');
-            }
+        if (rule.iso13485 && (!hasISO || !isoExpiryOk)) {
+            catEligible = false;
+            catMissing.push(!hasISO ? 'ISO 13485 Certificate not uploaded' : 'ISO 13485 Certificate expires within 30 days');
+            missingDocs.add('ISO 13485 Certificate');
         }
-        if (rule.mdel) {
-            if (!hasMDEL) {
-                catEligible = false;
-                catMissing.push('MDEL Certificate (not uploaded)');
-                missingDocs.add('MDEL Certificate');
-            }
+        if (rule.mdel && !hasMDEL) {
+            catEligible = false;
+            catMissing.push('MDEL Certificate not uploaded');
+            missingDocs.add('MDEL Certificate');
         }
-
-        if (catEligible) {
-            eligible.push({ value: cat, label: rule.label });
-        } else {
-            ineligible.push({ value: cat, label: rule.label, missing: catMissing });
-        }
+        if (catEligible) eligible.push({ value: cat, label: COMPLIANCE_RULES[cat].label });
+        else ineligible.push({ value: cat, label: COMPLIANCE_RULES[cat].label, missing: catMissing });
     });
 
-    // All eligible — proceed normally
-    if (ineligible.length === 0) {
-        approvedCategories = selected;
-        strippedCategories = [];
-        goToScreen(4);
-        return;
-    }
-
-    // Zero eligible — hard halt
+    if (ineligible.length === 0) { approvedCategories = selected; strippedCategories = []; goToScreen(4); return; }
     if (eligible.length === 0) {
-        errEl.innerHTML = `<strong>Unable to proceed.</strong> Based on the documents provided, none of your selected product categories can be approved at this time.<br><br>` +
-            `Missing: ${Array.from(missingDocs).join(', ')}.<br><br>` +
-            `Please obtain the required certificates and return to complete your application.`;
-        errEl.style.display = 'block';
-        window.scrollTo(0, 0);
+        const errMsg = `Unable to proceed. Based on the documents provided, none of your selected product categories can be approved at this time. Missing: ${Array.from(missingDocs).join(', ')}. Please obtain the required certificates and return to complete your application.`;
+        showErrorSummary('screen3', [errMsg]);
         return;
     }
-
-    // Partial — show suggestion panel
+    approvedCategories = eligible.map(c => c.value);
+    strippedCategories = ineligible.map(c => c.value);
     showSuggestionPanel(eligible, ineligible, Array.from(missingDocs));
 }
 
-function showSuggestionPanel(eligible, ineligible, missingDocs) {
+function goToScreen5() {
+    goToScreen(5);
+}
+
+function validateAndGoToScreen6() {
+    const errors = [];
+    // Reference 1 is mandatory
+    if (!document.getElementById('f_ref1Company').value.trim()) errors.push('Reference 1 — Company Name is required (ISO 7.4).');
+    if (!document.getElementById('f_ref1Contact').value.trim()) errors.push('Reference 1 — Contact Name is required.');
+    if (!document.getElementById('f_ref1Relationship').value.trim()) errors.push('Reference 1 — Relationship description is required.');
+    if (errors.length > 0) { showErrorSummary('screen5', errors); return; }
+    document.getElementById('screen5Errors').classList.remove('show');
+    goToScreen(6);
+}
     let html = '';
 
     html += `<div class="suggestion-section">`;
@@ -1558,47 +1653,90 @@ function goToScreen(num) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function showErrorSummary(screenId, errors) {
+    const box = document.getElementById(screenId + 'Errors');
+    const list = document.getElementById(screenId + 'ErrorList');
+    if (errors.length === 0) { box.classList.remove('show'); return; }
+    list.innerHTML = errors.map(e => `<li>${e}</li>`).join('');
+    box.classList.add('show');
+    box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateCertRequirements() {
+    const iso = document.getElementById('f_iso13485').value;
+    const numLabel = document.getElementById('iso13485NumLabel');
+    if (iso === 'Yes') {
+        numLabel.textContent = '*';
+        numLabel.style.color = 'var(--red)';
+        numLabel.className = '';
+    } else {
+        numLabel.textContent = '(if applicable)';
+        numLabel.style.color = '';
+        numLabel.className = 'opt';
+    }
+}
+
 function goToScreen3() {
-    let valid = true;
+    const errors = [];
 
     // Required text fields
-    const required = ['f_firstName','f_lastName','f_jobTitle','f_streetAddress','f_postalCode'];
-    required.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el.value.trim()) { el.classList.add('error'); valid = false; }
-        else el.classList.remove('error');
+    const textFields = [
+        { id: 'f_firstName', label: 'Contact First Name' },
+        { id: 'f_lastName', label: 'Contact Last Name' },
+        { id: 'f_jobTitle', label: 'Job Title' },
+        { id: 'f_streetAddress', label: 'Street Address' },
+        { id: 'f_postalCode', label: 'Postal Code' }
+    ];
+    textFields.forEach(f => {
+        const el = document.getElementById(f.id);
+        if (!el.value.trim()) {
+            el.classList.add('error');
+            errors.push(`${f.label} is required.`);
+        } else el.classList.remove('error');
     });
 
     // Required selects
-    const reqSelects = ['f_province','f_country'];
-    reqSelects.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el.value) { el.classList.add('error'); valid = false; }
-        else el.classList.remove('error');
+    const selectFields = [
+        { id: 'f_province', label: 'Province or State' },
+        { id: 'f_country', label: 'Country' },
+        { id: 'f_dropShip', label: 'Drop Ship Capability' }
+    ];
+    selectFields.forEach(f => {
+        const el = document.getElementById(f.id);
+        if (!el.value) {
+            el.classList.add('error');
+            errors.push(`${f.label} is required.`);
+        } else el.classList.remove('error');
     });
 
-    // Website and phone
-    if (!validateWebsite()) valid = false;
-    if (!validatePhone()) valid = false;
+    // Lead time
+    const leadTime = document.getElementById('f_leadTime').value;
+    if (!leadTime && leadTime !== '0') {
+        document.getElementById('f_leadTime').classList.add('error');
+        errors.push('Standard Lead Time is required.');
+    } else document.getElementById('f_leadTime').classList.remove('error');
+
+    // Website
+    if (!validateWebsite()) errors.push('Website address format is invalid.');
+
+    // Phone
+    if (!validatePhone()) errors.push('Phone number is required and must include country code.');
 
     // Supplier type
     if (getSelectedSupplierTypes().length === 0) {
         document.getElementById('supplierTypeError').classList.add('show');
-        valid = false;
-    } else {
-        document.getElementById('supplierTypeError').classList.remove('show');
-    }
+        errors.push('At least one Supplier Type must be selected.');
+    } else document.getElementById('supplierTypeError').classList.remove('show');
 
     // Product categories
     const selected = getSelectedCategories();
     if (selected.length === 0) {
         document.getElementById('catError').classList.add('show');
-        valid = false;
-    } else {
-        document.getElementById('catError').classList.remove('show');
-    }
+        errors.push('At least one Product or Service Category must be selected.');
+    } else document.getElementById('catError').classList.remove('show');
 
-    if (!valid) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (errors.length > 0) { showErrorSummary('screen2', errors); return; }
+    document.getElementById('screen2Errors').classList.remove('show');
     if (approvedCategories.length === 0) approvedCategories = selected;
     goToScreen(3);
 }
@@ -1793,7 +1931,8 @@ async function submitForm() {
 function validateWebsite() {
     const val = document.getElementById('f_website').value.trim();
     const errEl = document.getElementById('websiteError');
-    const pattern = /^https?:\/\/([\w-]+(\.[\w-]+)+)(\/.*)?$/;
+    // Accept with or without https://, must have valid domain with extension
+    const pattern = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/.*)?$/;
     if (!val || !pattern.test(val)) {
         errEl.classList.add('show');
         document.getElementById('f_website').classList.add('error');
