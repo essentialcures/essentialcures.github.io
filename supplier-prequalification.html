@@ -39,14 +39,14 @@
         .form-card { background: var(--white); border-radius: 12px; box-shadow: 0 4px 24px rgba(0,48,96,0.08); border: 1px solid #E8ECF0; padding: 48px; }
 
         /* STEPS */
-        .steps { display: flex; align-items: center; margin-bottom: 36px; }
-        .step { display: flex; align-items: center; gap: 8px; flex: 1; }
-        .step-num { width: 28px; height: 28px; border-radius: 50%; background: #E8ECF0; color: var(--cool-gray); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s; }
+        .steps { display: flex; align-items: center; margin-bottom: 36px; width: 100%; overflow: hidden; }
+        .step { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
+        .step-num { width: 26px; height: 26px; border-radius: 50%; background: #E8ECF0; color: var(--cool-gray); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s; }
         .step-num.active { background: var(--deep-blue); color: var(--white); }
         .step-num.done { background: var(--leaf-green); color: var(--white); }
-        .step-label { font-size: 11px; font-weight: 600; color: var(--cool-gray); }
+        .step-label { font-size: 10px; font-weight: 600; color: var(--cool-gray); white-space: nowrap; }
         .step-label.active { color: var(--deep-blue); }
-        .step-divider { flex: 1; height: 2px; background: #E8ECF0; margin: 0 6px; }
+        .step-divider { flex: 1; height: 2px; background: #E8ECF0; margin: 0 4px; margin-bottom: 14px; min-width: 8px; }
 
         /* FORM ELEMENTS */
         .form-group { margin-bottom: 20px; }
@@ -77,11 +77,11 @@
 
         /* CHECKBOXES */
         .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
-        .checkbox-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: 6px; border: 1.5px solid transparent; transition: all 0.2s; cursor: pointer; }
+        .checkbox-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: 6px; border: 1.5px solid transparent; transition: all 0.2s; cursor: pointer; user-select: none; }
         .checkbox-item:hover { background: #F0F7FF; border-color: #D4DAE0; }
         .checkbox-item.selected { background: #EBF5E8; border-color: var(--leaf-green); }
-        .checkbox-item input[type="checkbox"] { width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; accent-color: var(--deep-blue); cursor: pointer; }
-        .checkbox-item label { font-size: 13px; color: var(--slate); font-weight: 400; cursor: pointer; flex: 1; }
+        .checkbox-item input[type="checkbox"] { width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; accent-color: var(--deep-blue); cursor: pointer; pointer-events: none; }
+        .checkbox-item label { font-size: 13px; color: var(--slate); font-weight: 400; cursor: pointer; flex: 1; pointer-events: none; }
         .checkbox-item .cat-badge { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; margin-left: 6px; white-space: nowrap; }
         .badge-regulated { background: rgba(192,57,43,0.1); color: var(--red); }
         .badge-nhp { background: rgba(230,126,34,0.1); color: var(--amber); }
@@ -435,8 +435,10 @@
                     <input type="text" id="f_companyName" readonly style="background:#F0F7FF;color:var(--deep-blue);font-weight:600;" />
                 </div>
                 <div class="form-group">
-                    <label>Website</label>
-                    <input type="url" id="f_website" placeholder="https://yourcompany.com" />
+                    <label>Website <em>*</em></label>
+                    <input type="text" id="f_website" placeholder="https://yourcompany.com" onblur="validateWebsite()" />
+                    <p class="field-hint">Include https:// — e.g. https://yourcompany.com</p>
+                    <div class="field-error" id="websiteError">Please enter a valid website URL (e.g. https://yourcompany.com)</div>
                 </div>
             </div>
             <div class="form-grid">
@@ -461,8 +463,10 @@
             </div>
             <div class="form-grid">
                 <div class="form-group">
-                    <label>Phone</label>
-                    <input type="tel" id="f_phone" placeholder="+1 (xxx) xxx-xxxx" />
+                    <label>Phone <em>*</em></label>
+                    <input type="tel" id="f_phone" placeholder="+1 (xxx) xxx-xxxx" onblur="validatePhone()" />
+                    <p class="field-hint">Include country code — e.g. +1 (204) 555-0100</p>
+                    <div class="field-error" id="phoneError">Please enter a valid phone number including country code.</div>
                 </div>
                 <div class="form-group">
                     <label>Preferred Contact Method</label>
@@ -528,23 +532,22 @@
             </div>
 
             <p class="section-title">Business Classification</p>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Supplier Type <em>*</em></label>
-                    <select id="f_supplierType">
-                        <option value="">Select</option>
-                        <option value="Distributor">Distributor</option>
-                        <option value="Manufacturer">Manufacturer</option>
-                        <option value="Manufacturer Rep">Manufacturer Representative</option>
-                        <option value="Wholesaler">Wholesaler</option>
-                        <option value="Importer">Importer</option>
-                        <option value="Other">Other</option>
-                    </select>
+            <div class="form-group">
+                <label>Supplier Type <em>*</em></label>
+                <p style="font-size:12px;color:var(--cool-gray);margin-bottom:8px;">Select all that apply.</p>
+                <div class="checkbox-group" id="supplierTypeGroup">
+                    <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Distributor"><label>Distributor</label></div>
+                    <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Manufacturer"><label>Manufacturer</label></div>
+                    <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Manufacturer Rep"><label>Manufacturer Representative</label></div>
+                    <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Wholesaler"><label>Wholesaler</label></div>
+                    <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Importer"><label>Importer</label></div>
+                    <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Other"><label>Other</label></div>
                 </div>
-                <div class="form-group">
-                    <label>Year Established</label>
-                    <input type="text" id="f_yearEst" placeholder="e.g. 2005" maxlength="4" />
-                </div>
+                <p id="supplierTypeError" class="field-error">Please select at least one supplier type.</p>
+            </div>
+            <div class="form-group">
+                <label>Year Established</label>
+                <input type="text" id="f_yearEst" placeholder="e.g. 2005" maxlength="4" />
             </div>
             <div class="form-grid">
                 <div class="form-group">
@@ -575,47 +578,47 @@
             <p style="font-size:13px;color:var(--cool-gray);margin-bottom:12px;">Select all categories you wish to supply. Required documentation will be determined by your selections.</p>
             <div class="checkbox-group" id="categoryGroup">
                 <div class="checkbox-item" onclick="toggleCat(this)">
-                    <input type="checkbox" value="PPE-IPC" onchange="updateComplianceIndicator()">
+                    <input type="checkbox" value="PPE-IPC">
                     <label>PPE and Infection Prevention and Control <span class="cat-badge badge-free">No Cert Required</span></label>
                 </div>
                 <div class="checkbox-item" onclick="toggleCat(this)">
-                    <input type="checkbox" value="Exam Consumables" onchange="updateComplianceIndicator()">
+                    <input type="checkbox" value="Exam Consumables">
                     <label>Exam Consumables <span class="cat-badge badge-free">No Cert Required</span></label>
                 </div>
                 <div class="checkbox-item" onclick="toggleCat(this)">
-                    <input type="checkbox" value="Wound Care" onchange="updateComplianceIndicator()">
+                    <input type="checkbox" value="Wound Care">
                     <label>Wound Care <span class="cat-badge badge-regulated">ISO 13485 + MDEL</span></label>
                 </div>
                 <div class="checkbox-item" onclick="toggleCat(this)">
-                    <input type="checkbox" value="Facility Supplies" onchange="updateComplianceIndicator()">
+                    <input type="checkbox" value="Facility Supplies">
                     <label>Facility Supplies <span class="cat-badge badge-free">No Cert Required</span></label>
                 </div>
                 <div class="checkbox-item" onclick="toggleCat(this)">
-                    <input type="checkbox" value="Class I MD" onchange="updateComplianceIndicator()">
+                    <input type="checkbox" value="Class I MD">
                     <label>Class I Medical Devices <span class="cat-badge badge-regulated">ISO 13485</span></label>
                 </div>
                 <div class="checkbox-item" onclick="toggleCat(this)">
-                    <input type="checkbox" value="Class II MD" onchange="updateComplianceIndicator()">
+                    <input type="checkbox" value="Class II MD">
                     <label>Class II Medical Devices <span class="cat-badge badge-regulated">ISO 13485 + MDEL</span></label>
                 </div>
                 <div class="checkbox-item" onclick="toggleCat(this)">
-                    <input type="checkbox" value="Class III-IV MD" onchange="updateComplianceIndicator()">
+                    <input type="checkbox" value="Class III-IV MD">
                     <label>Class III and IV Medical Devices <span class="cat-badge badge-regulated">ISO 13485 + MDEL</span></label>
                 </div>
                 <div class="checkbox-item" onclick="toggleCat(this)">
-                    <input type="checkbox" value="Surgical Instruments" onchange="updateComplianceIndicator()">
+                    <input type="checkbox" value="Surgical Instruments">
                     <label>Surgical Instruments <span class="cat-badge badge-regulated">ISO 13485 + MDEL</span></label>
                 </div>
                 <div class="checkbox-item" onclick="toggleCat(this)">
-                    <input type="checkbox" value="NHP" onchange="updateComplianceIndicator()">
+                    <input type="checkbox" value="NHP">
                     <label>Natural Health Products <span class="cat-badge badge-nhp">NHP Licence</span></label>
                 </div>
                 <div class="checkbox-item" onclick="toggleCat(this)">
-                    <input type="checkbox" value="Services" onchange="updateComplianceIndicator()">
+                    <input type="checkbox" value="Services">
                     <label>Services <span class="cat-badge badge-free">No Cert Required</span></label>
                 </div>
                 <div class="checkbox-item" onclick="toggleCat(this)">
-                    <input type="checkbox" value="Other" onchange="updateComplianceIndicator()">
+                    <input type="checkbox" value="Other">
                     <label>Other <span class="cat-badge badge-free">Manual Review</span></label>
                 </div>
             </div>
@@ -1269,12 +1272,12 @@ function resetGate() { showScreen('screen1'); currentScreen = 1; updateSteps(1);
 
 // ── COMPLIANCE INDICATOR (Screen 2) ─────────────────────────
 function toggleCat(item) {
+    // Prevent double-toggle from label/input propagation
     const cb = item.querySelector('input[type="checkbox"]');
-    if (cb) {
-        cb.checked = !cb.checked;
-        item.classList.toggle('selected', cb.checked);
-        if (item.closest('#categoryGroup')) updateComplianceIndicator();
-    }
+    if (!cb) return;
+    cb.checked = !cb.checked;
+    item.classList.toggle('selected', cb.checked);
+    if (item.closest('#categoryGroup')) updateComplianceIndicator();
 }
 
 function updateComplianceIndicator() {
@@ -1550,12 +1553,46 @@ function goToScreen(num) {
 }
 
 function goToScreen3() {
+    let valid = true;
+
+    // Required text fields
+    const required = ['f_firstName','f_lastName','f_jobTitle','f_streetAddress','f_postalCode'];
+    required.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) { el.classList.add('error'); valid = false; }
+        else el.classList.remove('error');
+    });
+
+    // Required selects
+    const reqSelects = ['f_province','f_country'];
+    reqSelects.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value) { el.classList.add('error'); valid = false; }
+        else el.classList.remove('error');
+    });
+
+    // Website and phone
+    if (!validateWebsite()) valid = false;
+    if (!validatePhone()) valid = false;
+
+    // Supplier type
+    if (getSelectedSupplierTypes().length === 0) {
+        document.getElementById('supplierTypeError').classList.add('show');
+        valid = false;
+    } else {
+        document.getElementById('supplierTypeError').classList.remove('show');
+    }
+
+    // Product categories
     const selected = getSelectedCategories();
     if (selected.length === 0) {
         document.getElementById('catError').classList.add('show');
-        return;
+        valid = false;
+    } else {
+        document.getElementById('catError').classList.remove('show');
     }
-    document.getElementById('catError').classList.remove('show');
+
+    if (!valid) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
     if (approvedCategories.length === 0) approvedCategories = selected;
     goToScreen(3);
 }
@@ -1599,7 +1636,7 @@ function buildReviewSummary() {
         ['Job Title', document.getElementById('f_jobTitle').value],
         ['Email', document.getElementById('f_email').value],
         ['Address', [document.getElementById('f_streetAddress').value, document.getElementById('f_city').value, document.getElementById('f_province').value, document.getElementById('f_postalCode').value, document.getElementById('f_country').value].filter(Boolean).join(', ')],
-        ['Supplier Type', document.getElementById('f_supplierType').value],
+        ['Supplier Type', getSelectedSupplierTypes().join(', ')],
         ['Product Categories', catDisplay],
         ['Distribution Territory', territory.join(', ') || 'Not specified'],
         ['ISO 13485', document.getElementById('f_iso13485').value],
@@ -1665,7 +1702,7 @@ async function submitForm() {
             },
             organisation: {
                 website: document.getElementById('f_website').value,
-                supplierType: document.getElementById('f_supplierType').value,
+                supplierType: getSelectedSupplierTypes(),
                 yearEstablished: document.getElementById('f_yearEst').value,
                 employeeCount: document.getElementById('f_employeeCount').value,
                 revenue: document.getElementById('f_revenue').value,
@@ -1744,6 +1781,44 @@ async function submitForm() {
         document.getElementById('successName').textContent = document.getElementById('f_firstName').value;
         showScreen('screenSuccess');
     }
+}
+
+// ── FIELD VALIDATORS ─────────────────────────────────────────
+function validateWebsite() {
+    const val = document.getElementById('f_website').value.trim();
+    const errEl = document.getElementById('websiteError');
+    const pattern = /^https?:\/\/([\w-]+(\.[\w-]+)+)(\/.*)?$/;
+    if (!val || !pattern.test(val)) {
+        errEl.classList.add('show');
+        document.getElementById('f_website').classList.add('error');
+        return false;
+    }
+    errEl.classList.remove('show');
+    document.getElementById('f_website').classList.remove('error');
+    document.getElementById('f_website').classList.add('valid');
+    return true;
+}
+
+function validatePhone() {
+    const val = document.getElementById('f_phone').value.trim();
+    const errEl = document.getElementById('phoneError');
+    // Accept formats: +1xxxxxxxxxx, +1 (xxx) xxx-xxxx, digits with spaces/dashes/parens
+    const pattern = /^[+]?[\d\s\-().]{7,20}$/;
+    if (!val || !pattern.test(val)) {
+        errEl.classList.add('show');
+        document.getElementById('f_phone').classList.add('error');
+        return false;
+    }
+    errEl.classList.remove('show');
+    document.getElementById('f_phone').classList.remove('error');
+    document.getElementById('f_phone').classList.add('valid');
+    return true;
+}
+
+function getSelectedSupplierTypes() {
+    const t = [];
+    document.querySelectorAll('#supplierTypeGroup input[type="checkbox"]:checked').forEach(cb => t.push(cb.value));
+    return t;
 }
 
 // ── UTILITIES ────────────────────────────────────────────────
