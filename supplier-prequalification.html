@@ -29,22 +29,23 @@
 
         /* HERO */
         /* CONTROLLED DOC HEADER */
-        .doc-header { position: sticky; top: 0; z-index: 200; background: var(--white); }
+        .doc-header { position: sticky; top: 0; z-index: 200; background: var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
         .doc-header-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        .doc-header-table td { padding: 6px 10px; vertical-align: middle; border: 1px solid #CCCCCC; font-family: Calibri, Arial, sans-serif; }
-        .doc-header-left { width: 25%; }
-        .doc-header-left img { height: 36px; display: block; margin-bottom: 3px; }
-        .doc-header-left .org-name { font-size: 11px; font-weight: 700; color: var(--deep-blue); letter-spacing: 0.5px; }
-        .doc-header-left .tagline { font-size: 9px; color: var(--leaf-green); font-style: italic; }
-        .doc-header-middle { width: 50%; text-align: center; }
-        .doc-header-middle .doc-title { font-size: 13px; font-weight: 700; color: var(--dark-navy); }
-        .doc-header-middle .doc-sub { font-size: 10px; color: var(--cool-gray); margin-top: 2px; }
+        .doc-header-table td { padding: 10px 16px; vertical-align: middle; border: 1px solid #CCCCCC; font-family: Calibri, Arial, sans-serif; }
+        .doc-header-left { width: 25%; text-align: center; }
+        .doc-header-left img { height: 72px; display: block; margin: 0 auto 6px; }
+        .doc-header-middle { width: 50%; text-align: center; background: var(--white); }
+        .doc-header-middle .org-name { font-size: 16px; font-weight: 700; color: var(--deep-blue); letter-spacing: 1px; margin-bottom: 2px; }
+        .doc-header-middle .tagline { font-size: 12px; color: var(--leaf-green); font-style: italic; font-weight: 600; margin-bottom: 4px; }
+        .doc-header-middle .doc-title { font-size: 14px; font-weight: 700; color: var(--dark-navy); }
         .doc-header-right { width: 25%; text-align: right; }
-        .doc-header-right .doc-id { font-size: 11px; font-weight: 700; color: var(--deep-blue); }
-        .doc-header-right .doc-meta { font-size: 10px; color: var(--cool-gray); line-height: 1.5; margin-top: 2px; }
-        .doc-header-stripe1 { height: 3px; background: var(--deep-blue); }
-        .doc-header-stripe2 { height: 3px; background: var(--lime); }
+        .doc-header-right .doc-id { font-size: 13px; font-weight: 700; color: var(--deep-blue); margin-bottom: 3px; }
+        .doc-header-right .doc-meta { font-size: 12px; color: var(--cool-gray); line-height: 1.8; }
+        .doc-header-stripe1 { height: 4px; background: var(--deep-blue); }
+        .doc-header-stripe2 { height: 4px; background: var(--lime); }
         .page-hero { display: none; }
+        /* HIDE old header styles */
+        header { display: none !important; }
 
         /* MAIN */
         .main { flex: 1; max-width: 720px; margin: 0 auto; width: 100%; padding: 56px 40px; }
@@ -360,33 +361,22 @@
     </div>
 </div>
 
-<header>
-    <div class="header-inner">
-        <a href="https://essentialcures.com" class="header-brand">
-            <img src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures">
-            <div class="header-text">
-                <h1>ESSENTIAL CURES INC.</h1>
-                <p>Compliant Solutions. Confident Care.</p>
-            </div>
-        </a>
-    </div>
-</header>
+
 
 <div class="doc-header">
     <table class="doc-header-table">
         <tr>
             <td class="doc-header-left">
                 <img src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures">
-                <div class="org-name">ESSENTIAL CURES INC.</div>
-                <div class="tagline">Compliant Solutions. Confident Care.</div>
             </td>
             <td class="doc-header-middle">
+                <div class="org-name">ESSENTIAL CURES INC.</div>
+                <div class="tagline">Compliant Solutions. Confident Care.</div>
                 <div class="doc-title">Vendor and Manufacturer Pre-Qualification</div>
-                <div class="doc-sub">EC-PUR-FRM-001 | Supplier Pre-Qualification Programme</div>
             </td>
             <td class="doc-header-right">
                 <div class="doc-id">EC-PUR-FRM-001</div>
-                <div class="doc-meta">Rev: R01<br>Date: August 5, 2026<br>Status: Active</div>
+                <div class="doc-meta">Rev: R01<br>Date: August 5, 2026</div>
             </td>
         </tr>
     </table>
@@ -1172,6 +1162,20 @@
                 <p class="status-body" style="font-size:13px;">For any questions or to provide additional documentation, please contact our Procurement team at <a href="mailto:procurement@essentialcures.com" style="color:var(--deep-blue);font-weight:600;">procurement@essentialcures.com</a> and reference your submission details.</p>
                 <a href="https://essentialcures.com" class="btn-primary" style="display:inline-block;width:auto;padding:12px 32px;text-decoration:none;margin-top:8px;">Return to Essential Cures</a>
             </div>
+        </div>
+
+        <!-- TAGLINE BAR ABOVE FOOTER -->
+        <div style="margin-top:40px;margin-bottom:0;">
+            <table style="width:100%;border-collapse:collapse;">
+                <tr>
+                    <td style="width:50%;background-color:#4A8B2C;padding:14px 0;text-align:center;">
+                        <span style="font-size:13px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span>
+                    </td>
+                    <td style="width:50%;background-color:#0070B0;padding:14px 0;text-align:center;">
+                        <span style="font-size:13px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Quality Built In. Not Bolted On.</span>
+                    </td>
+                </tr>
+            </table>
         </div>
 
     </div>
