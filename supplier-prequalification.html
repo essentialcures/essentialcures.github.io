@@ -1156,11 +1156,11 @@
 </footer>
 
 <script>
-// ═══════════════════════════════════════════════════════════════
+
 // COMPLIANCE RULES TABLE
-// Update this table when regulations change — all form logic
+// Update this table when regulations change  all form logic
 // derives from it automatically.
-// ═══════════════════════════════════════════════════════════════
+
 const COMPLIANCE_RULES = {
     'PPE-IPC':           { iso13485: false, mdel: false, nhp: false, label: 'PPE and Infection Prevention and Control' },
     'Exam Consumables':  { iso13485: false, mdel: false, nhp: false, label: 'Exam Consumables' },
@@ -1175,7 +1175,7 @@ const COMPLIANCE_RULES = {
     'Other':             { iso13485: false, mdel: false, nhp: false, label: 'Other' }
 };
 
-// ── STATE ────────────────────────────────────────────────────
+//  STATE 
 let gateData = { vendorId: '', vendorName: '', reason: '', reviewDate: '', submissionReason: '' };
 let currentScreen = 1;
 let turnstileVerified = false;
@@ -1183,7 +1183,7 @@ let approvedCategories = [];
 let strippedCategories = [];
 let uploadedFiles = { iso: null, iso9001: null, insurance: null, mdel: null, nhp: null };
 
-// ── COMPUTED REQUIREMENTS ────────────────────────────────────
+//  COMPUTED REQUIREMENTS 
 function getRequirements() {
     const selected = getSelectedCategories();
     const req = { iso13485: false, mdel: false, nhp: false };
@@ -1216,16 +1216,16 @@ function getSelectedFreight() {
     return f;
 }
 
-// ── PREFLIGHT ────────────────────────────────────────────────
+//  PREFLIGHT 
 function dismissPreflight() {
     document.getElementById('preflightModal').classList.add('hidden');
 }
 
-// ── TURNSTILE ────────────────────────────────────────────────
+//  TURNSTILE 
 function onTurnstileSuccess(token) { turnstileVerified = true; document.getElementById('turnstileError').classList.remove('show'); }
 function onTurnstileExpired() { turnstileVerified = false; }
 
-// ── GATE VERIFICATION ────────────────────────────────────────
+//  GATE VERIFICATION 
 async function verifyGate() {
     const company = document.getElementById('gateCompany').value.trim();
     const email = document.getElementById('gateEmail').value.trim();
@@ -1313,7 +1313,7 @@ function proceedToForm() {
 
 function resetGate() { showScreen('screen1'); currentScreen = 1; updateSteps(1); }
 
-// ── COMPLIANCE INDICATOR (Screen 2) ─────────────────────────
+// COMPLIANCE INDICATOR (Screen 2)
 function toggleCat(item) {
     // Prevent double-toggle from label/input propagation
     const cb = item.querySelector('input[type="checkbox"]');
@@ -1333,15 +1333,15 @@ function updateComplianceIndicator() {
 
     indicator.classList.add('show');
     let html = '';
-    html += `<div class="compliance-row"><div class="compliance-dot dot-required"></div><span>Liability Insurance Certificate (CAD $2M minimum) — <strong>Always required</strong></span></div>`;
-    if (req.iso13485) html += `<div class="compliance-row"><div class="compliance-dot dot-required"></div><span>ISO 13485 Certificate — <strong>Required for your selected categories</strong></span></div>`;
-    if (req.mdel) html += `<div class="compliance-row"><div class="compliance-dot dot-required"></div><span>MDEL Certificate — <strong>Required for your selected categories</strong></span></div>`;
-    if (req.nhp) html += `<div class="compliance-row"><div class="compliance-dot dot-required"></div><span>NHP Product Licence — <strong>Required for Natural Health Products</strong></span></div>`;
-    if (!req.iso13485) html += `<div class="compliance-row"><div class="compliance-dot dot-optional"></div><span>ISO 13485 Certificate — not required for your current selections</span></div>`;
+    html += `<div class="compliance-row"><div class="compliance-dot dot-required"></div><span>Liability Insurance Certificate (CAD $2M minimum)  <strong>Always required</strong></span></div>`;
+    if (req.iso13485) html += `<div class="compliance-row"><div class="compliance-dot dot-required"></div><span>ISO 13485 Certificate  <strong>Required for your selected categories</strong></span></div>`;
+    if (req.mdel) html += `<div class="compliance-row"><div class="compliance-dot dot-required"></div><span>MDEL Certificate  <strong>Required for your selected categories</strong></span></div>`;
+    if (req.nhp) html += `<div class="compliance-row"><div class="compliance-dot dot-required"></div><span>NHP Product Licence  <strong>Required for Natural Health Products</strong></span></div>`;
+    if (!req.iso13485) html += `<div class="compliance-row"><div class="compliance-dot dot-optional"></div><span>ISO 13485 Certificate  not required for your current selections</span></div>`;
     rows.innerHTML = html;
 }
 
-// ── SCREEN 3 SETUP ───────────────────────────────────────────
+//  SCREEN 3 SETUP 
 function setupScreen3() {
     const req = getRequirements();
     const selected = getSelectedCategories();
@@ -1369,7 +1369,7 @@ function setupScreen3() {
     document.getElementById('nhpUploadGroup').style.display = req.nhp ? 'block' : 'none';
 }
 
-// ── FILE UPLOAD HANDLER ──────────────────────────────────────
+//  FILE UPLOAD HANDLER 
 function handleFileUpload(inputId, zoneId, nameId, errorId) {
     const input = document.getElementById(inputId);
     const zone = document.getElementById(zoneId);
@@ -1400,7 +1400,7 @@ function handleFileUpload(inputId, zoneId, nameId, errorId) {
     }
 
     zone.classList.add('has-file');
-    nameEl.textContent = '✓ ' + file.name + ' (' + (file.size / 1024 / 1024).toFixed(2) + 'MB)';
+    nameEl.textContent = ' ' + file.name + ' (' + (file.size / 1024 / 1024).toFixed(2) + 'MB)';
     nameEl.classList.add('show');
 
     // Store file reference
@@ -1409,7 +1409,7 @@ function handleFileUpload(inputId, zoneId, nameId, errorId) {
     if (keyMap[inputId.replace('f_','')]) uploadedFiles[keyMap[inputId.replace('f_','')]] = file;
 }
 
-// ── EXPIRY CHECK ─────────────────────────────────────────────
+//  EXPIRY CHECK 
 function checkExpiry(inputId, warningId) {
     const val = document.getElementById(inputId).value;
     const warning = document.getElementById(warningId);
@@ -1430,7 +1430,7 @@ function checkExpiry(inputId, warningId) {
     }
 }
 
-// ── INSURANCE COVERAGE CHECK ─────────────────────────────────
+//  INSURANCE COVERAGE CHECK 
 function checkInsuranceCoverage() {
     const val = document.getElementById('f_insuranceAmt').value;
     const errEl = document.getElementById('insuranceAmtError');
@@ -1443,7 +1443,7 @@ function checkInsuranceCoverage() {
     return true;
 }
 
-// ── SCREEN 3 VALIDATION WITH SUGGESTION ENGINE ───────────────
+//  SCREEN 3 VALIDATION WITH SUGGESTION ENGINE 
 function validateAndProceedScreen3() {
     const req = getRequirements();
     const errors = [];
@@ -1513,7 +1513,7 @@ function validateAndProceedScreen3() {
         }
     }
 
-    // Insurance — always required
+    // Insurance  always required
     const hasInsurance = document.getElementById('f_insuranceFile').files[0];
     const insuranceExpiry = document.getElementById('f_insuranceExpiry').value;
     const insuranceVal = document.getElementById('f_insurance').value;
@@ -1588,42 +1588,36 @@ function goToScreen5() {
 
 function validateAndGoToScreen6() {
     const errors = [];
-    // Reference 1 is mandatory
-    if (!document.getElementById('f_ref1Company').value.trim()) errors.push('Reference 1 — Company Name is required (ISO 7.4).');
-    if (!document.getElementById('f_ref1Contact').value.trim()) errors.push('Reference 1 — Contact Name is required.');
-    if (!document.getElementById('f_ref1Relationship').value.trim()) errors.push('Reference 1 — Relationship description is required.');
+    if (!document.getElementById('f_ref1Company').value.trim()) errors.push('Reference 1 - Company Name is required (ISO 7.4).');
+    if (!document.getElementById('f_ref1Contact').value.trim()) errors.push('Reference 1 - Contact Name is required.');
+    if (!document.getElementById('f_ref1Relationship').value.trim()) errors.push('Reference 1 - Relationship description is required.');
     if (errors.length > 0) { showErrorSummary('screen5', errors); return; }
     document.getElementById('screen5Errors').classList.remove('show');
     goToScreen(6);
 }
+
+function showSuggestionPanel(eligible, ineligible, missingDocs) {
     let html = '';
-
-    html += `<div class="suggestion-section">`;
-    html += `<h4 class="eligible">✓ Eligible for Approval (${eligible.length})</h4>`;
-    eligible.forEach(cat => {
-        html += `<div class="suggestion-cat"><div class="cat-icon" style="color:var(--leaf-green)">✓</div><div><div class="cat-name">${cat.label}</div></div></div>`;
+    html += '<div class="suggestion-section">';
+    html += '<h4 class="eligible">Eligible for Approval (' + eligible.length + ')</h4>';
+    eligible.forEach(function(cat) {
+        html += '<div class="suggestion-cat"><div class="cat-icon" style="color:var(--leaf-green)">&#10003;</div><div><div class="cat-name">' + cat.label + '</div></div></div>';
     });
-    html += `</div>`;
-
-    html += `<div class="suggestion-section">`;
-    html += `<h4 class="ineligible">✗ Not Eligible — Documents Missing (${ineligible.length})</h4>`;
-    ineligible.forEach(cat => {
-        html += `<div class="suggestion-cat"><div class="cat-icon" style="color:var(--red)">✗</div><div><div class="cat-name">${cat.label}</div><div class="cat-reason">${cat.missing.join(', ')}</div></div></div>`;
+    html += '</div>';
+    html += '<div class="suggestion-section">';
+    html += '<h4 class="ineligible">Not Eligible - Documents Missing (' + ineligible.length + ')</h4>';
+    ineligible.forEach(function(cat) {
+        html += '<div class="suggestion-cat"><div class="cat-icon" style="color:var(--red)">&#10007;</div><div><div class="cat-name">' + cat.label + '</div><div class="cat-reason">' + cat.missing.join(', ') + '</div></div></div>';
     });
-    html += `</div>`;
-
-    html += `<div class="missing-docs">`;
-    html += `<h4>To Qualify for All Categories, You Need</h4><ul>`;
-    missingDocs.forEach(doc => { html += `<li>${doc}</li>`; });
-    html += `</ul></div>`;
-
+    html += '</div>';
+    html += '<div class="missing-docs">';
+    html += '<h4>To Qualify for All Categories, You Need</h4><ul>';
+    missingDocs.forEach(function(doc) { html += '<li>' + doc + '</li>'; });
+    html += '</ul></div>';
     document.getElementById('suggestionContent').innerHTML = html;
-    document.getElementById('proceedPartialBtn').textContent = `Proceed with ${eligible.length} Eligible ${eligible.length === 1 ? 'Category' : 'Categories'} Only`;
-
-    // Store for later use
-    approvedCategories = eligible.map(c => c.value);
-    strippedCategories = ineligible.map(c => c.value);
-
+    document.getElementById('proceedPartialBtn').textContent = 'Proceed with ' + eligible.length + ' Eligible ' + (eligible.length === 1 ? 'Category' : 'Categories') + ' Only';
+    approvedCategories = eligible.map(function(c) { return c.value; });
+    strippedCategories = ineligible.map(function(c) { return c.value; });
     document.getElementById('suggestionModal').classList.remove('hidden');
 }
 
@@ -1638,7 +1632,7 @@ function cancelSuggestion() {
     strippedCategories = [];
 }
 
-// ── SCREEN NAVIGATION ────────────────────────────────────────
+//  SCREEN NAVIGATION 
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
@@ -1748,19 +1742,19 @@ function updateSteps(active) {
         if (!num) continue;
         num.className = 'step-num' + (i < active ? ' done' : i === active ? ' active' : '');
         lbl.className = 'step-label' + (i === active ? ' active' : '');
-        num.textContent = i < active ? '✓' : i;
+        num.textContent = i < active ? '' : i;
     }
 }
 
-// ── REVIEW SUMMARY ───────────────────────────────────────────
+//  REVIEW SUMMARY 
 function buildReviewSummary() {
     const allSelected = getSelectedCategories();
     const approvedSet = new Set(approvedCategories);
 
     const catDisplay = allSelected.map(cat => {
         const label = COMPLIANCE_RULES[cat]?.label || cat;
-        if (approvedSet.has(cat)) return `<span class="cat-approved">✓ ${label}</span>`;
-        return `<span class="cat-strikethrough">${label} (removed — documents not provided)</span>`;
+        if (approvedSet.has(cat)) return `<span class="cat-approved"> ${label}</span>`;
+        return `<span class="cat-strikethrough">${label} (removed  documents not provided)</span>`;
     }).join('<br>');
 
     const files = [];
@@ -1799,7 +1793,7 @@ function buildReviewSummary() {
     document.getElementById('reviewSummary').innerHTML = html;
 }
 
-// ── FORM SUBMISSION ──────────────────────────────────────────
+//  FORM SUBMISSION 
 async function submitForm() {
     if (!document.getElementById('f_confirm').checked) {
         document.getElementById('submitError').textContent = 'Please confirm the accuracy of your information before submitting.';
@@ -1831,11 +1825,11 @@ async function submitForm() {
 
         // Payload as JSON string in FormData
         const payload = {
-            vendorId: gateData.vendorId,
-            vendorName: gateData.vendorName,
-            submissionReason: gateData.submissionReason,
-            approvedCategories: approvedCategories,
-            strippedCategories: strippedCategories,
+//             vendorId: gateData.vendorId,
+//             vendorName: gateData.vendorName,
+//             submissionReason: gateData.submissionReason,
+//             approvedCategories: approvedCategories,
+//             strippedCategories: strippedCategories,
             contact: {
                 firstName: document.getElementById('f_firstName').value,
                 lastName: document.getElementById('f_lastName').value,
@@ -1910,7 +1904,7 @@ async function submitForm() {
 
         await fetch('https://essentialcures.com/api/cm27/submit', {
             method: 'POST',
-            body: formData
+//             body: formData
         });
 
         spinner.classList.remove('show');
@@ -1921,13 +1915,13 @@ async function submitForm() {
     } catch (err) {
         spinner.classList.remove('show');
         document.getElementById('submitFinalBtn').disabled = false;
-        // Still show success — files may have gone through
+        // Still show success  files may have gone through
         document.getElementById('successName').textContent = document.getElementById('f_firstName').value;
         showScreen('screenSuccess');
     }
 }
 
-// ── FIELD VALIDATORS ─────────────────────────────────────────
+//  FIELD VALIDATORS 
 function validateWebsite() {
     const val = document.getElementById('f_website').value.trim();
     const errEl = document.getElementById('websiteError');
@@ -1966,7 +1960,7 @@ function getSelectedSupplierTypes() {
     return t;
 }
 
-// ── UTILITIES ────────────────────────────────────────────────
+//  UTILITIES 
 function formatDate(dateStr) {
     if (!dateStr) return '';
     try {
