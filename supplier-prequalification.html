@@ -28,10 +28,23 @@
         .header-text p { font-size: 11.5px; color: var(--lime); font-style: italic; font-weight: 500; margin-top: 1px; }
 
         /* HERO */
-        .page-hero { background: linear-gradient(135deg, var(--dark-navy) 0%, var(--deep-blue) 100%); padding: 16px 40px; text-align: center; position: sticky; top: 0; z-index: 100; border-bottom: 3px solid var(--leaf-green); }
-        .page-hero .label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--lime); margin-bottom: 2px; }
-        .page-hero h2 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--white); font-weight: 600; margin-bottom: 0; }
-        .page-hero p { display: none; }
+        /* CONTROLLED DOC HEADER */
+        .doc-header { position: sticky; top: 0; z-index: 200; background: var(--white); }
+        .doc-header-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .doc-header-table td { padding: 6px 10px; vertical-align: middle; border: 1px solid #CCCCCC; font-family: Calibri, Arial, sans-serif; }
+        .doc-header-left { width: 25%; }
+        .doc-header-left img { height: 36px; display: block; margin-bottom: 3px; }
+        .doc-header-left .org-name { font-size: 11px; font-weight: 700; color: var(--deep-blue); letter-spacing: 0.5px; }
+        .doc-header-left .tagline { font-size: 9px; color: var(--leaf-green); font-style: italic; }
+        .doc-header-middle { width: 50%; text-align: center; }
+        .doc-header-middle .doc-title { font-size: 13px; font-weight: 700; color: var(--dark-navy); }
+        .doc-header-middle .doc-sub { font-size: 10px; color: var(--cool-gray); margin-top: 2px; }
+        .doc-header-right { width: 25%; text-align: right; }
+        .doc-header-right .doc-id { font-size: 11px; font-weight: 700; color: var(--deep-blue); }
+        .doc-header-right .doc-meta { font-size: 10px; color: var(--cool-gray); line-height: 1.5; margin-top: 2px; }
+        .doc-header-stripe1 { height: 3px; background: var(--deep-blue); }
+        .doc-header-stripe2 { height: 3px; background: var(--lime); }
+        .page-hero { display: none; }
 
         /* MAIN */
         .main { flex: 1; max-width: 720px; margin: 0 auto; width: 100%; padding: 56px 40px; }
@@ -359,10 +372,26 @@
     </div>
 </header>
 
-<div class="page-hero">
-    <div class="label">Essential Cures Inc. — Procurement Programme</div>
-    <h2>Vendor and Manufacturer Pre-Qualification</h2>
-    <p>Complete this form to apply for qualification as an Essential Cures supply partner. Our structured assessment evaluates regulatory compliance, product alignment, commercial viability, and operational capability. All submissions are reviewed by our Procurement team within 5 business days.</p>
+<div class="doc-header">
+    <table class="doc-header-table">
+        <tr>
+            <td class="doc-header-left">
+                <img src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures">
+                <div class="org-name">ESSENTIAL CURES INC.</div>
+                <div class="tagline">Compliant Solutions. Confident Care.</div>
+            </td>
+            <td class="doc-header-middle">
+                <div class="doc-title">Vendor and Manufacturer Pre-Qualification</div>
+                <div class="doc-sub">EC-PUR-FRM-001 | Supplier Pre-Qualification Programme</div>
+            </td>
+            <td class="doc-header-right">
+                <div class="doc-id">EC-PUR-FRM-001</div>
+                <div class="doc-meta">Rev: R01<br>Date: August 5, 2026<br>Status: Active</div>
+            </td>
+        </tr>
+    </table>
+    <div class="doc-header-stripe1"></div>
+    <div class="doc-header-stripe2"></div>
 </div>
 
 <main class="main">
@@ -836,7 +865,7 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label>Any Recalls in Last 3 Years?</label>
-                    <select id="f_recalls">
+                    <select id="f_recalls" onchange="updateRecallRequirement()">
                         <option value="">Select</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
@@ -863,8 +892,9 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Recall Details <span class="opt">(if applicable)</span></label>
-                <textarea id="f_recallDetails" placeholder="Briefly describe any recalls in the last 3 years"></textarea>
+                <label>Recall Details <span id="recallDetailsLabel" class="opt">(required if recalls = Yes)</span></label>
+                <textarea id="f_recallDetails" placeholder="Briefly describe any recalls in the last 3 years, including affected products, dates, and resolution"></textarea>
+                <div class="field-error" id="recallDetailsError">Recall details are required when recalls in the last 3 years is Yes.</div>
             </div>
 
             <p class="section-title">Certificate Uploads</p>
@@ -988,7 +1018,7 @@
                 </div>
                 <div class="form-group">
                     <label>Volume Rebate Available?</label>
-                    <select id="f_rebate">
+                    <select id="f_rebate" onchange="updateRebateRequirement()">
                         <option value="">Select</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
@@ -996,8 +1026,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>Volume Rebate Details <span class="opt">(if applicable)</span></label>
+                <label>Volume Rebate Details <span id="rebateDetailsLabel" class="opt">(required if rebate = Yes)</span></label>
                 <textarea id="f_rebateDetails" placeholder="Describe rebate structure, thresholds, and percentage"></textarea>
+                <div class="field-error" id="rebateDetailsError">Rebate details are required when Volume Rebate Available is Yes.</div>
             </div>
             <div class="form-group">
                 <label>Minimum Order Value (CAD)</label>
@@ -1037,7 +1068,7 @@
                 <label>Additional Notes <span class="opt">(optional)</span></label>
                 <textarea id="f_notes" placeholder="Any additional context, qualifications, or information relevant to your application"></textarea>
             </div>
-            <button class="btn-primary" onclick="goToScreen(5)">Continue to References</button>
+            <button class="btn-primary" onclick="goToScreen5()">Continue to References</button>
             <button class="btn-secondary" onclick="goToScreen(3)">Back</button>
         </div>
 
@@ -1582,6 +1613,28 @@ function validateAndProceedScreen3() {
 }
 
 function goToScreen5() {
+    const errors = [];
+    // Recall details mandatory if recalls = Yes
+    if (document.getElementById('f_recalls').value === 'Yes' &&
+        !document.getElementById('f_recallDetails').value.trim()) {
+        errors.push('Recall Details are required when any recalls in the last 3 years is Yes.');
+        document.getElementById('recallDetailsError').classList.add('show');
+    } else {
+        document.getElementById('recallDetailsError').classList.remove('show');
+    }
+    // Rebate details mandatory if rebate = Yes
+    if (document.getElementById('f_rebate').value === 'Yes' &&
+        !document.getElementById('f_rebateDetails').value.trim()) {
+        errors.push('Volume Rebate Details are required when Volume Rebate Available is Yes.');
+        document.getElementById('rebateDetailsError').classList.add('show');
+    } else {
+        document.getElementById('rebateDetailsError').classList.remove('show');
+    }
+    if (errors.length > 0) {
+        // Show inline errors only — no summary box on screen 4
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+    }
     goToScreen(5);
 }
 
@@ -1963,6 +2016,34 @@ function formatDate(dateStr) {
         const d = new Date(dateStr);
         return d.toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
     } catch(e) { return dateStr; }
+}
+
+function updateRecallRequirement() {
+    const val = document.getElementById('f_recalls').value;
+    const label = document.getElementById('recallDetailsLabel');
+    if (val === 'Yes') {
+        label.textContent = '* required';
+        label.style.color = 'var(--red)';
+        label.className = '';
+    } else {
+        label.textContent = '(required if recalls = Yes)';
+        label.style.color = '';
+        label.className = 'opt';
+    }
+}
+
+function updateRebateRequirement() {
+    const val = document.getElementById('f_rebate').value;
+    const label = document.getElementById('rebateDetailsLabel');
+    if (val === 'Yes') {
+        label.textContent = '* required';
+        label.style.color = 'var(--red)';
+        label.className = '';
+    } else {
+        label.textContent = '(required if rebate = Yes)';
+        label.style.color = '';
+        label.className = 'opt';
+    }
 }
 
 function updateLeadTimeRequirement() {
