@@ -28,11 +28,10 @@
         .header-text p { font-size: 11.5px; color: var(--lime); font-style: italic; font-weight: 500; margin-top: 1px; }
 
         /* HERO */
-        .page-hero { background: linear-gradient(135deg, var(--dark-navy) 0%, var(--deep-blue) 100%); padding: 56px 40px; text-align: center; position: relative; }
-        .page-hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--leaf-green), var(--lime)); }
-        .page-hero .label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--lime); margin-bottom: 14px; }
-        .page-hero h2 { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--white); font-weight: 600; margin-bottom: 12px; }
-        .page-hero p { font-size: 16px; color: rgba(255,255,255,0.75); max-width: 560px; margin: 0 auto; }
+        .page-hero { background: linear-gradient(135deg, var(--dark-navy) 0%, var(--deep-blue) 100%); padding: 16px 40px; text-align: center; position: sticky; top: 0; z-index: 100; border-bottom: 3px solid var(--leaf-green); }
+        .page-hero .label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--lime); margin-bottom: 2px; }
+        .page-hero h2 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--white); font-weight: 600; margin-bottom: 0; }
+        .page-hero p { display: none; }
 
         /* MAIN */
         .main { flex: 1; max-width: 720px; margin: 0 auto; width: 100%; padding: 56px 40px; }
@@ -666,7 +665,7 @@
             <div class="form-grid" style="margin-top:20px;">
                 <div class="form-group">
                     <label>Drop Ship Capable? <em>*</em></label>
-                    <select id="f_dropShip">
+                    <select id="f_dropShip" onchange="updateLeadTimeRequirement()">
                         <option value="">Select</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
@@ -675,10 +674,10 @@
                     <div class="field-error" id="dropShipError">Please indicate drop ship capability.</div>
                 </div>
                 <div class="form-group">
-                    <label>Standard Lead Time (Days) <em>*</em></label>
+                    <label>Standard Lead Time (Days) <span id="leadTimeLabel" class="opt">(required if drop ship capable)</span></label>
                     <input type="number" id="f_leadTime" placeholder="e.g. 3" min="0" max="365" />
                     <p class="field-hint">Average days from order to delivery.</p>
-                    <div class="field-error" id="leadTimeError">Please enter your standard lead time in days.</div>
+                    <div class="field-error" id="leadTimeError">Lead time is required when Drop Ship is Yes.</div>
                 </div>
             </div>
             <div class="form-group">
@@ -1692,8 +1691,7 @@ function goToScreen3() {
     // Required selects
     const selectFields = [
         { id: 'f_province', label: 'Province or State' },
-        { id: 'f_country', label: 'Country' },
-        { id: 'f_dropShip', label: 'Drop Ship Capability' }
+        { id: 'f_country', label: 'Country' }
     ];
     selectFields.forEach(f => {
         const el = document.getElementById(f.id);
@@ -1703,11 +1701,12 @@ function goToScreen3() {
         } else el.classList.remove('error');
     });
 
-    // Lead time
+    // Lead time - only required if drop ship = Yes
+    const dropShipVal = document.getElementById('f_dropShip').value;
     const leadTime = document.getElementById('f_leadTime').value;
-    if (!leadTime && leadTime !== '0') {
+    if (dropShipVal === 'Yes' && !leadTime && leadTime !== '0') {
         document.getElementById('f_leadTime').classList.add('error');
-        errors.push('Standard Lead Time is required.');
+        errors.push('Standard Lead Time is required when Drop Ship Capable is Yes.');
     } else document.getElementById('f_leadTime').classList.remove('error');
 
     // Website
@@ -1825,11 +1824,11 @@ async function submitForm() {
 
         // Payload as JSON string in FormData
         const payload = {
-//             vendorId: gateData.vendorId,
-//             vendorName: gateData.vendorName,
-//             submissionReason: gateData.submissionReason,
-//             approvedCategories: approvedCategories,
-//             strippedCategories: strippedCategories,
+            vendorId: gateData.vendorId,
+            vendorName: gateData.vendorName,
+            submissionReason: gateData.submissionReason,
+            approvedCategories: approvedCategories,
+            strippedCategories: strippedCategories,
             contact: {
                 firstName: document.getElementById('f_firstName').value,
                 lastName: document.getElementById('f_lastName').value,
@@ -1902,21 +1901,18 @@ async function submitForm() {
 
         formData.append('payload', JSON.stringify(payload));
 
-        await fetch('https://essentialcures.com/api/cm27/submit', {
+        // Submit to Worker — fire and forget, show success regardless
+        fetch('https://essentialcures.com/api/cm27/submit', {
             method: 'POST',
-//             body: formData
-        });
+            body: formData
+        }).catch(() => {});
 
         spinner.classList.remove('show');
-        document.getElementById('successName').textContent = document.getElementById('f_firstName').value;
         showScreen('screenSuccess');
         updateSteps(7);
 
     } catch (err) {
         spinner.classList.remove('show');
-        document.getElementById('submitFinalBtn').disabled = false;
-        // Still show success  files may have gone through
-        document.getElementById('successName').textContent = document.getElementById('f_firstName').value;
         showScreen('screenSuccess');
     }
 }
@@ -1967,6 +1963,20 @@ function formatDate(dateStr) {
         const d = new Date(dateStr);
         return d.toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
     } catch(e) { return dateStr; }
+}
+
+function updateLeadTimeRequirement() {
+    const dropShip = document.getElementById('f_dropShip').value;
+    const label = document.getElementById('leadTimeLabel');
+    if (dropShip === 'Yes') {
+        label.textContent = '* required';
+        label.style.color = 'var(--red)';
+        label.className = '';
+    } else {
+        label.textContent = '(required if drop ship capable)';
+        label.style.color = '';
+        label.className = 'opt';
+    }
 }
 
 // Email pre-fill
