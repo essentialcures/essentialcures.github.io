@@ -23,13 +23,13 @@
         .doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
         .doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
         .doc-header-table td{vertical-align:middle;border:1px solid #CCCCCC;font-family:Calibri,Arial,sans-serif;}
-        .doc-header-left{width:20%;text-align:center;padding:4px 4px;}
+        .doc-header-left{width:12%;text-align:center;padding:4px 4px;}
         .doc-header-left img{height:80px;width:auto;display:block;margin:0 auto;}
-        .doc-header-middle{width:60%;text-align:center;padding:10px 16px;background:var(--white);}
+        .doc-header-middle{width:76%;text-align:center;padding:10px 16px;background:var(--white);}
         .doc-header-middle .org-name{font-size:16px;font-weight:700;color:var(--deep-blue);letter-spacing:1px;margin-bottom:2px;}
         .doc-header-middle .tagline{font-size:12px;color:var(--leaf-green);font-style:italic;font-weight:600;margin-bottom:4px;}
         .doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
-        .doc-header-right{width:20%;text-align:right;padding:4px 4px;}
+        .doc-header-right{width:12%;text-align:right;padding:4px 4px;}
         .doc-header-right .doc-id{font-size:13px;font-weight:700;color:var(--deep-blue);margin-bottom:3px;}
         .doc-header-right .doc-meta{font-size:11px;color:var(--cool-gray);line-height:1.8;}
         .doc-header-stripe1{height:4px;background:var(--deep-blue);}
@@ -965,9 +965,9 @@ function updateCertRequirements(){const iso=document.getElementById('f_iso13485'
 function updateSteps(active){
     for(let i=1;i<=6;i++){const n=document.getElementById('stepNum'+i);const l=document.getElementById('stepLbl'+i);if(!n)continue;n.className='step-num'+(i<active?' done':i===active?' active':'');l.className='step-label'+(i===active?' active':'');n.innerHTML=i<active?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>':String(i);}
 }
-function updateRecallRequirement(){const v=document.getElementById('f_recalls').value;const l=document.getElementById('recallDetailsLabel');if(v==='Yes'){l.textContent='* required';l.style.color='var(--red)';l.className='';}else{l.textContent='(required if recalls = Yes)';l.style.color='';l.className='opt';}}
-function updateRebateRequirement(){const v=document.getElementById('f_rebate').value;const l=document.getElementById('rebateDetailsLabel');if(v==='Yes'){l.textContent='* required';l.style.color='var(--red)';l.className='';}else{l.textContent='(required if rebate = Yes)';l.style.color='';l.className='opt';}}
-function updateLeadTimeRequirement(){const v=document.getElementById('f_dropShip').value;const l=document.getElementById('leadTimeLabel');if(v==='Yes'){l.textContent='* required';l.style.color='var(--red)';l.className='';}else{l.textContent='(required if drop ship capable)';l.style.color='';l.className='opt';}}
+function updateRecallRequirement(){const v=document.getElementById('f_recalls').value;const l=document.getElementById('recallDetailsLabel');if(v==='Yes'){l.textContent='* required';l.style.color='var(--red)';l.className='';}else{l.textContent='';l.style.color='';l.className='opt';}}
+function updateRebateRequirement(){const v=document.getElementById('f_rebate').value;const l=document.getElementById('rebateDetailsLabel');if(v==='Yes'){l.textContent='* required';l.style.color='var(--red)';l.className='';}else{l.textContent='';l.style.color='';l.className='opt';}}
+function updateLeadTimeRequirement(){const v=document.getElementById('f_dropShip').value;const l=document.getElementById('leadTimeLabel');if(v==='Yes'){l.textContent='* required';l.style.color='var(--red)';l.className='';}else{l.textContent='';l.style.color='';l.className='opt';}}
 
 // REVIEW SUMMARY
 function buildReviewSummary(){
