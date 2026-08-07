@@ -29,7 +29,7 @@
         .doc-header-middle .org-name{font-size:16px;font-weight:700;color:var(--deep-blue);letter-spacing:1px;margin-bottom:2px;}
         .doc-header-middle .tagline{font-size:12px;color:var(--leaf-green);font-style:italic;font-weight:600;margin-bottom:4px;}
         .doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
-        .doc-header-right{width:12%;text-align:right;padding:4px 12px 4px 4px;}
+        .doc-header-right{width:12%;text-align:right;padding:4px 4px;}
         .doc-header-right .doc-id{font-size:13px;font-weight:700;color:var(--deep-blue);margin-bottom:3px;}
         .doc-header-right .doc-meta{font-size:11px;color:var(--cool-gray);line-height:1.8;}
         .doc-header-stripe1{height:4px;background:var(--deep-blue);}
@@ -595,12 +595,16 @@
 
   <!-- EMAIL COPY OPTION -->
   <div class="email-copy-box">
-  <h4>Request a Submission Confirmation to Your Registered Email</h4>
-<p>You may request that a formal submission confirmation be sent to the email address you provided during verification. Our Procurement team will dispatch this once your application has been logged in our system. This is optional and does not affect processing of your application.</p>
-<div class="email-copy-row">
-<input type="checkbox" id="emailCopyCheck" onchange="toggleEmailCopyField()">
-<label for="emailCopyCheck">Yes, please send a submission confirmation to my registered email address</label>
-</div>
+    <h4>Request a Formal Submission Confirmation</h4>
+    <p>You may request that a formal submission confirmation be dispatched to your registered email address once your application has been logged and verified by our Procurement team. This is optional and does not affect processing of your application.</p>
+    <div class="email-copy-row">
+      <input type="checkbox" id="emailCopyCheck" onchange="toggleEmailCopyField()">
+      <label for="emailCopyCheck">Yes, please send a submission confirmation to my registered email address</label>
+    </div>
+    <div class="email-copy-email" id="emailCopyEmailRow" style="display:none">
+      <input type="email" id="emailCopyAddress" placeholder="Your registered email address" autocomplete="email">
+      <p class="field-hint" style="margin-top:4px">Confirmation will be sent to this address once your application has been logged. This address is drawn from your verification step and cannot be changed.</p>
+    </div>
   </div>
 
   <div class="form-group" style="margin-top:16px">
@@ -627,7 +631,7 @@
     <p class="status-body">Your supplier pre-qualification application has been received by Essential Cures Inc. Our Procurement team will review your submission against our qualification framework and be in touch within <strong>5 business days</strong> via your preferred contact method.</p>
     <p class="status-body" style="font-size:13px">Reference your company name and contact email in any follow-up correspondence. Direct questions to <a href="mailto:procurement@essentialcures.com" style="color:var(--deep-blue);font-weight:600">procurement@essentialcures.com</a></p>
     <div id="emailConfirmNote" style="display:none;background:#F0F7FF;border-radius:8px;padding:14px 20px;margin:16px 0;font-size:13px;color:var(--slate)">
-      <strong style="color:var(--dark-navy)">Submission Copy Sent</strong><br>A summary of your application has been sent to <span id="emailCopyConfirmAddr" style="color:var(--deep-blue);font-weight:600"></span>
+      <strong style="color:var(--dark-navy)">Submission Confirmation Requested</strong><br>A formal submission confirmation will be dispatched to <span id="emailCopyConfirmAddr" style="color:var(--deep-blue);font-weight:600"></span> once your application has been logged and verified by our Procurement team. Please allow up to one business day.
     </div>
     <a href="https://essentialcures.com" class="btn-primary" style="display:inline-block;width:auto;padding:12px 32px;text-decoration:none;margin-top:8px">Return to Essential Cures Website</a>
   </div>
