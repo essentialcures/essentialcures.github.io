@@ -23,13 +23,13 @@
         .doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
         .doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
         .doc-header-table td{vertical-align:middle;border:1px solid #CCCCCC;font-family:Calibri,Arial,sans-serif;}
-        .doc-header-left{width:20%;text-align:center;padding:8px 12px;}
+        .doc-header-left{width:20%;text-align:center;padding:4px 4px;}
         .doc-header-left img{height:80px;width:auto;display:block;margin:0 auto;}
         .doc-header-middle{width:60%;text-align:center;padding:10px 16px;background:var(--white);}
         .doc-header-middle .org-name{font-size:16px;font-weight:700;color:var(--deep-blue);letter-spacing:1px;margin-bottom:2px;}
         .doc-header-middle .tagline{font-size:12px;color:var(--leaf-green);font-style:italic;font-weight:600;margin-bottom:4px;}
         .doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
-        .doc-header-right{width:20%;text-align:right;padding:8px 12px;}
+        .doc-header-right{width:20%;text-align:right;padding:4px 4px;}
         .doc-header-right .doc-id{font-size:13px;font-weight:700;color:var(--deep-blue);margin-bottom:3px;}
         .doc-header-right .doc-meta{font-size:11px;color:var(--cool-gray);line-height:1.8;}
         .doc-header-stripe1{height:4px;background:var(--deep-blue);}
@@ -245,15 +245,43 @@
         .footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
         .footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
 
+        /* FLOATING IT SUPPORT */
+        .it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
+        .it-tab{background:var(--dark-navy);color:var(--white);padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;letter-spacing:0.5px;border:none;font-family:'Inter',sans-serif;transition:background 0.2s;box-shadow:2px 0 8px rgba(0,0,0,0.15);}
+        .it-tab:hover{background:var(--deep-blue);}
+        .it-panel{display:none;background:var(--white);border:1px solid #E8ECF0;border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
+        .it-panel.open{display:block;}
+        .it-panel h4{font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
+        .it-panel p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-bottom:10px;}
+        .it-panel a{color:var(--deep-blue);font-weight:600;font-size:12px;}
+        .it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;line-height:1;margin-top:-4px;}
+        .it-err-ref{font-size:11px;color:var(--cool-gray);font-family:monospace;margin-top:6px;word-break:break-all;display:none;}
+        /* DISABLED FIELD STATE */
+        .field-disabled{opacity:0.45;pointer-events:none;}
+        .field-disabled input,.field-disabled select{background:#F0F0F0!important;cursor:not-allowed;}
+        .file-drop-zone.disabled{opacity:0.45;pointer-events:none;cursor:not-allowed;}
         @media(max-width:700px){
             .form-card{padding:28px 20px;}
             .main{padding:32px 20px;}
             .form-grid{grid-template-columns:1fr;}
             .doc-header-left img{height:56px;}
+            .it-panel{width:200px;}
         }
     </style>
 </head>
 <body>
+
+<!-- FLOATING IT SUPPORT -->
+<div class="it-float" id="itFloat">
+  <button class="it-tab" onclick="toggleIT()">Technical Support</button>
+  <div class="it-panel" id="itPanel">
+    <button class="it-close" onclick="toggleIT()">&#10005;</button>
+    <h4>Having Technical Issues?</h4>
+    <p>If you are experiencing a problem with this form, our IT team can help. Email us with a description of the issue.</p>
+    <a href="mailto:it@essentialcures.com?subject=Supplier Form Technical Issue&body=Page: Supplier Pre-Qualification%0D%0AIssue: ">Email IT Support</a>
+    <div class="it-err-ref" id="itErrRef"></div>
+  </div>
+</div>
 
 <!-- PREFLIGHT MODAL -->
 <div class="modal-overlay" id="preflightModal">
@@ -414,7 +442,7 @@
   </div>
   <p class="section-title">Business Classification</p>
   <div class="form-group"><label>Supplier Type <em>*</em></label><p style="font-size:12px;color:var(--cool-gray);margin-bottom:8px">Select all that apply.</p><div class="checkbox-group" id="supplierTypeGroup"><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Distributor"><label>Distributor</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Manufacturer"><label>Manufacturer</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Manufacturer Rep"><label>Manufacturer Representative</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Wholesaler"><label>Wholesaler</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Importer"><label>Importer</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Other"><label>Other</label></div></div><p id="supplierTypeError" class="field-error">Please select at least one supplier type.</p></div>
-  <div class="form-group"><label>Year Established <span class="opt">(optional)</span></label><input type="number" id="f_yearEst" placeholder="e.g. 2005" min="1800" max="2026" step="1" oninput="enforceYearRange(this)"><p class="field-hint">4-digit year between 1800 and 2026.</p><div class="field-error" id="yearEstError">Please enter a valid 4-digit year between 1800 and 2026.</div></div>
+  <div class="form-group"><label>Year Established <span class="opt">(optional)</span></label><input type="number" id="f_yearEst" placeholder="e.g. 2005" min="1800" step="1" oninput="enforceYearRange(this)"><p class="field-hint">4-digit year between 1800 and 2026.</p><div class="field-error" id="yearEstError">Please enter a valid 4-digit year between 1800 and the current year.</div></div>
   <div class="form-grid">
     <div class="form-group"><label>Employee Count</label><select id="f_employeeCount"><option value="">Select range</option><option value="1-10">1 to 10</option><option value="11-50">11 to 50</option><option value="51-200">51 to 200</option><option value="201-500">201 to 500</option><option value="500+">500 or more</option></select></div>
     <div class="form-group"><label>Annual Revenue (CAD)</label><select id="f_revenue"><option value="">Select range</option><option value="Under $1M">Under $1M</option><option value="$1M-$5M">$1M to $5M</option><option value="$5M-$20M">$5M to $20M</option><option value="$20M-$100M">$20M to $100M</option><option value="$100M+">$100M or more</option></select></div>
@@ -439,7 +467,7 @@
   <div class="form-group" style="margin-top:20px"><label>Distribution Territory</label><p style="font-size:12px;color:var(--cool-gray);margin-bottom:8px">Select all territories where you distribute products.</p><div class="checkbox-group" id="territoryGroup"><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Canadian Prairies"><label>Canadian Prairies (AB, SK, MB)</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Western Canada"><label>Western Canada</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Eastern Canada"><label>Eastern Canada</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="National Canada"><label>National Canada</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="United States"><label>United States</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="North America"><label>North America (US and Canada)</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="International"><label>International</label></div></div></div>
   <div class="form-grid" style="margin-top:20px">
     <div class="form-group"><label>Drop Ship Capable? <em>*</em></label><select id="f_dropShip" onchange="updateLeadTimeRequirement()"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="In Progress">In Progress</option></select><div class="field-error" id="dropShipError">Please indicate drop ship capability.</div></div>
-    <div class="form-group"><label>Standard Lead Time (Days) <span id="leadTimeLabel" class="opt">(required if drop ship capable)</span></label><input type="number" id="f_leadTime" placeholder="e.g. 3" min="0" max="365" step="1" oninput="enforceInteger(this,0,365)"><p class="field-hint">Whole number of days. Maximum 365.</p><div class="field-error" id="leadTimeError">Lead time is required when Drop Ship is Yes.</div></div>
+    <div class="form-group"><label>Standard Lead Time (Days) <span id="leadTimeLabel" class="opt"></span></label><input type="number" id="f_leadTime" placeholder="e.g. 3" min="0" max="365" step="1" oninput="enforceInteger(this,0,365)"><p class="field-hint">Whole number of days. Maximum 365.</p><div class="field-error" id="leadTimeError">Lead time is required when Drop Ship is Yes.</div></div>
   </div>
   <div class="form-group"><label>Private Label Capable?</label><select id="f_privateLabel"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="In Progress">In Progress</option></select></div>
   <div class="nav-group">
@@ -455,7 +483,7 @@
   <p class="section-title">Regulatory and Quality Compliance</p>
   <div class="form-grid">
     <div class="form-group"><label>ISO 13485 Certified? <em id="iso13485Label">*</em></label><select id="f_iso13485" onchange="updateCertRequirements()"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="In Progress">In Progress</option></select></div>
-    <div class="form-group"><label>ISO 13485 Certificate Number <span id="iso13485NumLabel" class="opt">(if applicable)</span></label><input type="text" id="f_iso13485Num" placeholder="e.g. CA-MD-123456" maxlength="30" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9\-\/]/g,'')"><p class="field-hint">Alphanumeric only, max 30 characters.</p><div class="field-error" id="iso13485NumError">Certificate number required when ISO 13485 is certified.</div></div>
+    <div class="form-group"><label>ISO 13485 Certificate Number <span id="iso13485NumLabel" class="opt"></span></label><input type="text" id="f_iso13485Num" placeholder="e.g. CA-MD-123456" maxlength="30" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9\-\/]/g,'')"><p class="field-hint">Alphanumeric only, max 30 characters.</p><div class="field-error" id="iso13485NumError">Certificate number required when ISO 13485 is certified.</div></div>
   </div>
   <div class="form-group"><label>ISO 13485 Certificate Expiry <span id="iso13485ExpiryLabel" class="opt">(if applicable)</span></label><input type="date" id="f_iso13485Expiry" onchange="checkExpiry('f_iso13485Expiry','iso13485ExpiryWarning')"><div class="expiry-warning" id="iso13485ExpiryWarning">This certificate expires within 30 days and cannot be accepted. Please obtain a renewed certificate before submitting.</div></div>
   <div class="form-grid">
@@ -475,10 +503,10 @@
   </div>
   <p class="section-title">Liability Insurance <em style="color:var(--red);font-style:normal">Always Required</em></p>
   <div class="form-grid">
-    <div class="form-group"><label>Liability Insurance in Place? <em>*</em></label><select id="f_insurance"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
-    <div class="form-group"><label>Coverage Amount (CAD) <em>*</em></label><div class="currency-input-wrap"><span class="currency-prefix">$</span><input type="number" id="f_insuranceAmt" placeholder="2000000" min="0" step="1" oninput="enforceInteger(this,0,999999999)" onblur="checkInsuranceCoverage()"></div><p class="field-hint">Minimum required: CAD $2,000,000. Numbers only e.g. 2000000</p><div class="field-error" id="insuranceAmtError">Coverage must be at least CAD $2,000,000.</div></div>
+    <div class="form-group"><label>Liability Insurance in Place? <em>*</em></label><select id="f_insurance" onchange="updateInsuranceFields()"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+    <div class="form-group" id="insuranceAmtGroup"><label>Coverage Amount (CAD) <em>*</em></label><div class="currency-input-wrap"><span class="currency-prefix">$</span><input type="number" id="f_insuranceAmt" placeholder="2000000" min="0" step="1" oninput="enforceInteger(this,0,999999999)" onblur="checkInsuranceCoverage()"></div><p class="field-hint">Minimum required: CAD $2,000,000. Numbers only e.g. 2000000</p><div class="field-error" id="insuranceAmtError">Coverage must be at least CAD $2,000,000.</div></div>
   </div>
-  <div class="form-group"><label>Insurance Expiry Date <em>*</em></label><input type="date" id="f_insuranceExpiry" onchange="checkExpiry('f_insuranceExpiry','insuranceExpiryWarning')"><div class="expiry-warning" id="insuranceExpiryWarning">This certificate expires within 30 days and cannot be accepted. Please obtain a renewed certificate before submitting.</div></div>
+  <div class="form-group" id="insuranceExpGroup"><label>Insurance Expiry Date <em>*</em></label><input type="date" id="f_insuranceExpiry" onchange="checkExpiry('f_insuranceExpiry','insuranceExpiryWarning')"><div class="expiry-warning" id="insuranceExpiryWarning">This certificate expires within 30 days and cannot be accepted. Please obtain a renewed certificate before submitting.</div></div>
   <p class="section-title">Additional Compliance</p>
   <div class="form-grid">
     <div class="form-group"><label>MDALL Listed?</label><select id="f_mdall"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="Not Applicable">Not Applicable</option></select></div>
@@ -489,7 +517,7 @@
     <div class="form-group"><label>WHMIS / SDS Available?</label><select id="f_whmis"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="Not Applicable">Not Applicable</option></select></div>
   </div>
   <div class="form-group"><label>Health Canada Licensed?</label><select id="f_healthCanada"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="In Progress">In Progress</option><option value="Not Applicable">Not Applicable</option></select></div>
-  <div class="form-group"><label>Recall Details <span id="recallDetailsLabel" class="opt">(required if recalls = Yes)</span></label><textarea id="f_recallDetails" placeholder="Briefly describe any recalls in the last 3 years, including affected products, dates, and resolution"></textarea><div class="field-error" id="recallDetailsError">Recall details are required when recalls in the last 3 years is Yes.</div></div>
+  <div class="form-group"><label>Recall Details <span id="recallDetailsLabel" class="opt"></span></label><textarea id="f_recallDetails" placeholder="Briefly describe any recalls in the last 3 years, including affected products, dates, and resolution"></textarea><div class="field-error" id="recallDetailsError">Recall details are required when recalls in the last 3 years is Yes.</div></div>
   <p class="section-title">Certificate Uploads</p>
   <p style="font-size:13px;color:var(--cool-gray);margin-bottom:16px">PDF format only. Maximum 5MB per file. All certificates must have at least 30 days remaining validity.</p>
   <div class="file-upload-group" id="iso13485UploadGroup"><label>ISO 13485 Certificate <em id="isoUploadRequired">*</em></label><div class="file-drop-zone" id="isoDropZone"><input type="file" id="f_isoFile" accept=".pdf,application/pdf" onchange="handleFileUpload('f_isoFile','isoDropZone','isoFileName','isoFileError')"><div class="file-drop-icon">&#128196;</div><div class="file-drop-text"><strong>Click to upload</strong> or drag and drop</div><div class="file-drop-text">PDF only - max 5MB</div></div><div class="file-name-display" id="isoFileName"></div><div class="file-error" id="isoFileError"></div></div>
@@ -517,7 +545,7 @@
     <div class="form-group"><label>Volume Rebate Available?</label><select id="f_rebate" onchange="updateRebateRequirement()"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
     <div class="form-group"><label>Minimum Order Value (CAD) <span class="opt">(optional)</span></label><div class="currency-input-wrap"><span class="currency-prefix">$</span><input type="number" id="f_minOrder" placeholder="500" min="0" step="1" oninput="enforceInteger(this,0,9999999)"></div><p class="field-hint">Whole dollar amount in CAD. Enter 0 if no minimum.</p><div class="field-error" id="minOrderError">Please enter a valid dollar amount (0 or greater).</div></div>
   </div>
-  <div class="form-group"><label>Volume Rebate Details <span id="rebateDetailsLabel" class="opt">(required if rebate = Yes)</span></label><textarea id="f_rebateDetails" placeholder="Describe rebate structure, thresholds, and percentage"></textarea><div class="field-error" id="rebateDetailsError">Rebate details are required when Volume Rebate Available is Yes.</div></div>
+  <div class="form-group"><label>Volume Rebate Details <span id="rebateDetailsLabel" class="opt"></span></label><textarea id="f_rebateDetails" placeholder="Describe rebate structure, thresholds, and percentage"></textarea><div class="field-error" id="rebateDetailsError">Rebate details are required when Volume Rebate Available is Yes.</div></div>
   <div class="form-group"><label>Return Policy Summary <span class="opt">(optional)</span></label><textarea id="f_returnPolicy" placeholder="Briefly describe your return and restocking policy"></textarea></div>
   <div class="form-group"><label>Discount Structure Summary <span class="opt">(optional)</span></label><textarea id="f_discountStructure" placeholder="Describe any standard discount tiers or programs available"></textarea></div>
   <div class="form-grid">
@@ -575,7 +603,7 @@
     </div>
     <div class="email-copy-email" id="emailCopyEmailRow" style="display:none">
       <input type="email" id="emailCopyAddress" placeholder="Enter the email address to send a copy to" autocomplete="email">
-      <p class="field-hint" style="margin-top:4px">This can be the same as your contact email or a different address such as a shared inbox.</p>
+      <p class="field-hint" style="margin-top:4px">Automatically set to your verification email. This is for your records only and cannot be changed.</p>
     </div>
   </div>
 
@@ -686,7 +714,7 @@ function onTurnstileExpired(){turnstileVerified=false;}
 
 // NUMBER ENFORCEMENT
 function enforceInteger(el,min,max){let v=el.value.replace(/[^0-9]/g,'');if(!v){el.value='';return;}let n=parseInt(v,10);if(isNaN(n)){el.value='';return;}if(n<min)n=min;if(n>max)n=max;el.value=n;}
-function enforceYearRange(el){let v=el.value.replace(/[^0-9]/g,'');if(v.length>4)v=v.slice(0,4);el.value=v;const err=document.getElementById('yearEstError');if(v.length===4){const n=parseInt(v,10);if(n<1800||n>2026){err.classList.add('show');el.classList.add('error');}else{err.classList.remove('show');el.classList.remove('error');}}else if(v.length>0){err.classList.remove('show');}}
+function enforceYearRange(el){let v=el.value.replace(/[^0-9]/g,'');if(v.length>4)v=v.slice(0,4);el.value=v;const err=document.getElementById('yearEstError');const currentYear=new Date().getFullYear();if(v.length===4){const n=parseInt(v,10);if(n<1800||n>currentYear){err.classList.add('show');el.classList.add('error');}else{err.classList.remove('show');el.classList.remove('error');}}else if(v.length>0){err.classList.remove('show');}}
 
 // POSTAL CODE
 function formatPostalCode(el){let v=el.value.toUpperCase().replace(/[^A-Z0-9]/g,'');if(v.length>3)v=v.slice(0,3)+' '+v.slice(3,6);el.value=v;}
@@ -712,11 +740,22 @@ function validatePostalCode(){
     err.classList.remove('show');document.getElementById('f_postalCode').classList.remove('error');return true;
 }
 
-// EMAIL COPY TOGGLE
+// EMAIL COPY TOGGLE - auto-populate from gate email, readonly
 function toggleEmailCopyField(){
     const checked=document.getElementById('emailCopyCheck').checked;
     document.getElementById('emailCopyEmailRow').style.display=checked?'block':'none';
-    if(!checked)document.getElementById('emailCopyAddress').value='';
+    if(checked){
+        const gateEmail=document.getElementById('gateEmail').value.trim();
+        const copyField=document.getElementById('emailCopyAddress');
+        copyField.value=gateEmail;
+        copyField.readOnly=true;
+        copyField.style.background='#F0F7FF';
+        copyField.style.color='var(--cool-gray)';
+        copyField.style.cursor='not-allowed';
+        copyField.title='Email address from your verification step';
+    }else{
+        document.getElementById('emailCopyAddress').value='';
+    }
 }
 
 // GATE
@@ -1044,6 +1083,31 @@ function showTechError(ref){
         +'<p class="tech-error-ref">Reference: '+ref+'</p>';
     banner.classList.add('show');
     banner.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// IT SUPPORT PANEL
+function toggleIT(){
+    const panel=document.getElementById('itPanel');
+    panel.classList.toggle('open');
+    if(errorRef){const ref=document.getElementById('itErrRef');ref.textContent='Error ref: '+errorRef;ref.style.display='block';}
+}
+
+// LIABILITY INSURANCE DEPENDENCY
+function updateInsuranceFields(){
+    const val=document.getElementById('f_insurance').value;
+    const disabled=val==='No';
+    ['insuranceAmtGroup','insuranceExpGroup'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)el.classList.toggle('field-disabled',disabled);
+    });
+    const fileZone=document.getElementById('insuranceDropZone');
+    if(fileZone)fileZone.classList.toggle('disabled',disabled);
+    if(disabled){
+        document.getElementById('f_insuranceAmt').value='';
+        document.getElementById('insuranceAmtError').classList.remove('show');
+        document.getElementById('f_insuranceExpiry').value='';
+        document.getElementById('insuranceExpiryWarning').classList.remove('show');
+    }
 }
 
 // EMAIL PRE-FILL
