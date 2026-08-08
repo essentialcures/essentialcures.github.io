@@ -18,22 +18,28 @@
         *{margin:0;padding:0;box-sizing:border-box;}
         body{font-family:'Inter',sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
         header{display:none!important;}
+
+        /* DOC HEADER — fixed proportions */
         .doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
         .doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
         .doc-header-table td{vertical-align:middle;border:1px solid #CCCCCC;font-family:Calibri,Arial,sans-serif;}
-        .doc-header-left{width:12%;text-align:center;padding:4px;}
+        .doc-header-left{width:12%;text-align:center;padding:4px 4px;}
         .doc-header-left img{height:80px;width:auto;display:block;margin:0 auto;}
         .doc-header-middle{width:76%;text-align:center;padding:10px 16px;background:var(--white);}
         .doc-header-middle .org-name{font-size:16px;font-weight:700;color:var(--deep-blue);letter-spacing:1px;margin-bottom:2px;}
         .doc-header-middle .tagline{font-size:12px;color:var(--leaf-green);font-style:italic;font-weight:600;margin-bottom:4px;}
         .doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
-        .doc-header-right{width:12%;text-align:right;padding:4px;}
+        .doc-header-right{width:12%;text-align:right;padding:4px 4px;}
         .doc-header-right .doc-id{font-size:13px;font-weight:700;color:var(--deep-blue);margin-bottom:3px;}
         .doc-header-right .doc-meta{font-size:11px;color:var(--cool-gray);line-height:1.8;}
         .doc-header-stripe1{height:4px;background:var(--deep-blue);}
         .doc-header-stripe2{height:4px;background:var(--lime);}
+
+        /* MAIN */
         .main{flex:1;max-width:720px;margin:0 auto;width:100%;padding:56px 40px;}
         .form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:48px;}
+
+        /* STEPS */
         .steps{display:flex;align-items:center;margin-bottom:36px;width:100%;overflow:hidden;}
         .step{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;}
         .step-num{width:26px;height:26px;border-radius:50%;background:#E8ECF0;color:var(--cool-gray);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;}
@@ -42,6 +48,8 @@
         .step-label{font-size:10px;font-weight:600;color:var(--cool-gray);white-space:nowrap;}
         .step-label.active{color:var(--deep-blue);}
         .step-divider{flex:1;height:2px;background:#E8ECF0;margin:0 4px;margin-bottom:14px;min-width:8px;}
+
+        /* FORM ELEMENTS */
         .form-group{margin-bottom:20px;}
         .form-group label{display:block;font-size:13px;font-weight:600;color:var(--dark-navy);margin-bottom:6px;}
         .form-group label em{font-style:normal;color:var(--red);}
@@ -61,6 +69,8 @@
         .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
         input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
         input[type=number]{-moz-appearance:textfield;}
+
+        /* CHECKBOXES */
         .checkbox-group{display:flex;flex-direction:column;gap:10px;}
         .checkbox-item{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border-radius:6px;border:1.5px solid transparent;transition:all 0.2s;cursor:pointer;user-select:none;}
         .checkbox-item:hover{background:#F0F7FF;border-color:#D4DAE0;}
@@ -71,6 +81,8 @@
         .badge-regulated{background:rgba(192,57,43,0.1);color:var(--red);}
         .badge-nhp{background:rgba(230,126,34,0.1);color:var(--amber);}
         .badge-free{background:rgba(74,139,44,0.1);color:var(--leaf-green);}
+
+        /* FILE UPLOAD */
         .file-upload-group{margin-bottom:20px;}
         .file-upload-group label{display:block;font-size:13px;font-weight:600;color:var(--dark-navy);margin-bottom:6px;}
         .file-upload-group label em{font-style:normal;color:var(--red);}
@@ -87,6 +99,8 @@
         .file-name-display.show{display:block;}
         .file-error{font-size:12px;color:var(--red);margin-top:4px;display:none;}
         .file-error.show{display:block;}
+
+        /* COMPLIANCE */
         .compliance-indicator{background:#F7F9FB;border:1px solid #E8ECF0;border-radius:8px;padding:14px 16px;margin-bottom:20px;display:none;}
         .compliance-indicator.show{display:block;}
         .compliance-indicator h4{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
@@ -94,11 +108,17 @@
         .compliance-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
         .dot-required{background:var(--red);}
         .dot-optional{background:var(--cool-gray);}
+
+        /* SECTION TITLE */
         .section-title{font-size:13px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:1px;margin:28px 0 16px;padding-bottom:8px;border-bottom:2px solid var(--lime);}
+
+        /* TURNSTILE */
         .turnstile-group{margin:22px 0;}
         .turnstile-group label{display:block;font-size:13px;font-weight:600;color:var(--dark-navy);margin-bottom:8px;}
         .turnstile-error{display:none;font-size:12.5px;color:var(--red);margin-top:6px;}
         .turnstile-error.show{display:block;}
+
+        /* BUTTONS */
         .btn-primary{width:100%;padding:14px;background:var(--deep-blue);color:var(--white);border:none;border-radius:6px;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.3s;margin-top:8px;}
         .btn-primary:hover{background:var(--dark-navy);transform:translateY(-1px);}
         .btn-primary:disabled{background:#A9B7C4;cursor:not-allowed;transform:none;}
@@ -106,18 +126,31 @@
         .btn-secondary:hover{border-color:var(--slate);color:var(--slate);}
         .btn-success{width:100%;padding:14px;background:var(--leaf-green);color:var(--white);border:none;border-radius:6px;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.3s;margin-top:8px;}
         .btn-success:hover{background:#3a7022;transform:translateY(-1px);}
+
+        /* TERMINATE BUTTON */
         .btn-terminate{width:100%;padding:11px;background:transparent;color:var(--red);border:1.5px solid rgba(192,57,43,0.35);border-radius:6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.3s;margin-top:8px;}
         .btn-terminate:hover{background:rgba(192,57,43,0.06);border-color:var(--red);}
+
+        /* NAV BUTTON GROUP */
         .nav-group{display:flex;flex-direction:column;gap:0;margin-top:16px;}
         .nav-group .btn-primary,.nav-group .btn-secondary,.nav-group .btn-terminate{margin-top:8px;}
+
+        /* INFO / WARNING BOXES */
         .info-box{background:#F0F7FF;border-left:4px solid var(--deep-blue);padding:14px 16px;border-radius:0 6px 6px 0;margin-bottom:24px;}
         .info-box p{font-size:13px;color:var(--slate);line-height:1.6;}
         .info-box strong{color:var(--dark-navy);}
+        .warning-box{background:#FFF8E1;border-left:4px solid var(--amber);padding:14px 16px;border-radius:0 6px 6px 0;margin-bottom:20px;}
+
+        /* SPINNER */
         .spinner{display:none;width:36px;height:36px;border:3px solid #E8ECF0;border-top:3px solid var(--deep-blue);border-radius:50%;animation:spin 0.8s linear infinite;margin:24px auto;}
         .spinner.show{display:block;}
         @keyframes spin{to{transform:rotate(360deg);}}
+
+        /* SCREENS */
         .screen{display:none;}
         .screen.active{display:block;}
+
+        /* STATUS */
         .status-screen{text-align:center;padding:16px 0;}
         .status-icon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
         .status-icon.green{background:rgba(74,139,44,0.1);color:var(--leaf-green);}
@@ -127,6 +160,8 @@
         .status-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px;}
         .badge-green{background:rgba(74,139,44,0.1);color:var(--leaf-green);}
         .badge-amber{background:rgba(230,126,34,0.1);color:var(--amber);}
+
+        /* MODALS */
         .modal-overlay{position:fixed;inset:0;background:rgba(0,30,60,0.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
         .modal-overlay.hidden{display:none;}
         .modal-box{background:var(--white);border-radius:14px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,30,60,0.3);}
@@ -135,7 +170,11 @@
         .modal-header p{font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px;}
         .modal-body{padding:28px;}
         .modal-footer{padding:0 28px 28px;display:flex;flex-direction:column;gap:10px;}
+
+        /* TERMINATE CONFIRM MODAL */
         .terminate-modal-header{background:var(--red)!important;}
+
+        /* PREFLIGHT */
         .preflight-item{display:flex;align-items:flex-start;gap:14px;padding:14px;background:var(--off-white);border-radius:8px;border:1px solid #E8ECF0;margin-bottom:10px;}
         .preflight-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
         .preflight-icon.required{background:rgba(192,57,43,0.1);color:var(--red);}
@@ -143,6 +182,8 @@
         .preflight-text h4{font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:2px;}
         .preflight-text p{font-size:12px;color:var(--cool-gray);line-height:1.5;}
         .preflight-note{background:#FFF8E1;border:1px solid #F0D080;border-radius:6px;padding:12px 14px;font-size:12px;color:var(--slate);line-height:1.6;margin-bottom:16px;}
+
+        /* SUGGESTION PANEL */
         .suggestion-section{margin-bottom:16px;}
         .suggestion-section h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
         .suggestion-section h4.eligible{color:var(--leaf-green);}
@@ -156,20 +197,30 @@
         .missing-docs ul{list-style:none;padding:0;}
         .missing-docs li{font-size:12px;color:var(--slate);padding:3px 0;}
         .missing-docs li::before{content:'- ';color:var(--amber);font-weight:700;}
+
+        /* REVIEW TABLE */
         .review-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
         .review-table td{padding:8px 12px 8px 0;vertical-align:top;border-bottom:1px solid #F0F2F4;}
         .review-table td:first-child{font-weight:600;color:var(--dark-navy);width:40%;}
         .cat-strikethrough{text-decoration:line-through;color:var(--cool-gray);}
         .cat-approved{color:var(--leaf-green);font-weight:600;}
+
+        /* ERROR SUMMARY */
         .error-summary{display:none;background:#FFF0F0;border:2px solid var(--red);border-radius:8px;padding:16px 20px;margin-bottom:24px;}
         .error-summary.show{display:block;}
         .error-summary h4{font-size:13px;font-weight:700;color:var(--red);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;}
         .error-summary ul{list-style:none;padding:0;margin:0;}
         .error-summary ul li{font-size:13px;color:var(--red);padding:4px 0;padding-left:16px;position:relative;line-height:1.5;}
         .error-summary ul li::before{content:'*';position:absolute;left:0;font-weight:700;}
+
+        /* EXPIRY WARNING */
         .expiry-warning{display:none;background:#FFF5F5;border:1px solid rgba(192,57,43,0.3);border-radius:6px;padding:10px 12px;margin-top:6px;font-size:12px;color:var(--red);}
         .expiry-warning.show{display:block;}
+
+        /* REFERENCE BLOCK */
         .reference-block{background:var(--off-white);border:1px solid #E8ECF0;border-radius:8px;padding:16px;margin-bottom:14px;}
+
+        /* EMAIL COPY OPTION */
         .email-copy-box{background:#F0F7FF;border:1.5px solid var(--med-blue);border-radius:8px;padding:16px 20px;margin:20px 0;}
         .email-copy-box h4{font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
         .email-copy-box p{font-size:12px;color:var(--cool-gray);margin-bottom:12px;line-height:1.6;}
@@ -179,16 +230,22 @@
         .email-copy-email{margin-top:10px;}
         .email-copy-email input{width:100%;padding:9px 12px;border:1.5px solid #D4DAE0;border-radius:6px;font-size:13px;font-family:'Inter',sans-serif;}
         .email-copy-email input:focus{outline:none;border-color:var(--deep-blue);}
+
+        /* TECH ERROR BANNER */
         .tech-error-banner{display:none;background:#FFF0F0;border:2px solid var(--red);border-radius:8px;padding:16px 20px;margin-bottom:20px;}
         .tech-error-banner.show{display:block;}
         .tech-error-banner h4{font-size:13px;font-weight:700;color:var(--red);margin-bottom:8px;}
         .tech-error-banner p{font-size:13px;color:var(--slate);line-height:1.6;margin-bottom:8px;}
         .tech-error-banner a{color:var(--deep-blue);font-weight:600;}
         .tech-error-ref{font-size:11px;color:var(--cool-gray);font-family:monospace;margin-top:6px;}
+
+        /* FOOTER */
         footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
         .footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue) 60%,var(--cool-gray) 100%);margin-bottom:12px;}
         .footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
         .footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
+
+        /* FLOATING IT SUPPORT */
         .it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
         .it-tab{background:var(--dark-navy);color:var(--white);padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;letter-spacing:0.5px;border:none;font-family:'Inter',sans-serif;transition:background 0.2s;box-shadow:2px 0 8px rgba(0,0,0,0.15);}
         .it-tab:hover{background:var(--deep-blue);}
@@ -199,20 +256,28 @@
         .it-panel a{color:var(--deep-blue);font-weight:600;font-size:12px;}
         .it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;line-height:1;margin-top:-4px;}
         .it-err-ref{font-size:11px;color:var(--cool-gray);font-family:monospace;margin-top:6px;word-break:break-all;display:none;}
+        /* DISABLED FIELD STATE */
         .field-disabled{opacity:0.45;pointer-events:none;}
         .field-disabled input,.field-disabled select{background:#F0F0F0!important;cursor:not-allowed;}
         .file-drop-zone.disabled{opacity:0.45;pointer-events:none;cursor:not-allowed;}
-        @media(max-width:700px){.form-card{padding:28px 20px;}.main{padding:32px 20px;}.form-grid{grid-template-columns:1fr;}.doc-header-left img{height:56px;}.it-panel{width:200px;}}
+        @media(max-width:700px){
+            .form-card{padding:28px 20px;}
+            .main{padding:32px 20px;}
+            .form-grid{grid-template-columns:1fr;}
+            .doc-header-left img{height:56px;}
+            .it-panel{width:200px;}
+        }
     </style>
 </head>
 <body>
+
 <!-- FLOATING IT SUPPORT -->
 <div class="it-float" id="itFloat">
   <button class="it-tab" onclick="toggleIT()">Technical Support</button>
   <div class="it-panel" id="itPanel">
     <button class="it-close" onclick="toggleIT()">&#10005;</button>
     <h4>Having Technical Issues?</h4>
-    <p>If you are experiencing a problem with this form, our IT team can help.</p>
+    <p>If you are experiencing a problem with this form, our IT team can help. Email us with a description of the issue.</p>
     <a href="mailto:it@essentialcures.com?subject=Supplier Form Technical Issue&body=Page: Supplier Pre-Qualification%0D%0AIssue: ">Email IT Support</a>
     <div class="it-err-ref" id="itErrRef"></div>
   </div>
@@ -254,16 +319,16 @@
   </div>
 </div>
 
-<!-- TERMINATE MODAL -->
+<!-- TERMINATE CONFIRM MODAL -->
 <div class="modal-overlay hidden" id="terminateModal">
   <div class="modal-box">
     <div class="modal-header terminate-modal-header"><h3>Cancel This Application?</h3><p>Your progress will not be saved.</p></div>
     <div class="modal-body">
       <p style="font-size:14px;color:var(--slate);line-height:1.7;">You are about to cancel your pre-qualification application and return to the Essential Cures website. Any information entered on this form will be discarded and cannot be recovered.</p>
-      <p style="font-size:13px;color:var(--cool-gray);margin-top:12px;">For assistance, contact <a href="mailto:procurement@essentialcures.com" style="color:var(--deep-blue)">procurement@essentialcures.com</a></p>
+      <p style="font-size:13px;color:var(--cool-gray);margin-top:12px;">If you need more time to gather your documents, you are welcome to return and start a new application at any time. For assistance, contact <a href="mailto:procurement@essentialcures.com" style="color:var(--deep-blue)">procurement@essentialcures.com</a></p>
     </div>
     <div class="modal-footer">
-      <button onclick="confirmTerminate()" style="background:var(--red);color:var(--white);border:none;padding:14px;border-radius:6px;font-size:15px;font-weight:600;cursor:pointer;width:100%;">Yes, Cancel Application and Return to Website</button>
+      <button class="btn-terminate" onclick="confirmTerminate()" style="background:var(--red);color:var(--white);border:none;padding:14px;border-radius:6px;font-size:15px;font-weight:600;cursor:pointer;">Yes, Cancel Application and Return to Website</button>
       <button class="btn-secondary" onclick="dismissTerminate()">No, Continue My Application</button>
     </div>
   </div>
@@ -288,6 +353,7 @@
 
 <main class="main">
 <div class="form-card">
+
 <div class="steps">
   <div class="step"><div class="step-num active" id="stepNum1">1</div><span class="step-label active" id="stepLbl1">Verify</span></div>
   <div class="step-divider"></div>
@@ -304,20 +370,10 @@
 
 <!-- SCREEN 1 GATE -->
 <div class="screen active" id="screen1">
-  <div class="info-box"><p><strong>Eligibility Check:</strong> Enter your company name and select your reason for submission. Returning suppliers may enter their EC Procurement Reference ID (SQR number) to speed up verification. We will verify your eligibility before proceeding.</p></div>
+  <div class="info-box"><p><strong>Eligibility Check:</strong> Enter your company name and contact email exactly as registered with Essential Cures. If you are applying for the first time, use your primary business name and email. We will verify your eligibility before proceeding.</p></div>
   <div class="form-group"><label>Company / Organisation Name <em>*</em></label><input type="text" id="gateCompany" placeholder="Enter your registered company name" autocomplete="organization"></div>
-  <div class="form-group"><label>EC Procurement Reference ID <span class="opt">(returning suppliers only)</span></label><input type="text" id="gateProcRefId" placeholder="e.g. EC-SQR-10001 — leave blank if applying for the first time"></div>
   <div class="form-group"><label>Your Contact Email <em>*</em></label><input type="email" id="gateEmail" placeholder="you@yourcompany.com" autocomplete="email"></div>
-  <div class="form-group">
-    <label>Reason for Submission <em>*</em></label>
-    <select id="gateReason">
-      <option value="">Select reason</option>
-      <option value="New Qualification">New Qualification - first time applying</option>
-      <option value="Annual Renewal">Annual Renewal - our review date is approaching</option>
-      <option value="Information Update">Updating our company or contact information</option>
-      <option value="Logistics &amp; Delivery Update">Updating our delivery or logistics details</option>
-    </select>
-  </div>
+  <div class="form-group"><label>Reason for Submission <em>*</em></label><select id="gateReason"><option value="">Select reason</option><option value="new">New Qualification - first time applying</option><option value="renewal">Annual Renewal - our review date is approaching</option><option value="category">Adding New Product or Service Category</option></select></div>
   <div class="turnstile-group"><label>Verify you are human <em style="color:var(--red)">*</em></label><div class="cf-turnstile" data-sitekey="0x4AAAAAAEFjJFkYOcO5d-uj" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired"></div><p class="turnstile-error" id="turnstileError">Please complete the verification above before continuing.</p></div>
   <div class="spinner" id="verifySpinner"></div>
   <p id="gateError" style="color:var(--red);font-size:13px;margin-bottom:12px;display:none;"></p>
@@ -331,20 +387,36 @@
 <div class="screen" id="screenBlocked">
   <div class="status-screen">
     <div class="status-icon amber"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-    <div class="status-badge badge-amber" id="blockedBadge">Not Eligible</div>
-    <h3 class="status-title" id="blockedTitle">Unable to Proceed</h3>
-    <p class="status-body" id="blockedMessage">Please contact our procurement team for assistance.</p>
+    <div class="status-badge badge-amber" id="blockedBadge">Qualification Current</div>
+    <h3 class="status-title" id="blockedTitle">No Action Required</h3>
+    <p class="status-body" id="blockedMessage">Your qualification is current.</p>
     <p style="font-size:13px;color:var(--cool-gray)">Questions? Contact <a href="mailto:procurement@essentialcures.com" style="color:var(--deep-blue)">procurement@essentialcures.com</a></p>
-    <div style="margin-top:16px"><a href="https://essentialcures.com" style="display:inline-block;text-decoration:none;padding:12px 28px;border:1.5px solid #D4DAE0;border-radius:6px;color:var(--cool-gray);font-size:14px;font-weight:600;">Return to Essential Cures Website</a></div>
+    <div style="margin-top:16px"><a href="https://essentialcures.com" class="btn-secondary" style="display:inline-block;text-decoration:none;padding:12px 28px;border:1.5px solid #D4DAE0;border-radius:6px;color:var(--cool-gray);font-size:14px;font-weight:600;">Return to Essential Cures Website</a></div>
   </div>
 </div>
+
+<!-- CATEGORY EXPANSION -->
+<div class="screen" id="screenCategoryAllow">
+  <div class="status-screen">
+    <div class="status-icon amber"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+    <div class="status-badge badge-amber">Existing Qualification on File</div>
+    <h3 class="status-title">Active Qualification Detected</h3>
+    <p class="status-body">Your current qualification is active until <strong id="categoryDate"></strong>. You have selected to add a new product or service category. You may proceed and our Procurement team will assess whether a full requalification is required or whether the addition can be noted against your existing record.</p>
+    <div class="nav-group" style="max-width:340px;margin:0 auto">
+      <button class="btn-primary" onclick="proceedToForm()">Proceed to Application Form</button>
+      <button class="btn-secondary" onclick="resetGate()">Go Back</button>
+      <button class="btn-terminate" onclick="showTerminate()">Cancel - Return to Essential Cures Website</button>
+    </div>
+  </div>
+</div>
+
 <!-- SCREEN 2 ORGANISATION -->
 <div class="screen" id="screen2">
   <div class="error-summary" id="screen2Errors"><h4>Please correct the following before continuing</h4><ul id="screen2ErrorList"></ul></div>
   <p class="section-title">Organisation Profile</p>
   <div class="form-grid">
     <div class="form-group"><label>Company Name <em>*</em></label><input type="text" id="f_companyName" readonly style="background:#F0F7FF;color:var(--deep-blue);font-weight:600;"></div>
-    <div class="form-group"><label>Website <em>*</em></label><input type="text" id="f_website" placeholder="https://yourcompany.com" onblur="validateWebsite()" autocomplete="url"><p class="field-hint">e.g. essentialcures.com</p><div class="field-error" id="websiteError">Please enter a valid website address.</div></div>
+    <div class="form-group"><label>Website <em>*</em></label><input type="text" id="f_website" placeholder="https://yourcompany.com" onblur="validateWebsite()" autocomplete="url"><p class="field-hint">e.g. essentialcures.com or https://essentialcures.com</p><div class="field-error" id="websiteError">Please enter a valid website address.</div></div>
   </div>
   <div class="form-grid">
     <div class="form-group"><label>Contact First Name <em>*</em></label><input type="text" id="f_firstName" placeholder="First name" autocomplete="given-name"></div>
@@ -370,13 +442,13 @@
   </div>
   <p class="section-title">Business Classification</p>
   <div class="form-group"><label>Supplier Type <em>*</em></label><p style="font-size:12px;color:var(--cool-gray);margin-bottom:8px">Select all that apply.</p><div class="checkbox-group" id="supplierTypeGroup"><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Distributor"><label>Distributor</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Manufacturer"><label>Manufacturer</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Manufacturer Rep"><label>Manufacturer Representative</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Wholesaler"><label>Wholesaler</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Importer"><label>Importer</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Other"><label>Other</label></div></div><p id="supplierTypeError" class="field-error">Please select at least one supplier type.</p></div>
-  <div class="form-group"><label>Year Established <span class="opt">(optional)</span></label><input type="number" id="f_yearEst" placeholder="e.g. 2005" min="1950" step="1" oninput="enforceYearRange(this)"><p class="field-hint">4-digit year between 1950 and current year.</p><div class="field-error" id="yearEstError">Please enter a valid 4-digit year between 1950 and the current year.</div></div>
+  <div class="form-group"><label>Year Established <span class="opt">(optional)</span></label><input type="number" id="f_yearEst" placeholder="e.g. 2005" min="1950" step="1" oninput="enforceYearRange(this)"><p class="field-hint">4-digit year between 1950 and 2026.</p><div class="field-error" id="yearEstError">Please enter a valid 4-digit year between 1950 and the current year.</div></div>
   <div class="form-grid">
     <div class="form-group"><label>Employee Count</label><select id="f_employeeCount"><option value="">Select range</option><option value="1-10">1 to 10</option><option value="11-50">11 to 50</option><option value="51-200">51 to 200</option><option value="201-500">201 to 500</option><option value="500+">500 or more</option></select></div>
     <div class="form-group"><label>Annual Revenue (CAD)</label><select id="f_revenue"><option value="">Select range</option><option value="Under $1M">Under $1M</option><option value="$1M-$5M">$1M to $5M</option><option value="$5M-$20M">$5M to $20M</option><option value="$20M-$100M">$20M to $100M</option><option value="$100M+">$100M or more</option></select></div>
   </div>
   <p class="section-title">Products and Services Offered <em style="color:var(--red);font-style:normal">*</em></p>
-  <p style="font-size:13px;color:var(--cool-gray);margin-bottom:12px">Select all categories you wish to supply.</p>
+  <p style="font-size:13px;color:var(--cool-gray);margin-bottom:12px">Select all categories you wish to supply. Required documentation will be determined by your selections.</p>
   <div class="checkbox-group" id="categoryGroup">
     <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="PPE-IPC"><label>PPE and Infection Prevention and Control <span class="cat-badge badge-free">No Cert Required</span></label></div>
     <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Exam Consumables"><label>Exam Consumables <span class="cat-badge badge-free">No Cert Required</span></label></div>
@@ -413,7 +485,7 @@
     <div class="form-group"><label>ISO 13485 Certified? <em id="iso13485Label">*</em></label><select id="f_iso13485" onchange="updateCertRequirements()"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="In Progress">In Progress</option></select></div>
     <div class="form-group"><label>ISO 13485 Certificate Number <span id="iso13485NumLabel" class="opt"></span></label><input type="text" id="f_iso13485Num" placeholder="e.g. CA-MD-123456" maxlength="30" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9\-\/]/g,'')"><p class="field-hint">Alphanumeric only, max 30 characters.</p><div class="field-error" id="iso13485NumError">Certificate number required when ISO 13485 is certified.</div></div>
   </div>
-  <div class="form-group"><label>ISO 13485 Certificate Expiry <span id="iso13485ExpiryLabel" class="opt">(if applicable)</span></label><input type="date" id="f_iso13485Expiry" onchange="checkExpiry('f_iso13485Expiry','iso13485ExpiryWarning')"><div class="expiry-warning" id="iso13485ExpiryWarning">This certificate expires within 30 days and cannot be accepted.</div></div>
+  <div class="form-group"><label>ISO 13485 Certificate Expiry <span id="iso13485ExpiryLabel" class="opt">(if applicable)</span></label><input type="date" id="f_iso13485Expiry" onchange="checkExpiry('f_iso13485Expiry','iso13485ExpiryWarning')"><div class="expiry-warning" id="iso13485ExpiryWarning">This certificate expires within 30 days and cannot be accepted. Please obtain a renewed certificate before submitting.</div></div>
   <div class="form-grid">
     <div class="form-group"><label>ISO 9001 Certified? <span class="opt">(optional)</span></label><select id="f_iso9001"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="In Progress">In Progress</option></select></div>
     <div class="form-group"><label>MDEL Holder? <em id="mdelLabel">*</em></label><select id="f_mdel"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="Not Applicable">Not Applicable</option></select></div>
@@ -432,9 +504,9 @@
   <p class="section-title">Liability Insurance <em style="color:var(--red);font-style:normal">Always Required</em></p>
   <div class="form-grid">
     <div class="form-group"><label>Liability Insurance in Place? <em>*</em></label><select id="f_insurance" onchange="updateInsuranceFields()"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
-    <div class="form-group" id="insuranceAmtGroup"><label>Coverage Amount (CAD) <em>*</em></label><div class="currency-input-wrap"><span class="currency-prefix">$</span><input type="number" id="f_insuranceAmt" placeholder="2000000" min="0" step="1" oninput="enforceInteger(this,0,999999999)" onblur="checkInsuranceCoverage()"></div><p class="field-hint">Minimum required: CAD $2,000,000.</p><div class="field-error" id="insuranceAmtError">Coverage must be at least CAD $2,000,000.</div></div>
+    <div class="form-group" id="insuranceAmtGroup"><label>Coverage Amount (CAD) <em>*</em></label><div class="currency-input-wrap"><span class="currency-prefix">$</span><input type="number" id="f_insuranceAmt" placeholder="2000000" min="0" step="1" oninput="enforceInteger(this,0,999999999)" onblur="checkInsuranceCoverage()"></div><p class="field-hint">Minimum required: CAD $2,000,000. Numbers only e.g. 2000000</p><div class="field-error" id="insuranceAmtError">Coverage must be at least CAD $2,000,000.</div></div>
   </div>
-  <div class="form-group" id="insuranceExpGroup"><label>Insurance Expiry Date <em>*</em></label><input type="date" id="f_insuranceExpiry" onchange="checkExpiry('f_insuranceExpiry','insuranceExpiryWarning')"><div class="expiry-warning" id="insuranceExpiryWarning">This certificate expires within 30 days and cannot be accepted.</div></div>
+  <div class="form-group" id="insuranceExpGroup"><label>Insurance Expiry Date <em>*</em></label><input type="date" id="f_insuranceExpiry" onchange="checkExpiry('f_insuranceExpiry','insuranceExpiryWarning')"><div class="expiry-warning" id="insuranceExpiryWarning">This certificate expires within 30 days and cannot be accepted. Please obtain a renewed certificate before submitting.</div></div>
   <p class="section-title">Additional Compliance</p>
   <div class="form-grid">
     <div class="form-group"><label>MDALL Listed?</label><select id="f_mdall"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="Not Applicable">Not Applicable</option></select></div>
@@ -459,6 +531,7 @@
     <button class="btn-terminate" onclick="showTerminate()">Cancel - Return to Essential Cures Website</button>
   </div>
 </div>
+
 <!-- SCREEN 4 COMMERCIAL -->
 <div class="screen" id="screen4">
   <div class="error-summary" id="screen4Errors"><h4>Please correct the following before continuing</h4><ul id="screen4ErrorList"></ul></div>
@@ -490,7 +563,7 @@
 <!-- SCREEN 5 REFERENCES -->
 <div class="screen" id="screen5">
   <div class="error-summary" id="screen5Errors"><h4>Please correct the following before continuing</h4><ul id="screen5ErrorList"></ul></div>
-  <div class="info-box"><p><strong>Trade References (ISO 7.4 Requirement):</strong> We require a minimum of one trade reference from an organisation you currently or have previously supplied. At least one reference is mandatory.</p></div>
+  <div class="info-box"><p><strong>Trade References (ISO 7.4 Requirement):</strong> As part of our supplier qualification process, we require a minimum of one trade reference from an organisation you currently or have previously supplied. At least one reference is mandatory. All three strengthen your application significantly.</p></div>
   <p class="section-title">Reference 1 <em style="color:var(--red);font-style:normal">Required</em></p>
   <div class="reference-block">
     <div class="form-grid"><div class="form-group"><label>Company Name <em>*</em></label><input type="text" id="f_ref1Company" placeholder="Organisation name"></div><div class="form-group"><label>Contact Name <em>*</em></label><input type="text" id="f_ref1Contact" placeholder="Contact person"></div></div>
@@ -519,18 +592,21 @@
   <p class="section-title">Review Your Submission</p>
   <div class="info-box" style="margin-bottom:20px"><p>Please review your submission carefully. Once submitted, our Procurement team will review your application within <strong>5 business days</strong>.</p></div>
   <div id="reviewSummary"></div>
+
+  <!-- EMAIL COPY OPTION -->
   <div class="email-copy-box">
     <h4>Request a Formal Submission Confirmation</h4>
-    <p>You may request that a formal submission confirmation be dispatched to your registered email address once your application has been logged and verified by our Procurement team.</p>
+    <p>You may request that a formal submission confirmation be dispatched to your registered email address once your application has been logged and verified by our Procurement team. This is optional and does not affect processing of your application.</p>
     <div class="email-copy-row">
       <input type="checkbox" id="emailCopyCheck" onchange="toggleEmailCopyField()">
       <label for="emailCopyCheck">Yes, please send a submission confirmation to my registered email address</label>
     </div>
     <div class="email-copy-email" id="emailCopyEmailRow" style="display:none">
       <input type="email" id="emailCopyAddress" placeholder="Your registered email address" autocomplete="email">
-      <p class="field-hint" style="margin-top:4px">Confirmation will be sent to this address once your application has been logged and verified. Please allow up to one business day.</p>
+      <p class="field-hint" style="margin-top:4px">Confirmation will be sent to this address once your application has been logged. This address is drawn from your verification step and cannot be changed.</p>
     </div>
   </div>
+
   <div class="form-group" style="margin-top:16px">
     <div class="checkbox-item" onclick="toggleCat(this)" id="confirmItem">
       <input type="checkbox" id="f_confirm">
@@ -552,10 +628,10 @@
     <div class="status-icon green"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
     <div class="status-badge badge-green">Submission Received</div>
     <h3 class="status-title">Pre-Qualification Submitted Successfully</h3>
-    <p class="status-body">Your supplier pre-qualification application has been received by Essential Cures Inc. Our Procurement team will review your submission and be in touch within <strong>5 business days</strong>.</p>
-    <p class="status-body" style="font-size:13px">Direct questions to <a href="mailto:procurement@essentialcures.com" style="color:var(--deep-blue);font-weight:600">procurement@essentialcures.com</a></p>
+    <p class="status-body">Your supplier pre-qualification application has been received by Essential Cures Inc. Our Procurement team will review your submission against our qualification framework and be in touch within <strong>5 business days</strong> via your preferred contact method.</p>
+    <p class="status-body" style="font-size:13px">Reference your company name and contact email in any follow-up correspondence. Direct questions to <a href="mailto:procurement@essentialcures.com" style="color:var(--deep-blue);font-weight:600">procurement@essentialcures.com</a></p>
     <div id="emailConfirmNote" style="display:none;background:#F0F7FF;border-radius:8px;padding:14px 20px;margin:16px 0;font-size:13px;color:var(--slate)">
-      <strong style="color:var(--dark-navy)">Submission Confirmation Requested</strong><br>A formal submission confirmation will be dispatched to <span id="emailCopyConfirmAddr" style="color:var(--deep-blue);font-weight:600"></span> once your application has been logged. Please allow up to one business day.
+      <strong style="color:var(--dark-navy)">Submission Confirmation Requested</strong><br>A formal submission confirmation will be dispatched to <span id="emailCopyConfirmAddr" style="color:var(--deep-blue);font-weight:600"></span> once your application has been logged and verified by our Procurement team. Please allow up to one business day.
     </div>
     <a href="https://essentialcures.com" class="btn-primary" style="display:inline-block;width:auto;padding:12px 32px;text-decoration:none;margin-top:8px">Return to Essential Cures Website</a>
   </div>
@@ -570,7 +646,8 @@
     </tr>
   </table>
 </div>
-</div></main>
+</div><!-- /form-card -->
+</main>
 
 <footer>
   <div class="footer-inner">
@@ -580,6 +657,9 @@
   </div>
 </footer>
 <script>
+// ============================================================
+// COMPLIANCE RULES TABLE
+// ============================================================
 const COMPLIANCE_RULES = {
     'PPE-IPC':              {iso13485:false,mdel:false,nhp:false,label:'PPE and Infection Prevention and Control'},
     'Exam Consumables':     {iso13485:false,mdel:false,nhp:false,label:'Exam Consumables'},
@@ -594,122 +674,135 @@ const COMPLIANCE_RULES = {
     'Other':                {iso13485:false,mdel:false,nhp:false,label:'Other'}
 };
 
-const REASON_LABELS = {
-    'New Qualification':           'New Qualification',
-    'Annual Renewal':              'Annual Renewal',
-    'Information Update':          'Information Update',
-    'Logistics & Delivery Update': 'Logistics and Delivery Update'
-};
-
-let gateData = {vendorId:'',vendorName:'',reviewDate:'',submissionReason:'',sqrId:''};
+// STATE
+let gateData = {vendorId:'',vendorName:'',reason:'',reviewDate:'',submissionReason:''};
 let currentScreen = 1;
 let turnstileVerified = false;
 let approvedCategories = [];
 let strippedCategories = [];
 let errorRef = '';
 
-function genErrorRef(){return 'ERR-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).substr(2,4).toUpperCase();}
-function getRequirements(){const sel=getSelectedCategories();const req={iso13485:false,mdel:false,nhp:false};sel.forEach(cat=>{const r=COMPLIANCE_RULES[cat];if(r){if(r.iso13485)req.iso13485=true;if(r.mdel)req.mdel=true;if(r.nhp)req.nhp=true;}});return req;}
+// ERROR REFERENCE GENERATOR
+function genErrorRef() {
+    return 'ERR-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2,4).toUpperCase();
+}
+
+// GETTERS
+function getRequirements() {
+    const sel = getSelectedCategories();
+    const req = {iso13485:false,mdel:false,nhp:false};
+    sel.forEach(cat => {
+        const r = COMPLIANCE_RULES[cat];
+        if(r){if(r.iso13485)req.iso13485=true;if(r.mdel)req.mdel=true;if(r.nhp)req.nhp=true;}
+    });
+    return req;
+}
 function getSelectedCategories(){const a=[];document.querySelectorAll('#categoryGroup input:checked').forEach(cb=>a.push(cb.value));return a;}
 function getSelectedTerritories(){const a=[];document.querySelectorAll('#territoryGroup input:checked').forEach(cb=>a.push(cb.value));return a;}
 function getSelectedFreight(){const a=[];document.querySelectorAll('#freightGroup input:checked').forEach(cb=>a.push(cb.value));return a;}
 function getSelectedSupplierTypes(){const a=[];document.querySelectorAll('#supplierTypeGroup input:checked').forEach(cb=>a.push(cb.value));return a;}
 
+// PREFLIGHT / TERMINATE
 function dismissPreflight(){document.getElementById('preflightModal').classList.add('hidden');}
 function showTerminate(){document.getElementById('terminateModal').classList.remove('hidden');}
 function dismissTerminate(){document.getElementById('terminateModal').classList.add('hidden');}
 function confirmTerminate(){window.location.href='https://essentialcures.com';}
+
+// TURNSTILE
 function onTurnstileSuccess(t){turnstileVerified=true;document.getElementById('turnstileError').classList.remove('show');}
 function onTurnstileExpired(){turnstileVerified=false;}
-function enforceInteger(el,min,max){let v=el.value.replace(/[^0-9]/g,'');if(!v){el.value='';return;}let n=parseInt(v,10);if(isNaN(n)){el.value='';return;}if(n<min)n=min;if(n>max)n=max;el.value=n;}
-function enforceYearRange(el){let v=el.value.replace(/[^0-9]/g,'');if(v.length>4)v=v.slice(0,4);el.value=v;const err=document.getElementById('yearEstError');const cy=new Date().getFullYear();if(v.length===4){const n=parseInt(v,10);if(n<1950||n>cy){err.classList.add('show');el.classList.add('error');}else{err.classList.remove('show');el.classList.remove('error');}}else if(v.length>0){err.classList.remove('show');}}
-function formatPostalCode(el){let v=el.value.toUpperCase().replace(/[^A-Z0-9]/g,'');if(v.length>3)v=v.slice(0,3)+' '+v.slice(3,6);el.value=v;}
-function updatePostalHint(){const country=document.getElementById('f_country').value;const hint=document.getElementById('postalHint');const inp=document.getElementById('f_postalCode');if(country==='United States'){hint.textContent='US ZIP code e.g. 90210';inp.placeholder='90210';inp.maxLength=10;}else{hint.textContent='Canadian postal code e.g. R3T 4V6';inp.placeholder='A1A 1A1';inp.maxLength=7;}}
-function validatePostalCode(){const v=document.getElementById('f_postalCode').value.trim();const country=document.getElementById('f_country').value;const err=document.getElementById('postalCodeError');const ca=/^[A-Za-z]\d[A-Za-z][ ]?\d[A-Za-z]\d$/;const us=/^\d{5}(-\d{4})?$/;const gen=/^[A-Za-z0-9\s\-]{3,10}$/;let ok=false;if(country==='Canada'||country==='')ok=ca.test(v);else if(country==='United States')ok=us.test(v);else ok=gen.test(v);if(!ok&&v.length>0){err.classList.add('show');document.getElementById('f_postalCode').classList.add('error');return false;}err.classList.remove('show');document.getElementById('f_postalCode').classList.remove('error');return true;}
 
+// NUMBER ENFORCEMENT
+function enforceInteger(el,min,max){let v=el.value.replace(/[^0-9]/g,'');if(!v){el.value='';return;}let n=parseInt(v,10);if(isNaN(n)){el.value='';return;}if(n<min)n=min;if(n>max)n=max;el.value=n;}
+function enforceYearRange(el){let v=el.value.replace(/[^0-9]/g,'');if(v.length>4)v=v.slice(0,4);el.value=v;const err=document.getElementById('yearEstError');const currentYear=new Date().getFullYear();if(v.length===4){const n=parseInt(v,10);if(n<1950||n>currentYear){err.classList.add('show');el.classList.add('error');}else{err.classList.remove('show');el.classList.remove('error');}}else if(v.length>0){err.classList.remove('show');}}
+
+// POSTAL CODE
+function formatPostalCode(el){let v=el.value.toUpperCase().replace(/[^A-Z0-9]/g,'');if(v.length>3)v=v.slice(0,3)+' '+v.slice(3,6);el.value=v;}
+function updatePostalHint(){
+    const country=document.getElementById('f_country').value;
+    const hint=document.getElementById('postalHint');
+    const inp=document.getElementById('f_postalCode');
+    if(country==='United States'){hint.textContent='US ZIP code e.g. 90210';inp.placeholder='90210';inp.maxLength=10;}
+    else{hint.textContent='Canadian postal code e.g. R3T 4V6';inp.placeholder='A1A 1A1';inp.maxLength=7;}
+}
+function validatePostalCode(){
+    const v=document.getElementById('f_postalCode').value.trim();
+    const country=document.getElementById('f_country').value;
+    const err=document.getElementById('postalCodeError');
+    const ca=/^[A-Za-z]\d[A-Za-z][ ]?\d[A-Za-z]\d$/;
+    const us=/^\d{5}(-\d{4})?$/;
+    const gen=/^[A-Za-z0-9\s\-]{3,10}$/;
+    let ok=false;
+    if(country==='Canada'||country==='')ok=ca.test(v);
+    else if(country==='United States')ok=us.test(v);
+    else ok=gen.test(v);
+    if(!ok&&v.length>0){err.classList.add('show');document.getElementById('f_postalCode').classList.add('error');return false;}
+    err.classList.remove('show');document.getElementById('f_postalCode').classList.remove('error');return true;
+}
+
+// EMAIL COPY TOGGLE - auto-populate from gate email, readonly
 function toggleEmailCopyField(){
     const checked=document.getElementById('emailCopyCheck').checked;
     document.getElementById('emailCopyEmailRow').style.display=checked?'block':'none';
     if(checked){
         const gateEmail=document.getElementById('gateEmail').value.trim();
         const copyField=document.getElementById('emailCopyAddress');
-        copyField.value=gateEmail;copyField.readOnly=true;
-        copyField.style.background='#F0F7FF';copyField.style.color='var(--cool-gray)';copyField.style.cursor='not-allowed';
-    }else{document.getElementById('emailCopyAddress').value='';}
+        copyField.value=gateEmail;
+        copyField.readOnly=true;
+        copyField.style.background='#F0F7FF';
+        copyField.style.color='var(--cool-gray)';
+        copyField.style.cursor='not-allowed';
+        copyField.title='Email address from your verification step';
+    }else{
+        document.getElementById('emailCopyAddress').value='';
+    }
 }
 
+// GATE
 async function verifyGate(){
-    const company   = document.getElementById('gateCompany').value.trim();
-    const procRefId = document.getElementById('gateProcRefId').value.trim();
-    const email     = document.getElementById('gateEmail').value.trim();
-    const reason    = document.getElementById('gateReason').value;
-    const errEl     = document.getElementById('gateError');
-    const spinner   = document.getElementById('verifySpinner');
+    const company=document.getElementById('gateCompany').value.trim();
+    const email=document.getElementById('gateEmail').value.trim();
+    const reason=document.getElementById('gateReason').value;
+    const errEl=document.getElementById('gateError');
+    const spinner=document.getElementById('verifySpinner');
     errEl.style.display='none';
-    if(!company||!email||!reason){errEl.textContent='Please complete all required fields before verifying.';errEl.style.display='block';return;}
+    if(!company||!email||!reason){errEl.textContent='Please complete all fields before verifying.';errEl.style.display='block';return;}
     if(!turnstileVerified){document.getElementById('turnstileError').classList.add('show');document.querySelector('.turnstile-group').scrollIntoView({behavior:'smooth',block:'center'});return;}
     spinner.classList.add('show');
     document.querySelector('#screen1 .btn-primary').disabled=true;
     try{
-        const resp=await fetch('https://essentialcures.com/api/cm27/gate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({companyName:company,procurementRefId:procRefId,submissionReason:reason})});
+        const resp=await fetch('https://essentialcures.com/api/cm27/gate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({companyName:company,contactEmail:email,submissionReason:reason})});
         const raw=await resp.text();
         let result;
         try{result=JSON.parse(raw);if(typeof result==='string')result=JSON.parse(result);}
         catch{spinner.classList.remove('show');document.querySelector('#screen1 .btn-primary').disabled=false;errEl.textContent='Verification failed. Please try again or contact procurement@essentialcures.com';errEl.style.display='block';return;}
         spinner.classList.remove('show');document.querySelector('#screen1 .btn-primary').disabled=false;
-        gateData.submissionReason=reason;gateData.vendorId=result.vendorId||'';gateData.vendorName=result.vendorName||company;gateData.reviewDate=result.reviewDate||'';gateData.sqrId=result.sqrId||'';
-        if(result.status==='allow'){proceedToForm();}
-        else if(result.status==='block'){showBlock(result);}
-        else if(result.status==='confirm'){showConfirmPanel(result.matches);}
+        gateData.submissionReason=reason;gateData.vendorId=result.vendorId||'';gateData.vendorName=result.vendorName||company;gateData.reviewDate=result.reviewDate||'';
+        if(result.status==='allow'){
+            if(result.reason==='category_expansion'){document.getElementById('categoryDate').textContent=formatDate(result.reviewDate);showScreen('screenCategoryAllow');}
+            else proceedToForm();
+        }else if(result.status==='block'){showBlock(result.reason,result.reviewDate,result.vendorName);}
         else{errEl.textContent=result.reason||'Verification failed. Please contact procurement@essentialcures.com';errEl.style.display='block';}
     }catch(e){
         spinner.classList.remove('show');document.querySelector('#screen1 .btn-primary').disabled=false;
         errEl.textContent='Unable to verify at this time. Please try again or contact procurement@essentialcures.com';errEl.style.display='block';
     }
 }
-
-function showBlock(result){
-    const badge=document.getElementById('blockedBadge');const title=document.getElementById('blockedTitle');const message=document.getElementById('blockedMessage');
-    if(result.reason==='qualification_current'){
-        const eligible=result.eligibleFrom?' You may submit an Annual Renewal from '+formatDate(result.eligibleFrom)+'.':'';
-        badge.textContent='Qualification Current';title.textContent='Your Qualification Is Current';
-        message.textContent='Your organisation's supplier qualification is active and valid until '+formatDate(result.reviewDate)+'.'+eligible+' To update your information, please select Information Update or Logistics and Delivery Update and resubmit.';
-    }else if(result.reason==='reapplication_too_soon'){
-        badge.textContent='Reapplication Not Yet Eligible';title.textContent='Reapplication Period Has Not Elapsed';
-        message.textContent='A previous qualification application was not approved. You may reapply from '+formatDate(result.eligibleFrom)+'. Contact procurement@essentialcures.com if you have questions.';
-    }else if(result.reason==='ref_id_not_found'){
-        badge.textContent='Reference ID Not Found';title.textContent='Procurement Reference ID Not Recognised';
-        message.textContent='The EC Procurement Reference ID you entered could not be found. Please check the ID and try again, or leave the field blank and search by company name only.';
-    }else{badge.textContent='Not Eligible';title.textContent='Unable to Proceed';message.textContent='Please contact procurement@essentialcures.com for assistance.';}
+function showBlock(reason,reviewDate,vendorName){
+    if(reason==='qualification_current'){
+        document.getElementById('blockedBadge').textContent='Qualification Current';
+        document.getElementById('blockedTitle').textContent='Your Qualification Is Current';
+        document.getElementById('blockedMessage').textContent='Your organisation\'s supplier qualification is active and valid until '+formatDate(reviewDate)+'. No action is required at this time. Our team will contact you in advance of your annual review date. To add a new product category, please select that option and resubmit.';
+    }
     showScreen('screenBlocked');
 }
+function proceedToForm(){document.getElementById('f_companyName').value=gateData.vendorName||document.getElementById('gateCompany').value;document.getElementById('f_email').value=document.getElementById('gateEmail').value;goToScreen(2);}
+function resetGate(){showScreen('screen1');currentScreen=1;updateSteps(1);}
 
-function showConfirmPanel(matches){
-    let html='<div style="background:#FFF8E1;border:1.5px solid var(--amber);border-radius:8px;padding:16px 20px;margin-bottom:16px"><h4 style="font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px">Multiple Records Found</h4><p style="font-size:13px;color:var(--slate);margin-bottom:12px">More than one organisation matches the name you entered. Please confirm which one you are:</p>';
-    matches.forEach(m=>{
-        const vn=m.vendorName.replace(/'/g,"\'");
-        html+='<button onclick="selectConfirmedVendor(''+m.vendorId+'',''+vn+'',''+m.sqrId+'')" style="width:100%;text-align:left;padding:10px 14px;margin-bottom:8px;border:1.5px solid #D4DAE0;border-radius:6px;background:var(--white);cursor:pointer;font-size:13px;font-family:Inter,sans-serif;color:var(--slate)"><strong>'+m.vendorName+'</strong>'+(m.sqrId?' <span style="color:var(--cool-gray);font-size:12px">Ref: '+m.sqrId+'</span>':'')+'</button>';
-    });
-    html+='<button onclick="document.getElementById('confirmPanel').remove()" style="width:100%;padding:10px;border:1.5px solid #D4DAE0;border-radius:6px;background:transparent;cursor:pointer;font-size:13px;color:var(--cool-gray);font-family:Inter,sans-serif;margin-top:4px">None of these - search again</button></div>';
-    let panel=document.getElementById('confirmPanel');
-    if(!panel){panel=document.createElement('div');panel.id='confirmPanel';document.getElementById('gateError').insertAdjacentElement('afterend',panel);}
-    panel.innerHTML=html;
-}
-
-function selectConfirmedVendor(vendorId,vendorName,sqrId){
-    gateData.vendorId=vendorId;gateData.vendorName=vendorName;gateData.sqrId=sqrId;
-    const panel=document.getElementById('confirmPanel');if(panel)panel.remove();
-    proceedToForm();
-}
-
-function proceedToForm(){
-    document.getElementById('f_companyName').value=gateData.vendorName||document.getElementById('gateCompany').value;
-    document.getElementById('f_email').value=document.getElementById('gateEmail').value;
-    goToScreen(2);
-}
-
+// CHECKBOX TOGGLE
 function toggleCat(item){const cb=item.querySelector('input[type="checkbox"]');if(!cb)return;cb.checked=!cb.checked;item.classList.toggle('selected',cb.checked);if(item.closest('#categoryGroup'))updateComplianceIndicator();}
 
+// COMPLIANCE INDICATOR
 function updateComplianceIndicator(){
     const req=getRequirements();const ind=document.getElementById('complianceIndicator');const rows=document.getElementById('complianceRows');const sel=getSelectedCategories();
     if(sel.length===0){ind.classList.remove('show');return;}
@@ -722,18 +815,20 @@ function updateComplianceIndicator(){
     rows.innerHTML=h;
 }
 
+// SETUP SCREEN 3
 function setupScreen3(){
-    const req=getRequirements();const parts=['Liability Insurance Certificate'];
+    const req=getRequirements();
+    const parts=['Liability Insurance Certificate'];
     if(req.iso13485)parts.push('ISO 13485 Certificate');if(req.mdel)parts.push('MDEL Certificate');if(req.nhp)parts.push('NHP Product Licence');
     document.getElementById('complianceSummaryText').innerHTML='Based on your selected categories, the following documents are <strong>required</strong>: '+parts.join(', ')+'. All must be PDF format, max 5MB, valid for at least 30 days from today.';
     document.getElementById('iso13485Label').textContent=req.iso13485?'*':'(optional)';document.getElementById('iso13485Label').style.color=req.iso13485?'var(--red)':'var(--cool-gray)';
     document.getElementById('isoUploadRequired').textContent=req.iso13485?'*':'(optional)';
     document.getElementById('mdelLabel').textContent=req.mdel?'*':'(optional)';document.getElementById('mdelLabel').style.color=req.mdel?'var(--red)':'var(--cool-gray)';
     document.getElementById('mdelUploadGroup').style.display=req.mdel?'block':'none';
-    document.getElementById('nhpSection').style.display=req.nhp?'block':'none';
-    document.getElementById('nhpUploadGroup').style.display=req.nhp?'block':'none';
+    document.getElementById('nhpSection').style.display=req.nhp?'block':'none';document.getElementById('nhpUploadGroup').style.display=req.nhp?'block':'none';
 }
 
+// FILE UPLOAD
 function handleFileUpload(inputId,zoneId,nameId,errorId){
     const inp=document.getElementById(inputId);const zone=document.getElementById(zoneId);const nameEl=document.getElementById(nameId);const errEl=document.getElementById(errorId);const file=inp.files[0];
     nameEl.classList.remove('show');errEl.classList.remove('show');zone.classList.remove('has-file','error');
@@ -743,6 +838,7 @@ function handleFileUpload(inputId,zoneId,nameId,errorId){
     zone.classList.add('has-file');nameEl.textContent=file.name+' ('+(file.size/1024/1024).toFixed(2)+'MB)';nameEl.classList.add('show');
 }
 
+// EXPIRY CHECK
 function checkExpiry(inputId,warningId){
     const v=document.getElementById(inputId).value;const w=document.getElementById(warningId);if(!v){w.classList.remove('show');return;}
     const exp=new Date(v);const thirty=new Date();thirty.setDate(thirty.getDate()+30);
@@ -750,12 +846,14 @@ function checkExpiry(inputId,warningId){
     else{w.classList.remove('show');document.getElementById(inputId).classList.remove('error');document.getElementById(inputId).classList.add('valid');}
 }
 
+// INSURANCE COVERAGE
 function checkInsuranceCoverage(){
     const v=document.getElementById('f_insuranceAmt').value;const err=document.getElementById('insuranceAmtError');const n=parseInt(v,10);
     if(!v||isNaN(n)||n<2000000){err.classList.add('show');document.getElementById('f_insuranceAmt').classList.add('error');return false;}
     err.classList.remove('show');document.getElementById('f_insuranceAmt').classList.remove('error');document.getElementById('f_insuranceAmt').classList.add('valid');return true;
 }
 
+// SCREEN 2 -> 3
 function goToScreen3(){
     const errors=[];
     [{id:'f_firstName',label:'Contact First Name'},{id:'f_lastName',label:'Contact Last Name'},{id:'f_jobTitle',label:'Job Title'},{id:'f_streetAddress',label:'Street Address'},{id:'f_city',label:'City'}].forEach(f=>{const el=document.getElementById(f.id);if(!el.value.trim()){el.classList.add('error');errors.push(f.label+' is required.');}else el.classList.remove('error');});
@@ -763,7 +861,7 @@ function goToScreen3(){
     if(!document.getElementById('f_postalCode').value.trim()){errors.push('Postal Code is required.');document.getElementById('f_postalCode').classList.add('error');}else if(!validatePostalCode())errors.push('Postal Code format is invalid for the selected country.');
     if(!document.getElementById('f_dropShip').value){document.getElementById('dropShipError').classList.add('show');errors.push('Drop Ship Capable is required.');}else document.getElementById('dropShipError').classList.remove('show');
     if(document.getElementById('f_dropShip').value==='Yes'&&document.getElementById('f_leadTime').value===''){document.getElementById('f_leadTime').classList.add('error');document.getElementById('leadTimeError').classList.add('show');errors.push('Standard Lead Time is required when Drop Ship Capable is Yes.');}else{document.getElementById('f_leadTime').classList.remove('error');document.getElementById('leadTimeError').classList.remove('show');}
-    const yr=document.getElementById('f_yearEst').value;if(yr!==''){const n=parseInt(yr,10);const cy=new Date().getFullYear();if(isNaN(n)||n<1950||n>cy){errors.push('Year Established must be between 1950 and '+cy+'.');document.getElementById('yearEstError').classList.add('show');document.getElementById('f_yearEst').classList.add('error');}}
+    const yr=document.getElementById('f_yearEst').value;if(yr!==''){const n=parseInt(yr,10);if(isNaN(n)||n<1950||n>2026){errors.push('Year Established must be between 1950 and 2026.');document.getElementById('yearEstError').classList.add('show');document.getElementById('f_yearEst').classList.add('error');}}
     if(!validateWebsite())errors.push('Website address format is invalid.');
     if(!validatePhone())errors.push('Phone number is required and must include country code.');
     if(getSelectedSupplierTypes().length===0){document.getElementById('supplierTypeError').classList.add('show');errors.push('At least one Supplier Type must be selected.');}else document.getElementById('supplierTypeError').classList.remove('show');
@@ -774,6 +872,7 @@ function goToScreen3(){
     goToScreen(3);
 }
 
+// SCREEN 3 VALIDATION
 function validateAndProceedScreen3(){
     const req=getRequirements();const errors=[];const today=new Date();const thirty=new Date();thirty.setDate(today.getDate()+30);
     const iso=document.getElementById('f_iso13485').value;
@@ -783,7 +882,7 @@ function validateAndProceedScreen3(){
         if(!cn){errors.push('ISO 13485 Certificate Number is required when certified.');document.getElementById('iso13485NumError').classList.add('show');}else if(cn.length>30){errors.push('ISO 13485 Certificate Number max 30 characters.');document.getElementById('iso13485NumError').classList.add('show');}else document.getElementById('iso13485NumError').classList.remove('show');
         const ie=document.getElementById('f_iso13485Expiry').value;
         if(!ie)errors.push('ISO 13485 Certificate expiry date is required.');else if(new Date(ie)<=thirty)errors.push('ISO 13485 Certificate expires within 30 days and cannot be accepted.');
-    }else if(req.iso13485&&iso!=='Yes')errors.push('ISO 13485 certification is required for your selected categories.');
+    }else if(req.iso13485&&iso!=='Yes')errors.push('ISO 13485 certification is required for your selected categories. You must hold a current ISO 13485 certificate to qualify.');
     const mdel=document.getElementById('f_mdel').value;
     if(req.mdel&&(!mdel||mdel==='No'))errors.push('MDEL is required for your selected regulated categories.');
     if(mdel==='Yes'){const mn=document.getElementById('f_mdelNum').value.trim();if(!mn||!/^\d{5,7}$/.test(mn)){errors.push('MDEL Number must be 5 to 7 digits.');document.getElementById('mdelNumError').classList.add('show');}else document.getElementById('mdelNumError').classList.remove('show');}
@@ -802,15 +901,23 @@ function validateAndProceedScreen3(){
     if(req.mdel&&mdel==='Yes'&&!document.getElementById('f_mdelFile').files[0])errors.push('MDEL Certificate file upload is required.');
     if(errors.length>0){showErrorSummary('screen3',errors);return;}
     document.getElementById('screen3Errors').classList.remove('show');
+
+    // Suggestion engine
     const sel=getSelectedCategories();const hasISO=!!document.getElementById('f_isoFile').files[0];const isoExp=document.getElementById('f_iso13485Expiry').value;const isoOk=isoExp?new Date(isoExp)>thirty:false;const hasMDEL=!!document.getElementById('f_mdelFile').files[0];
     const eligible=[],ineligible=[];const missing=new Set();
-    sel.forEach(cat=>{const rule=COMPLIANCE_RULES[cat];if(!rule)return;let ok=true;const catMiss=[];if(rule.iso13485&&(!hasISO||!isoOk)){ok=false;catMiss.push(!hasISO?'ISO 13485 Certificate not uploaded':'ISO 13485 Certificate expires within 30 days');missing.add('ISO 13485 Certificate');}if(rule.mdel&&!hasMDEL){ok=false;catMiss.push('MDEL Certificate not uploaded');missing.add('MDEL Certificate');}if(ok)eligible.push({value:cat,label:COMPLIANCE_RULES[cat].label});else ineligible.push({value:cat,label:COMPLIANCE_RULES[cat].label,missing:catMiss});});
+    sel.forEach(cat=>{
+        const rule=COMPLIANCE_RULES[cat];if(!rule)return;let ok=true;const catMiss=[];
+        if(rule.iso13485&&(!hasISO||!isoOk)){ok=false;catMiss.push(!hasISO?'ISO 13485 Certificate not uploaded':'ISO 13485 Certificate expires within 30 days');missing.add('ISO 13485 Certificate');}
+        if(rule.mdel&&!hasMDEL){ok=false;catMiss.push('MDEL Certificate not uploaded');missing.add('MDEL Certificate');}
+        if(ok)eligible.push({value:cat,label:COMPLIANCE_RULES[cat].label});else ineligible.push({value:cat,label:COMPLIANCE_RULES[cat].label,missing:catMiss});
+    });
     if(ineligible.length===0){approvedCategories=sel;strippedCategories=[];goToScreen(4);return;}
     if(eligible.length===0){showErrorSummary('screen3',['Unable to proceed. Based on the documents provided, none of your selected categories can be approved. Missing: '+Array.from(missing).join(', ')+'. Please obtain the required certificates and return to complete your application.']);return;}
     approvedCategories=eligible.map(c=>c.value);strippedCategories=ineligible.map(c=>c.value);
     showSuggestionPanel(eligible,ineligible,Array.from(missing));
 }
 
+// SCREEN 4 -> 5
 function goToScreen5(){
     const errors=[];
     if(document.getElementById('f_recalls').value==='Yes'&&!document.getElementById('f_recallDetails').value.trim()){errors.push('Recall Details are required when recalls in the last 3 years is Yes.');document.getElementById('recallDetailsError').classList.add('show');}else document.getElementById('recallDetailsError').classList.remove('show');
@@ -820,6 +927,7 @@ function goToScreen5(){
     document.getElementById('screen4Errors').classList.remove('show');goToScreen(5);
 }
 
+// SCREEN 5 -> 6
 function validateAndGoToScreen6(){
     const errors=[];
     if(!document.getElementById('f_ref1Company').value.trim())errors.push('Reference 1 - Company Name is required (ISO 7.4).');
@@ -829,13 +937,15 @@ function validateAndGoToScreen6(){
     document.getElementById('screen5Errors').classList.remove('show');goToScreen(6);
 }
 
+// SUGGESTION PANEL
 function showSuggestionPanel(eligible,ineligible,missingDocs){
     let h='<div class="suggestion-section"><h4 class="eligible">Eligible for Approval ('+eligible.length+')</h4>';
     eligible.forEach(c=>h+='<div class="suggestion-cat"><div style="color:var(--leaf-green);margin-right:4px">&#10003;</div><div><div class="cat-name">'+c.label+'</div></div></div>');
     h+='</div><div class="suggestion-section"><h4 class="ineligible">Not Eligible - Documents Missing ('+ineligible.length+')</h4>';
     ineligible.forEach(c=>h+='<div class="suggestion-cat"><div style="color:var(--red);margin-right:4px">&#10007;</div><div><div class="cat-name">'+c.label+'</div><div class="cat-reason">'+c.missing.join(', ')+'</div></div></div>');
     h+='</div><div class="missing-docs"><h4>To Qualify for All Categories, You Need</h4><ul>';
-    missingDocs.forEach(d=>h+='<li>'+d+'</li>');h+='</ul></div>';
+    missingDocs.forEach(d=>h+='<li>'+d+'</li>');
+    h+='</ul></div>';
     document.getElementById('suggestionContent').innerHTML=h;
     document.getElementById('proceedPartialBtn').textContent='Proceed with '+eligible.length+' Eligible '+(eligible.length===1?'Category':'Categories')+' Only';
     document.getElementById('suggestionModal').classList.remove('hidden');
@@ -843,15 +953,23 @@ function showSuggestionPanel(eligible,ineligible,missingDocs){
 function proceedWithPartial(){document.getElementById('suggestionModal').classList.add('hidden');goToScreen(4);}
 function cancelSuggestion(){document.getElementById('suggestionModal').classList.add('hidden');approvedCategories=[];strippedCategories=[];}
 
+// SCREEN NAVIGATION
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 function goToScreen(n){if(n===3)setupScreen3();if(n===6)buildReviewSummary();showScreen('screen'+n);currentScreen=n;updateSteps(n);window.scrollTo({top:0,behavior:'smooth'});}
-function showErrorSummary(sid,errors){const box=document.getElementById(sid+'Errors');const list=document.getElementById(sid+'ErrorList');if(!box||errors.length===0){if(box)box.classList.remove('show');return;}list.innerHTML=errors.map(e=>'<li>'+e+'</li>').join('');box.classList.add('show');box.scrollIntoView({behavior:'smooth',block:'start'});}
+function showErrorSummary(sid,errors){
+    const box=document.getElementById(sid+'Errors');const list=document.getElementById(sid+'ErrorList');
+    if(!box||errors.length===0){if(box)box.classList.remove('show');return;}
+    list.innerHTML=errors.map(e=>'<li>'+e+'</li>').join('');box.classList.add('show');box.scrollIntoView({behavior:'smooth',block:'start'});
+}
 function updateCertRequirements(){const iso=document.getElementById('f_iso13485').value;const lbl=document.getElementById('iso13485NumLabel');if(iso==='Yes'){lbl.textContent='*';lbl.style.color='var(--red)';lbl.className='';}else{lbl.textContent='(if applicable)';lbl.style.color='';lbl.className='opt';}}
-function updateSteps(active){for(let i=1;i<=6;i++){const n=document.getElementById('stepNum'+i);const l=document.getElementById('stepLbl'+i);if(!n)continue;n.className='step-num'+(i<active?' done':i===active?' active':'');l.className='step-label'+(i===active?' active':'');n.innerHTML=i<active?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>':String(i);}}
+function updateSteps(active){
+    for(let i=1;i<=6;i++){const n=document.getElementById('stepNum'+i);const l=document.getElementById('stepLbl'+i);if(!n)continue;n.className='step-num'+(i<active?' done':i===active?' active':'');l.className='step-label'+(i===active?' active':'');n.innerHTML=i<active?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>':String(i);}
+}
 function updateRecallRequirement(){const v=document.getElementById('f_recalls').value;const l=document.getElementById('recallDetailsLabel');if(v==='Yes'){l.textContent='* required';l.style.color='var(--red)';l.className='';}else{l.textContent='';l.style.color='';l.className='opt';}}
 function updateRebateRequirement(){const v=document.getElementById('f_rebate').value;const l=document.getElementById('rebateDetailsLabel');if(v==='Yes'){l.textContent='* required';l.style.color='var(--red)';l.className='';}else{l.textContent='';l.style.color='';l.className='opt';}}
 function updateLeadTimeRequirement(){const v=document.getElementById('f_dropShip').value;const l=document.getElementById('leadTimeLabel');if(v==='Yes'){l.textContent='* required';l.style.color='var(--red)';l.className='';}else{l.textContent='';l.style.color='';l.className='opt';}}
 
+// REVIEW SUMMARY
 function buildReviewSummary(){
     const allSel=getSelectedCategories();const appSet=new Set(approvedCategories);
     const catDisp=allSel.map(cat=>{const lbl=COMPLIANCE_RULES[cat]?COMPLIANCE_RULES[cat].label:cat;if(appSet.has(cat))return'<span class="cat-approved">&#10003; '+lbl+'</span>';return'<span class="cat-strikethrough">'+lbl+' (removed - documents not provided)</span>';}).join('<br>');
@@ -874,77 +992,125 @@ function buildReviewSummary(){
         ['Freight Terms',getSelectedFreight().join(', ')||'Not specified'],
         ['Minimum Order',moDisp],
         ['Drop Ship Capable',document.getElementById('f_dropShip').value],
-        ['Submission Reason',REASON_LABELS[gateData.submissionReason]||gateData.submissionReason],
+        ['Submission Reason',{new:'New Qualification',renewal:'Annual Renewal',category:'Category Expansion'}[gateData.submissionReason]||gateData.submissionReason],
         ['Documents Uploaded',files.join(', ')||'None'],
     ];
     rows.forEach(r=>h+='<tr><td>'+r[0]+'</td><td>'+(r[1]||'<em style="color:var(--cool-gray)">Not provided</em>')+'</td></tr>');
-    h+='</table>';document.getElementById('reviewSummary').innerHTML=h;
+    h+='</table>';
+    document.getElementById('reviewSummary').innerHTML=h;
 }
 
-function validateWebsite(){const v=document.getElementById('f_website').value.trim();const err=document.getElementById('websiteError');const ok=/^(https?:\/\/)?(([\w-]+\.)+[\w-]+)(\/.*)?$/.test(v);if(!v||!ok){err.classList.add('show');document.getElementById('f_website').classList.add('error');return false;}err.classList.remove('show');document.getElementById('f_website').classList.remove('error');document.getElementById('f_website').classList.add('valid');return true;}
+// VALIDATORS
+function validateWebsite(){const v=document.getElementById('f_website').value.trim();const err=document.getElementById('websiteError');const ok=/^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/.*)?$/.test(v);if(!v||!ok){err.classList.add('show');document.getElementById('f_website').classList.add('error');return false;}err.classList.remove('show');document.getElementById('f_website').classList.remove('error');document.getElementById('f_website').classList.add('valid');return true;}
 function validatePhone(){const v=document.getElementById('f_phone').value.trim();const err=document.getElementById('phoneError');const ok=/^[+]?[\d\s\-().]{7,20}$/.test(v);if(!v||!ok){err.classList.add('show');document.getElementById('f_phone').classList.add('error');return false;}err.classList.remove('show');document.getElementById('f_phone').classList.remove('error');document.getElementById('f_phone').classList.add('valid');return true;}
 function formatDate(d){if(!d)return'';try{return new Date(d).toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'});}catch(e){return d;}}
 
+// SEND TECH ERROR EMAIL
 async function sendTechErrorEmail(ref,details){
-    try{await fetch('https://essentialcures.com/api/cm27/error-report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:ref,details:details,company:gateData.vendorName||'Unknown',timestamp:new Date().toISOString()})});}
-    catch(e){console.error('Error report failed',e);}
+    try{
+        await fetch('https://essentialcures.com/api/cm27/error-report',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({ref:ref,details:details,company:gateData.vendorName||'Unknown',contactEmail:document.getElementById('f_email')?document.getElementById('f_email').value:'',timestamp:new Date().toISOString(),to:'it@essentialcures.com'})
+        });
+    }catch(e){console.error('Error report send failed',e);}
 }
 
+// FORM SUBMISSION
 async function submitForm(){
     if(!document.getElementById('f_confirm').checked){document.getElementById('submitError').textContent='Please confirm the accuracy of your information before submitting.';document.getElementById('submitError').style.display='block';return;}
     const emailCopy=document.getElementById('emailCopyCheck').checked;
     const emailCopyAddr=document.getElementById('emailCopyAddress').value.trim();
-    if(emailCopy&&(!emailCopyAddr||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailCopyAddr))){document.getElementById('submitError').textContent='Please enter a valid email address.';document.getElementById('submitError').style.display='block';return;}
+    if(emailCopy&&(!emailCopyAddr||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailCopyAddr))){document.getElementById('submitError').textContent='Please enter a valid email address to send the copy to.';document.getElementById('submitError').style.display='block';return;}
     const spinner=document.getElementById('submitSpinner');const errEl=document.getElementById('submitError');errEl.style.display='none';spinner.classList.add('show');document.getElementById('submitFinalBtn').disabled=true;
     errorRef=genErrorRef();
     try{
         const fd=new FormData();
-        ['isoFile','iso9001File','insuranceFile','mdelFile','nhpFile'].forEach(fid=>{const f=document.getElementById('f_'+fid);if(f&&f.files[0])fd.append(fid,f.files[0]);});
+        const files=['isoFile','iso9001File','insuranceFile','mdelFile','nhpFile'];
+        files.forEach(fid=>{const f=document.getElementById('f_'+fid);if(f&&f.files[0])fd.append(fid,f.files[0]);});
         const mo=document.getElementById('f_minOrder').value;
         const payload={
             vendorId:gateData.vendorId,vendorName:gateData.vendorName,submissionReason:gateData.submissionReason,
-            approvedCategories:approvedCategories,strippedCategories:strippedCategories,errorRef:errorRef,
+            approvedCategories:approvedCategories,strippedCategories:strippedCategories,
+            errorRef:errorRef,
             emailCopy:emailCopy,emailCopyAddress:emailCopy?emailCopyAddr:'',
             contact:{firstName:document.getElementById('f_firstName').value,lastName:document.getElementById('f_lastName').value,email:document.getElementById('f_email').value,phone:document.getElementById('f_phone').value,jobTitle:document.getElementById('f_jobTitle').value,preferredContact:document.getElementById('f_preferredContact').value},
             organisation:{website:document.getElementById('f_website').value,supplierType:getSelectedSupplierTypes(),yearEstablished:document.getElementById('f_yearEst').value,employeeCount:document.getElementById('f_employeeCount').value,revenue:document.getElementById('f_revenue').value,territory:getSelectedTerritories(),dropShip:document.getElementById('f_dropShip').value,leadTime:document.getElementById('f_leadTime').value,privateLabel:document.getElementById('f_privateLabel').value,streetAddress:document.getElementById('f_streetAddress').value,city:document.getElementById('f_city').value,province:document.getElementById('f_province').value,postalCode:document.getElementById('f_postalCode').value,country:document.getElementById('f_country').value},
-            compliance:{iso13485:document.getElementById('f_iso13485').value,iso13485CertNum:document.getElementById('f_iso13485Num').value,iso13485Expiry:document.getElementById('f_iso13485Expiry').value,iso9001:document.getElementById('f_iso9001').value,mdel:document.getElementById('f_mdel').value,mdelNum:document.getElementById('f_mdelNum').value,gmp:document.getElementById('f_gmp').value,insurance:document.getElementById('f_insurance').value,insuranceAmount:document.getElementById('f_insuranceAmt').value?parseInt(document.getElementById('f_insuranceAmt').value,10):null,insuranceExpiry:document.getElementById('f_insuranceExpiry').value,recalls:document.getElementById('f_recalls').value,recallDetails:document.getElementById('f_recallDetails').value,aer:document.getElementById('f_aer').value,whmis:document.getElementById('f_whmis').value,healthCanada:document.getElementById('f_healthCanada').value,mdall:document.getElementById('f_mdall').value,nhpLicenceNum:document.getElementById('f_nhpLicenceNum')?document.getElementById('f_nhpLicenceNum').value:'',nhpExpiry:document.getElementById('f_nhpExpiry')?document.getElementById('f_nhpExpiry').value:''},
+            compliance:{iso13485:document.getElementById('f_iso13485').value,iso13485CertNum:document.getElementById('f_iso13485Num').value,iso13485Expiry:document.getElementById('f_iso13485Expiry').value,iso9001:document.getElementById('f_iso9001').value,mdel:document.getElementById('f_mdel').value,mdelNum:document.getElementById('f_mdelNum').value,gmp:document.getElementById('f_gmp').value,insurance:document.getElementById('f_insurance').value,insuranceAmount:mo!==''?parseInt(document.getElementById('f_insuranceAmt').value,10):null,insuranceExpiry:document.getElementById('f_insuranceExpiry').value,recalls:document.getElementById('f_recalls').value,recallDetails:document.getElementById('f_recallDetails').value,aer:document.getElementById('f_aer').value,whmis:document.getElementById('f_whmis').value,healthCanada:document.getElementById('f_healthCanada').value,mdall:document.getElementById('f_mdall').value,nhpLicenceNum:document.getElementById('f_nhpLicenceNum')?document.getElementById('f_nhpLicenceNum').value:'',nhpExpiry:document.getElementById('f_nhpExpiry')?document.getElementById('f_nhpExpiry').value:''},
             commercial:{paymentTerms:document.getElementById('f_paymentTerms').value,freightTerms:getSelectedFreight(),pricingModel:document.getElementById('f_pricingModel').value,rebate:document.getElementById('f_rebate').value,rebateDetails:document.getElementById('f_rebateDetails').value,minOrderCAD:mo!==''?parseInt(mo,10):null,returnPolicy:document.getElementById('f_returnPolicy').value,discountStructure:document.getElementById('f_discountStructure').value,catalogue:document.getElementById('f_catalogue').value,marketingSupport:document.getElementById('f_marketingSupport').value},
             references:{ref1Company:document.getElementById('f_ref1Company').value,ref1Contact:document.getElementById('f_ref1Contact').value,ref1Relationship:document.getElementById('f_ref1Relationship').value,ref2Company:document.getElementById('f_ref2Company').value,ref2Contact:document.getElementById('f_ref2Contact').value,ref2Relationship:document.getElementById('f_ref2Relationship').value,ref3Company:document.getElementById('f_ref3Company').value,ref3Contact:document.getElementById('f_ref3Contact').value,ref3Relationship:document.getElementById('f_ref3Relationship').value},
             notes:document.getElementById('f_notes').value
         };
         fd.append('payload',JSON.stringify(payload));
+
+        let submitOk=false;
         try{
             const resp=await fetch('https://essentialcures.com/api/cm27/submit',{method:'POST',body:fd});
+            submitOk=resp.ok;
             if(!resp.ok)throw new Error('HTTP '+resp.status);
         }catch(fetchErr){
-            await sendTechErrorEmail(errorRef,{stage:'submit',error:fetchErr.toString()});
-            spinner.classList.remove('show');document.getElementById('submitFinalBtn').disabled=false;showTechError(errorRef);return;
+            // TECH ERROR PATH: notify IT, show friendly message with reference
+            await sendTechErrorEmail(errorRef,{stage:'submit',error:fetchErr.toString(),company:gateData.vendorName,email:document.getElementById('f_email')?document.getElementById('f_email').value:''});
+            spinner.classList.remove('show');document.getElementById('submitFinalBtn').disabled=false;
+            showTechError(errorRef);
+            return;
         }
+
         spinner.classList.remove('show');
-        if(emailCopy&&emailCopyAddr){document.getElementById('emailConfirmNote').style.display='block';document.getElementById('emailCopyConfirmAddr').textContent=emailCopyAddr;}
+        // Show success
+        if(emailCopy&&emailCopyAddr){
+            document.getElementById('emailConfirmNote').style.display='block';
+            document.getElementById('emailCopyConfirmAddr').textContent=emailCopyAddr;
+        }
         showScreen('screenSuccess');updateSteps(7);
     }catch(err){
         await sendTechErrorEmail(errorRef,{stage:'general',error:err.toString()});
-        spinner.classList.remove('show');document.getElementById('submitFinalBtn').disabled=false;showTechError(errorRef);
+        spinner.classList.remove('show');document.getElementById('submitFinalBtn').disabled=false;
+        showTechError(errorRef);
     }
 }
 
 function showTechError(ref){
+    // Insert tech error banner before submit button if not already present
     let banner=document.getElementById('techErrorBanner');
-    if(!banner){banner=document.createElement('div');banner.id='techErrorBanner';banner.className='tech-error-banner';const btn=document.getElementById('submitFinalBtn');btn.parentNode.insertBefore(banner,btn);}
-    banner.innerHTML='<h4>Submission Could Not Be Processed</h4><p>We encountered a technical issue. Our IT team has been automatically notified.</p><p>Please try again in a few minutes. If the issue persists, email <a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a> and quote the reference number below.</p><p class="tech-error-ref">Reference: '+ref+'</p>';
-    banner.classList.add('show');banner.scrollIntoView({behavior:'smooth',block:'start'});
+    if(!banner){
+        banner=document.createElement('div');banner.id='techErrorBanner';banner.className='tech-error-banner';
+        const btn=document.getElementById('submitFinalBtn');btn.parentNode.insertBefore(banner,btn);
+    }
+    banner.innerHTML='<h4>Submission Could Not Be Processed</h4>'
+        +'<p>We encountered a technical issue while processing your application. Our IT team has been automatically notified and will investigate promptly.</p>'
+        +'<p>You do not need to start over. Please try submitting again in a few minutes. If the issue persists, email your application details directly to <a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a> and quote the reference number below.</p>'
+        +'<p class="tech-error-ref">Reference: '+ref+'</p>';
+    banner.classList.add('show');
+    banner.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function toggleIT(){const panel=document.getElementById('itPanel');panel.classList.toggle('open');if(errorRef){const ref=document.getElementById('itErrRef');ref.textContent='Error ref: '+errorRef;ref.style.display='block';}}
+// IT SUPPORT PANEL
+function toggleIT(){
+    const panel=document.getElementById('itPanel');
+    panel.classList.toggle('open');
+    if(errorRef){const ref=document.getElementById('itErrRef');ref.textContent='Error ref: '+errorRef;ref.style.display='block';}
+}
 
+// LIABILITY INSURANCE DEPENDENCY
 function updateInsuranceFields(){
-    const val=document.getElementById('f_insurance').value;const disabled=val==='No';
-    ['insuranceAmtGroup','insuranceExpGroup'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('field-disabled',disabled);});
-    const fileZone=document.getElementById('insuranceDropZone');if(fileZone)fileZone.classList.toggle('disabled',disabled);
-    if(disabled){document.getElementById('f_insuranceAmt').value='';document.getElementById('insuranceAmtError').classList.remove('show');document.getElementById('f_insuranceExpiry').value='';document.getElementById('insuranceExpiryWarning').classList.remove('show');}
+    const val=document.getElementById('f_insurance').value;
+    const disabled=val==='No';
+    ['insuranceAmtGroup','insuranceExpGroup'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)el.classList.toggle('field-disabled',disabled);
+    });
+    const fileZone=document.getElementById('insuranceDropZone');
+    if(fileZone)fileZone.classList.toggle('disabled',disabled);
+    if(disabled){
+        document.getElementById('f_insuranceAmt').value='';
+        document.getElementById('insuranceAmtError').classList.remove('show');
+        document.getElementById('f_insuranceExpiry').value='';
+        document.getElementById('insuranceExpiryWarning').classList.remove('show');
+    }
 }
 
+// EMAIL PRE-FILL
 const params=new URLSearchParams(window.location.search);
 const ep=params.get('email');
 if(ep)document.getElementById('gateEmail').value=decodeURIComponent(ep);
