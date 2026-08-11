@@ -391,9 +391,6 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
   <p id="catError" class="field-error">Please select at least one product or service category.</p>
   <div class="compliance-indicator" id="complianceIndicator"><h4>Required Documents for Your Selection</h4><div id="complianceRows"></div></div>
 
-  <p class="section-title">Phase Alignment <em style="color:var(--red);font-style:normal">*</em></p>
-  <div class="form-group"><label>Which Essential Cures phase do your products primarily align with?</label><select id="f_phaseAlignment"><option value="">Select phase</option><option value="Phase 1A-Non-Regulated Commercial">Phase 1A - Non-Regulated Commercial (PPE, Consumables, Facility Supplies)</option><option value="Phase 1B-Class I &amp; MDEL Prep">Phase 1B - Class I Medical Devices and MDEL Prep</option><option value="Phase 2-Class II Medical Devices">Phase 2 - Class II Medical Devices</option><option value="Phase 3-Class III/IV &amp; Surgical">Phase 3 - Class III/IV and Surgical Instruments</option></select><p class="field-hint">Select the phase that best describes your primary product offerings.</p></div>
-
   <p class="section-title">Distribution and Logistics</p>
   <div class="form-group"><label>Distribution Territory <span class="opt">(select all that apply)</span></label><div class="checkbox-group" id="territoryGroup"><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Canadian Prairies"><label>Canadian Prairies (AB, SK, MB)</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Western Canada"><label>Western Canada</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Eastern Canada"><label>Eastern Canada</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="National Canada"><label>National Canada</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="United States"><label>United States</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="International"><label>International</label></div></div></div>
 
@@ -545,7 +542,6 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
   <p class="section-title">Product Capability</p>
   <div class="form-grid">
     <div class="form-group"><label>Private Label Capable?</label><select id="f_privateLabelBrand"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="In Progress">In Progress</option></select><p class="field-hint">Can you supply products under the Essential Cures brand or customer brand?</p></div>
-    <div class="form-group"><label>Phase Alignment <span class="opt">(confirm or update)</span></label><select id="f_phaseAlignmentBrands"><option value="">Select</option><option value="Phase 1A-Non-Regulated Commercial">Phase 1A - Non-Regulated Commercial</option><option value="Phase 1B-Class I &amp; MDEL Prep">Phase 1B - Class I and MDEL Prep</option><option value="Phase 2-Class II Medical Devices">Phase 2 - Class II Medical Devices</option><option value="Phase 3-Class III/IV &amp; Surgical">Phase 3 - Class III/IV and Surgical</option></select></div>
   </div>
 
   <div class="nav-group">
@@ -598,6 +594,16 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
     <p>You may request a formal submission confirmation be sent to your registered email once your application has been logged.</p>
     <div class="email-copy-row"><input type="checkbox" id="emailCopyCheck" onchange="toggleEmailCopyField()"><label for="emailCopyCheck">Yes, please send a submission confirmation to my registered email address</label></div>
     <div class="email-copy-email" id="emailCopyEmailRow" style="display:none"><input type="email" id="emailCopyAddress" placeholder="Your registered email address" readonly style="background:#F0F7FF;color:var(--cool-gray);cursor:not-allowed;"></div>
+  </div>
+
+
+  <div class="form-group" style="background:#F7F9FB;border:1px solid #E8ECF0;border-radius:8px;padding:16px 20px;margin:16px 0;">
+    <h4 style="font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;">Link Contact to This Qualification Record</h4>
+    <p style="font-size:12px;color:var(--cool-gray);margin-bottom:12px;line-height:1.6;">By checking this box, your contact details will be linked as the primary contact for this qualification record in our system. This helps us reach you directly for any qualification-related communications.</p>
+    <div class="checkbox-item" onclick="toggleCat(this)" id="linkContactItem">
+      <input type="checkbox" id="f_linkContact" checked>
+      <label>Yes, link my contact details to this qualification record</label>
+    </div>
   </div>
 
   <div class="form-group" style="margin-top:16px">
@@ -843,7 +849,6 @@ function goToScreen3(){
   if(!validatePhone())errors.push('Phone number is required and must include country code.');
   if(getSelectedSupplierTypes().length===0){document.getElementById('supplierTypeError').classList.add('show');errors.push('At least one Supplier Type must be selected.');}else document.getElementById('supplierTypeError').classList.remove('show');
   if(getSelectedCategories().length===0){document.getElementById('catError').classList.add('show');errors.push('At least one Product or Service Category must be selected.');}else document.getElementById('catError').classList.remove('show');
-  if(!document.getElementById('f_phaseAlignment').value)errors.push('Phase Alignment is required.');
   if(errors.length>0){showErrorSummary('screen2',errors);return;}
   document.getElementById('screen2Errors').classList.remove('show');
   if(approvedCategories.length===0)approvedCategories=getSelectedCategories();
@@ -925,7 +930,6 @@ function buildReviewSummary(){
     ['Address',[document.getElementById('f_streetAddress').value,document.getElementById('f_city').value,document.getElementById('f_province').value,document.getElementById('f_postalCode').value,document.getElementById('f_country').value].filter(Boolean).join(', ')],
     ['Ownership Type',document.getElementById('f_ownershipType').value||'Not specified'],
     ['Supplier Type',getSelectedSupplierTypes().join(', ')||'Not specified'],
-    ['Phase Alignment',document.getElementById('f_phaseAlignment').value||'Not specified'],
     ['Product Categories',catDisp],
     ['Distribution Territory',getSelectedTerritories().join(', ')||'Not specified'],
     ['Coverage Provinces',getSelectedCoverage().join(', ')||'Not specified'],
@@ -965,12 +969,11 @@ async function submitForm(){
     ['isoFile','iso9001File','insuranceFile','mdelFile','nhpFile'].forEach(fid=>{const f=document.getElementById('f_'+fid);if(f&&f.files[0])fd.append(fid,f.files[0]);});
     const recallProductsSummary=getRecallProductsSummary();
     const recallDetailsCombined=(document.getElementById('f_recallDetails').value||'')+(recallProductsSummary?'\n\nProduct Entries:\n'+recallProductsSummary:'');
-    const phaseUsed=document.getElementById('f_phaseAlignmentBrands').value||document.getElementById('f_phaseAlignment').value;
     const privateLabelUsed=document.getElementById('f_privateLabelBrand').value||document.getElementById('f_privateLabel').value;
     const skuUsed=document.getElementById('f_approxSKU2').value||document.getElementById('f_approxSKU').value;
     const payload={
       vendorId:gateData.vendorId,vendorName:gateData.vendorName,submissionReason:gateData.submissionReason,
-      approvedCategories,strippedCategories,errorRef,emailCopy,emailCopyAddress:emailCopy?emailCopyAddr:'',
+      approvedCategories,strippedCategories,errorRef,emailCopy,emailCopyAddress:emailCopy?emailCopyAddr:'',linkContactToCM27:document.getElementById('f_linkContact').checked,
       contact:{
         firstName:document.getElementById('f_firstName').value,lastName:document.getElementById('f_lastName').value,
         email:document.getElementById('f_email').value,phone:document.getElementById('f_phone').value,
@@ -986,7 +989,7 @@ async function submitForm(){
         privateLabel:privateLabelUsed,streetAddress:document.getElementById('f_streetAddress').value,
         city:document.getElementById('f_city').value,province:document.getElementById('f_province').value,
         postalCode:document.getElementById('f_postalCode').value,country:document.getElementById('f_country').value,
-        phaseAlignment:phaseUsed,brandsCarried:document.getElementById('f_brandsCarried').value,
+        brandsCarried:document.getElementById('f_brandsCarried').value,
         brandName:document.getElementById('f_brandName').value,brandAuthEvidence:document.getElementById('f_brandAuthEvidence').value,
         approxSKU:skuUsed
       },
