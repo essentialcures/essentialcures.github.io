@@ -535,7 +535,8 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
   <div class="form-group"><label>Primary Brand Name <span class="opt">(most significant brand)</span></label><input type="text" id="f_brandName" placeholder="e.g. Kimberly-Clark"><p class="field-hint">Enter your primary or most significant brand for quick identification.</p></div>
 
   <div class="form-grid">
-    <div class="form-group"><label>Brand Authorization Evidence</label><select id="f_brandAuthEvidence"><option value="">Select</option><option value="Provided">Provided with this application</option><option value="Requested">Will provide on request</option><option value="Not Required">Not Required - own brand or private label</option><option value="Not Provided">Not Provided</option></select><p class="field-hint">Do you have written brand authorization letters from manufacturers?</p></div>
+    <div class="form-group"><label>Brand Authorization Evidence</label><select id="f_brandAuthEvidence" onchange="updateBrandAuthUpload()"><option value="">Select</option><option value="Provided">Provided with this application</option><option value="Requested">Will provide on request</option><option value="Not Required">Not Required - own brand or private label</option><option value="Not Provided">Not Provided</option></select><p class="field-hint">Do you have written brand authorization letters from manufacturers?</p></div>
+    <div class="file-upload-group" id="brandAuthUploadGroup" style="display:none"><label>Brand Authorization Letter(s) <em>*</em></label><div class="file-drop-zone" id="brandAuthDropZone"><input type="file" id="f_brandAuthFile" accept=".pdf,application/pdf" onchange="handleFileUpload('f_brandAuthFile','brandAuthDropZone','brandAuthFileName','brandAuthFileError')"><div class="file-drop-icon">&#128196;</div><div class="file-drop-text"><strong>Click to upload</strong> or drag and drop</div><div class="file-drop-text">PDF only - max 5MB</div></div><div class="file-name-display" id="brandAuthFileName"></div><div class="file-error" id="brandAuthFileError"></div></div>
     <div class="form-group"><label>Total Approx SKU Count <span class="opt">(optional)</span></label><input type="number" id="f_approxSKU2" placeholder="e.g. 500" min="0" step="1"><p class="field-hint">Total number of unique SKUs across all brands you carry.</p></div>
   </div>
 
@@ -744,6 +745,10 @@ function checkInsuranceCoverage(){
   if(!v||isNaN(n)||n<2000000){err.classList.add('show');document.getElementById('f_insuranceAmt').classList.add('error');return false;}
   err.classList.remove('show');document.getElementById('f_insuranceAmt').classList.remove('error');return true;
 }
+function updateBrandAuthUpload(){
+  const v=document.getElementById('f_brandAuthEvidence').value;
+  document.getElementById('brandAuthUploadGroup').style.display=v==='Provided'?'block':'none';
+}
 function updateDataFeedFormat(){
   const v=document.getElementById('f_catalogue').value;
   const grp=document.getElementById('dataFeedFormatGroup');
@@ -932,8 +937,8 @@ function buildReviewSummary(){
     ['Supplier Type',getSelectedSupplierTypes().join(', ')||'Not specified'],
     ['Product Categories',catDisp],
     ['Distribution Territory',getSelectedTerritories().join(', ')||'Not specified'],
-    ['Coverage Provinces',getSelectedCoverage().join(', ')||'Not specified'],
-    ['DC Locations',document.getElementById('f_dcLocations').value||'Not specified'],
+    ['Coverage Provinces',getSelectedCoverage().length>0?getSelectedCoverage().join(', '):'Not specified'],
+    ['DC Locations',(document.getElementById('f_dcLocations')&&document.getElementById('f_dcLocations').value.trim())||'Not specified'],
     ['ISO 13485',document.getElementById('f_iso13485').value||'Not specified'],
     ['Liability Insurance',document.getElementById('f_insurance').value||'Not specified'],
     ['Recalls in Last 3 Years',document.getElementById('f_recalls').value||'Not specified'],
@@ -966,7 +971,7 @@ async function submitForm(){
   errorRef=genErrorRef();
   try{
     const fd=new FormData();
-    ['isoFile','iso9001File','insuranceFile','mdelFile','nhpFile'].forEach(fid=>{const f=document.getElementById('f_'+fid);if(f&&f.files[0])fd.append(fid,f.files[0]);});
+    ['isoFile','iso9001File','insuranceFile','mdelFile','nhpFile','brandAuthFile'].forEach(fid=>{const f=document.getElementById('f_'+fid);if(f&&f.files[0])fd.append(fid,f.files[0]);});
     const recallProductsSummary=getRecallProductsSummary();
     const recallDetailsCombined=(document.getElementById('f_recallDetails').value||'')+(recallProductsSummary?'\n\nProduct Entries:\n'+recallProductsSummary:'');
     const privateLabelUsed=document.getElementById('f_privateLabelBrand').value||document.getElementById('f_privateLabel').value;
