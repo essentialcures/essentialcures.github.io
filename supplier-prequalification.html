@@ -314,13 +314,13 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
   </div>
 </div>
 
-<!-- CATEGORY EXPANSION -->
+<!-- CATEGORY EXPANSION — kept for reference but auto-proceeds -->
 <div class="screen" id="screenCategoryAllow">
   <div class="status-screen">
     <div class="status-icon amber"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
     <div class="status-badge badge-amber">Existing Qualification on File</div>
-    <h3 class="status-title">Active Qualification Detected</h3>
-    <p class="status-body">Your current qualification is active until <strong id="categoryDate"></strong>. You may proceed to add a new category.</p>
+    <h3 class="status-title">Updating Your Qualification</h3>
+    <p class="status-body">You may proceed to update your qualification details, add new product categories, or renew your annual qualification.</p>
     <div class="nav-group" style="max-width:340px;margin:0 auto">
       <button class="btn-primary" onclick="proceedToForm()">Proceed to Application Form</button>
       <button class="btn-secondary" onclick="resetGate()">Go Back</button>
@@ -349,6 +349,14 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
   <div class="form-grid">
     <div class="form-group"><label>Phone <em>*</em></label><input type="tel" id="f_phone" placeholder="+1 (204) 555-0100" onblur="validatePhone()"><p class="field-hint">Include country code e.g. +1 (204) 555-0100</p><div class="field-error" id="phoneError">Please enter a valid phone number including country code.</div></div>
     <div class="form-group"><label>Preferred Contact Method</label><select id="f_preferredContact"><option value="">Select</option><option value="Email">Email</option><option value="Phone">Phone</option><option value="Either">Either</option></select></div>
+  </div>
+
+  <div style="background:#F0F7FF;border:1.5px solid var(--med-blue);border-radius:8px;padding:14px 20px;margin-bottom:20px;">
+    <h4 style="font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;">Link Contact to Qualification Record</h4>
+    <div class="checkbox-item selected" onclick="toggleCat(this)" id="linkContactItem2" style="border:none;padding:4px 0;background:transparent;">
+      <input type="checkbox" id="f_linkContact2" checked>
+      <label>Link my contact details as the primary contact for this qualification record in Essential Cures system</label>
+    </div>
   </div>
 
   <p class="section-title">Business Address</p>
@@ -598,14 +606,6 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
   </div>
 
 
-  <div class="form-group" style="background:#F7F9FB;border:1px solid #E8ECF0;border-radius:8px;padding:16px 20px;margin:16px 0;">
-    <h4 style="font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;">Link Contact to This Qualification Record</h4>
-    <p style="font-size:12px;color:var(--cool-gray);margin-bottom:12px;line-height:1.6;">By checking this box, your contact details will be linked as the primary contact for this qualification record in our system. This helps us reach you directly for any qualification-related communications.</p>
-    <div class="checkbox-item" onclick="toggleCat(this)" id="linkContactItem">
-      <input type="checkbox" id="f_linkContact" checked>
-      <label>Yes, link my contact details to this qualification record</label>
-    </div>
-  </div>
 
   <div class="form-group" style="margin-top:16px">
     <div class="checkbox-item" onclick="toggleCat(this)" id="confirmItem">
@@ -828,8 +828,14 @@ async function verifyGate(){
     gateData.vendorName=result.vendorName||company;
     gateData.reviewDate=result.reviewDate||'';
     if(result.status==='allow'){
-      if(result.reason==='category_expansion'){document.getElementById('categoryDate').textContent=formatDate(result.reviewDate);showScreen('screenCategoryAllow');}
-      else proceedToForm();
+      // renewal_due, category_expansion, new_supplier, first_time — all proceed to form
+      // Only show intermediate screen if there's a date to communicate
+      if((result.reason==='category_expansion'||result.reason==='renewal_due')&&result.reviewDate){
+        document.getElementById('categoryDate').textContent=formatDate(result.reviewDate);
+        showScreen('screenCategoryAllow');
+      } else {
+        proceedToForm();
+      }
     }else if(result.status==='block'){
       document.getElementById('blockedTitle').textContent='Your Qualification Is Current';
       document.getElementById('blockedMessage').textContent='Your supplier qualification is active and valid until '+formatDate(result.reviewDate)+'. No action is required at this time.';
@@ -978,7 +984,7 @@ async function submitForm(){
     const skuUsed=document.getElementById('f_approxSKU2').value||document.getElementById('f_approxSKU').value;
     const payload={
       vendorId:gateData.vendorId,vendorName:gateData.vendorName,submissionReason:gateData.submissionReason,
-      approvedCategories,strippedCategories,errorRef,emailCopy,emailCopyAddress:emailCopy?emailCopyAddr:'',linkContactToCM27:document.getElementById('f_linkContact').checked,
+      approvedCategories,strippedCategories,errorRef,emailCopy,emailCopyAddress:emailCopy?emailCopyAddr:'',linkContactToCM27:true,
       contact:{
         firstName:document.getElementById('f_firstName').value,lastName:document.getElementById('f_lastName').value,
         email:document.getElementById('f_email').value,phone:document.getElementById('f_phone').value,
