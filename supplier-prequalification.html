@@ -511,6 +511,7 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
 
   <p class="section-title">Freight and Logistics</p>
   <div class="form-group"><label>Freight Terms <span class="opt">(select all that apply - Incoterms 2020)</span></label><div class="checkbox-group" id="freightGroup"><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="EXW"><label>EXW - Ex Works (buyer arranges all freight)</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="FCA"><label>FCA - Free Carrier</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="FOB"><label>FOB - Free on Board</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="CFR"><label>CFR - Cost and Freight</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="CIF"><label>CIF - Cost, Insurance and Freight</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="CPT"><label>CPT - Carriage Paid To</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="CIP"><label>CIP - Carriage and Insurance Paid To</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="DAP"><label>DAP - Delivered at Place (seller delivers to buyer)</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="DPU"><label>DPU - Delivered at Place Unloaded</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="DDP"><label>DDP - Delivered Duty Paid (seller handles everything)</label></div></div></div>
+  <div class="form-group"><label>Free Freight Threshold (CAD) <span class="opt">(optional)</span></label><div class="currency-input-wrap"><span class="currency-prefix">$</span><input type="number" id="f_freightThreshold" placeholder="e.g. 500" min="0" step="1"></div><p class="field-hint">Minimum order value for free freight. Enter 0 if not applicable.</p></div>
   <div class="form-group"><label>Return Policy Summary <span class="opt">(optional)</span></label><textarea id="f_returnPolicy" placeholder="Briefly describe your return and restocking policy, including any conditions, timeframes, or restocking fees."></textarea></div>
 
   <p class="section-title">Catalogue and Data</p>
@@ -662,7 +663,7 @@ const COMPLIANCE_RULES={
   'Services':{iso13485:false,mdel:false,nhp:false},
   'Other':{iso13485:false,mdel:false,nhp:false}
 };
-let gateData={vendorId:'',vendorName:'',reason:'',reviewDate:'',submissionReason:''};
+let gateData={vendorId:'',vendorName:'',reason:'',reviewDate:'',submissionReason:'',existingSQRId:'',existingLineageId:''};
 let turnstileVerified=false;
 let approvedCategories=[];
 let strippedCategories=[];
@@ -827,6 +828,8 @@ async function verifyGate(){
     gateData.vendorId=result.vendorId||'';
     gateData.vendorName=result.vendorName||company;
     gateData.reviewDate=result.reviewDate||'';
+    gateData.existingSQRId=result.sqrId||'';
+    gateData.existingLineageId=result.lineageId||'';
     if(result.status==='allow'){
       // renewal_due, category_expansion, new_supplier, first_time — all proceed to form
       // Only show intermediate screen if there's a date to communicate
@@ -983,7 +986,7 @@ async function submitForm(){
     const privateLabelUsed=document.getElementById('f_privateLabelBrand').value||document.getElementById('f_privateLabel').value;
     const skuUsed=document.getElementById('f_approxSKU2').value||document.getElementById('f_approxSKU').value;
     const payload={
-      vendorId:gateData.vendorId,vendorName:gateData.vendorName,submissionReason:gateData.submissionReason,
+      vendorId:gateData.vendorId,vendorName:gateData.vendorName,submissionReason:gateData.submissionReason,existingSQRId:gateData.existingSQRId,existingLineageId:gateData.existingLineageId,
       approvedCategories,strippedCategories,errorRef,emailCopy,emailCopyAddress:emailCopy?emailCopyAddr:'',linkContactToCM27:true,
       contact:{
         firstName:document.getElementById('f_firstName').value,lastName:document.getElementById('f_lastName').value,
@@ -1022,7 +1025,7 @@ async function submitForm(){
         pricingModel:document.getElementById('f_pricingModel').value,rebate:document.getElementById('f_rebate').value,
         rebateDetails:document.getElementById('f_rebateDetails').value,
         minOrderCAD:document.getElementById('f_minOrder').value!==''?parseInt(document.getElementById('f_minOrder').value,10):null,
-        returnPolicy:document.getElementById('f_returnPolicy').value,discountStructure:document.getElementById('f_discountStructure').value,
+        returnPolicy:document.getElementById('f_returnPolicy').value,freightThreshold:document.getElementById('f_freightThreshold').value,discountStructure:document.getElementById('f_discountStructure').value,
         catalogue:document.getElementById('f_catalogue').value,dataFeedFormat:document.getElementById('f_dataFeedFormat').value,
         approxSKU:skuUsed,marketingSupport:document.getElementById('f_marketingSupport').value
       },
