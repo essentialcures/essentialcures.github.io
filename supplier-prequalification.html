@@ -1100,6 +1100,15 @@ function showTechError(ref){
   const v=parseInt(el.value,10);const err=document.getElementById('skuError');
   if(el.value&&(isNaN(v)||v<1||v>999999||el.value.includes('.'))){err.classList.add('show');el.classList.add('error');}
   else{err.classList.remove('show');el.classList.remove('error');}
+    function handleEmailChange(){
+  const v=document.getElementById('f_emailChanged').value;
+  emailChanged=(v==='Yes');
+  const neg=document.getElementById('newEmailGroup');
+  if(neg)neg.style.display=emailChanged?'block':'none';
+  if(!emailChanged){
+    const ne=document.getElementById('f_newEmail');if(ne)ne.value='';
+  }
+}
 }
 function toggleIT(){document.getElementById('itPanel').classList.toggle('open');}
 const params=new URLSearchParams(window.location.search);const ep=params.get('email');if(ep)document.getElementById('gateEmail').value=decodeURIComponent(ep);
