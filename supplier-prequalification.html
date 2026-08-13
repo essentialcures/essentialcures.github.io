@@ -1026,8 +1026,10 @@ async function submitForm(){
     const recallDetailsCombined=(document.getElementById('f_recallDetails').value||'')+(recallProductsSummary?'\n\nProduct Entries:\n'+recallProductsSummary:'');
     const privateLabelUsed=document.getElementById('f_privateLabelBrand').value||document.getElementById('f_privateLabel').value;
     const skuUsed=document.getElementById('f_approxSKU2').value||document.getElementById('f_approxSKU').value;
+    const newEmail=emailChanged?document.getElementById('f_newEmail').value.trim():'';
     const payload={
       vendorId:gateData.vendorId,vendorName:gateData.vendorName,submissionReason:gateData.submissionReason,existingSQRId:gateData.existingSQRId,existingLineageId:gateData.existingLineageId,
+      contactId:gateData.contactId,emailChanged:emailChanged,
       approvedCategories,strippedCategories,errorRef,emailCopy,emailCopyAddress:emailCopy?emailCopyAddr:'',linkContactToCM27:true,
       contact:{
         firstName:document.getElementById('f_firstName').value,lastName:document.getElementById('f_lastName').value,
