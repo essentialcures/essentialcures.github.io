@@ -841,8 +841,14 @@ async function verifyGate(){
         proceedToForm();
       }
     }else if(result.status==='block'){
-      document.getElementById('blockedTitle').textContent='Your Qualification Is Current';
-      document.getElementById('blockedMessage').textContent='Your supplier qualification is active and valid until '+formatDate(result.reviewDate)+'. No action is required at this time.';
+      if(result.reason==='no_existing_record'){
+        document.getElementById('blockedTitle').textContent='No Existing Qualification Found';
+        document.getElementById('blockedMessage').textContent=result.message||'No active qualification on file for your organisation. Please submit as a new qualification first.';
+        document.querySelector('#screenBlocked .status-badge').textContent='ACTION REQUIRED';
+      }else{
+        document.getElementById('blockedTitle').textContent='Your Qualification Is Current';
+        document.getElementById('blockedMessage').textContent='Your supplier qualification is active and valid until '+formatDate(result.reviewDate)+'. No action is required at this time.';
+      }
       showScreen('screenBlocked');
     }else{errEl.textContent=result.reason||'Verification failed.';errEl.style.display='block';}
   }catch(e){spinner.classList.remove('show');document.querySelector('#screen1 .btn-primary').disabled=false;errEl.textContent='Unable to verify at this time. Please try again.';errEl.style.display='block';}
