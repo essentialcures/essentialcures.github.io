@@ -1094,6 +1094,11 @@ function showTechError(ref){
   container.innerHTML='<div class="tech-error-banner show"><h4>Submission Could Not Be Processed</h4><p>Our IT team has been notified. Please try again in a few minutes or email <a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a> quoting the reference below.</p><p class="tech-error-ref">Reference: '+ref+'</p></div>';
   container.scrollIntoView({behavior:'smooth',block:'start'});
 }
+  function validateSKU(el){
+  const v=parseInt(el.value,10);const err=document.getElementById('skuError');
+  if(el.value&&(isNaN(v)||v<1||v>999999||el.value.includes('.'))){err.classList.add('show');el.classList.add('error');}
+  else{err.classList.remove('show');el.classList.remove('error');}
+}
 function toggleIT(){document.getElementById('itPanel').classList.toggle('open');}
 const params=new URLSearchParams(window.location.search);const ep=params.get('email');if(ep)document.getElementById('gateEmail').value=decodeURIComponent(ep);
 </script>
