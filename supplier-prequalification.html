@@ -1033,7 +1033,7 @@ async function submitForm(){
       approvedCategories,strippedCategories,errorRef,emailCopy,emailCopyAddress:emailCopy?emailCopyAddr:'',linkContactToCM27:true,
       contact:{
         firstName:document.getElementById('f_firstName').value,lastName:document.getElementById('f_lastName').value,
-        email:document.getElementById('f_email').value,phone:document.getElementById('f_phone').value,
+        email:emailChanged&&newEmail?newEmail:document.getElementById('f_email').value,phone:document.getElementById('f_phone').value,
         jobTitle:document.getElementById('f_jobTitle').value,preferredContact:document.getElementById('f_preferredContact').value
       },
       organisation:{
