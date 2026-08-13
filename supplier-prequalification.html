@@ -664,12 +664,13 @@ const COMPLIANCE_RULES={
   'Services':{iso13485:false,mdel:false,nhp:false},
   'Other':{iso13485:false,mdel:false,nhp:false}
 };
-let gateData={vendorId:'',vendorName:'',reason:'',reviewDate:'',submissionReason:'',existingSQRId:'',existingLineageId:''};
+let gateData={vendorId:'',vendorName:'',reason:'',reviewDate:'',submissionReason:'',existingSQRId:'',existingLineageId:'',contactId:'',contactName:''};
 let turnstileVerified=false;
 let approvedCategories=[];
 let strippedCategories=[];
 let errorRef='';
 let recallProductCount=0;
+let emailChanged=false;
 
 function genErrorRef(){return 'ERR-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).substr(2,4).toUpperCase();}
 function getRequirements(){
