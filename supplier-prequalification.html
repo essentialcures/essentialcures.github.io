@@ -11,17 +11,7 @@
 <style>
 :root{--deep-blue:#005090;--med-blue:#0070B0;--dark-navy:#003060;--leaf-green:#4A8B2C;--lime:#8FC23C;--slate:#2C3E50;--cool-gray:#6B7C8C;--light-bg:#F7F9FB;--white:#FFFFFF;--off-white:#FAFBFC;--red:#C0392B;--amber:#E67E22;--success:#27AE60;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:"Inter",sans-serif;color:var(--sla<div class="form-group"><label>Contact Email</label><input type="email" id="f_email" readonly style="background:#F0F7FF;color:var(--deep-blue);font-weight:600;"></div>
-  </div>
-  <div id="emailChangeSection" style="display:none">
-    <div style="background:#FFF8E1;border:1.5px solid #F0D080;border-radius:8px;padding:14px 20px;margin-bottom:20px;">
-      <h4 style="font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;">Has Your Contact Email Changed?</h4>
-      <p style="font-size:12px;color:var(--cool-gray);margin-bottom:10px;line-height:1.6;">If your primary contact email has changed since your last qualification, select Yes below. A new contact record will be created with your updated details. Your previous contact record will remain in our system.</p>
-      <div class="form-grid">
-        <div class="form-group" style="margin-bottom:0"><label>Email Changed?</label><select id="f_emailChanged" onchange="handleEmailChange()"><option value="No">No - same email as before</option><option value="Yes">Yes - I have a new email address</option></select></div>
-        <div class="form-group" id="newEmailGroup" style="display:none;margin-bottom:0"><label>New Contact Email <em>*</em></label><input type="email" id="f_newEmail" placeholder="newemail@company.com"><div class="field-error" id="newEmailError">Please enter a valid email address.</div></div>
-      </div>
-    </div>te);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
+body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
 header{display:none!important;}
 .doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
 .doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
@@ -331,9 +321,6 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
     <div class="status-badge badge-amber">Existing Qualification on File</div>
     <h3 class="status-title">Updating Your Qualification</h3>
     <p class="status-body">You may proceed to update your qualification details, add new product categories, or renew your annual qualification.</p>
-    <div style="background:#FFF8E1;border:1px solid #F0D080;border-radius:8px;padding:14px 18px;margin:0 auto 16px;max-width:480px;text-align:left;">
-      <p style="font-size:13px;color:var(--slate);line-height:1.7;margin:0"><strong style="color:var(--amber)">Please Note:</strong> Submitting this application will create a new qualification record for review. Your existing active qualification remains in effect until the new submission is approved. If approved, it will supersede your current record.</p>
-    </div>
     <p class="status-body" style="font-size:13px">Current qualification on file. Next scheduled review: <strong id="categoryDate"></strong></p>
     <div class="nav-group" style="max-width:340px;margin:0 auto">
       <button class="btn-primary" onclick="proceedToForm()">Proceed to Application Form</button>
@@ -359,16 +346,6 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
   <div class="form-grid">
     <div class="form-group"><label>Job Title <em>*</em></label><input type="text" id="f_jobTitle" placeholder="e.g. VP Sales, Account Manager"></div>
     <div class="form-group"><label>Contact Email</label><input type="email" id="f_email" readonly style="background:#F0F7FF;color:var(--deep-blue);font-weight:600;"></div>
-  </div>
-  <div id="emailChangeSection" style="display:none">
-    <div style="background:#FFF8E1;border:1.5px solid #F0D080;border-radius:8px;padding:14px 20px;margin-bottom:20px;">
-      <h4 style="font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;">Has Your Contact Email Changed?</h4>
-      <p style="font-size:12px;color:var(--cool-gray);margin-bottom:10px;line-height:1.6;">If your primary contact email has changed since your last qualification, select Yes below. A new contact record will be created with your updated details. Your previous contact record will remain in our system.</p>
-      <div class="form-grid">
-        <div class="form-group" style="margin-bottom:0"><label>Email Changed?</label><select id="f_emailChanged" onchange="handleEmailChange()"><option value="No">No - same email as before</option><option value="Yes">Yes - I have a new email address</option></select></div>
-        <div class="form-group" id="newEmailGroup" style="display:none;margin-bottom:0"><label>New Contact Email <em>*</em></label><input type="email" id="f_newEmail" placeholder="newemail@company.com"><div class="field-error" id="newEmailError">Please enter a valid email address.</div></div>
-      </div>
-    </div>
   </div>
   <div class="form-grid">
     <div class="form-group"><label>Phone <em>*</em></label><input type="tel" id="f_phone" placeholder="+1 (204) 555-0100" onblur="validatePhone()"><p class="field-hint">Include country code e.g. +1 (204) 555-0100</p><div class="field-error" id="phoneError">Please enter a valid phone number including country code.</div></div>
@@ -543,8 +520,10 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
     <div class="form-group"><label>Catalogue or Data Feed Available?</label><select id="f_catalogue" onchange="updateDataFeedFormat()"><option value="">Select</option><option value="CSV">Yes - CSV format</option><option value="EDI">Yes - EDI format</option><option value="API">Yes - API integration available</option><option value="Manual">Yes - manual / PDF catalogue</option><option value="None">No catalogue available</option></select></div>
     <div class="form-group" id="dataFeedFormatGroup" style="display:none"><label>Data Feed Format</label><select id="f_dataFeedFormat"><option value="">Select</option><option value="CSV">CSV</option><option value="EDI">EDI</option><option value="API">API</option><option value="Manual">Manual</option></select></div>
   </div>
-  <div class="form-group"><label>Marketing Support Available?</label><select id="f_marketingSupport"><option value="">Select</option><option value="Yes-Full">Yes - Full support available</option><option value="Yes-Limited">Yes - Limited support available</option><option value="No">No</option></select></div>
-  
+  <div class="form-grid">
+    <div class="form-group"><label>Approx Total SKU Count <span class="opt">(optional)</span></label><input type="number" id="f_approxSKU" placeholder="e.g. 500" min="0" step="1"><p class="field-hint">Approximate number of unique SKUs you carry.</p></div>
+    <div class="form-group"><label>Marketing Support Available?</label><select id="f_marketingSupport"><option value="">Select</option><option value="Yes-Full">Yes - Full support available</option><option value="Yes-Limited">Yes - Limited support available</option><option value="No">No</option></select></div>
+  </div>
   <div class="form-group"><label>Additional Notes <span class="opt">(optional)</span></label><textarea id="f_notes" placeholder="Any additional context, qualifications, or information relevant to your application."></textarea></div>
 
   <div class="nav-group">
@@ -568,7 +547,7 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
   <div class="form-grid">
     <div class="form-group"><label>Brand Authorization Evidence</label><select id="f_brandAuthEvidence" onchange="updateBrandAuthUpload()"><option value="">Select</option><option value="Provided">Provided with this application</option><option value="Requested">Will provide on request</option><option value="Not Required">Not Required - own brand or private label</option><option value="Not Provided">Not Provided</option></select><p class="field-hint">Do you have written brand authorization letters from manufacturers?</p></div>
     <div class="file-upload-group" id="brandAuthUploadGroup" style="display:none"><label>Brand Authorization Letter(s) <em>*</em></label><div class="file-drop-zone" id="brandAuthDropZone"><input type="file" id="f_brandAuthFile" accept=".pdf,application/pdf" onchange="handleFileUpload('f_brandAuthFile','brandAuthDropZone','brandAuthFileName','brandAuthFileError')"><div class="file-drop-icon">&#128196;</div><div class="file-drop-text"><strong>Click to upload</strong> or drag and drop</div><div class="file-drop-text">PDF only - max 5MB</div></div><div class="file-name-display" id="brandAuthFileName"></div><div class="file-error" id="brandAuthFileError"></div></div>
-    <div class="form-group"><label>Total Approx SKU Count <span class="opt">(optional)</span></label><input type="number" id="f_approxSKU2" placeholder="e.g. 500" min="1" max="999999" step="1" oninput="validateSKU(this)"><p class="field-hint">Whole positive number. Maximum 999,999.</p><div class="field-error" id="skuError">SKU count must be a whole positive number, maximum 999,999.</div></div>
+    <div class="form-group"><label>Total Approx SKU Count <span class="opt">(optional)</span></label><input type="number" id="f_approxSKU2" placeholder="e.g. 500" min="0" step="1"><p class="field-hint">Total number of unique SKUs across all brands you carry.</p></div>
   </div>
 
   <p class="section-title">Product Capability</p>
@@ -685,13 +664,12 @@ const COMPLIANCE_RULES={
   'Services':{iso13485:false,mdel:false,nhp:false},
   'Other':{iso13485:false,mdel:false,nhp:false}
 };
-let gateData={vendorId:'',vendorName:'',reason:'',reviewDate:'',submissionReason:'',existingSQRId:'',existingLineageId:'',contactId:'',contactName:''};
+let gateData={vendorId:'',vendorName:'',reason:'',reviewDate:'',submissionReason:'',existingSQRId:'',existingLineageId:''};
 let turnstileVerified=false;
 let approvedCategories=[];
 let strippedCategories=[];
 let errorRef='';
 let recallProductCount=0;
-let emailChanged=false;
 
 function genErrorRef(){return 'ERR-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).substr(2,4).toUpperCase();}
 function getRequirements(){
@@ -851,10 +829,8 @@ async function verifyGate(){
     gateData.vendorId=result.vendorId||'';
     gateData.vendorName=result.vendorName||company;
     gateData.reviewDate=result.reviewDate||'';
-   gateData.existingSQRId=result.sqrId||'';
+    gateData.existingSQRId=result.sqrId||'';
     gateData.existingLineageId=result.lineageId||'';
-    gateData.contactId=result.contactId||'';
-    gateData.contactName=result.contactName||'';
     if(result.status==='allow'){
       // renewal_due, category_expansion, new_supplier, first_time — all proceed to form
       // Only show intermediate screen if there's a date to communicate
@@ -880,16 +856,6 @@ async function verifyGate(){
 function proceedToForm(){
   document.getElementById('f_companyName').value=gateData.vendorName||document.getElementById('gateCompany').value;
   document.getElementById('f_email').value=document.getElementById('gateEmail').value;
-  // Show email change option only for renewals and category expansions (not new qualification)
-  const showEmailChange=gateData.submissionReason==='renewal'||gateData.submissionReason==='category';
-  const ecs=document.getElementById('emailChangeSection');
-  if(ecs)ecs.style.display=showEmailChange?'block':'none';
-  // Reset email change state
-  emailChanged=false;
-  const ecSel=document.getElementById('f_emailChanged');
-  if(ecSel)ecSel.value='No';
-  const neg=document.getElementById('newEmailGroup');
-  if(neg)neg.style.display='none';
   goToScreen(2);
 }
 function resetGate(){showScreen('screen1');updateSteps(1);}
@@ -902,7 +868,6 @@ function goToScreen3(){
   if(document.getElementById('f_dropShip').value==='Yes'&&!document.getElementById('f_leadTime').value)errors.push('Lead Time is required when Drop Ship is Yes.');
   if(!validateWebsite())errors.push('Website address is required and must be valid.');
   if(!validatePhone())errors.push('Phone number is required and must include country code.');
-  if(emailChanged){const ne=document.getElementById('f_newEmail').value.trim();if(!ne||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ne)){errors.push('New contact email is required and must be valid.');document.getElementById('newEmailError').classList.add('show');}else{document.getElementById('newEmailError').classList.remove('show');}}
   if(getSelectedSupplierTypes().length===0){document.getElementById('supplierTypeError').classList.add('show');errors.push('At least one Supplier Type must be selected.');}else document.getElementById('supplierTypeError').classList.remove('show');
   if(getSelectedCategories().length===0){document.getElementById('catError').classList.add('show');errors.push('At least one Product or Service Category must be selected.');}else document.getElementById('catError').classList.remove('show');
   if(errors.length>0){showErrorSummary('screen2',errors);return;}
@@ -1026,15 +991,13 @@ async function submitForm(){
     const recallProductsSummary=getRecallProductsSummary();
     const recallDetailsCombined=(document.getElementById('f_recallDetails').value||'')+(recallProductsSummary?'\n\nProduct Entries:\n'+recallProductsSummary:'');
     const privateLabelUsed=document.getElementById('f_privateLabelBrand').value||document.getElementById('f_privateLabel').value;
-   const skuUsed=document.getElementById('f_approxSKU2').value||'';
-    const newEmail=emailChanged?document.getElementById('f_newEmail').value.trim():'';
+    const skuUsed=document.getElementById('f_approxSKU2').value||document.getElementById('f_approxSKU').value;
     const payload={
       vendorId:gateData.vendorId,vendorName:gateData.vendorName,submissionReason:gateData.submissionReason,existingSQRId:gateData.existingSQRId,existingLineageId:gateData.existingLineageId,
-      contactId:gateData.contactId,emailChanged:emailChanged,
       approvedCategories,strippedCategories,errorRef,emailCopy,emailCopyAddress:emailCopy?emailCopyAddr:'',linkContactToCM27:true,
       contact:{
         firstName:document.getElementById('f_firstName').value,lastName:document.getElementById('f_lastName').value,
-        email:emailChanged&&newEmail?newemail:emailChanged&&newEmail?newEmail:document.getElementById('f_email').value,phone:document.getElementById('f_phone').value,
+        email:document.getElementById('f_email').value,phone:document.getElementById('f_phone').value,
         jobTitle:document.getElementById('f_jobTitle').value,preferredContact:document.getElementById('f_preferredContact').value
       },
       organisation:{
@@ -1096,20 +1059,6 @@ function showTechError(ref){
   const container=document.getElementById('techErrorBannerContainer');
   container.innerHTML='<div class="tech-error-banner show"><h4>Submission Could Not Be Processed</h4><p>Our IT team has been notified. Please try again in a few minutes or email <a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a> quoting the reference below.</p><p class="tech-error-ref">Reference: '+ref+'</p></div>';
   container.scrollIntoView({behavior:'smooth',block:'start'});
-}
-  function validateSKU(el){
-  const v=parseInt(el.value,10);const err=document.getElementById('skuError');
-  if(el.value&&(isNaN(v)||v<1||v>999999||el.value.includes('.'))){err.classList.add('show');el.classList.add('error');}
-  else{err.classList.remove('show');el.classList.remove('error');}
-    function handleEmailChange(){
-  const v=document.getElementById('f_emailChanged').value;
-  emailChanged=(v==='Yes');
-  const neg=document.getElementById('newEmailGroup');
-  if(neg)neg.style.display=emailChanged?'block':'none';
-  if(!emailChanged){
-    const ne=document.getElementById('f_newEmail');if(ne)ne.value='';
-  }
-}
 }
 function toggleIT(){document.getElementById('itPanel').classList.toggle('open');}
 const params=new URLSearchParams(window.location.search);const ep=params.get('email');if(ep)document.getElementById('gateEmail').value=decodeURIComponent(ep);
