@@ -11,7 +11,17 @@
 <style>
 :root{--deep-blue:#005090;--med-blue:#0070B0;--dark-navy:#003060;--leaf-green:#4A8B2C;--lime:#8FC23C;--slate:#2C3E50;--cool-gray:#6B7C8C;--light-bg:#F7F9FB;--white:#FFFFFF;--off-white:#FAFBFC;--red:#C0392B;--amber:#E67E22;--success:#27AE60;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
+body{font-family:"Inter",sans-serif;color:var(--sla<div class="form-group"><label>Contact Email</label><input type="email" id="f_email" readonly style="background:#F0F7FF;color:var(--deep-blue);font-weight:600;"></div>
+  </div>
+  <div id="emailChangeSection" style="display:none">
+    <div style="background:#FFF8E1;border:1.5px solid #F0D080;border-radius:8px;padding:14px 20px;margin-bottom:20px;">
+      <h4 style="font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;">Has Your Contact Email Changed?</h4>
+      <p style="font-size:12px;color:var(--cool-gray);margin-bottom:10px;line-height:1.6;">If your primary contact email has changed since your last qualification, select Yes below. A new contact record will be created with your updated details. Your previous contact record will remain in our system.</p>
+      <div class="form-grid">
+        <div class="form-group" style="margin-bottom:0"><label>Email Changed?</label><select id="f_emailChanged" onchange="handleEmailChange()"><option value="No">No - same email as before</option><option value="Yes">Yes - I have a new email address</option></select></div>
+        <div class="form-group" id="newEmailGroup" style="display:none;margin-bottom:0"><label>New Contact Email <em>*</em></label><input type="email" id="f_newEmail" placeholder="newemail@company.com"><div class="field-error" id="newEmailError">Please enter a valid email address.</div></div>
+      </div>
+    </div>te);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
 header{display:none!important;}
 .doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
 .doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
@@ -872,6 +882,16 @@ async function verifyGate(){
 function proceedToForm(){
   document.getElementById('f_companyName').value=gateData.vendorName||document.getElementById('gateCompany').value;
   document.getElementById('f_email').value=document.getElementById('gateEmail').value;
+  // Show email change option only for renewals and category expansions (not new qualification)
+  const showEmailChange=gateData.submissionReason==='renewal'||gateData.submissionReason==='category';
+  const ecs=document.getElementById('emailChangeSection');
+  if(ecs)ecs.style.display=showEmailChange?'block':'none';
+  // Reset email change state
+  emailChanged=false;
+  const ecSel=document.getElementById('f_emailChanged');
+  if(ecSel)ecSel.value='No';
+  const neg=document.getElementById('newEmailGroup');
+  if(neg)neg.style.display='none';
   goToScreen(2);
 }
 function resetGate(){showScreen('screen1');updateSteps(1);}
