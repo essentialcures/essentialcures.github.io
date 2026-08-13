@@ -350,6 +350,16 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
     <div class="form-group"><label>Job Title <em>*</em></label><input type="text" id="f_jobTitle" placeholder="e.g. VP Sales, Account Manager"></div>
     <div class="form-group"><label>Contact Email</label><input type="email" id="f_email" readonly style="background:#F0F7FF;color:var(--deep-blue);font-weight:600;"></div>
   </div>
+  <div id="emailChangeSection" style="display:none">
+    <div style="background:#FFF8E1;border:1.5px solid #F0D080;border-radius:8px;padding:14px 20px;margin-bottom:20px;">
+      <h4 style="font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;">Has Your Contact Email Changed?</h4>
+      <p style="font-size:12px;color:var(--cool-gray);margin-bottom:10px;line-height:1.6;">If your primary contact email has changed since your last qualification, select Yes below. A new contact record will be created with your updated details. Your previous contact record will remain in our system.</p>
+      <div class="form-grid">
+        <div class="form-group" style="margin-bottom:0"><label>Email Changed?</label><select id="f_emailChanged" onchange="handleEmailChange()"><option value="No">No - same email as before</option><option value="Yes">Yes - I have a new email address</option></select></div>
+        <div class="form-group" id="newEmailGroup" style="display:none;margin-bottom:0"><label>New Contact Email <em>*</em></label><input type="email" id="f_newEmail" placeholder="newemail@company.com"><div class="field-error" id="newEmailError">Please enter a valid email address.</div></div>
+      </div>
+    </div>
+  </div>
   <div class="form-grid">
     <div class="form-group"><label>Phone <em>*</em></label><input type="tel" id="f_phone" placeholder="+1 (204) 555-0100" onblur="validatePhone()"><p class="field-hint">Include country code e.g. +1 (204) 555-0100</p><div class="field-error" id="phoneError">Please enter a valid phone number including country code.</div></div>
     <div class="form-group"><label>Preferred Contact Method</label><select id="f_preferredContact"><option value="">Select</option><option value="Email">Email</option><option value="Phone">Phone</option><option value="Either">Either</option></select></div>
