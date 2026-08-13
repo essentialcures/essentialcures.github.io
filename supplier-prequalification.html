@@ -902,6 +902,7 @@ function goToScreen3(){
   if(document.getElementById('f_dropShip').value==='Yes'&&!document.getElementById('f_leadTime').value)errors.push('Lead Time is required when Drop Ship is Yes.');
   if(!validateWebsite())errors.push('Website address is required and must be valid.');
   if(!validatePhone())errors.push('Phone number is required and must include country code.');
+  if(emailChanged){const ne=document.getElementById('f_newEmail').value.trim();if(!ne||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ne)){errors.push('New contact email is required and must be valid.');document.getElementById('newEmailError').classList.add('show');}else{document.getElementById('newEmailError').classList.remove('show');}}
   if(getSelectedSupplierTypes().length===0){document.getElementById('supplierTypeError').classList.add('show');errors.push('At least one Supplier Type must be selected.');}else document.getElementById('supplierTypeError').classList.remove('show');
   if(getSelectedCategories().length===0){document.getElementById('catError').classList.add('show');errors.push('At least one Product or Service Category must be selected.');}else document.getElementById('catError').classList.remove('show');
   if(errors.length>0){showErrorSummary('screen2',errors);return;}
