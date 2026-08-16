@@ -47,7 +47,7 @@ header{display:none!important;}
 .step-label{font-size:10px;font-weight:600;color:var(--cool-gray);white-space:nowrap;}
 .step-label.active{color:var(--deep-blue);}
 .step-divider{flex:1;height:2px;background:#E8ECF0;margin:0 4px;margin-bottom:14px;min-width:8px;}
-.section-block{border-radius:10px;padding:24px;margin-bottom:28px;border:1px solid rgba(0,0,0,0.06);}
+.section-block{border-radius:10px;padding:18px;margin-bottom:20px;border:1px solid rgba(0,0,0,0.06);}
 .section-block.contact-block{background:var(--sec-contact);}
 .section-block.address-block{background:var(--sec-address);}
 .section-block.classify-block{background:var(--sec-classify);}
@@ -63,7 +63,7 @@ header{display:none!important;}
 .section-block.brands-block{background:var(--sec-brands);}
 .section-block.refs-block{background:var(--sec-refs);}
 .section-block.uploads-block{background:#F8F8F8;}
-.form-group{margin-bottom:20px;}
+.form-group{margin-bottom:16px;}
 .form-group label{display:block;font-size:13px;font-weight:600;color:var(--dark-navy);margin-bottom:6px;}
 .form-group label em{font-style:normal;color:var(--red);}
 .form-group label .opt{font-style:italic;color:var(--cool-gray);font-weight:400;font-size:11px;margin-left:4px;}
@@ -81,12 +81,12 @@ header{display:none!important;}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
 input[type=number]{-moz-appearance:textfield;}
-.checkbox-group{display:flex;flex-direction:column;gap:10px;}
-.checkbox-item{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border-radius:6px;border:1.5px solid transparent;transition:all 0.2s;cursor:pointer;user-select:none;}
+.checkbox-group{display:flex;flex-direction:column;gap:6px;}
+.checkbox-item{display:flex;align-items:flex-start;gap:8px;padding:6px 10px;border-radius:6px;border:1.5px solid transparent;transition:all 0.2s;cursor:pointer;user-select:none;}
 .checkbox-item:hover{background:#F0F7FF;border-color:#D4DAE0;}
 .checkbox-item.selected{background:#EBF5E8;border-color:var(--leaf-green);}
 .checkbox-item input[type="checkbox"]{width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:var(--deep-blue);cursor:pointer;pointer-events:none;}
-.checkbox-item label{font-size:13px;color:var(--slate);font-weight:400;cursor:pointer;flex:1;pointer-events:none;}
+.checkbox-item label{font-size:12px;color:var(--slate);font-weight:400;cursor:pointer;flex:1;pointer-events:none;}
 .cat-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;margin-left:6px;white-space:nowrap;}
 .badge-regulated{background:rgba(192,57,43,0.1);color:var(--red);}
 .badge-nhp{background:rgba(230,126,34,0.1);color:var(--amber);}
@@ -227,7 +227,7 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
 </style>
 </head>
 <body>
-<div class="it-float" id="itFloat"><button class="it-tab" onclick="toggleIT()">Technical Support</button><div class="it-panel" id="itPanel"><button class="it-close" onclick="toggleIT()">&#10005;</button><h4>Technical Issues?</h4><p>If you are experiencing a problem with this form, email our IT team with a description of the issue.</p><a href="mailto:it@essentialcures.com?subject=Supplier Form Technical Issue">Email EC-IT Support</a></div></div>
+<div class="it-float" id="itFloat"><button class="it-tab" onclick="toggleIT()">Technical Support</button><div class="it-panel" id="itPanel"><button class="it-close" onclick="toggleIT()">&#10005;</button><h4>Technical Issues?</h4><p>If you are experiencing a problem with this form, email our IT team with a description of the issue.</p><a href="mailto:it@essentialcures.com?subject=Supplier Form Technical Issue">Email IT Support</a></div></div>
 <div class="modal-overlay" id="preflightModal"><div class="modal-box" style="background:#FFFFFF;">
 
 <!-- MODAL HEADER -->
@@ -710,7 +710,7 @@ function formatDate(d){if(!d)return '';try{return new Date(d).toLocaleDateString
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 function goToScreen(n){if(n===3)setupScreen3();if(n===7)buildReviewSummary();showScreen('screen'+n);window.scrollTo({top:0,behavior:'smooth'});updateSteps(n);}
 function updateSteps(active){for(let i=1;i<=7;i++){const n=document.getElementById('stepNum'+i);const l=document.getElementById('stepLbl'+i);if(!n)continue;const done='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';n.className='step-num'+(i<active?' done':i===active?' active':'');l.className='step-label'+(i===active?' active':'');n.innerHTML=i<active?done:String(i);}}
-function showErrorSummary(sid,errors){const box=document.getElementById(sid+'Errors');const list=document.getElementById(sid+'ErrorList');if(!box)return;if(errors.length===0){box.classList.remove('show');return;}list.innerHTML=errors.map(e=>'<li>'+e+'</li>').join('');box.classList.add('show');box.scrollIntoView({behavior:'smooth',block:'start'});}
+function showErrorSummary(sid,errors){const box=document.getElementById(sid+'Errors');const list=document.getElementById(sid+'ErrorList');if(!box)return;if(errors.length===0){box.classList.remove('show');return;}list.innerHTML=errors.map(e=>'<li>'+e+'</li>').join('');box.classList.add('show');const headerH=document.querySelector('.doc-header')?document.querySelector('.doc-header').offsetHeight:0;const boxTop=box.getBoundingClientRect().top+window.pageYOffset-headerH-16;window.scrollTo({top:boxTop,behavior:'smooth'});}
 async function verifyGate(){const company=document.getElementById('gateCompany').value.trim();const email=document.getElementById('gateEmail').value.trim();const reason=document.getElementById('gateReason').value;const errEl=document.getElementById('gateError');const spinner=document.getElementById('verifySpinner');errEl.style.display='none';if(!company||!email||!reason){errEl.textContent='Please complete all fields before verifying.';errEl.style.display='block';return;}if(!turnstileVerified){document.getElementById('turnstileError').classList.add('show');return;}spinner.classList.add('show');document.querySelector('#screen1 .btn-primary').disabled=true;try{const resp=await fetch('https://essentialcures.com/api/cm27/gate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({companyName:company,contactEmail:email,submissionReason:reason})});const raw=await resp.text();let result;try{result=JSON.parse(raw);if(typeof result==='string')result=JSON.parse(result);}catch{spinner.classList.remove('show');document.querySelector('#screen1 .btn-primary').disabled=false;errEl.textContent='Verification failed. Please try again.';errEl.style.display='block';return;}spinner.classList.remove('show');document.querySelector('#screen1 .btn-primary').disabled=false;gateData.submissionReason=reason;gateData.vendorId=result.vendorId||'';gateData.vendorName=result.vendorName||company;gateData.reviewDate=result.reviewDate||'';gateData.existingSQRId=result.sqrId||'';gateData.existingLineageId=result.lineageId||'';gateData.contactId=result.contactId||'';gateData.contactName=result.contactName||'';if(result.status==='allow'){if((result.reason==='category_expansion'||result.reason==='renewal_due')&&result.reviewDate){document.getElementById('categoryDate').textContent=formatDate(result.reviewDate);showScreen('screenCategoryAllow');}else{proceedToForm();}}else if(result.status==='block'){if(result.reason==='no_existing_record'){document.getElementById('blockedBadge').textContent='ACTION REQUIRED';document.getElementById('blockedTitle').textContent='No Existing Qualification Found';document.getElementById('blockedMessage').textContent=result.message||'No active qualification on file for your organisation. Please submit as a new qualification first.';showNewQualOption();}else if(result.reason==='email_mismatch'){document.getElementById('blockedBadge').textContent='EMAIL NOT RECOGNISED';document.getElementById('blockedTitle').textContent='Email Does Not Match Our Records';document.getElementById('blockedMessage').textContent=result.message||'Please use your registered contact email or contact procurement@essentialcures.com for assistance.';}else if(result.reason==='renewal_not_due'){document.getElementById('blockedBadge').textContent='RENEWAL NOT YET DUE';document.getElementById('blockedTitle').textContent='Renewal Window Not Open';document.getElementById('blockedMessage').textContent=result.message||'Your renewal window has not opened yet. Please check your next review date.';}else{document.getElementById('blockedBadge').textContent='QUALIFICATION CURRENT';document.getElementById('blockedTitle').textContent='Your Qualification Is Current';document.getElementById('blockedMessage').textContent='Your supplier qualification is active and valid until '+formatDate(result.reviewDate)+'. No action is required at this time.';}showScreen('screenBlocked');}else{errEl.textContent=result.reason||'Verification failed.';errEl.style.display='block';}}catch(e){spinner.classList.remove('show');document.querySelector('#screen1 .btn-primary').disabled=false;errEl.textContent='Unable to verify at this time. Please try again.';errEl.style.display='block';}}
 function proceedToForm(){document.getElementById('f_companyName').value=gateData.vendorName||document.getElementById('gateCompany').value;document.getElementById('f_email').value=document.getElementById('gateEmail').value;const showEmailChange=gateData.submissionReason==='renewal'||gateData.submissionReason==='category';const ecs=document.getElementById('emailChangeSection');if(ecs)ecs.style.display=showEmailChange?'block':'none';emailChanged=false;const ecSel=document.getElementById('f_emailChanged');if(ecSel)ecSel.value='No';const neg=document.getElementById('newEmailGroup');if(neg)neg.style.display='none';goToScreen(2);}
 function resetGate(){showScreen('screen1');updateSteps(1);}
@@ -811,7 +811,7 @@ async function submitForm(){
     showScreen('screenSuccess');updateSteps(8);
   }catch(err){await sendTechErrorEmail(errorRef,{stage:'general',error:err.toString()});spinner.classList.remove('show');document.getElementById('submitFinalBtn').disabled=false;showTechError(errorRef);}
 }
-function showTechError(ref){const container=document.getElementById('techErrorBannerContainer');container.innerHTML='<div class="tech-error-banner show"><h4>Submission Could Not Be Processed</h4><p>Our IT team has been notified. Please try again in a few minutes or email <a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a> quoting the reference below.</p><p class="tech-error-ref">Reference: '+ref+'</p></div>';container.scrollIntoView({behavior:'smooth',block:'start'});}
+function showTechError(ref){const container=document.getElementById('techErrorBannerContainer');container.innerHTML='<div class="tech-error-banner show"><h4>Submission Could Not Be Processed</h4><p>Our IT team has been notified. Please try again in a few minutes or email <a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a> quoting the reference below.</p><p class="tech-error-ref">Reference: '+ref+'</p></div>';const headerH=document.querySelector('.doc-header')?document.querySelector('.doc-header').offsetHeight:0;const top=container.getBoundingClientRect().top+window.pageYOffset-headerH-16;window.scrollTo({top,behavior:'smooth'});}
 function toggleIT(){document.getElementById('itPanel').classList.toggle('open');}
 const params=new URLSearchParams(window.location.search);const ep=params.get('email');if(ep)document.getElementById('gateEmail').value=decodeURIComponent(ep);
 </script>
