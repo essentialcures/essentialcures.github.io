@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Customer Care Profile | Essential Cures Inc.</title>
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --deep-blue:   #005090;
+  --med-blue:    #0070B0;
+  --leaf-green:  #4A8B2C;
+  --lime:        #8FC23C;
+  --navy:        #003060;
+  --slate:       #2C3E50;
+  --cool-gray:   #6B7C8C;
+  --light-gray:  #E8ECEF;
+  --off-white:   #F7F9FB;
+  --white:       #FFFFFF;
+  --error-red:   #C0392B;
+  --success-green: #27AE60;
+  --font: 'Calibri', 'Segoe UI', Arial, sans-serif;
+}
+body {
+  font-family: var(--font);
+  background: var(--off-white);
+  color: var(--slate);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── HEADER ──────────────────────────────────────────────── */
+.site-header {
+  background: var(--white);
+  border-bottom: 3px solid var(--deep-blue);
+  padding: 0;
+}
+.header-inner {
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  gap: 16px;
+}
+.header-logo img { height: 52px; display: block; }
+.header-brand { flex: 1; }
+.header-brand .org-name {
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--deep-blue);
+  letter-spacing: 0.3px;
+}
+.header-brand .tagline {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--med-blue);
+}
+.header-stripe {
+  height: 4px;
+  background: linear-gradient(90deg, var(--deep-blue) 60%, var(--lime) 100%);
+}
+
+/* ── HERO BANNER ─────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--deep-blue) 60%, var(--med-blue) 100%);
+  color: var(--white);
+  padding: 40px 24px 36px;
+  text-align: center;
+}
+.hero h1 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  margin-bottom: 8px;
+}
+.hero .subtitle {
+  font-size: 14px;
+  color: rgba(255,255,255,0.82);
+  max-width: 620px;
+  margin: 0 auto;
+}
+.hero .badge {
+  display: inline-block;
+  margin-top: 14px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--lime);
+}
+
+/* ── MAIN CONTAINER ──────────────────────────────────────── */
+.container {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+/* ── PANELS ──────────────────────────────────────────────── */
+.panel {
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 32px 36px;
+  margin-bottom: 24px;
+}
+.panel-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--deep-blue);
+  margin-bottom: 6px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--med-blue);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.panel-title .step-badge {
+  background: var(--deep-blue);
+  color: var(--white);
+  border-radius: 50%;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.panel-desc {
+  font-size: 13px;
+  color: var(--cool-gray);
+  margin-bottom: 20px;
+}
+
+/* ── FORM GRID ───────────────────────────────────────────── */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+}
+.form-grid.single { grid-template-columns: 1fr; }
+.form-grid.triple { grid-template-columns: 1fr 1fr 1fr; }
+.col-span-2 { grid-column: span 2; }
+.col-span-3 { grid-column: span 3; }
+
+.field-group { display: flex; flex-direction: column; gap: 5px; }
+label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate);
+}
+label .req { color: var(--error-red); margin-left: 2px; }
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid var(--light-gray);
+  border-radius: 5px;
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--slate);
+  background: var(--off-white);
+  transition: border-color 0.2s;
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--med-blue);
+  background: var(--white);
+}
+textarea { resize: vertical; min-height: 80px; }
+.field-hint {
+  font-size: 11.5px;
+  color: var(--cool-gray);
+}
+.field-error {
+  font-size: 12px;
+  color: var(--error-red);
+  display: none;
+}
+.field-error.show { display: block; }
+
+/* ── CHECKBOX GROUP ──────────────────────────────────────── */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  padding: 8px 0;
+}
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  font-size: 13.5px;
+}
+.checkbox-item input[type="checkbox"] {
+  width: 16px; height: 16px;
+  accent-color: var(--deep-blue);
+  cursor: pointer;
+}
+
+/* ── RADIO GROUP ─────────────────────────────────────────── */
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  padding: 6px 0;
+}
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+.radio-item input[type="radio"] {
+  width: 16px; height: 16px;
+  accent-color: var(--deep-blue);
+  cursor: pointer;
+}
+
+/* ── ELIGIBILITY GATE ────────────────────────────────────── */
+#gate-panel .gate-intro {
+  background: var(--off-white);
+  border-left: 4px solid var(--lime);
+  padding: 14px 16px;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 22px;
+  font-size: 13.5px;
+  color: var(--slate);
+}
+.gate-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--deep-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  padding: 11px 28px;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 10px;
+}
+.gate-btn:hover { background: var(--navy); }
+.gate-btn:disabled { background: var(--cool-gray); cursor: not-allowed; }
+
+/* ── ALERT BOXES ─────────────────────────────────────────── */
+.alert {
+  border-radius: 6px;
+  padding: 14px 18px;
+  font-size: 13.5px;
+  margin: 16px 0;
+  display: none;
+}
+.alert.show { display: flex; align-items: flex-start; gap: 12px; }
+.alert-icon { font-size: 18px; flex-shrink: 0; line-height: 1.3; }
+.alert-body { flex: 1; }
+.alert-body strong { display: block; margin-bottom: 3px; }
+.alert-error { background: #FDEDEC; border: 1px solid #E74C3C; color: #922B21; }
+.alert-warning { background: #FEF9E7; border: 1px solid #F0B429; color: #7D6608; }
+.alert-success { background: #EAFAF1; border: 1px solid #27AE60; color: #1D6A3B; }
+.alert-info    { background: #EBF5FB; border: 1px solid var(--med-blue); color: #154360; }
+
+/* ── PROGRESS BAR ────────────────────────────────────────── */
+.progress-wrap { margin-bottom: 28px; }
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--cool-gray);
+  margin-bottom: 6px;
+}
+.progress-bar-bg {
+  height: 6px;
+  background: var(--light-gray);
+  border-radius: 3px;
+}
+.progress-bar-fill {
+  height: 6px;
+  background: linear-gradient(90deg, var(--deep-blue), var(--lime));
+  border-radius: 3px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+/* ── SECTION TABS ────────────────────────────────────────── */
+.section-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--light-gray);
+  margin-bottom: 28px;
+  overflow-x: auto;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 10px 18px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cool-gray);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+.tab-btn.active { color: var(--deep-blue); border-bottom-color: var(--deep-blue); }
+.tab-btn.done { color: var(--leaf-green); }
+
+/* ── SECTION CONTENT ─────────────────────────────────────── */
+.form-section { display: none; }
+.form-section.active { display: block; }
+
+/* ── NAV BUTTONS ─────────────────────────────────────────── */
+.form-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+  gap: 12px;
+}
+.btn-back {
+  background: none;
+  border: 1.5px solid var(--cool-gray);
+  color: var(--slate);
+  border-radius: 6px;
+  padding: 10px 22px;
+  font-family: var(--font);
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: border-color 0.2s;
+}
+.btn-back:hover { border-color: var(--deep-blue); color: var(--deep-blue); }
+.btn-next, .btn-submit {
+  background: var(--deep-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 26px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-next:hover, .btn-submit:hover { background: var(--navy); }
+.btn-next:disabled, .btn-submit:disabled {
+  background: var(--cool-gray);
+  cursor: not-allowed;
+}
+.btn-submit { background: var(--leaf-green); }
+.btn-submit:hover { background: #3a6e22; }
+
+/* ── CASL BOX ────────────────────────────────────────────── */
+.casl-box {
+  background: var(--off-white);
+  border: 1px solid var(--light-gray);
+  border-radius: 6px;
+  padding: 18px 20px;
+  margin-top: 16px;
+}
+.casl-box p { font-size: 13px; color: var(--slate); margin-bottom: 14px; }
+.casl-consent-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13.5px;
+}
+.casl-consent-check input[type="checkbox"] {
+  width: 18px; height: 18px;
+  accent-color: var(--leaf-green);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+/* ── SUCCESS SCREEN ──────────────────────────────────────── */
+#success-screen {
+  display: none;
+  text-align: center;
+  padding: 48px 24px;
+}
+.success-icon {
+  width: 72px; height: 72px;
+  background: var(--leaf-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 32px;
+  color: var(--white);
+}
+#success-screen h2 { font-size: 22px; color: var(--deep-blue); margin-bottom: 12px; }
+#success-screen p { color: var(--cool-gray); font-size: 14px; max-width: 480px; margin: 0 auto; }
+
+/* ── SPINNER ─────────────────────────────────────────────── */
+.spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: var(--white);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+.site-footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.55);
+  text-align: center;
+  padding: 18px;
+  font-size: 12px;
+}
+.site-footer a { color: var(--lime); text-decoration: none; }
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .form-grid.triple { grid-template-columns: 1fr; }
+  .col-span-2, .col-span-3 { grid-column: span 1; }
+  .panel { padding: 22px 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────────── -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <img src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" alt="Essential Cures Inc." />
+    </div>
+    <div class="header-brand">
+      <div class="org-name">ESSENTIAL CURES INC.</div>
+      <div class="tagline">Compliant Solutions. Confident Care.</div>
+    </div>
+  </div>
+  <div class="header-stripe"></div>
+</header>
+
+<!-- ── HERO ────────────────────────────────────────────── -->
+<div class="hero">
+  <h1>Customer Care Profile</h1>
+  <p class="subtitle">
+    Help us understand your organisation's needs, preferences, and purchasing profile so we can configure your account and deliver the right products efficiently.
+  </p>
+  <span class="badge">Secure &nbsp;·&nbsp; Invitation-Based &nbsp;·&nbsp; Confidential</span>
+</div>
+
+<!-- ── MAIN ─────────────────────────────────────────────── -->
+<main class="container">
+
+  <!-- GATE PANEL -->
+  <div class="panel" id="gate-panel">
+    <div class="panel-title">
+      <span class="step-badge">1</span>
+      Eligibility Verification
+    </div>
+    <p class="panel-desc">
+      This form is available to existing Essential Cures account holders and invited contacts only. Please confirm your organisation and the email address registered with your account to continue.
+    </p>
+    <div class="gate-intro">
+      Your submission is linked to your organisation's account record in our system. The email you provide must match the registered contact on file. If you have not yet received an invitation, please contact your Essential Cures account manager.
+    </div>
+
+    <div class="form-grid">
+      <div class="field-group col-span-2">
+        <label for="g-account">Registered Organisation Name <span class="req">*</span></label>
+        <input type="text" id="g-account" placeholder="Enter your organisation name exactly as registered" autocomplete="organization" />
+        <span class="field-hint">Must match your account name in the Essential Cures system exactly.</span>
+        <span class="field-error" id="g-account-err"></span>
+      </div>
+      <div class="field-group col-span-2">
+        <label for="g-email">Registered Email Address <span class="req">*</span></label>
+        <input type="email" id="g-email" placeholder="your@organisation.com" autocomplete="email" />
+        <span class="field-hint">This must match the email on file for your organisation or primary contact.</span>
+        <span class="field-error" id="g-email-err"></span>
+      </div>
+    </div>
+
+    <div id="gate-alert-block" class="alert" role="alert"></div>
+
+    <button class="gate-btn" id="gate-btn" onclick="runGate()">
+      <span id="gate-btn-label">Verify Eligibility</span>
+      <span id="gate-spinner" class="spinner" style="display:none;"></span>
+    </button>
+  </div><!-- /gate-panel -->
+
+
+  <!-- FORM WRAPPER (hidden until gate passes) -->
+  <div id="form-wrapper" style="display:none;">
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="progress-text">Section 1 of 5</span>
+        <span id="progress-pct">20%</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill" style="width:20%"></div>
+      </div>
+    </div>
+
+    <!-- SECTION TABS -->
+    <div class="section-tabs" id="section-tabs">
+      <button class="tab-btn active" data-section="0" onclick="goToSection(0)">Organisation</button>
+      <button class="tab-btn" data-section="1" onclick="goToSection(1)">Primary Contact</button>
+      <button class="tab-btn" data-section="2" onclick="goToSection(2)">Purchasing Profile</button>
+      <button class="tab-btn" data-section="3" onclick="goToSection(3)">Logistics &amp; Terms</button>
+      <button class="tab-btn" data-section="4" onclick="goToSection(4)">Compliance &amp; Consent</button>
+    </div>
+
+    <!-- FORM ALERTS -->
+    <div id="form-alert" class="alert" role="alert"></div>
+
+    <form id="care-form" novalidate>
+
+      <!-- ── SECTION 0: ORGANISATION ──────────────────────── -->
+      <div class="form-section active" id="section-0">
+        <div class="panel">
+          <div class="panel-title">
+            <span class="step-badge">2</span>
+            Organisation Profile
+          </div>
+          <p class="panel-desc">Confirm your facility type, industry, and how you connected with us.</p>
+
+          <div class="form-grid">
+
+            <div class="field-group col-span-2">
+              <label for="f-facility">Facility Type <span class="req">*</span></label>
+              <select id="f-facility">
+                <option value="">— Select —</option>
+                <option value="Hospital - WRHA">Hospital – WRHA</option>
+                <option value="Hospital - Independent">Hospital – Independent</option>
+                <option value="Long-Term Care">Long-Term Care</option>
+                <option value="Community Health">Community Health Centre</option>
+                <option value="Dental">Dental Clinic</option>
+                <option value="Private Clinic">Private Clinic</option>
+                <option value="Pharmacy">Pharmacy</option>
+                <option value="Government">Government / Public Health</option>
+                <option value="Other">Other</option>
+              </select>
+              <span class="field-error" id="f-facility-err"></span>
+            </div>
+
+            <div class="field-group col-span-2">
+              <label>Industry Segment(s) <span class="req">*</span></label>
+              <p class="field-hint">Select all that apply to your organisation.</p>
+              <div class="checkbox-group" id="f-industry-group">
+                <label class="checkbox-item"><input type="checkbox" value="Hospital - WRHA" /> Hospital – WRHA</label>
+                <label class="checkbox-item"><input type="checkbox" value="Hospital - Independent" /> Hospital – Independent</label>
+                <label class="checkbox-item"><input type="checkbox" value="Long-Term Care" /> Long-Term Care</label>
+                <label class="checkbox-item"><input type="checkbox" value="Community Health" /> Community Health</label>
+                <label class="checkbox-item"><input type="checkbox" value="Dental" /> Dental</label>
+                <label class="checkbox-item"><input type="checkbox" value="Private Clinic" /> Private Clinic</label>
+                <label class="checkbox-item"><input type="checkbox" value="Pharmacy" /> Pharmacy</label>
+                <label class="checkbox-item"><input type="checkbox" value="Government" /> Government / Public Health</label>
+                <label class="checkbox-item"><input type="checkbox" value="Other" /> Other</label>
+              </div>
+              <span class="field-error" id="f-industry-err"></span>
+            </div>
+
+            <div class="field-group">
+              <label for="f-gpo">GPO Membership</label>
+              <select id="f-gpo">
+                <option value="false">Not a GPO member</option>
+                <option value="true">Yes — GPO member</option>
+              </select>
+            </div>
+
+            <div class="field-group" id="f-gpo-name-wrap" style="display:none;">
+              <label for="f-gpo-name">GPO Name</label>
+              <input type="text" id="f-gpo-name" placeholder="e.g. HealthPRO, Mohawk Medbuy" />
+            </div>
+
+            <div class="field-group col-span-2">
+              <label for="f-how-heard">How Did You Hear About Essential Cures?</label>
+              <select id="f-how-heard">
+                <option value="">— Select —</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Web Search">Web Search / Google</option>
+                <option value="Referral">Referral from a Colleague</option>
+                <option value="Trade Show">Trade Show / Conference</option>
+                <option value="Cold Outreach">Essential Cures Outreach</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <span></span>
+          <button type="button" class="btn-next" onclick="nextSection(0)">Next: Primary Contact →</button>
+        </div>
+      </div><!-- /section-0 -->
+
+
+      <!-- ── SECTION 1: PRIMARY CONTACT ───────────────────── -->
+      <div class="form-section" id="section-1">
+        <div class="panel">
+          <div class="panel-title">
+            <span class="step-badge">3</span>
+            Primary Contact
+          </div>
+          <p class="panel-desc">Confirm the key contact person for this account. This will be set as your primary contact in our system.</p>
+
+          <div class="form-grid">
+
+            <div class="field-group">
+              <label for="f-first">First Name <span class="req">*</span></label>
+              <input type="text" id="f-first" autocomplete="given-name" />
+              <span class="field-error" id="f-first-err"></span>
+            </div>
+
+            <div class="field-group">
+              <label for="f-last">Last Name <span class="req">*</span></label>
+              <input type="text" id="f-last" autocomplete="family-name" />
+              <span class="field-error" id="f-last-err"></span>
+            </div>
+
+            <div class="field-group">
+              <label for="f-email-confirm">Email Address <span class="req">*</span></label>
+              <input type="email" id="f-email-confirm" autocomplete="email" readonly style="background:#f0f4f8;color:#555;" />
+              <span class="field-hint">Pre-filled from eligibility verification.</span>
+            </div>
+
+            <div class="field-group">
+              <label for="f-phone">Direct Phone</label>
+              <input type="tel" id="f-phone" placeholder="+1 (204) 555-0000" autocomplete="tel" />
+            </div>
+
+            <div class="field-group">
+              <label for="f-title">Job Title</label>
+              <input type="text" id="f-title" placeholder="e.g. Director of Procurement" />
+            </div>
+
+            <div class="field-group">
+              <label for="f-role">Role / Function</label>
+              <select id="f-role">
+                <option value="">— Select —</option>
+                <option value="Procurement">Procurement</option>
+                <option value="Clinical">Clinical</option>
+                <option value="Administration">Administration</option>
+                <option value="Finance">Finance</option>
+                <option value="Billing">Billing</option>
+                <option value="Logistics">Logistics</option>
+                <option value="Executive">Executive</option>
+                <option value="QA">QA / Quality</option>
+                <option value="Regulatory">Regulatory</option>
+                <option value="Technical">Technical</option>
+                <option value="Account Manager">Account Manager</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="field-group col-span-2">
+              <label>Contact Type</label>
+              <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="f-contact-type" value="Customer" checked /> Customer</label>
+                <label class="radio-item"><input type="radio" name="f-contact-type" value="Both (Customer and Supplier)" /> Customer &amp; Supplier</label>
+                <label class="radio-item"><input type="radio" name="f-contact-type" value="Internal" /> Internal</label>
+              </div>
+            </div>
+
+            <div class="field-group col-span-2">
+              <label for="f-pref-contact">Preferred Communication Method</label>
+              <select id="f-pref-contact">
+                <option value="">— Select —</option>
+                <option value="Email">Email</option>
+                <option value="Phone">Phone</option>
+                <option value="Either">Either</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <button type="button" class="btn-back" onclick="prevSection(1)">← Back</button>
+          <button type="button" class="btn-next" onclick="nextSection(1)">Next: Purchasing Profile →</button>
+        </div>
+      </div><!-- /section-1 -->
+
+
+      <!-- ── SECTION 2: PURCHASING PROFILE ────────────────── -->
+      <div class="form-section" id="section-2">
+        <div class="panel">
+          <div class="panel-title">
+            <span class="step-badge">4</span>
+            Purchasing Profile
+          </div>
+          <p class="panel-desc">Tell us about your procurement patterns, product needs, and order expectations. This information helps us configure your pricing tier and service level.</p>
+
+          <div class="form-grid">
+
+            <div class="field-group col-span-2">
+              <label>Product Categories of Interest</label>
+              <p class="field-hint">Select the categories your organisation typically procures.</p>
+              <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" name="f-categories" value="PPE-IPC" /> PPE / IPC Supplies</label>
+                <label class="checkbox-item"><input type="checkbox" name="f-categories" value="Exam Consumables" /> Exam Consumables</label>
+                <label class="checkbox-item"><input type="checkbox" name="f-categories" value="Wound Care" /> Wound Care</label>
+                <label class="checkbox-item"><input type="checkbox" name="f-categories" value="Facility Supplies" /> Facility Supplies</label>
+                <label class="checkbox-item"><input type="checkbox" name="f-categories" value="Class I MD" /> Class I Medical Devices</label>
+                <label class="checkbox-item"><input type="checkbox" name="f-categories" value="Class II MD" /> Class II Medical Devices</label>
+                <label class="checkbox-item"><input type="checkbox" name="f-categories" value="NHP" /> Natural Health Products</label>
+                <label class="checkbox-item"><input type="checkbox" name="f-categories" value="Services" /> Services</label>
+                <label class="checkbox-item"><input type="checkbox" name="f-categories" value="Other" /> Other</label>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label for="f-order-freq">Expected Order Frequency</label>
+              <select id="f-order-freq">
+                <option value="">— Select —</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Bi-weekly">Bi-Weekly</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Quarterly">Quarterly</option>
+                <option value="Ad Hoc">Ad Hoc / As Needed</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="f-min-order">Typical Minimum Order Value (CAD)</label>
+              <input type="number" id="f-min-order" placeholder="e.g. 500" min="0" step="50" />
+              <span class="field-hint">Approximate expected minimum per order.</span>
+            </div>
+
+            <div class="field-group">
+              <label for="f-credit-terms">Preferred Credit Terms</label>
+              <select id="f-credit-terms">
+                <option value="">— Select —</option>
+                <option value="Net 30">Net 30</option>
+                <option value="Net 60">Net 60</option>
+                <option value="Net 90">Net 90</option>
+                <option value="2/10 Net 30">2/10 Net 30</option>
+                <option value="COD">COD</option>
+                <option value="Prepaid">Prepaid</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="f-pricing-tier">Pricing Tier Requested</label>
+              <select id="f-pricing-tier">
+                <option value="">— Select —</option>
+                <option value="Standard">Standard</option>
+                <option value="Preferred">Preferred</option>
+                <option value="Strategic">Strategic Partner</option>
+              </select>
+            </div>
+
+            <div class="field-group col-span-2">
+              <label for="f-special-reqs">Special Requirements or Notes</label>
+              <textarea id="f-special-reqs" rows="3" placeholder="Any product specifications, regulatory requirements, formulary restrictions, or other notes that help us serve you better."></textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <button type="button" class="btn-back" onclick="prevSection(2)">← Back</button>
+          <button type="button" class="btn-next" onclick="nextSection(2)">Next: Logistics &amp; Terms →</button>
+        </div>
+      </div><!-- /section-2 -->
+
+
+      <!-- ── SECTION 3: LOGISTICS & TERMS ─────────────────── -->
+      <div class="form-section" id="section-3">
+        <div class="panel">
+          <div class="panel-title">
+            <span class="step-badge">5</span>
+            Delivery, Logistics &amp; Address
+          </div>
+          <p class="panel-desc">Provide your preferred delivery arrangements and physical location for shipping purposes.</p>
+
+          <div class="form-grid">
+
+            <div class="field-group col-span-2">
+              <label for="f-delivery-terms">Preferred Delivery Terms (Incoterms)</label>
+              <select id="f-delivery-terms">
+                <option value="">— Select —</option>
+                <option value="DDP">DDP – Delivered Duty Paid (most common)</option>
+                <option value="DAP">DAP – Delivered at Place</option>
+                <option value="EXW">EXW – Ex Works</option>
+                <option value="FCA">FCA – Free Carrier</option>
+                <option value="FOB">FOB – Free on Board</option>
+                <option value="CFR">CFR – Cost and Freight</option>
+                <option value="CIF">CIF – Cost, Insurance and Freight</option>
+              </select>
+            </div>
+
+            <div class="field-group col-span-2">
+              <label for="f-street">Physical / Delivery Street Address</label>
+              <input type="text" id="f-street" placeholder="Street address" autocomplete="street-address" />
+            </div>
+
+            <div class="field-group">
+              <label for="f-city">City</label>
+              <input type="text" id="f-city" placeholder="e.g. Winnipeg" autocomplete="address-level2" />
+            </div>
+
+            <div class="field-group">
+              <label for="f-province">Province / Territory</label>
+              <select id="f-province">
+                <option value="">— Select —</option>
+                <option value="Manitoba (MB)">Manitoba (MB)</option>
+                <option value="Ontario (ON)">Ontario (ON)</option>
+                <option value="British Columbia (BC)">British Columbia (BC)</option>
+                <option value="Alberta (AB)">Alberta (AB)</option>
+                <option value="Saskatchewan (SK)">Saskatchewan (SK)</option>
+                <option value="Quebec (QC)">Quebec (QC)</option>
+                <option value="Nova Scotia (NS)">Nova Scotia (NS)</option>
+                <option value="New Brunswick (NB)">New Brunswick (NB)</option>
+                <option value="Newfoundland (NL)">Newfoundland (NL)</option>
+                <option value="PEI (PE)">Prince Edward Island (PE)</option>
+                <option value="Yukon (YT)">Yukon (YT)</option>
+                <option value="NW Territories (NT)">Northwest Territories (NT)</option>
+                <option value="Nunavut (NU)">Nunavut (NU)</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="f-postal">Postal Code</label>
+              <input type="text" id="f-postal" placeholder="e.g. R3T 4V6" autocomplete="postal-code" maxlength="7" />
+            </div>
+
+            <div class="field-group">
+              <label for="f-country">Country</label>
+              <select id="f-country">
+                <option value="Canada">Canada</option>
+                <option value="United States">United States</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="field-group col-span-2">
+              <label for="f-hst">HST / GST Registration Number</label>
+              <input type="text" id="f-hst" placeholder="e.g. 123456789 RT0001" />
+              <span class="field-hint">Required if claiming input tax credits. Leave blank if not registered.</span>
+            </div>
+
+            <div class="field-group col-span-2">
+              <label>Tax Exempt Status</label>
+              <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="f-tax-exempt" value="false" checked /> No – Standard taxation applies</label>
+                <label class="radio-item"><input type="radio" name="f-tax-exempt" value="true" /> Yes – Organisation is tax exempt</label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-nav">
+          <button type="button" class="btn-back" onclick="prevSection(3)">← Back</button>
+          <button type="button" class="btn-next" onclick="nextSection(3)">Next: Compliance &amp; Consent →</button>
+        </div>
+      </div><!-- /section-3 -->
+
+
+      <!-- ── SECTION 4: COMPLIANCE & CONSENT ──────────────── -->
+      <div class="form-section" id="section-4">
+        <div class="panel">
+          <div class="panel-title">
+            <span class="step-badge">6</span>
+            Regulatory Compliance &amp; CASL Consent
+          </div>
+          <p class="panel-desc">Canada's Anti-Spam Legislation (CASL) requires that we obtain your express or implied consent before sending commercial electronic messages. Please review and confirm below.</p>
+
+          <div class="casl-box">
+            <p>
+              Essential Cures Inc. will use your email address and contact information to send order confirmations, product updates, pricing notifications, regulatory alerts, and promotional communications related to healthcare supplies. You may withdraw consent at any time by contacting <a href="mailto:privacy@essentialcures.com" style="color:var(--deep-blue);">privacy@essentialcures.com</a> or using the unsubscribe link in any email.
+            </p>
+
+            <div class="field-group" style="margin-bottom:16px;">
+              <label for="f-casl-type">Consent Type</label>
+              <select id="f-casl-type">
+                <option value="Express">Express – I am providing explicit consent</option>
+                <option value="Implied-Business">Implied – Existing business relationship</option>
+                <option value="Implied-Inquiry">Implied – I made an inquiry</option>
+              </select>
+            </div>
+
+            <div class="field-group" style="margin-bottom:16px;">
+              <label for="f-casl-method">How is consent being given?</label>
+              <select id="f-casl-method">
+                <option value="Web Form">Web Form (this submission)</option>
+                <option value="Written - Email">Written – Email</option>
+                <option value="Written - Signed Document">Written – Signed Document</option>
+                <option value="Verbal - Phone">Verbal – Phone</option>
+                <option value="Verbal - In Person">Verbal – In Person</option>
+              </select>
+            </div>
+
+            <div class="casl-consent-check">
+              <input type="checkbox" id="f-casl-given" />
+              <label for="f-casl-given">
+                I confirm that the contact named above authorises Essential Cures Inc. to send commercial electronic messages to the registered email address, in accordance with Canada's Anti-Spam Legislation (CASL).
+              </label>
+            </div>
+            <span class="field-error" id="f-casl-err" style="margin-top:8px;"></span>
+          </div>
+
+          <div style="margin-top:24px;">
+            <div class="field-group">
+              <label for="f-add-notes">Additional Notes for Essential Cures</label>
+              <textarea id="f-add-notes" rows="3" placeholder="Any other information we should know about your account, procurement process, or requirements."></textarea>
+            </div>
+          </div>
+
+        </div><!-- /panel -->
+
+        <div class="form-nav">
+          <button type="button" class="btn-back" onclick="prevSection(4)">← Back</button>
+          <button type="button" class="btn-submit" id="submit-btn" onclick="submitForm()">
+            <span id="submit-label">Submit Care Profile</span>
+            <span id="submit-spinner" class="spinner" style="display:none;"></span>
+          </button>
+        </div>
+      </div><!-- /section-4 -->
+
+    </form><!-- /care-form -->
+  </div><!-- /form-wrapper -->
+
+
+  <!-- SUCCESS SCREEN -->
+  <div id="success-screen" class="panel">
+    <div class="success-icon">✓</div>
+    <h2>Profile Submitted Successfully</h2>
+    <p>
+      Thank you. Your Customer Care Profile has been received and your account has been updated. An Essential Cures team member will review your submission and follow up within 2 business days.
+    </p>
+    <p style="margin-top:16px;">
+      Questions? Contact us at <a href="mailto:accounts@essentialcures.com" style="color:var(--deep-blue);">accounts@essentialcures.com</a>
+    </p>
+  </div>
+
+</main><!-- /container -->
+
+<!-- ── FOOTER ──────────────────────────────────────────── -->
+<footer class="site-footer">
+  &copy; 2026 Essential Cures Inc. &nbsp;·&nbsp;
+  <a href="https://essentialcures.com/privacy">Privacy Policy</a> &nbsp;·&nbsp;
+  37 Blue Lake Bay, Winnipeg MB R3T 4V6 &nbsp;·&nbsp;
+  Registry No. 10273719
+</footer>
+
+<!-- ── SCRIPTS ──────────────────────────────────────────── -->
+<script>
+// ── CONFIG ────────────────────────────────────────────────
+const WORKER_BASE = "https://essentialcures.com/api/customer";
+
+// ── STATE ─────────────────────────────────────────────────
+let gateData = null; // {accountId, accountName, contactId, reason}
+let currentSection = 0;
+const TOTAL_SECTIONS = 5;
+
+// ── UTILITY ───────────────────────────────────────────────
+function showAlert(containerId, type, title, message) {
+  const el = document.getElementById(containerId);
+  const icons = { error: "⛔", warning: "⚠️", success: "✅", info: "ℹ️" };
+  el.className = `alert alert-${type} show`;
+  el.innerHTML = `
+    <span class="alert-icon">${icons[type] || "ℹ️"}</span>
+    <div class="alert-body">
+      <strong>${title}</strong>
+      ${message}
+    </div>`;
+}
+
+function hideAlert(containerId) {
+  const el = document.getElementById(containerId);
+  el.className = "alert";
+  el.innerHTML = "";
+}
+
+function fieldError(id, msg) {
+  const el = document.getElementById(id);
+  if (el) { el.textContent = msg; el.classList.add("show"); }
+}
+function clearFieldError(id) {
+  const el = document.getElementById(id);
+  if (el) { el.textContent = ""; el.classList.remove("show"); }
+}
+
+function setLoading(btnId, spinnerId, labelId, loading, labelText) {
+  document.getElementById(btnId).disabled = loading;
+  document.getElementById(spinnerId).style.display = loading ? "inline-block" : "none";
+  document.getElementById(labelId).textContent = loading ? "Please wait…" : labelText;
+}
+
+// ── GPO TOGGLE ────────────────────────────────────────────
+document.getElementById("f-gpo").addEventListener("change", function() {
+  document.getElementById("f-gpo-name-wrap").style.display =
+    this.value === "true" ? "block" : "none";
+});
+
+// ── SECTION NAVIGATION ────────────────────────────────────
+function updateProgress(sectionIndex) {
+  const pct = Math.round(((sectionIndex + 1) / TOTAL_SECTIONS) * 100);
+  document.getElementById("progress-fill").style.width = pct + "%";
+  document.getElementById("progress-pct").textContent = pct + "%";
+  document.getElementById("progress-text").textContent =
+    `Section ${sectionIndex + 1} of ${TOTAL_SECTIONS}`;
+}
+
+function goToSection(idx) {
+  document.querySelectorAll(".form-section").forEach((s, i) => {
+    s.classList.toggle("active", i === idx);
+  });
+  document.querySelectorAll(".tab-btn").forEach((t, i) => {
+    t.classList.remove("active");
+    if (i === idx) t.classList.add("active");
+    if (i < idx) t.classList.add("done");
+  });
+  currentSection = idx;
+  updateProgress(idx);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function validateSection(idx) {
+  let ok = true;
+
+  if (idx === 0) {
+    // Organisation
+    if (!document.getElementById("f-facility").value) {
+      fieldError("f-facility-err", "Please select your facility type.");
+      ok = false;
+    } else { clearFieldError("f-facility-err"); }
+
+    const industries = [...document.querySelectorAll("#f-industry-group input:checked")];
+    if (industries.length === 0) {
+      fieldError("f-industry-err", "Please select at least one industry segment.");
+      ok = false;
+    } else { clearFieldError("f-industry-err"); }
+  }
+
+  if (idx === 1) {
+    // Primary Contact
+    if (!document.getElementById("f-first").value.trim()) {
+      fieldError("f-first-err", "First name is required.");
+      ok = false;
+    } else { clearFieldError("f-first-err"); }
+
+    if (!document.getElementById("f-last").value.trim()) {
+      fieldError("f-last-err", "Last name is required.");
+      ok = false;
+    } else { clearFieldError("f-last-err"); }
+  }
+
+  if (idx === 4) {
+    // CASL
+    if (!document.getElementById("f-casl-given").checked) {
+      fieldError("f-casl-err", "You must confirm consent to proceed.");
+      ok = false;
+    } else { clearFieldError("f-casl-err"); }
+  }
+
+  return ok;
+}
+
+function nextSection(current) {
+  if (!validateSection(current)) return;
+  goToSection(current + 1);
+}
+
+function prevSection(current) {
+  goToSection(current - 1);
+}
+
+// ── GATE ──────────────────────────────────────────────────
+async function runGate() {
+  const accountName  = document.getElementById("g-account").value.trim();
+  const contactEmail = document.getElementById("g-email").value.trim();
+
+  clearFieldError("g-account-err");
+  clearFieldError("g-email-err");
+  hideAlert("gate-alert-block");
+
+  let valid = true;
+  if (!accountName) { fieldError("g-account-err", "Organisation name is required."); valid = false; }
+  if (!contactEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) {
+    fieldError("g-email-err", "A valid email address is required.");
+    valid = false;
+  }
+  if (!valid) return;
+
+  setLoading("gate-btn", "gate-spinner", "gate-btn-label", true, "Verify Eligibility");
+
+  try {
+    const resp = await fetch(`${WORKER_BASE}/gate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ accountName, contactEmail }),
+    });
+    const data = await resp.json();
+
+    if (data.status === "allow") {
+      gateData = data;
+      // Pre-fill email into contact section
+      document.getElementById("f-email-confirm").value = contactEmail;
+
+      document.getElementById("gate-panel").style.display = "none";
+      document.getElementById("form-wrapper").style.display = "block";
+      goToSection(0);
+
+    } else if (data.status === "block") {
+      const msgs = {
+        account_not_found:  "We could not find an account matching that organisation name. Please check the spelling or contact your Essential Cures representative.",
+        email_not_matched:  `The email address provided does not match the registered contact for <strong>${escHtml(data.accountName || accountName)}</strong>. Please use the email on file or contact us to update your records.`,
+        profile_current:    `Your account for <strong>${escHtml(data.accountName || accountName)}</strong> is already active and approved. No further profile submission is required at this time.`,
+      };
+      showAlert("gate-alert-block", "error", "Verification Failed",
+        msgs[data.reason] || "Please check your details and try again.");
+
+    } else {
+      showAlert("gate-alert-block", "error", "System Error",
+        data.reason || "An unexpected error occurred. Please try again.");
+    }
+
+  } catch (err) {
+    showAlert("gate-alert-block", "error", "Connection Error",
+      "Could not reach our verification service. Please check your connection and try again.");
+  } finally {
+    setLoading("gate-btn", "gate-spinner", "gate-btn-label", false, "Verify Eligibility");
+  }
+}
+
+// Enter key on gate fields
+["g-account","g-email"].forEach(id => {
+  document.getElementById(id).addEventListener("keydown", e => {
+    if (e.key === "Enter") runGate();
+  });
+});
+
+// ── SUBMIT ────────────────────────────────────────────────
+async function submitForm() {
+  if (!validateSection(4)) return;
+
+  hideAlert("form-alert");
+  setLoading("submit-btn", "submit-spinner", "submit-label", true, "Submit Care Profile");
+
+  // Collect industries
+  const industries = [...document.querySelectorAll("#f-industry-group input:checked")]
+    .map(el => el.value).join(";");
+
+  // Contact type
+  const contactType = document.querySelector("input[name='f-contact-type']:checked")?.value || "Customer";
+
+  // Tax exempt
+  const taxExempt = document.querySelector("input[name='f-tax-exempt']:checked")?.value || "false";
+
+  const payload = {
+    accountId:            gateData.accountId,
+    contactId:            gateData.contactId || "",
+    contactEmail:         document.getElementById("g-email").value.trim(),
+    contactFirstName:     document.getElementById("f-first").value.trim(),
+    contactLastName:      document.getElementById("f-last").value.trim(),
+    contactPhone:         document.getElementById("f-phone").value.trim(),
+    contactJobTitle:      document.getElementById("f-title").value.trim(),
+    contactRole:          document.getElementById("f-role").value,
+    contactType:          contactType,
+    caslConsentGiven:     document.getElementById("f-casl-given").checked ? "Yes" : "No",
+    caslConsentMethod:    document.getElementById("f-casl-method").value,
+    caslConsentType:      document.getElementById("f-casl-type").value,
+    facilityType:         document.getElementById("f-facility").value,
+    ecIndustry:           industries,
+    gpoMember:            document.getElementById("f-gpo").value,
+    gpoName:              document.getElementById("f-gpo-name").value.trim(),
+    howDidYouHear:        document.getElementById("f-how-heard").value,
+    preferredContact:     document.getElementById("f-pref-contact").value,
+    preferredDelivery:    document.getElementById("f-delivery-terms").value,
+    creditTermsRequested: document.getElementById("f-credit-terms").value,
+    minOrderValue:        document.getElementById("f-min-order").value,
+    physicalStreet:       document.getElementById("f-street").value.trim(),
+    physicalCity:         document.getElementById("f-city").value.trim(),
+    physicalProvince:     document.getElementById("f-province").value,
+    physicalPostalCode:   document.getElementById("f-postal").value.trim(),
+    physicalCountry:      document.getElementById("f-country").value,
+    caslConsentDate:      new Date().toISOString().split("T")[0],
+  };
+
+  try {
+    const resp = await fetch(`${WORKER_BASE}/submit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await resp.json();
+
+    if (data.status === "success") {
+      document.getElementById("form-wrapper").style.display = "none";
+      document.getElementById("success-screen").style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      showAlert("form-alert", "error", "Submission Error",
+        data.message || data.reason || "Your profile could not be saved. Please try again.");
+    }
+
+  } catch (err) {
+    showAlert("form-alert", "error", "Connection Error",
+      "Could not reach our service. Please check your connection and try again.");
+  } finally {
+    setLoading("submit-btn", "submit-spinner", "submit-label", false, "Submit Care Profile");
+  }
+}
+
+// ── HELPERS ───────────────────────────────────────────────
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+</script>
+</body>
+</html>
