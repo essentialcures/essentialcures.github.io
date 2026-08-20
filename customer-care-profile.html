@@ -794,7 +794,7 @@ async function verifyGate(){
   spinner.classList.add("show");
   document.querySelector("#screen1 .btn-primary").disabled=true;
   try{
-    const resp=await fetch(WORKER_BASE+"/gate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({accountName:company,contactEmail:email})});
+    const resp = await fetch(WORKER_BASE+"/customer/gate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({accountName:company,contactEmail:email})});
     const data=await resp.json();
     spinner.classList.remove("show");
     document.querySelector("#screen1 .btn-primary").disabled=false;
@@ -949,7 +949,7 @@ async function submitForm(){
   };
 
   try{
-    const resp=await fetch(WORKER_BASE+"/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    const resp = await fetch(WORKER_BASE+"/customer/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
     const data=await resp.json();
     spinner.classList.remove("show");
     if(data.status==="success"){
