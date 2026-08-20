@@ -14,7 +14,8 @@
   --cool-gray:#6B7C8C;--light-bg:#F7F9FB;--white:#FFFFFF;
   --off-white:#FAFBFC;--red:#C0392B;--amber:#E67E22;--success:#27AE60;
   --sec-identity:#F0F7FF;--sec-contact:#F4FBF0;--sec-purchasing:#FFF8F0;
-  --sec-logistics:#F5F0FF;--sec-casl:#FFF0F0;
+  --sec-logistics:#F5F0FF;--sec-casl:#FFF0F0;--sec-delivery:#F0FBF8;
+  --sec-intel:#FFF8E8;--sec-billing:#F8F0FF;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
@@ -35,48 +36,52 @@ header{display:none!important;}
 .doc-header-stripe2{height:4px;background:var(--lime);}
 .main{flex:1;max-width:760px;margin:0 auto;width:100%;padding:56px 40px;}
 .form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:48px;}
-.steps{display:flex;align-items:center;margin-bottom:36px;width:100%;overflow:hidden;}
+.steps{display:flex;align-items:center;margin-bottom:36px;width:100%;overflow-x:auto;}
 .step{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;}
-.step-num{width:26px;height:26px;border-radius:50%;background:#E8ECF0;color:var(--cool-gray);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s;}
+.step-num{width:26px;height:26px;border-radius:50%;background:#E8ECF0;color:var(--cool-gray);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.3s;}
 .step-num.active{background:var(--deep-blue);color:var(--white);}
 .step-num.done{background:var(--leaf-green);color:var(--white);}
 .step-label{font-size:10px;font-weight:600;color:var(--cool-gray);white-space:nowrap;}
 .step-label.active{color:var(--deep-blue);}
-.step-divider{flex:1;height:2px;background:#E8ECF0;margin:0 4px;margin-bottom:14px;min-width:8px;}
+.step-divider{flex:1;height:2px;background:#E8ECF0;margin:0 4px;margin-bottom:14px;min-width:6px;}
 .section-block{border-radius:10px;padding:18px;margin-bottom:20px;border:1px solid rgba(0,0,0,0.06);}
 .section-block.identity-block{background:var(--sec-identity);}
 .section-block.contact-block{background:var(--sec-contact);}
 .section-block.purchasing-block{background:var(--sec-purchasing);}
 .section-block.logistics-block{background:var(--sec-logistics);}
 .section-block.casl-block{background:var(--sec-casl);}
+.section-block.delivery-block{background:var(--sec-delivery);}
+.section-block.intel-block{background:var(--sec-intel);}
+.section-block.billing-block{background:var(--sec-billing);}
 .form-group{margin-bottom:16px;}
 .form-group label{display:block;font-size:13px;font-weight:600;color:var(--dark-navy);margin-bottom:6px;}
 .form-group label em{font-style:normal;color:var(--red);}
 .form-group label .opt{font-style:italic;color:var(--cool-gray);font-weight:400;font-size:11px;margin-left:4px;}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid #D4DAE0;border-radius:6px;font-family:"Inter",sans-serif;font-size:14px;color:var(--slate);background:var(--white);transition:border-color 0.2s;}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--deep-blue);background:var(--white);}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--deep-blue);}
 .form-group input.error,.form-group select.error{border-color:var(--red);}
+.form-group input:disabled,.form-group select:disabled,.form-group textarea:disabled{background:#F0F4F8;color:#999;cursor:not-allowed;}
 .field-error{font-size:12px;color:var(--red);margin-top:4px;display:none;}
 .field-error.show{display:block;}
 .field-hint{font-size:12px;color:var(--cool-gray);margin-top:4px;font-style:italic;}
-.form-group textarea{resize:vertical;min-height:90px;}
+.form-group textarea{resize:vertical;min-height:80px;}
 .form-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%236B7C8C%27 stroke-width=%272%27%3E%3Cpolyline points=%276 9 12 15 18 9%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-color:var(--white);padding-right:36px;}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.currency-input-wrap{position:relative;}
-.currency-input-wrap .currency-prefix{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--cool-gray);font-weight:600;pointer-events:none;}
-.currency-input-wrap input{padding-left:42px;}
 .checkbox-group{display:flex;flex-direction:column;gap:6px;}
 .checkbox-item{display:flex;align-items:flex-start;gap:8px;padding:6px 10px;border-radius:6px;border:1.5px solid transparent;transition:all 0.2s;cursor:pointer;user-select:none;}
 .checkbox-item:hover{background:#F0F7FF;border-color:#D4DAE0;}
 .checkbox-item.selected{background:#EBF5E8;border-color:var(--leaf-green);}
-.checkbox-item input[type="checkbox"]{width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:var(--deep-blue);cursor:pointer;pointer-events:none;}
+.checkbox-item input[type="checkbox"]{width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:var(--deep-blue);pointer-events:none;}
 .checkbox-item label{font-size:12px;color:var(--slate);font-weight:400;cursor:pointer;flex:1;pointer-events:none;}
+.checkbox-days{display:flex;flex-wrap:wrap;gap:8px;padding:6px 0;}
+.day-btn{padding:6px 14px;border:1.5px solid #D4DAE0;border-radius:20px;font-size:12px;font-weight:600;color:var(--cool-gray);cursor:pointer;transition:all 0.2s;user-select:none;background:var(--white);}
+.day-btn.selected{background:var(--deep-blue);color:var(--white);border-color:var(--deep-blue);}
 .section-title{font-size:13px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:1px;margin:0 0 16px 0;padding-bottom:8px;border-bottom:2px solid var(--lime);display:flex;align-items:center;gap:8px;}
 .section-title .sec-icon{font-size:16px;}
 .btn-primary{width:100%;padding:14px;background:var(--deep-blue);color:var(--white);border:none;border-radius:6px;font-family:"Inter",sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.3s;margin-top:8px;}
 .btn-primary:hover{background:var(--dark-navy);}
 .btn-primary:disabled{background:#A9B7C4;cursor:not-allowed;}
-.btn-secondary{width:100%;padding:12px;background:transparent;color:var(--cool-gray);border:1.5px solid #D4DAE0;border-radius:6px;font-family:"Inter",sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.3s;margin-top:8px;}
+.btn-secondary{width:100%;padding:12px;background:transparent;color:var(--cool-gray);border:1.5px solid #D4DAE0;border-radius:6px;font-family:"Inter",sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;}
 .btn-success{width:100%;padding:14px;background:var(--leaf-green);color:var(--white);border:none;border-radius:6px;font-family:"Inter",sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;}
 .btn-terminate{width:100%;padding:11px;background:transparent;color:var(--red);border:1.5px solid rgba(192,57,43,0.35);border-radius:6px;font-family:"Inter",sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;}
 .nav-group{display:flex;flex-direction:column;gap:0;margin-top:16px;}
@@ -91,13 +96,11 @@ header{display:none!important;}
 .status-icon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
 .status-icon.green{background:rgba(74,139,44,0.1);color:var(--leaf-green);}
 .status-icon.amber{background:rgba(230,126,34,0.1);color:var(--amber);}
-.status-icon.red{background:rgba(192,57,43,0.1);color:var(--red);}
 .status-title{font-family:"Playfair Display",serif;font-size:22px;color:var(--dark-navy);margin-bottom:12px;}
 .status-body{font-size:14px;color:var(--cool-gray);line-height:1.8;margin-bottom:24px;}
 .status-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px;}
 .badge-green{background:rgba(74,139,44,0.1);color:var(--leaf-green);}
 .badge-amber{background:rgba(230,126,34,0.1);color:var(--amber);}
-.badge-red{background:rgba(192,57,43,0.1);color:var(--red);}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,30,60,0.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
 .modal-overlay.hidden{display:none;}
 .modal-box{background:var(--white);border-radius:14px;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,30,60,0.3);}
@@ -119,7 +122,16 @@ header{display:none!important;}
 .ack-box .ack-row label{font-size:13px;font-weight:600;color:var(--dark-navy);line-height:1.5;}
 .review-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
 .review-table td{padding:8px 12px 8px 0;vertical-align:top;border-bottom:1px solid #F0F2F4;}
-.review-table td:first-child{font-weight:600;color:var(--dark-navy);width:38%;}
+.review-table td:first-child{font-weight:600;color:var(--dark-navy);width:40%;}
+.review-section-head{font-size:11px;font-weight:700;color:var(--deep-blue);text-transform:uppercase;letter-spacing:1px;padding:12px 0 4px;border-bottom:2px solid var(--lime);display:block;}
+.email-copy-box{background:#F0F7FF;border:1.5px solid var(--med-blue);border-radius:8px;padding:16px 20px;margin:16px 0;}
+.email-copy-box h4{font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
+.email-copy-row{display:flex;align-items:center;gap:10px;}
+.email-copy-row input[type="checkbox"]{width:18px;height:18px;accent-color:var(--deep-blue);cursor:pointer;}
+.email-copy-row label{font-size:13px;font-weight:600;color:var(--dark-navy);cursor:pointer;}
+.same-address-wrap{background:#EBF5E8;border:1.5px solid var(--leaf-green);border-radius:8px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.same-address-wrap input[type="checkbox"]{width:18px;height:18px;accent-color:var(--leaf-green);}
+.same-address-wrap label{font-size:13px;font-weight:600;color:var(--dark-navy);cursor:pointer;}
 .it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
 .it-tab{background:var(--dark-navy);color:var(--white);padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;border:none;font-family:"Inter",sans-serif;}
 .it-panel{display:none;background:var(--white);border:1px solid #E8ECF0;border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
@@ -127,7 +139,7 @@ header{display:none!important;}
 .it-panel h4{font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
 .it-panel p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-bottom:10px;}
 .it-panel a{color:var(--deep-blue);font-weight:600;font-size:12px;}
-.it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;line-height:1;}
+.it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;}
 footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
 .footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue) 60%,var(--cool-gray) 100%);margin-bottom:12px;}
 .footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
@@ -136,837 +148,236 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
 </style>
 </head>
 <body>
-
-<!-- IT SUPPORT FLOAT -->
-<div class="it-float" id="itFloat">
-  <button class="it-tab" onclick="toggleIT()">Technical Support</button>
-  <div class="it-panel" id="itPanel">
-    <button class="it-close" onclick="toggleIT()">&#10005;</button>
-    <h4>Technical Issues?</h4>
-    <p>Having trouble with this form? Please email our team with a description of the problem.</p>
-    <a href="mailto:it@essentialcures.com?subject=Customer Care Profile Technical Issue">Email IT Support</a>
-  </div>
+<div class="it-float" id="itFloat"><button class="it-tab" onclick="toggleIT()">Technical Support</button><div class="it-panel" id="itPanel"><button class="it-close" onclick="toggleIT()">&#10005;</button><h4>Technical Issues?</h4><p>Having trouble? Email our team with a description of the problem.</p><a href="mailto:it@essentialcures.com?subject=Customer Care Profile Technical Issue">Email IT Support</a></div></div>
+<div class="modal-overlay" id="welcomeModal"><div class="modal-box"><div style="background:var(--dark-navy);padding:20px 28px;border-radius:14px 14px 0 0;display:flex;align-items:center;gap:14px;"><img src="https://essentialcures.github.io/Essential%20Cures%20Final%20Logo.png" alt="Essential Cures" style="height:44px;width:auto;flex-shrink:0;"><div><div style="font-size:14px;font-weight:700;color:#FFFFFF;letter-spacing:0.5px;">ESSENTIAL CURES INC.</div><div style="font-size:11px;color:var(--lime);font-style:italic;font-weight:600;">Compliant Solutions. Confident Care.</div></div></div><div style="height:3px;background:linear-gradient(90deg,var(--deep-blue),var(--lime));"></div><div style="padding:24px 28px 0;"><div style="background:#F0F4F8;border-left:4px solid var(--dark-navy);border-radius:0 8px 8px 0;padding:20px;margin-bottom:20px;"><p style="font-size:12px;color:var(--slate);line-height:1.8;margin-bottom:10px;">Thank you for your interest in Essential Cures Inc. We are committed to delivering compliant, reliable healthcare supply solutions tailored to your facility's needs.</p><p style="font-size:12px;color:var(--slate);line-height:1.8;margin-bottom:10px;">This Customer Care Profile helps us understand your organisation's procurement requirements so we can configure your account and ensure we are ready to serve you from day one.</p><p style="font-size:12px;color:var(--slate);line-height:1.8;">All information is handled in accordance with PIPEDA and our Privacy Policy.</p><div style="border-top:1px solid #D4DAE0;padding-top:12px;margin-top:16px;"><p style="font-size:12px;color:var(--cool-gray);margin-bottom:2px;">Warm regards,</p><p style="font-size:13px;font-weight:700;color:var(--dark-navy);">Essential Cures Inc. Team</p></div></div><div style="background:#F2F8EE;border-left:4px solid var(--leaf-green);border-radius:0 8px 8px 0;padding:16px 18px;margin-bottom:20px;"><p style="font-size:11px;font-weight:700;color:var(--leaf-green);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Before You Begin</p><ul style="font-size:12px;color:var(--slate);line-height:2;padding-left:18px;"><li>Your organisation name exactly as registered with Essential Cures</li><li>The email address registered with your account</li><li>Your facility address and HST / GST number if applicable</li><li>Details of your current procurement arrangements</li></ul></div></div><div class="modal-footer" style="padding-top:20px;"><button class="btn-success" onclick="dismissWelcome()">I Am Ready — Begin My Profile</button><a href="https://essentialcures.com" style="display:block;text-align:center;text-decoration:none;padding:12px;border:1.5px solid #D4DAE0;border-radius:6px;color:var(--cool-gray);font-size:14px;font-weight:600;margin-top:8px;">Return to Website</a></div></div></div>
+<div class="modal-overlay hidden" id="terminateModal"><div class="modal-box"><div class="modal-header" style="background:var(--red);"><h3>Cancel This Profile?</h3><p>Your progress will not be saved.</p></div><div class="modal-body"><p style="font-size:14px;color:var(--slate);line-height:1.7;">You are about to cancel your Customer Care Profile submission. Any information entered will be discarded.</p></div><div class="modal-footer"><button onclick="confirmTerminate()" style="background:var(--red);color:var(--white);border:none;padding:14px;border-radius:6px;font-size:15px;font-weight:600;cursor:pointer;">Yes, Cancel and Return to Website</button><button class="btn-secondary" onclick="dismissTerminate()">No, Continue My Profile</button></div></div></div>
+<div class="doc-header"><table class="doc-header-table"><tr><td class="doc-header-left"><img src="https://essentialcures.github.io/Essential%20Cures%20Final%20Logo.png" alt="Essential Cures Inc."></td><td class="doc-header-middle"><div class="org-name">ESSENTIAL CURES INC.</div><div class="tagline">Compliant Solutions. Confident Care.</div><div class="doc-title">Customer Care Profile</div></td><td class="doc-header-right"><div class="doc-id">EC-SAL-FRM-002</div><div class="doc-meta">Rev: R01<br>Date: August 19, 2026</div></td></tr></table><div class="doc-header-stripe1"></div><div class="doc-header-stripe2"></div></div>
+<main class="main"><div class="form-card">
+<div class="steps"><div class="step"><div class="step-num active" id="stepNum1">1</div><span class="step-label active" id="stepLbl1">Verify</span></div><div class="step-divider"></div><div class="step"><div class="step-num" id="stepNum2">2</div><span class="step-label" id="stepLbl2">Organisation</span></div><div class="step-divider"></div><div class="step"><div class="step-num" id="stepNum3">3</div><span class="step-label" id="stepLbl3">Contact</span></div><div class="step-divider"></div><div class="step"><div class="step-num" id="stepNum4">4</div><span class="step-label" id="stepLbl4">Delivery</span></div><div class="step-divider"></div><div class="step"><div class="step-num" id="stepNum5">5</div><span class="step-label" id="stepLbl5">Purchasing</span></div><div class="step-divider"></div><div class="step"><div class="step-num" id="stepNum6">6</div><span class="step-label" id="stepLbl6">Intelligence</span></div><div class="step-divider"></div><div class="step"><div class="step-num" id="stepNum7">7</div><span class="step-label" id="stepLbl7">Consent</span></div><div class="step-divider"></div><div class="step"><div class="step-num" id="stepNum8">8</div><span class="step-label" id="stepLbl8">Review</span></div></div>
+<!-- SCREEN 1 -->
+<div class="screen active" id="screen1">
+<div class="info-box"><p><strong>Account Verification:</strong> Enter your organisation name and registered email to verify your account. This form is for invited account holders only.</p></div>
+<div class="section-block identity-block">
+<p class="section-title"><span class="sec-icon">🔑</span>Account Verification</p>
+<div class="form-group"><label>Registered Organisation Name <em>*</em></label><input type="text" id="gateCompany" placeholder="Enter your organisation name exactly as registered" autocomplete="organization"><p class="field-hint">Must match your account name in the Essential Cures system exactly.</p></div>
+<div class="form-group"><label>Registered Email Address <em>*</em></label><input type="email" id="gateEmail" placeholder="you@yourorganisation.com" autocomplete="email"></div>
+<div class="form-group"><label>Reason for Submission <em>*</em></label><select id="gateReason"><option value="">— Select —</option><option value="new">New Profile — First Time Completing</option><option value="update">Update Existing Profile</option><option value="category">Add Product Categories</option></select><div class="field-error" id="gateReasonError">Please select a reason for submission.</div></div>
 </div>
-
-<!-- WELCOME MODAL -->
-<div class="modal-overlay" id="welcomeModal">
-  <div class="modal-box">
-    <div style="background:var(--dark-navy);padding:20px 28px;border-radius:14px 14px 0 0;display:flex;align-items:center;gap:14px;">
-      <img src="https://essentialcures.github.io/Essential%20Cures%20Final%20Logo.png" alt="Essential Cures" style="height:44px;width:auto;flex-shrink:0;">
-      <div>
-        <div style="font-size:14px;font-weight:700;color:#FFFFFF;letter-spacing:0.5px;line-height:1.3;">ESSENTIAL CURES INC.</div>
-        <div style="font-size:11px;color:var(--lime);font-style:italic;font-weight:600;">Compliant Solutions. Confident Care.</div>
-      </div>
-    </div>
-    <div style="height:3px;background:linear-gradient(90deg,var(--deep-blue),var(--lime));"></div>
-    <div style="padding:24px 28px 0;">
-      <div style="background:#F0F4F8;border-left:4px solid var(--dark-navy);border-radius:0 8px 8px 0;padding:20px 20px 18px;margin-bottom:20px;">
-        <p style="font-size:11px;font-weight:700;color:var(--deep-blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Welcome to Essential Cures</p>
-        <p style="font-size:12px;color:var(--slate);line-height:1.8;margin-bottom:10px;">Thank you for your interest in becoming an Essential Cures customer. This Customer Care Profile helps us understand your organisation's procurement needs, facility type, and service expectations so we can configure your account and deliver the right products efficiently.</p>
-        <p style="font-size:12px;color:var(--slate);line-height:1.8;margin-bottom:10px;">Your profile is linked directly to your account record in our system. All information provided is handled in accordance with PIPEDA and our Privacy Policy.</p>
-        <p style="font-size:12px;color:var(--slate);line-height:1.8;margin-bottom:16px;">This form is for invited account holders and contacts only. If you have not yet been invited, please contact your Essential Cures account manager.</p>
-        <div style="border-top:1px solid #D4DAE0;padding-top:12px;">
-          <p style="font-size:12px;color:var(--cool-gray);margin-bottom:4px;">Sincerely,</p>
-          <p style="font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:2px;">Faisal Khan</p>
-          <p style="font-size:12px;color:var(--cool-gray);margin:0;">Founder &amp; President | Essential Cures Inc.</p>
-        </div>
-      </div>
-      <div style="background:#F2F8EE;border-left:4px solid var(--leaf-green);border-radius:0 8px 8px 0;padding:16px 18px;margin-bottom:20px;">
-        <p style="font-size:11px;font-weight:700;color:var(--leaf-green);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Before You Begin</p>
-        <p style="font-size:12px;color:var(--slate);line-height:1.8;margin-bottom:6px;">Please have the following ready:</p>
-        <ul style="font-size:12px;color:var(--slate);line-height:2;padding-left:18px;">
-          <li>Your organisation's registered name (exactly as on file with Essential Cures)</li>
-          <li>The email address registered with your Essential Cures account</li>
-          <li>Your facility address and HST / GST registration number (if applicable)</li>
-          <li>Your CASL consent decision</li>
-        </ul>
-      </div>
-    </div>
-    <div class="modal-footer" style="padding-top:20px;">
-      <button class="btn-success" onclick="dismissWelcome()">I Am Ready — Begin My Profile</button>
-      <a href="https://essentialcures.com" style="display:block;text-align:center;text-decoration:none;padding:12px;border:1.5px solid #D4DAE0;border-radius:6px;color:var(--cool-gray);font-size:14px;font-weight:600;margin-top:8px;">I Am Not Ready — Return to Website</a>
-    </div>
-  </div>
+<div class="spinner" id="verifySpinner"></div>
+<p id="gateError" style="color:var(--red);font-size:13px;margin-bottom:12px;display:none;"></p>
+<div class="nav-group"><button class="btn-primary" onclick="verifyGate()">Verify Eligibility and Continue</button><button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Essential Cures Website</button></div>
 </div>
-
-<!-- TERMINATE MODAL -->
-<div class="modal-overlay hidden" id="terminateModal">
-  <div class="modal-box">
-    <div class="modal-header" style="background:var(--red);">
-      <h3>Cancel This Profile?</h3>
-      <p>Your progress will not be saved.</p>
-    </div>
-    <div class="modal-body">
-      <p style="font-size:14px;color:var(--slate);line-height:1.7;">You are about to cancel your Customer Care Profile submission. Any information entered will be discarded.</p>
-    </div>
-    <div class="modal-footer">
-      <button onclick="confirmTerminate()" style="background:var(--red);color:var(--white);border:none;padding:14px;border-radius:6px;font-size:15px;font-weight:600;cursor:pointer;">Yes, Cancel and Return to Website</button>
-      <button class="btn-secondary" onclick="dismissTerminate()">No, Continue My Profile</button>
-    </div>
-  </div>
+<!-- BLOCKED -->
+<div class="screen" id="screenBlocked"><div class="status-screen"><div class="status-icon amber"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="status-badge badge-amber" id="blockedBadge">Verification Failed</div><h3 class="status-title" id="blockedTitle">Unable to Verify</h3><p class="status-body" id="blockedMessage">We could not verify your account details.</p><p style="font-size:13px;color:var(--cool-gray);margin-bottom:20px">Questions? Contact <a href="mailto:accounts@essentialcures.com" style="color:var(--deep-blue)">accounts@essentialcures.com</a></p><div class="nav-group" style="max-width:340px;margin:0 auto"><button class="btn-secondary" onclick="resetGate()">Go Back — Try Again</button><a href="https://essentialcures.com" style="display:block;text-align:center;text-decoration:none;padding:12px;border:1.5px solid #D4DAE0;border-radius:6px;color:var(--cool-gray);font-size:14px;font-weight:600;margin-top:8px;">Return to Website</a></div></div></div>
+<!-- SCREEN 2 -->
+<div class="screen" id="screen2">
+<div class="error-summary" id="screen2Errors"><h4>Please correct the following</h4><ul id="screen2ErrorList"></ul></div>
+<div class="section-block identity-block">
+<p class="section-title"><span class="sec-icon">🏢</span>Organisation Details</p>
+<div class="form-grid">
+<div class="form-group"><label>Organisation Name</label><input type="text" id="f_orgName" readonly style="background:#F0F7FF;color:var(--deep-blue);font-weight:600;"></div>
+<div class="form-group"><label>Facility Type <em>*</em></label><select id="f_facilityType"><option value="">— Select —</option><option value="Hospital - WRHA">Hospital — WRHA</option><option value="Hospital - Independent">Hospital — Independent</option><option value="Long-Term Care">Long-Term Care Facility</option><option value="Community Health">Community Health Centre</option><option value="Dental">Dental Clinic</option><option value="Private Clinic">Private Clinic</option><option value="Pharmacy">Pharmacy</option><option value="Government">Government / Public Health</option><option value="Other">Other</option></select><div class="field-error" id="facilityTypeError">Please select your facility type.</div></div>
 </div>
-
-<!-- DOC HEADER -->
-<div class="doc-header">
-  <table class="doc-header-table">
-    <tr>
-      <td class="doc-header-left">
-        <img src="https://essentialcures.github.io/Essential%20Cures%20Final%20Logo.png" alt="Essential Cures Inc.">
-      </td>
-      <td class="doc-header-middle">
-        <div class="org-name">ESSENTIAL CURES INC.</div>
-        <div class="tagline">Compliant Solutions. Confident Care.</div>
-        <div class="doc-title">Customer Care Profile</div>
-      </td>
-      <td class="doc-header-right">
-        <div class="doc-id">EC-SAL-FRM-002</div>
-        <div class="doc-meta">Rev: R01<br>Date: August 19, 2026</div>
-      </td>
-    </tr>
-  </table>
-  <div class="doc-header-stripe1"></div>
-  <div class="doc-header-stripe2"></div>
+<div class="form-grid">
+<div class="form-group"><label>Facility Size <span class="opt">(beds / staff count)</span></label><input type="text" id="f_facilitySize" placeholder="e.g. 120 beds, 45 staff"></div>
+<div class="form-group"><label>Facility Accreditation</label><select id="f_accreditation"><option value="">— Select —</option><option value="Accreditation Canada">Accreditation Canada</option><option value="CARF">CARF</option><option value="IQMH">IQMH</option><option value="None">None</option></select></div>
 </div>
-
-<!-- MAIN -->
-<main class="main">
-  <div class="form-card">
-
-    <!-- STEP INDICATORS -->
-    <div class="steps">
-      <div class="step"><div class="step-num active" id="stepNum1">1</div><span class="step-label active" id="stepLbl1">Verify</span></div>
-      <div class="step-divider"></div>
-      <div class="step"><div class="step-num" id="stepNum2">2</div><span class="step-label" id="stepLbl2">Organisation</span></div>
-      <div class="step-divider"></div>
-      <div class="step"><div class="step-num" id="stepNum3">3</div><span class="step-label" id="stepLbl3">Contact</span></div>
-      <div class="step-divider"></div>
-      <div class="step"><div class="step-num" id="stepNum4">4</div><span class="step-label" id="stepLbl4">Purchasing</span></div>
-      <div class="step-divider"></div>
-      <div class="step"><div class="step-num" id="stepNum5">5</div><span class="step-label" id="stepLbl5">Logistics</span></div>
-      <div class="step-divider"></div>
-      <div class="step"><div class="step-num" id="stepNum6">6</div><span class="step-label" id="stepLbl6">Consent</span></div>
-      <div class="step-divider"></div>
-      <div class="step"><div class="step-num" id="stepNum7">7</div><span class="step-label" id="stepLbl7">Review</span></div>
-    </div>
-
-    <!-- SCREEN 1: ELIGIBILITY GATE -->
-    <div class="screen active" id="screen1">
-      <div class="info-box"><p><strong>Eligibility Check:</strong> Enter your organisation name and registered email to verify your account before beginning your Customer Care Profile.</p></div>
-      <div class="section-block identity-block">
-        <p class="section-title"><span class="sec-icon">🔑</span>Account Verification</p>
-        <div class="form-group">
-          <label>Registered Organisation Name <em>*</em></label>
-          <input type="text" id="gateCompany" placeholder="Enter your organisation name exactly as registered" autocomplete="organization">
-          <p class="field-hint">Must match your account name in the Essential Cures system exactly.</p>
-        </div>
-        <div class="form-group">
-          <label>Registered Email Address <em>*</em></label>
-          <input type="email" id="gateEmail" placeholder="you@yourorganisation.com" autocomplete="email">
-          <p class="field-hint">The email address on file with your Essential Cures account or primary contact.</p>
-        </div>
-      </div>
-      <div class="spinner" id="verifySpinner"></div>
-      <p id="gateError" style="color:var(--red);font-size:13px;margin-bottom:12px;display:none;"></p>
-      <div class="nav-group">
-        <button class="btn-primary" onclick="verifyGate()">Verify Eligibility and Continue</button>
-        <button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Essential Cures Website</button>
-      </div>
-    </div>
-
-    <!-- SCREEN BLOCKED -->
-    <div class="screen" id="screenBlocked">
-      <div class="status-screen">
-        <div class="status-icon amber">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        </div>
-        <div class="status-badge badge-amber" id="blockedBadge">Verification Failed</div>
-        <h3 class="status-title" id="blockedTitle">Unable to Verify</h3>
-        <p class="status-body" id="blockedMessage">We could not verify your account. Please check your details and try again.</p>
-        <p style="font-size:13px;color:var(--cool-gray);margin-bottom:20px">Questions? Contact <a href="mailto:accounts@essentialcures.com" style="color:var(--deep-blue)">accounts@essentialcures.com</a></p>
-        <div class="nav-group" style="max-width:340px;margin:0 auto">
-          <button class="btn-secondary" onclick="resetGate()">Go Back — Try Again</button>
-          <a href="https://essentialcures.com" style="display:block;text-align:center;text-decoration:none;padding:12px;border:1.5px solid #D4DAE0;border-radius:6px;color:var(--cool-gray);font-size:14px;font-weight:600;margin-top:8px;">Return to Website</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- SCREEN 2: ORGANISATION -->
-    <div class="screen" id="screen2">
-      <div class="error-summary" id="screen2Errors"><h4>Please correct the following before continuing</h4><ul id="screen2ErrorList"></ul></div>
-      <div class="section-block identity-block">
-        <p class="section-title"><span class="sec-icon">🏢</span>Organisation Details</p>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Organisation Name</label>
-            <input type="text" id="f_orgName" readonly style="background:#F0F7FF;color:var(--deep-blue);font-weight:600;">
-          </div>
-          <div class="form-group">
-            <label>Facility Type <em>*</em></label>
-            <select id="f_facilityType">
-              <option value="">— Select —</option>
-              <option value="Hospital - WRHA">Hospital — WRHA</option>
-              <option value="Hospital - Independent">Hospital — Independent</option>
-              <option value="Long-Term Care">Long-Term Care Facility</option>
-              <option value="Community Health">Community Health Centre</option>
-              <option value="Dental">Dental Clinic</option>
-              <option value="Private Clinic">Private Clinic</option>
-              <option value="Pharmacy">Pharmacy</option>
-              <option value="Government">Government / Public Health</option>
-              <option value="Other">Other</option>
-            </select>
-            <div class="field-error" id="facilityTypeError">Please select your facility type.</div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Industry Segment(s) <em>*</em></label>
-          <p class="field-hint">Select all that apply to your organisation.</p>
-          <div class="checkbox-group" id="industryGroup">
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Hospital - WRHA"><label>Hospital — WRHA</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Hospital - Independent"><label>Hospital — Independent</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Long-Term Care"><label>Long-Term Care</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Community Health"><label>Community Health</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Dental"><label>Dental</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Private Clinic"><label>Private Clinic</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Pharmacy"><label>Pharmacy</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Government"><label>Government / Public Health</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" value="Other"><label>Other</label></div>
-          </div>
-          <div class="field-error" id="industryError">Please select at least one industry segment.</div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>GPO Membership</label>
-            <select id="f_gpoMember" onchange="toggleGPOName()">
-              <option value="false">Not a GPO member</option>
-              <option value="true">Yes — GPO member</option>
-            </select>
-          </div>
-          <div class="form-group" id="gpoNameWrap" style="display:none;">
-            <label>GPO Name</label>
-            <input type="text" id="f_gpoName" placeholder="e.g. HealthPRO, Mohawk Medbuy">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>How Did You Hear About Essential Cures?</label>
-          <select id="f_howDidYouHear">
-            <option value="">— Select —</option>
-            <option value="LinkedIn">LinkedIn</option>
-            <option value="Web Search">Web Search</option>
-            <option value="Referral">Referral from a Colleague</option>
-            <option value="Trade Show">Trade Show / Conference</option>
-            <option value="Cold Outreach">Essential Cures Outreach</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-      </div>
-      <div class="nav-group">
-        <button class="btn-primary" onclick="goToScreen3()">Continue to Contact Details</button>
-        <button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Essential Cures Website</button>
-      </div>
-    </div>
-
-    <!-- SCREEN 3: PRIMARY CONTACT -->
-    <div class="screen" id="screen3">
-      <div class="error-summary" id="screen3Errors"><h4>Please correct the following before continuing</h4><ul id="screen3ErrorList"></ul></div>
-      <div class="section-block contact-block">
-        <p class="section-title"><span class="sec-icon">👤</span>Primary Contact</p>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>First Name <em>*</em></label>
-            <input type="text" id="f_firstName" placeholder="First name" autocomplete="given-name">
-            <div class="field-error" id="firstNameError">First name is required.</div>
-          </div>
-          <div class="form-group">
-            <label>Last Name <em>*</em></label>
-            <input type="text" id="f_lastName" placeholder="Last name" autocomplete="family-name">
-            <div class="field-error" id="lastNameError">Last name is required.</div>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" id="f_email" readonly style="background:#F0F7FF;color:var(--deep-blue);font-weight:600;">
-            <p class="field-hint">Pre-filled from eligibility verification.</p>
-          </div>
-          <div class="form-group">
-            <label>Direct Phone</label>
-            <input type="tel" id="f_phone" placeholder="+1 (204) 555-0000" autocomplete="tel">
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Job Title</label>
-            <input type="text" id="f_jobTitle" placeholder="e.g. Director of Procurement">
-          </div>
-          <div class="form-group">
-            <label>Role / Function</label>
-            <select id="f_contactRole">
-              <option value="">— Select —</option>
-              <option value="Procurement">Procurement</option>
-              <option value="Clinical">Clinical</option>
-              <option value="Administration">Administration</option>
-              <option value="Finance">Finance</option>
-              <option value="Billing">Billing</option>
-              <option value="Logistics">Logistics</option>
-              <option value="Executive">Executive</option>
-              <option value="QA">QA / Quality</option>
-              <option value="Regulatory">Regulatory</option>
-              <option value="Technical">Technical</option>
-              <option value="Account Manager">Account Manager</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Contact Type</label>
-            <select id="f_contactType">
-              <option value="Customer">Customer</option>
-              <option value="Both (Customer and Supplier)">Customer &amp; Supplier</option>
-              <option value="Internal">Internal</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Preferred Communication</label>
-            <select id="f_preferredContact">
-              <option value="">— Select —</option>
-              <option value="Email">Email</option>
-              <option value="Phone">Phone</option>
-              <option value="Either">Either</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="nav-group">
-        <button class="btn-primary" onclick="goToScreen4()">Continue to Purchasing Profile</button>
-        <button class="btn-secondary" onclick="goToScreen(2)">Back</button>
-        <button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Essential Cures Website</button>
-      </div>
-    </div>
-
-    <!-- SCREEN 4: PURCHASING PROFILE -->
-    <div class="screen" id="screen4">
-      <div class="error-summary" id="screen4Errors"><h4>Please correct the following before continuing</h4><ul id="screen4ErrorList"></ul></div>
-      <div class="section-block purchasing-block">
-        <p class="section-title"><span class="sec-icon">📦</span>Purchasing Profile</p>
-        <div class="form-group">
-          <label>Product Categories of Interest</label>
-          <p class="field-hint">Select all categories your organisation typically procures.</p>
-          <div class="checkbox-group">
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="PPE-IPC"><label>PPE / IPC Supplies</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Exam Consumables"><label>Exam Consumables</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Wound Care"><label>Wound Care</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Facility Supplies"><label>Facility Supplies</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Class I MD"><label>Class I Medical Devices</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Class II MD"><label>Class II Medical Devices</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="NHP"><label>Natural Health Products</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Services"><label>Services</label></div>
-            <div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Other"><label>Other</label></div>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Expected Order Frequency</label>
-            <select id="f_orderFreq">
-              <option value="">— Select —</option>
-              <option value="Weekly">Weekly</option>
-              <option value="Bi-weekly">Bi-Weekly</option>
-              <option value="Monthly">Monthly</option>
-              <option value="Quarterly">Quarterly</option>
-              <option value="Ad Hoc">Ad Hoc / As Needed</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Typical Minimum Order Value (CAD)</label>
-            <div class="currency-input-wrap">
-              <span class="currency-prefix">$</span>
-              <input type="text" inputmode="numeric" id="f_minOrder" placeholder="500" maxlength="10" oninput="formatNumber(this)">
-            </div>
-            <p class="field-hint">Approximate expected minimum per order.</p>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Preferred Credit Terms</label>
-            <select id="f_creditTerms">
-              <option value="">— Select —</option>
-              <option value="Net 30">Net 30</option>
-              <option value="Net 60">Net 60</option>
-              <option value="Net 90">Net 90</option>
-              <option value="2/10 Net 30">2/10 Net 30</option>
-              <option value="COD">COD</option>
-              <option value="Prepaid">Prepaid</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Pricing Tier Requested</label>
-            <select id="f_pricingTier">
-              <option value="">— Select —</option>
-              <option value="Standard">Standard</option>
-              <option value="Preferred">Preferred</option>
-              <option value="Strategic">Strategic Partner</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Special Requirements or Notes <span class="opt">(optional)</span></label>
-          <textarea id="f_purchasingNotes" placeholder="Product specifications, formulary restrictions, regulatory requirements, or any other procurement notes."></textarea>
-        </div>
-      </div>
-      <div class="nav-group">
-        <button class="btn-primary" onclick="goToScreen5()">Continue to Logistics &amp; Address</button>
-        <button class="btn-secondary" onclick="goToScreen(3)">Back</button>
-        <button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Essential Cures Website</button>
-      </div>
-    </div>
-
-    <!-- SCREEN 5: LOGISTICS & ADDRESS -->
-    <div class="screen" id="screen5">
-      <div class="error-summary" id="screen5Errors"><h4>Please correct the following before continuing</h4><ul id="screen5ErrorList"></ul></div>
-      <div class="section-block logistics-block">
-        <p class="section-title"><span class="sec-icon">🚚</span>Delivery &amp; Address</p>
-        <div class="form-group">
-          <label>Preferred Delivery Terms (Incoterms)</label>
-          <select id="f_deliveryTerms">
-            <option value="">— Select —</option>
-            <option value="DDP">DDP — Delivered Duty Paid (most common)</option>
-            <option value="DAP">DAP — Delivered at Place</option>
-            <option value="EXW">EXW — Ex Works</option>
-            <option value="FCA">FCA — Free Carrier</option>
-            <option value="FOB">FOB — Free on Board</option>
-            <option value="CFR">CFR — Cost and Freight</option>
-            <option value="CIF">CIF — Cost, Insurance and Freight</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Physical / Delivery Street Address</label>
-          <input type="text" id="f_street" placeholder="Street address" autocomplete="street-address">
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>City</label>
-            <input type="text" id="f_city" placeholder="e.g. Winnipeg" autocomplete="address-level2">
-          </div>
-          <div class="form-group">
-            <label>Province / Territory</label>
-            <select id="f_province">
-              <option value="">— Select —</option>
-              <option value="Manitoba (MB)">Manitoba (MB)</option>
-              <option value="Ontario (ON)">Ontario (ON)</option>
-              <option value="British Columbia (BC)">British Columbia (BC)</option>
-              <option value="Alberta (AB)">Alberta (AB)</option>
-              <option value="Saskatchewan (SK)">Saskatchewan (SK)</option>
-              <option value="Quebec (QC)">Quebec (QC)</option>
-              <option value="Nova Scotia (NS)">Nova Scotia (NS)</option>
-              <option value="New Brunswick (NB)">New Brunswick (NB)</option>
-              <option value="Newfoundland (NL)">Newfoundland (NL)</option>
-              <option value="PEI (PE)">Prince Edward Island (PE)</option>
-              <option value="Yukon (YT)">Yukon (YT)</option>
-              <option value="NW Territories (NT)">Northwest Territories (NT)</option>
-              <option value="Nunavut (NU)">Nunavut (NU)</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Postal Code</label>
-            <input type="text" id="f_postal" placeholder="e.g. R3T 4V6" autocomplete="postal-code" maxlength="7">
-          </div>
-          <div class="form-group">
-            <label>Country</label>
-            <select id="f_country">
-              <option value="Canada">Canada</option>
-              <option value="United States">United States</option>
-              <option value="Mexico">Mexico</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>HST / GST Registration Number <span class="opt">(optional)</span></label>
-            <input type="text" id="f_hst" placeholder="e.g. 123456789 RT0001">
-            <p class="field-hint">Leave blank if not registered.</p>
-          </div>
-          <div class="form-group">
-            <label>Tax Exempt Status</label>
-            <select id="f_taxExempt">
-              <option value="false">No — Standard taxation applies</option>
-              <option value="true">Yes — Organisation is tax exempt</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="nav-group">
-        <button class="btn-primary" onclick="goToScreen6()">Continue to Compliance &amp; Consent</button>
-        <button class="btn-secondary" onclick="goToScreen(4)">Back</button>
-        <button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Essential Cures Website</button>
-      </div>
-    </div>
-
-    <!-- SCREEN 6: CASL CONSENT -->
-    <div class="screen" id="screen6">
-      <div class="error-summary" id="screen6Errors"><h4>Please correct the following before continuing</h4><ul id="screen6ErrorList"></ul></div>
-      <div class="info-box"><p><strong>Canada's Anti-Spam Legislation (CASL):</strong> We are required to obtain your consent before sending commercial electronic messages. Please review and confirm your consent below.</p></div>
-      <div class="section-block casl-block">
-        <p class="section-title"><span class="sec-icon">🛡️</span>CASL Consent</p>
-        <p style="font-size:13px;color:var(--slate);line-height:1.7;margin-bottom:16px;">Essential Cures Inc. will use your email address and contact information to send order confirmations, product updates, pricing notifications, regulatory alerts, and promotional communications related to healthcare supplies. You may withdraw consent at any time by contacting <a href="mailto:privacy@essentialcures.com" style="color:var(--deep-blue)">privacy@essentialcures.com</a> or using the unsubscribe link in any email.</p>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Consent Type <em>*</em></label>
-            <select id="f_caslType">
-              <option value="Express">Express — Providing explicit consent</option>
-              <option value="Implied-Business">Implied — Existing business relationship</option>
-              <option value="Implied-Inquiry">Implied — Made an inquiry</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>How is consent being given? <em>*</em></label>
-            <select id="f_caslMethod">
-              <option value="Web Form">Web Form (this submission)</option>
-              <option value="Written - Email">Written — Email</option>
-              <option value="Written - Signed Document">Written — Signed Document</option>
-              <option value="Verbal - Phone">Verbal — Phone</option>
-              <option value="Verbal - In Person">Verbal — In Person</option>
-            </select>
-          </div>
-        </div>
-        <div class="ack-box">
-          <p class="ack-text">I confirm that the contact named in this profile authorises Essential Cures Inc. to send commercial electronic messages to the registered email address, in accordance with Canada's Anti-Spam Legislation (CASL). I understand I may withdraw consent at any time.</p>
-          <div class="ack-row">
-            <input type="checkbox" id="f_caslConsent">
-            <label for="f_caslConsent">I confirm CASL consent as described above. <em style="font-style:normal;color:var(--red)">*</em></label>
-          </div>
-          <div class="field-error" id="caslConsentError" style="margin-top:8px;">You must confirm CASL consent to proceed.</div>
-        </div>
-        <div class="form-group" style="margin-top:16px;">
-          <label>Additional Notes for Essential Cures <span class="opt">(optional)</span></label>
-          <textarea id="f_addNotes" placeholder="Any other information we should know about your account, procurement process, or requirements."></textarea>
-        </div>
-      </div>
-      <div class="nav-group">
-        <button class="btn-primary" onclick="goToScreen7()">Review and Submit</button>
-        <button class="btn-secondary" onclick="goToScreen(5)">Back</button>
-        <button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Essential Cures Website</button>
-      </div>
-    </div>
-
-    <!-- SCREEN 7: REVIEW -->
-    <div class="screen" id="screen7">
-      <p class="section-title">Review Your Submission</p>
-      <div class="info-box" style="margin-bottom:20px"><p>Please review your profile carefully before submitting. Our team will update your account within <strong>2 business days</strong>.</p></div>
-      <div id="reviewSummary"></div>
-      <div class="form-group" style="margin-top:16px;">
-        <div class="checkbox-item" onclick="toggleCat(this)" id="confirmItem">
-          <input type="checkbox" id="f_confirm">
-          <label>I confirm that all information provided is accurate and complete, and I authorise Essential Cures Inc. to use this information for account configuration and customer profiling purposes in compliance with PIPEDA.</label>
-        </div>
-      </div>
-      <div class="spinner" id="submitSpinner"></div>
-      <p id="submitError" style="color:var(--red);font-size:13px;margin-bottom:12px;display:none;"></p>
-      <div class="nav-group">
-        <button class="btn-primary" id="submitFinalBtn" onclick="submitForm()">Submit Customer Care Profile</button>
-        <button class="btn-secondary" onclick="goToScreen(6)">Back — Review Consent</button>
-        <button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Essential Cures Website</button>
-      </div>
-    </div>
-
-    <!-- SUCCESS -->
-    <div class="screen" id="screenSuccess">
-      <div class="status-screen">
-        <div class="status-icon green">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <div class="status-badge badge-green">Profile Submitted</div>
-        <h3 class="status-title">Customer Care Profile Received</h3>
-        <p class="status-body">Thank you. Your Customer Care Profile has been received and your account has been updated. An Essential Cures team member will review your submission within <strong>2 business days</strong>.</p>
-        <p style="font-size:13px;color:var(--cool-gray);margin-bottom:24px;">Questions? Contact <a href="mailto:accounts@essentialcures.com" style="color:var(--deep-blue);font-weight:600;">accounts@essentialcures.com</a></p>
-        <a href="https://essentialcures.com" style="display:inline-block;width:auto;padding:12px 32px;text-decoration:none;background:var(--deep-blue);color:var(--white);border-radius:6px;font-size:15px;font-weight:600;">Return to Essential Cures Website</a>
-      </div>
-    </div>
-
-    <!-- TAGLINE BAR -->
-    <div style="margin-top:24px;">
-      <table style="width:100%;border-collapse:collapse;">
-        <tr>
-          <td style="width:50%;background-color:#4A8B2C;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span></td>
-          <td style="width:50%;background-color:#0070B0;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Quality Built In. Not Bolted On.</span></td>
-        </tr>
-      </table>
-    </div>
-
-  </div><!-- /form-card -->
-</main>
-
-<footer>
-  <div class="footer-line"></div>
-  <p class="footer-urls">essentialcures.com | essentialcures.ca</p>
-  <p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p>
-</footer>
-
+<div class="form-grid">
+<div class="form-group"><label>GPO Membership</label><select id="f_gpoMember" onchange="toggleGPOName()"><option value="false">Not a GPO member</option><option value="true">Yes — GPO member</option></select></div>
+<div class="form-group" id="gpoNameWrap" style="display:none;"><label>GPO Name</label><input type="text" id="f_gpoName" placeholder="e.g. HealthPRO, Mohawk Medbuy"></div>
+</div>
+<div class="form-grid">
+<div class="form-group"><label>How Did You Hear About Essential Cures?</label><select id="f_howDidYouHear"><option value="">— Select —</option><option value="LinkedIn">LinkedIn</option><option value="Web Search">Web Search</option><option value="Referral">Referral from a Colleague</option><option value="Trade Show">Trade Show / Conference</option><option value="Cold Outreach">Essential Cures Outreach</option><option value="Other">Other</option></select></div>
+<div class="form-group"><label>Referred By <span class="opt">(if applicable)</span></label><input type="text" id="f_referredBy" placeholder="Name or organisation"></div>
+</div>
+<div class="form-grid">
+<div class="form-group"><label>Previous Essential Cures Customer?</label><select id="f_previousCustomer"><option value="false">No</option><option value="true">Yes</option></select></div>
+</div>
+</div>
+<div class="section-block identity-block">
+<p class="section-title"><span class="sec-icon">📍</span>Physical Address</p>
+<div class="form-group"><label>Street Address</label><input type="text" id="f_street" placeholder="Street address" autocomplete="street-address"></div>
+<div class="form-grid">
+<div class="form-group"><label>City</label><input type="text" id="f_city" placeholder="e.g. Winnipeg" autocomplete="address-level2"></div>
+<div class="form-group"><label>Province / Territory</label><select id="f_province"><option value="">— Select —</option><option value="Manitoba (MB)">Manitoba (MB)</option><option value="Ontario (ON)">Ontario (ON)</option><option value="British Columbia (BC)">British Columbia (BC)</option><option value="Alberta (AB)">Alberta (AB)</option><option value="Saskatchewan (SK)">Saskatchewan (SK)</option><option value="Quebec (QC)">Quebec (QC)</option><option value="Nova Scotia (NS)">Nova Scotia (NS)</option><option value="New Brunswick (NB)">New Brunswick (NB)</option><option value="Newfoundland (NL)">Newfoundland (NL)</option><option value="PEI (PE)">Prince Edward Island (PE)</option><option value="Yukon (YT)">Yukon (YT)</option><option value="NW Territories (NT)">Northwest Territories (NT)</option><option value="Nunavut (NU)">Nunavut (NU)</option><option value="Other">Other</option></select></div>
+</div>
+<div class="form-grid">
+<div class="form-group"><label>Postal Code</label><input type="text" id="f_postal" placeholder="e.g. R3T 4V6" maxlength="7"></div>
+<div class="form-group"><label>Country</label><select id="f_country"><option value="Canada">Canada</option><option value="United States">United States</option><option value="Other">Other</option></select></div>
+</div>
+<div class="form-grid">
+<div class="form-group"><label>HST / GST Number <span class="opt">(optional)</span></label><input type="text" id="f_hst" placeholder="e.g. 123456789 RT0001" maxlength="15" onblur="validateHST()"><p class="field-hint">Format: 9-digit BN + RT + 4 digits (e.g. 123456789 RT0001)</p><div class="field-error" id="hstError">Invalid format. Expected: 123456789 RT0001</div></div>
+<div class="form-group"><label>Tax Exempt</label><select id="f_taxExempt"><option value="false">No — Standard taxation applies</option><option value="true">Yes — Organisation is tax exempt</option></select></div>
+</div>
+<div class="form-group"><label>Formulary Restrictions?</label><select id="f_formularyRestrictions" onchange="toggleFormularyNotes()"><option value="false">No</option><option value="true">Yes — we have formulary restrictions</option></select></div>
+<div class="form-group" id="formularyNotesWrap" style="display:none;"><label>Formulary Notes</label><textarea id="f_formularyNotes" placeholder="Describe any formulary or product restrictions applicable to your facility."></textarea></div>
+</div>
+<div class="nav-group"><button class="btn-primary" onclick="goToScreen3()">Continue to Contact Details</button><button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Website</button></div>
+</div>
+<!-- SCREEN 3 -->
+<div class="screen" id="screen3">
+<div class="error-summary" id="screen3Errors"><h4>Please correct the following</h4><ul id="screen3ErrorList"></ul></div>
+<div class="section-block contact-block">
+<p class="section-title"><span class="sec-icon">👤</span>Primary Contact</p>
+<div class="form-grid">
+<div class="form-group"><label>First Name <em>*</em></label><input type="text" id="f_firstName" autocomplete="given-name"><div class="field-error" id="firstNameError">First name is required.</div></div>
+<div class="form-group"><label>Last Name <em>*</em></label><input type="text" id="f_lastName" autocomplete="family-name"><div class="field-error" id="lastNameError">Last name is required.</div></div>
+</div>
+<div class="form-grid">
+<div class="form-group"><label>Email Address</label><input type="email" id="f_email" readonly style="background:#F0F7FF;color:var(--deep-blue);font-weight:600;"><p class="field-hint">Pre-filled from verification.</p></div>
+<div class="form-group"><label>Direct Phone / Mobile</label><input type="tel" id="f_phone" placeholder="+1 (204) 555-0000" autocomplete="tel"></div>
+</div>
+<div class="form-group" id="emailChangeSection" style="display:none;"><div style="background:#FFF8E1;border:1.5px solid #F0D080;border-radius:8px;padding:14px 20px;"><h4 style="font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;">Has Your Contact Email Changed?</h4><div class="form-grid"><div class="form-group" style="margin-bottom:0;"><label>Email Changed?</label><select id="f_emailChanged" onchange="handleEmailChange()"><option value="No">No — same email as before</option><option value="Yes">Yes — I have a new email address</option></select></div><div class="form-group" id="newEmailGroup" style="display:none;margin-bottom:0;"><label>New Email Address <em>*</em></label><input type="email" id="f_newEmail" placeholder="newemail@organisation.com"><div class="field-error" id="newEmailError">Please enter a valid email address.</div></div></div></div></div>
+<div class="form-grid">
+<div class="form-group"><label>Organisation Main Phone</label><input type="tel" id="f_orgPhone" placeholder="+1 (204) 555-0100"><p class="field-hint">Switchboard or main reception line.</p></div>
+<div class="form-group"><label>Job Title</label><input type="text" id="f_jobTitle" placeholder="e.g. Director of Procurement"></div>
+</div>
+<div class="form-grid">
+<div class="form-group"><label>Role / Function</label><select id="f_contactRole"><option value="">— Select —</option><option value="Account Manager">Account Manager</option><option value="Accounts Payable">Accounts Payable</option><option value="Administration">Administration</option><option value="Billing">Billing</option><option value="Chief Operating Officer">Chief Operating Officer</option><option value="Clinical Lead">Clinical Lead</option><option value="Department Head">Department Head</option><option value="Director of Care">Director of Care</option><option value="Executive">Executive</option><option value="Executive Director">Executive Director</option><option value="Finance">Finance</option><option value="Infection Control Officer">Infection Control Officer</option><option value="Inventory Control">Inventory Control</option><option value="Logistics">Logistics</option><option value="Materials Management">Materials Management</option><option value="Office Manager">Office Manager</option><option value="Procurement">Procurement</option><option value="Receiving / Warehouse">Receiving / Warehouse</option><option value="Other">Other</option></select></div>
+<div class="form-group"><label>Contact Type</label><select id="f_contactType"><option value="Customer">Customer</option><option value="Both (Customer and Supplier)">Customer &amp; Supplier</option></select></div>
+</div>
+<div class="form-group"><label>Preferred Communication</label><select id="f_preferredContact"><option value="">— Select —</option><option value="Email">Email</option><option value="Phone">Phone</option><option value="Either">Either</option></select></div>
+</div>
+<div class="section-block billing-block">
+<p class="section-title"><span class="sec-icon">💳</span>Billing Contact <span style="font-size:11px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--cool-gray);margin-left:8px;">(if different from primary contact)</span></p>
+<div class="form-grid">
+<div class="form-group"><label>Billing Contact Name</label><input type="text" id="f_billingContactName" placeholder="Full name"></div>
+<div class="form-group"><label>Billing Contact Email</label><input type="email" id="f_billingContactEmail" placeholder="billing@organisation.com"></div>
+</div>
+<div class="form-group"><label>Preferred Payment Method</label><select id="f_paymentMethod"><option value="">— Select —</option><option value="Credit Card">Credit Card</option><option value="EFT">EFT — Electronic Funds Transfer</option><option value="Cheque">Cheque</option><option value="Wire Transfer">Wire Transfer</option></select><p class="field-hint">Payment terms are determined by Essential Cures based on account review.</p></div>
+</div>
+<div class="nav-group"><button class="btn-primary" onclick="goToScreen4()">Continue to Delivery</button><button class="btn-secondary" onclick="goToScreen(2)">Back</button><button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Website</button></div>
+</div>
+<!-- SCREEN 4 -->
+<div class="screen" id="screen4">
+<div class="error-summary" id="screen4Errors"><h4>Please correct the following</h4><ul id="screen4ErrorList"></ul></div>
+<div class="section-block delivery-block">
+<p class="section-title"><span class="sec-icon">🚚</span>Delivery Address &amp; Logistics</p>
+<div class="same-address-wrap"><input type="checkbox" id="f_sameAsPhysical" onchange="toggleDeliveryAddress()"><label for="f_sameAsPhysical">Delivery address is the same as physical address above</label></div>
+<div id="deliveryAddressBlock">
+<div class="form-group"><label>Delivery Street Address</label><input type="text" id="f_deliveryStreet" placeholder="Street address"></div>
+<div class="form-grid">
+<div class="form-group"><label>Delivery City</label><input type="text" id="f_deliveryCity" placeholder="City"></div>
+<div class="form-group"><label>Delivery Province</label><select id="f_deliveryProvince"><option value="">— Select —</option><option value="Manitoba (MB)">Manitoba (MB)</option><option value="Ontario (ON)">Ontario (ON)</option><option value="British Columbia (BC)">British Columbia (BC)</option><option value="Alberta (AB)">Alberta (AB)</option><option value="Saskatchewan (SK)">Saskatchewan (SK)</option><option value="Quebec (QC)">Quebec (QC)</option><option value="Nova Scotia (NS)">Nova Scotia (NS)</option><option value="New Brunswick (NB)">New Brunswick (NB)</option><option value="Newfoundland (NL)">Newfoundland (NL)</option><option value="PEI (PE)">Prince Edward Island (PE)</option><option value="Yukon (YT)">Yukon (YT)</option><option value="NW Territories (NT)">Northwest Territories (NT)</option><option value="Nunavut (NU)">Nunavut (NU)</option><option value="Other">Other</option></select></div>
+</div>
+<div class="form-grid">
+<div class="form-group"><label>Delivery Postal Code</label><input type="text" id="f_deliveryPostal" placeholder="e.g. R3T 4V6" maxlength="7"></div>
+<div class="form-group"><label>Delivery Country</label><select id="f_deliveryCountry"><option value="Canada">Canada</option><option value="United States">United States</option><option value="Other">Other</option></select></div>
+</div>
+</div>
+<div class="form-grid" style="margin-top:16px;">
+<div class="form-group"><label>Receiving Hours</label><input type="text" id="f_receivingHours" placeholder="e.g. 8:00 AM – 4:00 PM Mon–Fri"></div>
+<div class="form-group"><label>Preferred Delivery Terms (Incoterms)</label><select id="f_deliveryTerms"><option value="">— Select —</option><option value="DDP">DDP — Delivered Duty Paid</option><option value="DAP">DAP — Delivered at Place</option><option value="EXW">EXW — Ex Works</option><option value="FCA">FCA — Free Carrier</option><option value="FOB">FOB — Free on Board</option></select></div>
+</div>
+<div class="form-group"><label>Preferred Delivery Days</label><div class="checkbox-days" id="deliveryDays"><span class="day-btn" onclick="toggleDay(this)" data-value="Monday">Mon</span><span class="day-btn" onclick="toggleDay(this)" data-value="Tuesday">Tue</span><span class="day-btn" onclick="toggleDay(this)" data-value="Wednesday">Wed</span><span class="day-btn" onclick="toggleDay(this)" data-value="Thursday">Thu</span><span class="day-btn" onclick="toggleDay(this)" data-value="Friday">Fri</span></div></div>
+<div class="form-group"><label>Special Delivery Instructions <span class="opt">(optional)</span></label><textarea id="f_deliveryInstructions" placeholder="Dock location, access codes, special handling requirements, etc."></textarea></div>
+<div class="form-grid">
+<div class="form-group"><label>Dock Available?</label><select id="f_dockAvailable"><option value="">— Select —</option><option value="true">Yes — loading dock available</option><option value="false">No — ground level / street delivery</option></select></div>
+<div class="form-group"><label>Cold Chain Required?</label><select id="f_coldChain"><option value="false">No</option><option value="true">Yes — refrigerated / cold chain products</option></select></div>
+</div>
+</div>
+<div class="nav-group"><button class="btn-primary" onclick="goToScreen5()">Continue to Purchasing Profile</button><button class="btn-secondary" onclick="goToScreen(3)">Back</button><button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Website</button></div>
+</div>
+<!-- SCREEN 5 -->
+<div class="screen" id="screen5">
+<div class="error-summary" id="screen5Errors"><h4>Please correct the following</h4><ul id="screen5ErrorList"></ul></div>
+<div class="section-block purchasing-block">
+<p class="section-title"><span class="sec-icon">📦</span>Purchasing Profile</p>
+<div class="form-group"><label>Product Categories of Interest</label><p class="field-hint">Select all categories your organisation typically procures.</p><div class="checkbox-group"><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="PPE-IPC"><label>PPE / Infection Prevention and Control</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Exam Consumables"><label>Exam Consumables</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Wound Care"><label>Wound Care</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Facility Supplies"><label>Facility Supplies</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Class I MD"><label>Class I Medical Devices</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Class II MD"><label>Class II Medical Devices</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="NHP"><label>Natural Health Products</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Services"><label>Services</label></div><div class="checkbox-item" onclick="toggleCat(this)"><input type="checkbox" name="f_categories" value="Other"><label>Other</label></div></div></div>
+<div class="form-grid">
+<div class="form-group"><label>Expected Order Frequency</label><select id="f_orderFreq"><option value="">— Select —</option><option value="Weekly">Weekly</option><option value="Bi-weekly">Bi-Weekly</option><option value="Monthly">Monthly</option><option value="Quarterly">Quarterly</option><option value="Ad Hoc">Ad Hoc / As Needed</option></select></div>
+<div class="form-group"><label>Approx Monthly Procurement Spend (CAD)</label><input type="text" inputmode="numeric" id="f_monthlySpend" placeholder="e.g. 5,000" oninput="formatNumber(this)"></div>
+</div>
+<div class="form-grid">
+<div class="form-group"><label>Pricing Tier Requested</label><select id="f_pricingTier"><option value="">— Select —</option><option value="Standard">Standard</option><option value="Preferred">Preferred</option><option value="Strategic">Strategic Partner</option></select></div>
+<div class="form-group"><label>Procurement Urgency</label><select id="f_urgency"><option value="">— Select —</option><option value="Immediate">Immediate</option><option value="Within 30 Days">Within 30 Days</option><option value="Within 90 Days">Within 90 Days</option><option value="Planning Phase">Planning Phase</option></select></div>
+</div>
+<div class="form-group"><label>Special Requirements or Notes <span class="opt">(optional)</span></label><textarea id="f_purchasingNotes" placeholder="Product specifications, regulatory requirements, or any other procurement notes."></textarea></div>
+</div>
+<div class="nav-group"><button class="btn-primary" onclick="goToScreen6()">Continue to Procurement Intelligence</button><button class="btn-secondary" onclick="goToScreen(4)">Back</button><button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Website</button></div>
+</div>
+<!-- SCREEN 6 -->
+<div class="screen" id="screen6">
+<div class="info-box"><p>This section helps us understand your current procurement landscape so we can source the right products and brands for your facility. All information is treated as confidential.</p></div>
+<div class="section-block intel-block">
+<p class="section-title"><span class="sec-icon">🔍</span>Procurement Intelligence</p>
+<div class="form-group"><label>Current Primary Healthcare Supplier(s) <span class="opt">(optional)</span></label><textarea id="f_currentSuppliers" placeholder="List your current main healthcare supply distributors or manufacturers."></textarea></div>
+<div class="form-group"><label>Brand Preferences / Brands Currently Procured <span class="opt">(optional)</span></label><textarea id="f_brandPreferences" placeholder="e.g. 3M, Kimberly-Clark, Ansell, Halyard, Medline — list brands you currently use or prefer."></textarea></div>
+<div class="form-group"><label>Products / Categories to Source from Essential Cures <span class="opt">(optional)</span></label><textarea id="f_productsToSource" placeholder="Describe specific products, categories, or SKUs you are looking to source."></textarea></div>
+<div class="form-group"><label>Key Pain Points / Procurement Challenges <span class="opt">(optional)</span></label><textarea id="f_painPoints" placeholder="What challenges are you experiencing with your current supply arrangements?"></textarea></div>
+<div class="form-group"><label>Other Suppliers You Work With <span class="opt">(optional)</span></label><textarea id="f_competitorSuppliers" placeholder="Any other distributors or suppliers in your current supply chain."></textarea></div>
+</div>
+<div class="nav-group"><button class="btn-primary" onclick="goToScreen7()">Continue to Compliance &amp; Consent</button><button class="btn-secondary" onclick="goToScreen(5)">Back</button><button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Website</button></div>
+</div>
+<!-- SCREEN 7 -->
+<div class="screen" id="screen7">
+<div class="error-summary" id="screen7Errors"><h4>Please correct the following</h4><ul id="screen7ErrorList"></ul></div>
+<div class="info-box"><p><strong>Canada's Anti-Spam Legislation (CASL):</strong> We are required to obtain your consent before sending commercial electronic messages.</p></div>
+<div class="section-block casl-block">
+<p class="section-title"><span class="sec-icon">🛡️</span>CASL Consent</p>
+<p style="font-size:13px;color:var(--slate);line-height:1.7;margin-bottom:16px;">Essential Cures Inc. will use your contact information to send order confirmations, product updates, pricing notifications, regulatory alerts, and promotional communications related to healthcare supplies. You may withdraw consent at any time by contacting <a href="mailto:privacy@essentialcures.com" style="color:var(--deep-blue)">privacy@essentialcures.com</a>.</p>
+<div class="form-grid">
+<div class="form-group"><label>Consent Type <em>*</em></label><select id="f_caslType"><option value="Express">Express — Providing explicit consent</option><option value="Implied-Business">Implied — Existing business relationship</option><option value="Implied-Inquiry">Implied — Made an inquiry</option></select></div>
+<div class="form-group"><label>How is consent being given?</label><select id="f_caslMethod"><option value="Web Form">Web Form (this submission)</option><option value="Written - Email">Written — Email</option><option value="Written - Signed Document">Written — Signed Document</option><option value="Verbal - Phone">Verbal — Phone</option></select></div>
+</div>
+<div class="ack-box"><p class="ack-text">I confirm that the contact named in this profile authorises Essential Cures Inc. to send commercial electronic messages to the registered email address, in accordance with Canada's Anti-Spam Legislation (CASL).</p><div class="ack-row"><input type="checkbox" id="f_caslConsent"><label for="f_caslConsent">I confirm CASL consent as described above. <em style="font-style:normal;color:var(--red)">*</em></label></div><div class="field-error" id="caslConsentError" style="margin-top:8px;">CASL consent confirmation is required.</div></div>
+<div class="form-group" style="margin-top:16px;"><label>Additional Notes for Essential Cures <span class="opt">(optional)</span></label><textarea id="f_addNotes" placeholder="Any other information we should know about your account or procurement requirements."></textarea></div>
+</div>
+<div class="nav-group"><button class="btn-primary" onclick="goToScreen8()">Review and Submit</button><button class="btn-secondary" onclick="goToScreen(6)">Back</button><button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Website</button></div>
+</div>
+<!-- SCREEN 8 -->
+<div class="screen" id="screen8">
+<p class="section-title">Review Your Submission</p>
+<div class="info-box" style="margin-bottom:20px;"><p>Please review your profile carefully before submitting. Our team will update your account within <strong>2 business days</strong>.</p></div>
+<div id="reviewSummary"></div>
+<div class="email-copy-box"><h4>Request a Submission Summary</h4><p style="font-size:12px;color:var(--cool-gray);margin-bottom:10px;">You may request a summary of this submission be sent to your registered email address.</p><div class="email-copy-row"><input type="checkbox" id="emailCopyCheck" onchange="toggleEmailCopyField()"><label for="emailCopyCheck">Yes, send me a submission summary by email</label></div><div id="emailCopyRow" style="display:none;margin-top:10px;"><input type="email" id="emailCopyAddress" placeholder="Your email address" readonly style="background:#F0F7FF;color:var(--cool-gray);"></div></div>
+<div class="form-group" style="margin-top:16px;"><div class="checkbox-item" onclick="toggleCat(this)" id="confirmItem"><input type="checkbox" id="f_confirm"><label>I confirm that all information provided is accurate and complete, and I authorise Essential Cures Inc. to use this information for account configuration and customer profiling purposes in compliance with PIPEDA.</label></div></div>
+<div class="spinner" id="submitSpinner"></div>
+<p id="submitError" style="color:var(--red);font-size:13px;margin-bottom:12px;display:none;"></p>
+<div class="nav-group"><button class="btn-primary" id="submitFinalBtn" onclick="submitForm()">Submit Customer Care Profile</button><button class="btn-secondary" onclick="goToScreen(7)">Back — Review Consent</button><button class="btn-terminate" onclick="showTerminate()">Cancel — Return to Website</button></div>
+</div>
+<!-- SUCCESS -->
+<div class="screen" id="screenSuccess"><div class="status-screen"><div class="status-icon green"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="status-badge badge-green">Profile Submitted</div><h3 class="status-title">Customer Care Profile Received</h3><p class="status-body">Thank you. Your Customer Care Profile has been received and your account will be updated within <strong>2 business days</strong>. An Essential Cures team member may follow up if additional information is required.</p><div id="emailConfirmNote" style="display:none;background:#F0F7FF;border-radius:8px;padding:14px 20px;margin:16px 0;font-size:13px;color:var(--slate);"><strong style="color:var(--dark-navy);">Submission Summary Requested</strong><br>A summary will be sent to <span id="emailCopyConfirmAddr" style="color:var(--deep-blue);font-weight:600;"></span>.</div><p style="font-size:13px;color:var(--cool-gray);margin-bottom:24px;">Questions? Contact <a href="mailto:accounts@essentialcures.com" style="color:var(--deep-blue);font-weight:600;">accounts@essentialcures.com</a></p><a href="https://essentialcures.com" style="display:inline-block;padding:12px 32px;text-decoration:none;background:var(--deep-blue);color:var(--white);border-radius:6px;font-size:15px;font-weight:600;">Return to Essential Cures Website</a></div></div>
+<div style="margin-top:24px;"><table style="width:100%;border-collapse:collapse;"><tr><td style="width:50%;background-color:#4A8B2C;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span></td><td style="width:50%;background-color:#0070B0;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Quality Built In. Not Bolted On.</span></td></tr></table></div>
+</div></main>
+<footer><div class="footer-line"></div><p class="footer-urls">essentialcures.com | essentialcures.ca</p><p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p></footer>
 <script>
 const WORKER_BASE="https://essentialcures.com/api/cm27";
 let gateData={accountId:"",accountName:"",contactId:"",reason:""};
-
+let submissionReason="";
+let emailChanged=false;
+let selectedDeliveryDays=[];
 function dismissWelcome(){document.getElementById("welcomeModal").classList.add("hidden");}
 function showTerminate(){document.getElementById("terminateModal").classList.remove("hidden");}
 function dismissTerminate(){document.getElementById("terminateModal").classList.add("hidden");}
 function confirmTerminate(){window.location.href="https://essentialcures.com";}
 function toggleIT(){document.getElementById("itPanel").classList.toggle("open");}
-
-function toggleCat(item){
-  const cb=item.querySelector("input[type='checkbox']");
-  if(!cb)return;
-  cb.checked=!cb.checked;
-  item.classList.toggle("selected",cb.checked);
-}
-
-function toggleGPOName(){
-  const v=document.getElementById("f_gpoMember").value;
-  document.getElementById("gpoNameWrap").style.display=v==="true"?"block":"none";
-}
-
-function formatNumber(el){
-  const raw=el.value.replace(/[^0-9]/g,"");
-  if(!raw){el.value="";return;}
-  el.value=parseInt(raw,10).toLocaleString("en-CA");
-}
-
-function getRawNumber(id){
-  const el=document.getElementById(id);
-  if(!el||!el.value)return null;
-  return parseInt(el.value.replace(/[^0-9]/g,""),10)||null;
-}
-
-function getSelectedIndustries(){
-  return [...document.querySelectorAll("#industryGroup input:checked")].map(c=>c.value);
-}
-
-function getSelectedCategories(){
-  return [...document.querySelectorAll("input[name='f_categories']:checked")].map(c=>c.value);
-}
-
-function showScreen(id){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-function goToScreen(n){
-  updateSteps(n);
-  showScreen("screen"+n);
-}
-
-function updateSteps(active){
-  const done='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
-  for(let i=1;i<=7;i++){
-    const n=document.getElementById("stepNum"+i);
-    const l=document.getElementById("stepLbl"+i);
-    if(!n)continue;
-    n.className="step-num"+(i<active?" done":i===active?" active":"");
-    l.className="step-label"+(i===active?" active":"");
-    n.innerHTML=i<active?done:String(i);
-  }
-}
-
-function showErrorSummary(sid,errors){
-  const box=document.getElementById(sid+"Errors");
-  const list=document.getElementById(sid+"ErrorList");
-  if(!box)return;
-  if(!errors.length){box.classList.remove("show");return;}
-  list.innerHTML=errors.map(e=>"<li>"+e+"</li>").join("");
-  box.classList.add("show");
-  const hh=document.querySelector(".doc-header")?document.querySelector(".doc-header").offsetHeight:0;
-  window.scrollTo({top:box.getBoundingClientRect().top+window.pageYOffset-hh-16,behavior:"smooth"});
-}
-
+function toggleCat(item){const cb=item.querySelector("input[type='checkbox']");if(!cb)return;cb.checked=!cb.checked;item.classList.toggle("selected",cb.checked);}
+function toggleGPOName(){document.getElementById("gpoNameWrap").style.display=document.getElementById("f_gpoMember").value==="true"?"block":"none";}
+function toggleFormularyNotes(){document.getElementById("formularyNotesWrap").style.display=document.getElementById("f_formularyRestrictions").value==="true"?"block":"none";}
+function toggleDeliveryAddress(){const same=document.getElementById("f_sameAsPhysical").checked;const block=document.getElementById("deliveryAddressBlock");if(same){document.getElementById("f_deliveryStreet").value=document.getElementById("f_street").value;document.getElementById("f_deliveryCity").value=document.getElementById("f_city").value;document.getElementById("f_deliveryProvince").value=document.getElementById("f_province").value;document.getElementById("f_deliveryPostal").value=document.getElementById("f_postal").value;document.getElementById("f_deliveryCountry").value=document.getElementById("f_country").value;block.querySelectorAll("input,select").forEach(el=>el.disabled=true);}else{block.querySelectorAll("input,select").forEach(el=>el.disabled=false);}}
+function toggleDay(el){el.classList.toggle("selected");const val=el.dataset.value;const idx=selectedDeliveryDays.indexOf(val);if(idx>-1)selectedDeliveryDays.splice(idx,1);else selectedDeliveryDays.push(val);}
+function handleEmailChange(){const v=document.getElementById("f_emailChanged").value;emailChanged=(v==="Yes");document.getElementById("newEmailGroup").style.display=emailChanged?"block":"none";}
+function formatNumber(el){const raw=el.value.replace(/[^0-9]/g,"");if(!raw){el.value="";return;}el.value=parseInt(raw,10).toLocaleString("en-CA");}
+function validateHST(){const el=document.getElementById("f_hst");const err=document.getElementById("hstError");const v=el.value.trim();if(!v){err.classList.remove("show");el.classList.remove("error");return true;}const clean=v.replace(/\s+/g," ").trim();const ok=/^\d{9}\s?[A-Za-z]{2}\d{4}$/.test(clean);if(!ok){err.classList.add("show");el.classList.add("error");return false;}err.classList.remove("show");el.classList.remove("error");return true;}
+function getSelectedCategories(){return[...document.querySelectorAll("input[name='f_categories']:checked")].map(c=>c.value);}
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");window.scrollTo({top:0,behavior:"smooth"});}
+function goToScreen(n){updateSteps(n);showScreen("screen"+n);}
+function updateSteps(active){const done='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';for(let i=1;i<=8;i++){const n=document.getElementById("stepNum"+i);const l=document.getElementById("stepLbl"+i);if(!n)continue;n.className="step-num"+(i<active?" done":i===active?" active":"");l.className="step-label"+(i===active?" active":"");n.innerHTML=i<active?done:String(i);}}
+function showErrorSummary(sid,errors){const box=document.getElementById(sid+"Errors");const list=document.getElementById(sid+"ErrorList");if(!box)return;if(!errors.length){box.classList.remove("show");return;}list.innerHTML=errors.map(e=>"<li>"+e+"</li>").join("");box.classList.add("show");const hh=document.querySelector(".doc-header")?document.querySelector(".doc-header").offsetHeight:0;window.scrollTo({top:box.getBoundingClientRect().top+window.pageYOffset-hh-16,behavior:"smooth"});}
 function resetGate(){showScreen("screen1");updateSteps(1);}
-
-async function verifyGate(){
-  const company=document.getElementById("gateCompany").value.trim();
-  const email=document.getElementById("gateEmail").value.trim();
-  const errEl=document.getElementById("gateError");
-  const spinner=document.getElementById("verifySpinner");
-  errEl.style.display="none";
-  if(!company||!email){errEl.textContent="Please enter both your organisation name and registered email.";errEl.style.display="block";return;}
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errEl.textContent="Please enter a valid email address.";errEl.style.display="block";return;}
-  spinner.classList.add("show");
-  document.querySelector("#screen1 .btn-primary").disabled=true;
-  try{
-    const resp = await fetch(WORKER_BASE+"/customer/gate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({accountName:company,contactEmail:email})});
-    const data=await resp.json();
-    spinner.classList.remove("show");
-    document.querySelector("#screen1 .btn-primary").disabled=false;
-    if(data.status==="allow"){
-      gateData.accountId=data.accountId||"";
-      gateData.accountName=data.accountName||company;
-      gateData.contactId=data.contactId||"";
-      gateData.reason=data.reason||"first_time";
-      document.getElementById("f_orgName").value=gateData.accountName;
-      document.getElementById("f_email").value=email;
-      goToScreen(2);
-    } else if(data.status==="block"){
-      const msgs={
-        account_not_found:"We could not find an account matching that organisation name. Please check the spelling or contact your Essential Cures representative.",
-        email_not_matched:"The email address provided does not match the registered contact for this account. Please use the email on file or contact accounts@essentialcures.com.",
-        profile_current:"Your account is already active and approved. No further profile submission is required at this time. Contact accounts@essentialcures.com if you need to update your details."
-      };
-      document.getElementById("blockedBadge").textContent=data.reason==="account_not_found"?"Account Not Found":data.reason==="email_not_matched"?"Email Not Matched":"Profile Already Active";
-      document.getElementById("blockedTitle").textContent=data.reason==="account_not_found"?"Organisation Not Found":data.reason==="email_not_matched"?"Email Does Not Match Our Records":"Profile Already Active";
-      document.getElementById("blockedMessage").textContent=msgs[data.reason]||"Please check your details and try again.";
-      showScreen("screenBlocked");
-    } else {
-      errEl.textContent=data.reason||"Verification failed. Please try again.";
-      errEl.style.display="block";
-    }
-  }catch(e){
-    spinner.classList.remove("show");
-    document.querySelector("#screen1 .btn-primary").disabled=false;
-    errEl.textContent="Unable to verify at this time. Please try again or contact accounts@essentialcures.com.";
-    errEl.style.display="block";
-  }
-}
-
+async function verifyGate(){const company=document.getElementById("gateCompany").value.trim();const email=document.getElementById("gateEmail").value.trim();const reason=document.getElementById("gateReason").value;const errEl=document.getElementById("gateError");const spinner=document.getElementById("verifySpinner");errEl.style.display="none";if(!company||!email){errEl.textContent="Please enter your organisation name and registered email.";errEl.style.display="block";return;}if(!reason){document.getElementById("gateReasonError").classList.add("show");return;}document.getElementById("gateReasonError").classList.remove("show");if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errEl.textContent="Please enter a valid email address.";errEl.style.display="block";return;}spinner.classList.add("show");document.querySelector("#screen1 .btn-primary").disabled=true;try{const resp=await fetch(WORKER_BASE+"/customer/gate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({accountName:company,contactEmail:email})});const data=await resp.json();spinner.classList.remove("show");document.querySelector("#screen1 .btn-primary").disabled=false;if(data.status==="allow"){gateData.accountId=data.accountId||"";gateData.accountName=data.accountName||company;gateData.contactId=data.contactId||"";gateData.reason=data.reason||"first_time";submissionReason=reason;document.getElementById("f_orgName").value=gateData.accountName;document.getElementById("f_email").value=email;document.getElementById("emailChangeSection").style.display=(reason==="update"||reason==="category")?"block":"none";document.getElementById("emailCopyAddress").value=email;goToScreen(2);}else if(data.status==="block"){const msgs={account_not_found:"We could not find an account matching that organisation name. Please check spelling or contact accounts@essentialcures.com.",email_not_matched:"The email address provided does not match the registered contact for this account.",profile_current:"Your account is already active and approved. Contact accounts@essentialcures.com to update your details."};document.getElementById("blockedBadge").textContent=data.reason==="account_not_found"?"Account Not Found":data.reason==="email_not_matched"?"Email Not Matched":"Profile Active";document.getElementById("blockedTitle").textContent=data.reason==="account_not_found"?"Organisation Not Found":data.reason==="email_not_matched"?"Email Does Not Match Our Records":"Profile Already Active";document.getElementById("blockedMessage").textContent=msgs[data.reason]||"Please check your details and try again.";showScreen("screenBlocked");}else{errEl.textContent=data.reason||"Verification failed. Please try again.";errEl.style.display="block";}}catch(e){spinner.classList.remove("show");document.querySelector("#screen1 .btn-primary").disabled=false;errEl.textContent="Unable to verify at this time. Please try again or contact accounts@essentialcures.com.";errEl.style.display="block";}}
 document.getElementById("gateCompany").addEventListener("keydown",e=>{if(e.key==="Enter")verifyGate();});
 document.getElementById("gateEmail").addEventListener("keydown",e=>{if(e.key==="Enter")verifyGate();});
-
-function goToScreen3(){
-  const errors=[];
-  if(!document.getElementById("f_facilityType").value){document.getElementById("facilityTypeError").classList.add("show");errors.push("Facility Type is required.");}
-  else document.getElementById("facilityTypeError").classList.remove("show");
-  if(getSelectedIndustries().length===0){document.getElementById("industryError").classList.add("show");errors.push("At least one industry segment must be selected.");}
-  else document.getElementById("industryError").classList.remove("show");
-  if(errors.length){showErrorSummary("screen2",errors);return;}
-  document.getElementById("screen2Errors").classList.remove("show");
-  goToScreen(3);
-}
-
-function goToScreen4(){
-  const errors=[];
-  if(!document.getElementById("f_firstName").value.trim()){document.getElementById("firstNameError").classList.add("show");errors.push("First name is required.");}
-  else document.getElementById("firstNameError").classList.remove("show");
-  if(!document.getElementById("f_lastName").value.trim()){document.getElementById("lastNameError").classList.add("show");errors.push("Last name is required.");}
-  else document.getElementById("lastNameError").classList.remove("show");
-  if(errors.length){showErrorSummary("screen3",errors);return;}
-  document.getElementById("screen3Errors").classList.remove("show");
-  goToScreen(4);
-}
-
-function goToScreen5(){
-  document.getElementById("screen4Errors").classList.remove("show");
-  goToScreen(5);
-}
-
-function goToScreen6(){
-  document.getElementById("screen5Errors").classList.remove("show");
-  goToScreen(6);
-}
-
-function goToScreen7(){
-  const errors=[];
-  if(!document.getElementById("f_caslConsent").checked){document.getElementById("caslConsentError").classList.add("show");errors.push("CASL consent confirmation is required.");}
-  else document.getElementById("caslConsentError").classList.remove("show");
-  if(errors.length){showErrorSummary("screen6",errors);return;}
-  document.getElementById("screen6Errors").classList.remove("show");
-  buildReview();
-  goToScreen(7);
-}
-
-function buildReview(){
-  const industries=getSelectedIndustries().join(", ")||"Not specified";
-  const categories=getSelectedCategories().join(", ")||"Not specified";
-  const rows=[
-    ["Organisation",document.getElementById("f_orgName").value],
-    ["Facility Type",document.getElementById("f_facilityType").value||"Not specified"],
-    ["Industry Segments",industries],
-    ["GPO Member",document.getElementById("f_gpoMember").value==="true"?"Yes — "+(document.getElementById("f_gpoName").value||"Not specified"):"No"],
-    ["How Did You Hear",document.getElementById("f_howDidYouHear").value||"Not specified"],
-    ["Primary Contact",document.getElementById("f_firstName").value+" "+document.getElementById("f_lastName").value],
-    ["Job Title",document.getElementById("f_jobTitle").value||"Not specified"],
-    ["Email",document.getElementById("f_email").value],
-    ["Phone",document.getElementById("f_phone").value||"Not specified"],
-    ["Role",document.getElementById("f_contactRole").value||"Not specified"],
-    ["Contact Type",document.getElementById("f_contactType").value],
-    ["Preferred Contact",document.getElementById("f_preferredContact").value||"Not specified"],
-    ["Product Categories",categories],
-    ["Order Frequency",document.getElementById("f_orderFreq").value||"Not specified"],
-    ["Min Order Value",document.getElementById("f_minOrder").value?"CAD $"+document.getElementById("f_minOrder").value:"Not specified"],
-    ["Credit Terms",document.getElementById("f_creditTerms").value||"Not specified"],
-    ["Pricing Tier",document.getElementById("f_pricingTier").value||"Not specified"],
-    ["Delivery Terms",document.getElementById("f_deliveryTerms").value||"Not specified"],
-    ["Address",[document.getElementById("f_street").value,document.getElementById("f_city").value,document.getElementById("f_province").value,document.getElementById("f_postal").value,document.getElementById("f_country").value].filter(Boolean).join(", ")||"Not specified"],
-    ["HST / GST Number",document.getElementById("f_hst").value||"Not provided"],
-    ["Tax Exempt",document.getElementById("f_taxExempt").value==="true"?"Yes":"No"],
-    ["CASL Consent","Yes — "+document.getElementById("f_caslType").value+" via "+document.getElementById("f_caslMethod").value],
-  ];
-  let h="<table class='review-table'>";
-  rows.forEach(r=>h+="<tr><td>"+r[0]+"</td><td>"+(r[1]||'<em style="color:var(--cool-gray)">Not provided</em>')+"</td></tr>");
-  h+="</table>";
-  document.getElementById("reviewSummary").innerHTML=h;
-}
-
-async function submitForm(){
-  if(!document.getElementById("f_confirm").checked){
-    document.getElementById("submitError").textContent="Please confirm the accuracy of your information before submitting.";
-    document.getElementById("submitError").style.display="block";
-    return;
-  }
-  const spinner=document.getElementById("submitSpinner");
-  const errEl=document.getElementById("submitError");
-  errEl.style.display="none";
-  spinner.classList.add("show");
-  document.getElementById("submitFinalBtn").disabled=true;
-
-  const payload={
-    accountId:gateData.accountId,
-    contactId:gateData.contactId,
-    contactEmail:document.getElementById("f_email").value,
-    contactFirstName:document.getElementById("f_firstName").value.trim(),
-    contactLastName:document.getElementById("f_lastName").value.trim(),
-    contactPhone:document.getElementById("f_phone").value.trim(),
-    contactJobTitle:document.getElementById("f_jobTitle").value.trim(),
-    contactRole:document.getElementById("f_contactRole").value,
-    contactType:document.getElementById("f_contactType").value,
-    caslConsentGiven:document.getElementById("f_caslConsent").checked?"Yes":"No",
-    caslConsentMethod:document.getElementById("f_caslMethod").value,
-    caslConsentType:document.getElementById("f_caslType").value,
-    facilityType:document.getElementById("f_facilityType").value,
-    ecIndustry:getSelectedIndustries().join(";"),
-    gpoMember:document.getElementById("f_gpoMember").value,
-    gpoName:document.getElementById("f_gpoName").value.trim(),
-    howDidYouHear:document.getElementById("f_howDidYouHear").value,
-    preferredContact:document.getElementById("f_preferredContact").value,
-    preferredDelivery:document.getElementById("f_deliveryTerms").value,
-    creditTermsRequested:document.getElementById("f_creditTerms").value,
-    minOrderValue:document.getElementById("f_minOrder").value.replace(/[^0-9]/g,"")||"",
-    physicalStreet:document.getElementById("f_street").value.trim(),
-    physicalCity:document.getElementById("f_city").value.trim(),
-    physicalProvince:document.getElementById("f_province").value,
-    physicalPostalCode:document.getElementById("f_postal").value.trim(),
-    physicalCountry:document.getElementById("f_country").value,
-    caslConsentDate:new Date().toISOString().split("T")[0]
-  };
-
-  try{
-    const resp = await fetch(WORKER_BASE+"/customer/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-    const data=await resp.json();
-    spinner.classList.remove("show");
-    if(data.status==="success"){
-      showScreen("screenSuccess");
-      updateSteps(8);
-    } else {
-      document.getElementById("submitFinalBtn").disabled=false;
-      errEl.textContent=data.message||data.reason||"Submission failed. Please try again.";
-      errEl.style.display="block";
-    }
-  }catch(e){
-    spinner.classList.remove("show");
-    document.getElementById("submitFinalBtn").disabled=false;
-    errEl.textContent="Connection error. Please try again or contact accounts@essentialcures.com.";
-    errEl.style.display="block";
-  }
-}
+function goToScreen3(){const errors=[];if(!document.getElementById("f_facilityType").value){document.getElementById("facilityTypeError").classList.add("show");errors.push("Facility Type is required.");}else document.getElementById("facilityTypeError").classList.remove("show");if(!validateHST())errors.push("HST / GST Number format is invalid.");if(errors.length){showErrorSummary("screen2",errors);return;}document.getElementById("screen2Errors").classList.remove("show");goToScreen(3);}
+function goToScreen4(){const errors=[];if(!document.getElementById("f_firstName").value.trim()){document.getElementById("firstNameError").classList.add("show");errors.push("First name is required.");}else document.getElementById("firstNameError").classList.remove("show");if(!document.getElementById("f_lastName").value.trim()){document.getElementById("lastNameError").classList.add("show");errors.push("Last name is required.");}else document.getElementById("lastNameError").classList.remove("show");if(emailChanged){const ne=document.getElementById("f_newEmail").value.trim();if(!ne||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ne)){document.getElementById("newEmailError").classList.add("show");errors.push("New email address is required and must be valid.");}else document.getElementById("newEmailError").classList.remove("show");}if(errors.length){showErrorSummary("screen3",errors);return;}document.getElementById("screen3Errors").classList.remove("show");goToScreen(4);}
+function goToScreen5(){document.getElementById("screen4Errors").classList.remove("show");goToScreen(5);}
+function goToScreen6(){document.getElementById("screen5Errors").classList.remove("show");goToScreen(6);}
+function goToScreen7(){document.getElementById("screen6Errors").classList.remove("show");goToScreen(7);}
+function goToScreen8(){const errors=[];if(!document.getElementById("f_caslConsent").checked){document.getElementById("caslConsentError").classList.add("show");errors.push("CASL consent is required.");}else document.getElementById("caslConsentError").classList.remove("show");if(errors.length){showErrorSummary("screen7",errors);return;}document.getElementById("screen7Errors").classList.remove("show");buildReview();goToScreen(8);}
+function toggleEmailCopyField(){const checked=document.getElementById("emailCopyCheck").checked;document.getElementById("emailCopyRow").style.display=checked?"block":"none";}
+function buildReview(){const categories=getSelectedCategories().join(", ")||"Not specified";const days=selectedDeliveryDays.join(", ")||"Not specified";const sameAddr=document.getElementById("f_sameAsPhysical").checked;const contactEmail=emailChanged&&document.getElementById("f_newEmail")?.value.trim()?document.getElementById("f_newEmail").value.trim():document.getElementById("f_email").value;const sections=[{head:"Organisation",rows:[["Organisation",document.getElementById("f_orgName").value],["Submission Type",submissionReason==="new"?"New Profile":submissionReason==="update"?"Update Existing":submissionReason==="category"?"Add Product Categories":""],["Facility Type",document.getElementById("f_facilityType").value||"Not specified"],["Facility Size",document.getElementById("f_facilitySize").value||"Not specified"],["Accreditation",document.getElementById("f_accreditation").value||"Not specified"],["GPO Member",document.getElementById("f_gpoMember").value==="true"?"Yes — "+(document.getElementById("f_gpoName").value||""):"No"],["How Did You Hear",document.getElementById("f_howDidYouHear").value||"Not specified"],["Referred By",document.getElementById("f_referredBy").value||"Not specified"],["Previous EC Customer",document.getElementById("f_previousCustomer").value==="true"?"Yes":"No"],["Physical Address",[document.getElementById("f_street").value,document.getElementById("f_city").value,document.getElementById("f_province").value,document.getElementById("f_postal").value,document.getElementById("f_country").value].filter(Boolean).join(", ")||"Not specified"],["HST / GST",document.getElementById("f_hst").value||"Not provided"],["Tax Exempt",document.getElementById("f_taxExempt").value==="true"?"Yes":"No"],["Formulary Restrictions",document.getElementById("f_formularyRestrictions").value==="true"?"Yes":"No"]]},{head:"Primary Contact",rows:[["Name",document.getElementById("f_firstName").value+" "+document.getElementById("f_lastName").value],["Email",contactEmail],["Direct Phone",document.getElementById("f_phone").value||"Not specified"],["Organisation Phone",document.getElementById("f_orgPhone").value||"Not specified"],["Job Title",document.getElementById("f_jobTitle").value||"Not specified"],["Role",document.getElementById("f_contactRole").value||"Not specified"],["Contact Type",document.getElementById("f_contactType").value],["Preferred Contact",document.getElementById("f_preferredContact").value||"Not specified"],["Billing Contact",document.getElementById("f_billingContactName").value||"Not specified"],["Billing Email",document.getElementById("f_billingContactEmail").value||"Not specified"],["Payment Method",document.getElementById("f_paymentMethod").value||"Not specified"]]},{head:"Delivery",rows:[["Delivery Address",sameAddr?"Same as physical address":[document.getElementById("f_deliveryStreet").value,document.getElementById("f_deliveryCity").value,document.getElementById("f_deliveryProvince").value,document.getElementById("f_deliveryPostal").value,document.getElementById("f_deliveryCountry").value].filter(Boolean).join(", ")||"Not specified"],["Receiving Hours",document.getElementById("f_receivingHours").value||"Not specified"],["Preferred Delivery Days",days],["Delivery Terms",document.getElementById("f_deliveryTerms").value||"Not specified"],["Dock Available",document.getElementById("f_dockAvailable").value==="true"?"Yes":document.getElementById("f_dockAvailable").value==="false"?"No":"Not specified"],["Cold Chain Required",document.getElementById("f_coldChain").value==="true"?"Yes":"No"],["Instructions",document.getElementById("f_deliveryInstructions").value||"Not specified"]]},{head:"Purchasing Profile",rows:[["Product Categories",categories],["Order Frequency",document.getElementById("f_orderFreq").value||"Not specified"],["Monthly Spend (CAD)",document.getElementById("f_monthlySpend").value?"CAD $"+document.getElementById("f_monthlySpend").value:"Not specified"],["Pricing Tier",document.getElementById("f_pricingTier").value||"Not specified"],["Urgency",document.getElementById("f_urgency").value||"Not specified"]]},{head:"Procurement Intelligence",rows:[["Current Suppliers",document.getElementById("f_currentSuppliers").value||"Not provided"],["Brand Preferences",document.getElementById("f_brandPreferences").value||"Not provided"],["Products to Source",document.getElementById("f_productsToSource").value||"Not provided"],["Pain Points",document.getElementById("f_painPoints").value||"Not provided"],["Other Suppliers",document.getElementById("f_competitorSuppliers").value||"Not provided"]]},{head:"Consent",rows:[["CASL Consent","Yes — "+document.getElementById("f_caslType").value+" via "+document.getElementById("f_caslMethod").value]]}];let h="<table class='review-table'>";sections.forEach(sec=>{h+=`<tr><td colspan="2"><span class="review-section-head">${sec.head}</span></td></tr>`;sec.rows.forEach(r=>h+=`<tr><td>${r[0]}</td><td>${r[1]||'<em style="color:var(--cool-gray)">Not provided</em>'}</td></tr>`);});h+="</table>";document.getElementById("reviewSummary").innerHTML=h;}
+async function submitForm(){if(!document.getElementById("f_confirm").checked){document.getElementById("submitError").textContent="Please confirm the accuracy of your information before submitting.";document.getElementById("submitError").style.display="block";return;}const spinner=document.getElementById("submitSpinner");const errEl=document.getElementById("submitError");errEl.style.display="none";spinner.classList.add("show");document.getElementById("submitFinalBtn").disabled=true;const contactEmail=emailChanged&&document.getElementById("f_newEmail")?.value.trim()?document.getElementById("f_newEmail").value.trim():document.getElementById("f_email").value;const emailCopy=document.getElementById("emailCopyCheck").checked;const emailCopyAddr=document.getElementById("emailCopyAddress").value.trim();const payload={accountId:gateData.accountId,contactId:gateData.contactId,submissionReason:submissionReason,emailChanged:emailChanged,emailCopy:emailCopy,emailCopyAddress:emailCopy?emailCopyAddr:"",contactEmail:contactEmail,contactFirstName:document.getElementById("f_firstName").value.trim(),contactLastName:document.getElementById("f_lastName").value.trim(),contactPhone:document.getElementById("f_phone").value.trim(),orgPhone:document.getElementById("f_orgPhone").value.trim(),contactJobTitle:document.getElementById("f_jobTitle").value.trim(),contactRole:document.getElementById("f_contactRole").value,contactType:document.getElementById("f_contactType").value,caslConsentGiven:document.getElementById("f_caslConsent").checked?"Yes":"No",caslConsentMethod:document.getElementById("f_caslMethod").value,caslConsentType:document.getElementById("f_caslType").value,facilityType:document.getElementById("f_facilityType").value,facilitySize:document.getElementById("f_facilitySize").value.trim(),facilityAccreditation:document.getElementById("f_accreditation").value,gpoMember:document.getElementById("f_gpoMember").value,gpoName:document.getElementById("f_gpoName").value.trim(),howDidYouHear:document.getElementById("f_howDidYouHear").value,referredBy:document.getElementById("f_referredBy").value.trim(),previousCustomer:document.getElementById("f_previousCustomer").value,preferredContact:document.getElementById("f_preferredContact").value,preferredDelivery:document.getElementById("f_deliveryTerms").value,physicalStreet:document.getElementById("f_street").value.trim(),physicalCity:document.getElementById("f_city").value.trim(),physicalProvince:document.getElementById("f_province").value,physicalPostalCode:document.getElementById("f_postal").value.trim(),physicalCountry:document.getElementById("f_country").value,hstGstNumber:document.getElementById("f_hst").value.trim(),taxExempt:document.getElementById("f_taxExempt").value,formularyRestrictions:document.getElementById("f_formularyRestrictions").value,formularyNotes:document.getElementById("f_formularyNotes").value.trim(),deliverySameAsPhysical:document.getElementById("f_sameAsPhysical").checked?"true":"false",deliveryStreet:document.getElementById("f_deliveryStreet").value.trim(),deliveryCity:document.getElementById("f_deliveryCity").value.trim(),deliveryProvince:document.getElementById("f_deliveryProvince").value,deliveryPostalCode:document.getElementById("f_deliveryPostal").value.trim(),deliveryCountry:document.getElementById("f_deliveryCountry").value,receivingHours:document.getElementById("f_receivingHours").value.trim(),preferredDeliveryDays:selectedDeliveryDays.join(";"),deliveryInstructions:document.getElementById("f_deliveryInstructions").value.trim(),dockAvailable:document.getElementById("f_dockAvailable").value,coldChainRequired:document.getElementById("f_coldChain").value,productCategories:getSelectedCategories().join(";"),orderFrequency:document.getElementById("f_orderFreq").value,monthlySpendCAD:document.getElementById("f_monthlySpend").value.replace(/[^0-9]/g,""),pricingTier:document.getElementById("f_pricingTier").value,procurementUrgency:document.getElementById("f_urgency").value,purchasingNotes:document.getElementById("f_purchasingNotes").value.trim(),currentSuppliers:document.getElementById("f_currentSuppliers").value.trim(),brandPreferences:document.getElementById("f_brandPreferences").value.trim(),productsToSource:document.getElementById("f_productsToSource").value.trim(),painPoints:document.getElementById("f_painPoints").value.trim(),competitorSuppliers:document.getElementById("f_competitorSuppliers").value.trim(),billingContactName:document.getElementById("f_billingContactName").value.trim(),billingContactEmail:document.getElementById("f_billingContactEmail").value.trim(),preferredPaymentMethod:document.getElementById("f_paymentMethod").value,addNotes:document.getElementById("f_addNotes").value.trim(),caslConsentDate:new Date().toISOString().split("T")[0]};try{const resp=await fetch(WORKER_BASE+"/customer/submit",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const data=await resp.json();spinner.classList.remove("show");if(data.status==="success"){if(emailCopy&&emailCopyAddr){document.getElementById("emailConfirmNote").style.display="block";document.getElementById("emailCopyConfirmAddr").textContent=emailCopyAddr;}showScreen("screenSuccess");updateSteps(9);}else{document.getElementById("submitFinalBtn").disabled=false;errEl.textContent=data.message||data.reason||"Submission failed. Please try again.";errEl.style.display="block";}}catch(e){spinner.classList.remove("show");document.getElementById("submitFinalBtn").disabled=false;errEl.textContent="Connection error. Please try again or contact accounts@essentialcures.com.";errEl.style.display="block";}}
 </script>
 </body>
 </html>
