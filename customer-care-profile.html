@@ -148,7 +148,7 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
 </style>
 </head>
 <body>
-<div class="it-float" id="itFloat"><button class="it-tab" onclick="toggleIT()">Technical Support</button><div class="it-panel" id="itPanel"><button class="it-close" onclick="toggleIT()">&#10005;</button><h4>Technical Issues?</h4><p>Having trouble? Having trouble with the form? Please email our EC-IT team with a description of the problem. We apologize for the inconvenience in advance.</p><a href="mailto:it@essentialcures.com?subject=Customer Care Profile Technical Issue">Email IT Support</a></div></div>
+<div class="it-float" id="itFloat"><button class="it-tab" onclick="toggleIT()">Technical Support</button><div class="it-panel" id="itPanel"><button class="it-close" onclick="toggleIT()">&#10005;</button><h4>Technical Issues?</h4><p>Having trouble with the form? Please email our EC-IT team with a description of the problem. We apologize for the inconvenience in advance.</p><a href="mailto:it@essentialcures.com?subject=Customer Care Profile Technical Issue">Email IT Support</a></div></div>
 <div class="modal-overlay" id="welcomeModal"><div class="modal-box"><div style="background:var(--dark-navy);padding:20px 28px;border-radius:14px 14px 0 0;display:flex;align-items:center;gap:14px;"><img src="https://essentialcures.github.io/Essential%20Cures%20Final%20Logo.png" alt="Essential Cures" style="height:44px;width:auto;flex-shrink:0;"><div><div style="font-size:14px;font-weight:700;color:#FFFFFF;letter-spacing:0.5px;">ESSENTIAL CURES INC.</div><div style="font-size:11px;color:var(--lime);font-style:italic;font-weight:600;">Compliant Solutions. Confident Care.</div></div></div><div style="height:3px;background:linear-gradient(90deg,var(--deep-blue),var(--lime));"></div><div style="padding:24px 28px 0;"><div style="background:#F0F4F8;border-left:4px solid var(--dark-navy);border-radius:0 8px 8px 0;padding:20px;margin-bottom:20px;"><p style="font-size:12px;color:var(--slate);line-height:1.8;margin-bottom:10px;">Thank you for your interest in Essential Cures Inc. We are committed to delivering compliant, reliable healthcare supply solutions tailored to your facility's needs.</p><p style="font-size:12px;color:var(--slate);line-height:1.8;margin-bottom:10px;">This Customer Care Profile helps us understand your organisation's procurement requirements so we can configure your account and ensure we are ready to serve you from day one.</p><p style="font-size:12px;color:var(--slate);line-height:1.8;">All information is handled in accordance with PIPEDA and our Privacy Policy.</p><div style="border-top:1px solid #D4DAE0;padding-top:12px;margin-top:16px;"><p style="font-size:12px;color:var(--cool-gray);margin-bottom:2px;">Warm regards,</p><p style="font-size:13px;font-weight:700;color:var(--dark-navy);">Essential Cures Inc. Team</p></div></div><div style="background:#F2F8EE;border-left:4px solid var(--leaf-green);border-radius:0 8px 8px 0;padding:16px 18px;margin-bottom:20px;"><p style="font-size:11px;font-weight:700;color:var(--leaf-green);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Before You Begin</p><ul style="font-size:12px;color:var(--slate);line-height:2;padding-left:18px;"><li>Your organisation name exactly as registered with Essential Cures</li><li>The email address registered with your account</li><li>Your facility address and HST / GST number if applicable</li><li>Details of your current procurement arrangements</li></ul></div></div><div class="modal-footer" style="padding-top:20px;"><button class="btn-success" onclick="dismissWelcome()">I Am Ready — Begin My Profile</button><a href="https://essentialcures.com" style="display:block;text-align:center;text-decoration:none;padding:12px;border:1.5px solid #D4DAE0;border-radius:6px;color:var(--cool-gray);font-size:14px;font-weight:600;margin-top:8px;">Return to Website</a></div></div></div>
 <div class="modal-overlay hidden" id="terminateModal"><div class="modal-box"><div class="modal-header" style="background:var(--red);"><h3>Cancel This Profile?</h3><p>Your progress will not be saved.</p></div><div class="modal-body"><p style="font-size:14px;color:var(--slate);line-height:1.7;">You are about to cancel your Customer Care Profile submission. Any information entered will be discarded.</p></div><div class="modal-footer"><button onclick="confirmTerminate()" style="background:var(--red);color:var(--white);border:none;padding:14px;border-radius:6px;font-size:15px;font-weight:600;cursor:pointer;">Yes, Cancel and Return to Website</button><button class="btn-secondary" onclick="dismissTerminate()">No, Continue My Profile</button></div></div></div>
 <div class="doc-header"><table class="doc-header-table"><tr><td class="doc-header-left"><img src="https://essentialcures.github.io/Essential%20Cures%20Final%20Logo.png" alt="Essential Cures Inc."></td><td class="doc-header-middle"><div class="org-name">ESSENTIAL CURES INC.</div><div class="tagline">Compliant Solutions. Confident Care.</div><div class="doc-title">Customer Care Profile</div></td><td class="doc-header-right"><div class="doc-id">EC-SAL-FRM-002</div><div class="doc-meta">Rev: R01<br>Date: August 19, 2026</div></td></tr></table><div class="doc-header-stripe1"></div><div class="doc-header-stripe2"></div></div>
@@ -196,7 +196,7 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
 <div class="status-icon green"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
 <div class="status-badge badge-green">Profile Active</div>
 <h3 class="status-title">Your Profile Is Already Active</h3>
-<p class="status-body" style="max-width:480px;margin:0 auto 24px;">Good news — your Essential Cures account is already verified and active. A new profile submission is not required. Would you like to update your existing profile or add product categories instead?</p>
+<p class="status-body" style="max-width:480px;margin:0 auto 24px;">Good news — the account for <strong id="profileActiveOrgName"></strong> is already verified and active. A new profile submission is not required. Would you like to update your existing profile or add product categories instead?</p>
 <div style="display:flex;flex-direction:column;gap:12px;max-width:420px;margin:0 auto 28px;">
 <div style="background:#F0F7FF;border:1.5px solid var(--deep-blue);border-radius:10px;padding:18px 20px;text-align:left;cursor:pointer;" onclick="switchToUpdate()" id="optionUpdateCard">
 <p style="font-size:13px;font-weight:700;color:var(--deep-blue);margin-bottom:4px;">Update My Profile</p>
@@ -213,51 +213,6 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
 </div>
 </div>
 </div>
-<!-- SCREEN: PROFILE ACTIVE — shown when New selected but active profile exists -->
-<div class="screen" id="screenProfileActive">
-<div class="status-screen">
-<div class="status-icon" style="background:rgba(0,80,144,0.08);color:var(--deep-blue);"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-<div class="status-badge" style="background:rgba(0,80,144,0.1);color:var(--deep-blue);">Profile Already Active</div>
-<h3 class="status-title">Your Account Is Already Active</h3>
-<p class="status-body">We found an active Customer Care Profile on file for <strong id="profileActiveOrgName"></strong>. A new profile submission is not required.</p>
-<div style="background:#F0F7FF;border:1.5px solid var(--med-blue);border-radius:10px;padding:20px 24px;margin:0 auto 24px;max-width:480px;text-align:left;">
-<p style="font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;">What Would You Like To Do?</p>
-<p style="font-size:13px;color:var(--slate);line-height:1.7;margin-bottom:16px;">You can update your existing profile details, or add new product categories to your account. Select an option below to continue.</p>
-<div style="display:flex;flex-direction:column;gap:10px;">
-<button class="btn-primary" style="margin-top:0;" onclick="switchToUpdate()">&#9998; Update My Existing Profile</button>
-<button class="btn-primary" style="margin-top:0;background:var(--leaf-green);" onclick="switchToCategory()">&#43; Add Product Categories to My Account</button>
-</div>
-</div>
-<p style="font-size:12px;color:var(--cool-gray);margin-bottom:20px;">Need to make changes not listed here? Contact <a href="mailto:accounts@essentialcures.com" style="color:var(--deep-blue);">accounts@essentialcures.com</a></p>
-<div class="nav-group" style="max-width:340px;margin:0 auto;">
-<button class="btn-secondary" onclick="resetGate()">&#8592; Go Back — Change Details</button>
-</div>
-</div>
-</div>
-
-<!-- SCREEN: ACCOUNT ON HOLD — shown when Customer_Status = Inactive -->
-<div class="screen" id="screenOnHold">
-<div class="status-screen">
-<div class="status-icon" style="background:rgba(192,57,43,0.08);color:var(--red);"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
-<div class="status-badge" style="background:rgba(192,57,43,0.1);color:var(--red);">Account Restricted</div>
-<h3 class="status-title">We Are Unable to Process Your Request</h3>
-<p class="status-body">Your account for <strong id="onHoldOrgName"></strong> is currently restricted and profile submissions cannot be accepted at this time.</p>
-<div style="background:#FFF8F7;border:1.5px solid rgba(192,57,43,0.3);border-radius:10px;padding:20px 24px;margin:0 auto 24px;max-width:480px;text-align:left;">
-<p style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Next Steps</p>
-<p style="font-size:13px;color:var(--slate);line-height:1.8;">Please reach out to our sales team directly and we will be happy to assist you in resolving this and getting your account back in good standing.</p>
-<div style="border-top:1px solid rgba(192,57,43,0.2);margin-top:16px;padding-top:16px;">
-<p style="font-size:12px;color:var(--cool-gray);margin-bottom:4px;">Essential Cures Sales Team</p>
-<a href="mailto:sales@essentialcures.com" style="font-size:15px;font-weight:700;color:var(--deep-blue);text-decoration:none;">sales@essentialcures.com</a>
-</div>
-</div>
-<p style="font-size:12px;color:var(--cool-gray);margin-bottom:20px;">Reference your organisation name when contacting us so we can locate your account quickly.</p>
-<div class="nav-group" style="max-width:340px;margin:0 auto;">
-<button class="btn-secondary" onclick="resetGate()">&#8592; Go Back</button>
-<a href="https://essentialcures.com" style="display:block;text-align:center;text-decoration:none;padding:12px;border:1.5px solid #D4DAE0;border-radius:6px;color:var(--cool-gray);font-size:14px;font-weight:600;margin-top:8px;">Return to Website</a>
-</div>
-</div>
-</div>
-
 <!-- SCREEN 2 -->
 <div class="screen" id="screen2">
 <div class="error-summary" id="screen2Errors"><h4>Please correct the following</h4><ul id="screen2ErrorList"></ul></div>
@@ -433,7 +388,7 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
 <p class="section-title"><span class="sec-icon">🔍</span>Procurement Intelligence</p>
 <div class="form-group"><label>Current Primary Healthcare Supplier(s) <span class="opt">(optional)</span></label><textarea id="f_currentSuppliers" placeholder="List your current main healthcare supply distributors or manufacturers."></textarea></div>
 <div class="form-group"><label>Brand Preferences / Brands Currently Procured <span class="opt">(optional)</span></label><textarea id="f_brandPreferences" placeholder="e.g. 3M, Kimberly-Clark, Ansell, Halyard, Medline — list brands you currently use or prefer."></textarea></div>
-<div class="form-group"><label>Any Additional Products / Categories to Source from Essential Cures <span class="opt">(optional)</span></label><textarea id="f_productsToSource" placeholder="Describe specific products, categories, or SKUs you are looking to source."></textarea></div>
+<div class="form-group"><label>Products / Categories to Source from Essential Cures <span class="opt">(optional)</span></label><textarea id="f_productsToSource" placeholder="Describe specific products, categories, or SKUs you are looking to source."></textarea></div>
 <div class="form-group"><label>Key Pain Points / Procurement Challenges <span class="opt">(optional)</span></label><textarea id="f_painPoints" placeholder="What challenges are you experiencing with your current supply arrangements?"></textarea></div>
 <div class="form-group"><label>Other Suppliers You Work With <span class="opt">(optional)</span></label><textarea id="f_competitorSuppliers" placeholder="Any other distributors or suppliers in your current supply chain."></textarea></div>
 </div>
