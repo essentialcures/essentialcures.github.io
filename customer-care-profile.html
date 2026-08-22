@@ -542,11 +542,23 @@ try{
       document.getElementById("blockedMessage").textContent="We could not find an active profile for "+( data.accountName||company)+". Please select New Profile to submit your Customer Care Profile for the first time.";
       showScreen("screenBlocked");
 
-    } else if(data.reason==="account_not_found"){
-      document.getElementById("blockedBadge").textContent="Account Not Found";
-      document.getElementById("blockedTitle").textContent="Organisation Not Found";
-      document.getElementById("blockedMessage").textContent="We could not find an account matching that organisation name. Please check your spelling or contact itsupport@essentialcures.com.";
-      showScreen("screenBlocked");
+         } else if(data.reason==="account_not_found"){
+      if(document.getElementById("gateReason").value==="new"){
+        gateData.accountId="";
+        gateData.accountName=document.getElementById("gateCompany").value.trim();
+        gateData.contactId="";
+        submissionReason="new";
+        document.getElementById("f_orgName").value=gateData.accountName;
+        document.getElementById("f_email").value=document.getElementById("gateEmail").value.trim();
+        document.getElementById("emailChangeSection").style.display="none";
+        document.getElementById("emailCopyAddress").value=document.getElementById("gateEmail").value.trim();
+        goToScreen(2);
+      } else {
+        document.getElementById("blockedBadge").textContent="Account Not Found";
+        document.getElementById("blockedTitle").textContent="Organisation Not Found";
+        document.getElementById("blockedMessage").textContent="We could not find an existing profile for this organisation. Please contact itsupport@essentialcures.com.";
+        showScreen("screenBlocked");
+      }
 
     } else if(data.reason==="email_not_matched"){
       document.getElementById("blockedBadge").textContent="Email Not Matched";
