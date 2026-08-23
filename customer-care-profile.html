@@ -632,7 +632,16 @@ async function verifyGate(){
   document.querySelector("#screen1 .btn-primary").disabled=true;
   try{
     const resp=await fetch(WORKER_BASE+"/customer/gate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({accountName:company,contactEmail:email,submissionType:reason})});
-    const data=await resp.json();
+    const raw=await resp.text();
+    let data;
+    try{data=JSON.parse(raw);}catch(parseErr){
+      console.error("Gate verification: non-JSON response",resp.status,raw);
+      throw new Error("The verification service returned an unexpected response (HTTP "+resp.status+"). Please try again shortly.");
+    }
+    if(!resp.ok){
+      console.error("Gate verification: HTTP error",resp.status,data);
+      throw new Error(data.message||data.reason||("Verification service error (HTTP "+resp.status+"). Please try again."));
+    }
     spinner.classList.remove("show");
     document.querySelector("#screen1 .btn-primary").disabled=false;
 
@@ -709,9 +718,10 @@ async function verifyGate(){
       errEl.style.display="block";
     }
   } catch(e){
+    console.error("Gate verification failed",e);
     spinner.classList.remove("show");
     document.querySelector("#screen1 .btn-primary").disabled=false;
-    errEl.textContent="Unable to verify at this time. Please try again or contact itsupport@essentialcures.com.";
+    errEl.textContent=(e&&e.message)?e.message:"Unable to verify at this time. Please try again or contact itsupport@essentialcures.com.";
     errEl.style.display="block";
   }
 }
