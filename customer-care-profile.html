@@ -979,16 +979,9 @@ placeholder="Name or organisation"></div>
 
 </div>
 
-<div class="form-grid" id="previousCustomerRow">
-
-<div class="form-group"><label>Existing Essential Cures
-Customer?</label><select id="f_previousCustomer"><option
-value="false">No</option><option
-value="true">Yes</option></select></div>
-
 </div>
 
-</div>
+<input type="hidden" id="f_previousCustomer" value="false">
 
 <div class="section-block identity-block">
 
@@ -1055,8 +1048,9 @@ exempt</option></select><p class="field-hint">Tax exemption is separate from GST
 <div class="form-grid">
 
 <div class="form-group" id="gstHstNumberWrap" style="display:none;"><label>GST/HST Account Number <em>*</em></label><input
-type="text" id="f_hst" placeholder="e.g. 123456789RT0001" maxlength="15"
-onblur="validateHST()"><p class="field-hint">Format: 9-digit BN + RT + 4 digits (e.g. 123456789RT0001)</p><div class="field-error"
+type="text" id="f_hst" placeholder="e.g. 123456789RT0001" maxlength="24"
+autocapitalize="characters" autocomplete="off" spellcheck="false"
+oninput="normalizeGSTHSTInput(this)" onblur="validateHST()"><p class="field-hint">Format: 9-digit BN + RT + 4 digits (e.g. 123456789RT0001). Use the number 0, not the letter O.</p><div class="field-error"
 id="hstError">Enter a valid GST/HST account number, such as 123456789RT0001.</div></div>
 
 <div class="form-group" id="businessNumberWrap" style="display:none;"><label>CRA Business Number <span class="opt">(optional)</span></label><input
@@ -1858,11 +1852,12 @@ v=document.getElementById("f_emailChanged").value;emailChanged=(v==="Yes");docum
 function formatNumber(el){const
 raw=el.value.replace(/[^0-9]/g,"");if(!raw){el.value="";return;}el.value=parseInt(raw,10).toLocaleString("en-CA");}
 
+function normalizeGSTHSTInput(el){el.value=el.value.normalize("NFKC").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,15);}
+
 function validateHST(){const el=document.getElementById("f_hst");const
 err=document.getElementById("hstError");const
-registered=document.getElementById("f_gstHstStatus").value==="Registered";const raw=el.value.trim();if(!raw&&!registered){err.classList.remove("show");el.classList.remove("error");return
-true;}const clean=raw.toUpperCase().replace(/[^A-Z0-9]/g,"");const
-ok=/^\d{9}RT\d{4}$/.test(clean);if(!ok){err.classList.add("show");el.classList.add("error");return
+registered=document.getElementById("f_gstHstStatus").value==="Registered";normalizeGSTHSTInput(el);const clean=el.value;if(!clean&&!registered){err.classList.remove("show");el.classList.remove("error");return
+true;}const ok=/^[0-9]{9}RT[0-9]{4}$/.test(clean);if(!ok){const numericParts=clean.slice(0,9)+clean.slice(11);err.textContent=/[A-Z]/.test(numericParts)?"Use digits in the numeric positions (use 0, not the letter O), followed by RT and 4 digits.":"Enter a valid GST/HST account number, such as 123456789RT0001.";err.classList.add("show");el.classList.add("error");return
 false;}el.value=clean;err.classList.remove("show");el.classList.remove("error");return
 true;}
 
@@ -1972,8 +1967,6 @@ document.getElementById("f_email").value=email;
 document.getElementById("emailChangeSection").style.display="none";
 
 document.getElementById("emailCopyAddress").value=email;
-
-document.getElementById("previousCustomerRow").style.display="none";
 
 goToScreen(2);
 
@@ -2089,14 +2082,6 @@ document.getElementById("f_email").value=email;
 document.getElementById("emailChangeSection").style.display=(submissionReason==="update"||submissionReason==="category")?"block":"none";
 
 document.getElementById("emailCopyAddress").value=email;
-
-if(submissionReason==="new"&&!gateData.accountId){
-
-// Brand new org — hide existing customer field
-
-document.getElementById("previousCustomerRow").style.display="none";
-
-}
 
 goToScreen(2);
 
@@ -2241,7 +2226,7 @@ s6e=document.getElementById("screen6Errors");if(s6e)s6e.classList.remove("show")
 
 function goToScreen8(){const
 errors=[];if(!document.getElementById("f_caslConsent").checked){document.getElementById("caslConsentError").classList.add("show");errors.push("CASL consent is required.");}else
-document.getElementById("caslConsentError").classList.remove("show");if(errors.length){showErrorSummary("screen7",errors);return;}document.getElementById("screen7Errors").classList.remove("show");buildReview();goToScreen(8);}
+document.getElementById("caslConsentError").classList.remove("show");if(errors.length){showErrorSummary("screen7",errors);return;}document.getElementById("screen7Errors").classList.remove("show");buildReview();document.querySelectorAll("#reviewSummary tr").forEach(row=>{if(row.cells[0]&&row.cells[0].textContent.trim()==="Existing EC Customer")row.remove();});goToScreen(8);}
 
 // ── REVIEW BUILD ─────────────────────────────────────────────────
 
@@ -2344,8 +2329,6 @@ gpoName:document.getElementById("f_gpoName").value.trim(),
 howDidYouHear:document.getElementById("f_howDidYouHear").value,
 
 referredBy:document.getElementById("f_referredBy").value.trim(),
-
-previousCustomer:document.getElementById("f_previousCustomer").value,
 
 preferredContact:document.getElementById("f_preferredContact").value,
 
