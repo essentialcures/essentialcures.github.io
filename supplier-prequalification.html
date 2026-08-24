@@ -451,7 +451,7 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
 <script>
 const COMPLIANCE_RULES={'PPE-IPC':{iso13485:false,mdel:false,nhp:false},'Exam Consumables':{iso13485:false,mdel:false,nhp:false},'Wound Care':{iso13485:true,mdel:true,nhp:false},'Facility Supplies':{iso13485:false,mdel:false,nhp:false},'Class I MD':{iso13485:true,mdel:false,nhp:false},'Class II MD':{iso13485:true,mdel:true,nhp:false},'Class III-IV MD':{iso13485:true,mdel:true,nhp:false},'Surgical Instruments':{iso13485:true,mdel:true,nhp:false},'NHP':{iso13485:false,mdel:false,nhp:true},'Services':{iso13485:false,mdel:false,nhp:false},'Other':{iso13485:false,mdel:false,nhp:false}};
 let gateData={vendorId:'',vendorName:'',reason:'',reviewDate:'',submissionReason:'',existingSQRId:'',existingLineageId:'',contactId:'',contactName:''};
-let turnstileVerified=false;let turnstileToken='';let approvedCategories=[];let strippedCategories=[];let errorRef='';let emailChanged=false;
+let turnstileVerified=false;let approvedCategories=[];let strippedCategories=[];let errorRef='';let emailChanged=false;
 function genErrorRef(){return 'ERR-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).substr(2,4).toUpperCase();}
 function getRequirements(){const sel=getSelectedCategories();const req={iso13485:false,mdel:false,nhp:false};sel.forEach(cat=>{const r=COMPLIANCE_RULES[cat];if(r){if(r.iso13485)req.iso13485=true;if(r.mdel)req.mdel=true;if(r.nhp)req.nhp=true;}});return req;}
 function getSelectedCategories(){const a=[];document.querySelectorAll('#categoryGroup input:checked').forEach(cb=>a.push(cb.value));return a;}
@@ -463,8 +463,8 @@ function dismissPreflight(){document.getElementById('preflightModal').classList.
 function showTerminate(){document.getElementById('terminateModal').classList.remove('hidden');}
 function dismissTerminate(){document.getElementById('terminateModal').classList.add('hidden');}
 function confirmTerminate(){window.location.href='https://essentialcures.com';}
-function onTurnstileSuccess(token){turnstileVerified=true;turnstileToken=token;document.getElementById('turnstileError').classList.remove('show');}
-function onTurnstileExpired(){turnstileVerified=false;turnstileToken='';}
+function onTurnstileSuccess(){turnstileVerified=true;document.getElementById('turnstileError').classList.remove('show');}
+function onTurnstileExpired(){turnstileVerified=false;}
 function toggleCat(item,hasSpecify){const cb=item.querySelector('input[type="checkbox"]');if(!cb)return;cb.checked=!cb.checked;item.classList.toggle('selected',cb.checked);if(item.closest('#categoryGroup')){updateComplianceIndicator();if(hasSpecify){const spec=document.getElementById('otherCategorySpecify');if(spec)spec.style.display=cb.checked?'block':'none';if(!cb.checked){const f=document.getElementById('f_otherCategory');if(f)f.value='';}}}if(item.closest('#supplierTypeGroup')&&hasSpecify){const spec=document.getElementById('supplierTypeOtherSpecify');if(spec)spec.style.display=cb.checked?'block':'none';if(!cb.checked){const f=document.getElementById('f_supplierTypeOther');if(f)f.value='';}}}
 function updateComplianceIndicator(){const req=getRequirements();const ind=document.getElementById('complianceIndicator');const rows=document.getElementById('complianceRows');const sel=getSelectedCategories();if(sel.length===0){ind.classList.remove('show');return;}ind.classList.add('show');let h='<div class="compliance-row"><div class="compliance-dot dot-required"></div><span>Liability Insurance Certificate (CAD $2M minimum) - <strong>Always required</strong></span></div>';if(req.iso13485)h+='<div class="compliance-row"><div class="compliance-dot dot-required"></div><span>ISO 13485 Certificate - <strong>Required for your selections</strong></span></div>';if(req.mdel)h+='<div class="compliance-row"><div class="compliance-dot dot-required"></div><span>MDEL Certificate - <strong>Required for your selections</strong></span></div>';if(req.nhp)h+='<div class="compliance-row"><div class="compliance-dot dot-required"></div><span>NHP Product Licence - <strong>Required for Natural Health Products</strong></span></div>';rows.innerHTML=h;}
 function updateRecallSection(){const v=document.getElementById('f_recallProcedure').value;document.getElementById('recallKPISection').style.display=(v==='Yes'&&document.getElementById('f_iso13485').value==='Yes')?'block':'none';}
@@ -508,7 +508,7 @@ async function verifyGate(){
   spinner.classList.add('show');
   document.querySelector('#screen1 .btn-primary').disabled=true;
   try{
-    const resp=await fetch('https://essentialcures.com/api/cm27/gate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({companyName:company,contactEmail:email,submissionReason:reason,turnstileToken:turnstileToken})});
+    const resp=await fetch('https://essentialcures.com/api/cm27/gate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({companyName:company,contactEmail:email,submissionReason:reason})});
     const raw=await resp.text();
     let result;
     try{result=JSON.parse(raw);if(typeof result==='string')result=JSON.parse(result);}
