@@ -1854,9 +1854,11 @@ raw=el.value.replace(/[^0-9]/g,"");if(!raw){el.value="";return;}el.value=parseIn
 
 function normalizeGSTHSTInput(el){el.value=el.value.normalize("NFKC").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,15);}
 
+function containsDigitsOnly(value){return value.length>0&&value.split("").every(character=>character>="0"&&character<="9");}
+
 function validateHST(){const el=document.getElementById("f_hst");const
 err=document.getElementById("hstError");const
-registered=document.getElementById("f_gstHstStatus").value==="Registered";if(!registered){err.classList.remove("show");el.classList.remove("error");return true;}normalizeGSTHSTInput(el);const clean=el.value;const ok=/^[0-9]{9}RT[0-9]{4}$/.test(clean);if(!ok){const numericParts=clean.slice(0,9)+clean.slice(11);err.textContent=/[A-Z]/.test(numericParts)?"Use digits in the numeric positions (use 0, not the letter O), followed by RT and 4 digits.":"Enter a valid GST/HST account number, such as 123456789RT0001.";err.classList.add("show");el.classList.add("error");return
+registered=document.getElementById("f_gstHstStatus").value==="Registered";if(!registered){err.classList.remove("show");el.classList.remove("error");return true;}normalizeGSTHSTInput(el);const clean=el.value;const firstNine=clean.substring(0,9);const programId=clean.substring(9,11);const referenceNumber=clean.substring(11,15);const ok=clean.length===15&&containsDigitsOnly(firstNine)&&programId==="RT"&&referenceNumber.length===4&&containsDigitsOnly(referenceNumber);if(!ok){const numericParts=firstNine+referenceNumber;err.textContent=/[A-Z]/.test(numericParts)?"Use digits in the numeric positions (use 0, not the letter O), followed by RT and 4 digits.":"Enter a valid GST/HST account number, such as 123456789RT0001.";err.classList.add("show");el.classList.add("error");return
 false;}el.value=clean;err.classList.remove("show");el.classList.remove("error");return
 true;}
 
