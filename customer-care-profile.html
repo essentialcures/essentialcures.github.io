@@ -1908,12 +1908,10 @@ table=document.getElementById("catSelectionTable");const
 keys=Object.keys(catSelections);if(keys.length===0){table.style.display="none";tbody.innerHTML="";return;}table.style.display="block";tbody.innerHTML=keys.map(cat=>{const
 subs=catSelections[cat];const subsText=subs.length>0?subs.join(", "):'<em style="color:var(--cool-gray);">No sub-categories selected</em>';return`<tr style="border-bottom:1px solid #F0F2F4;"><td style="padding:8px 12px;font-weight:600;color:var(--dark-navy);vertical-align:top;">${cat}</td><td style="padding:8px 12px;color:var(--slate);">${subsText}</td><td style="padding:8px 4px;text-align:center;"><button onclick="removeCatRow('${cat}')" style="background:none;border:none;color:var(--red);font-size:16px;cursor:pointer;" title="Remove">&#10005;</button></td></tr>`;}).join('');}
 
-function getCategoryPayload(){return
-Object.keys(catSelections).join(";");}
+function getCategoryPayload(){return Object.keys(catSelections).join(";");}
 
 function getSubCategoryPayload(){const
-all=[];Object.values(catSelections).forEach(arr=>arr.forEach(s=>{if(!all.includes(s))all.push(s);}));return
-all.join(";")}
+all=[];Object.values(catSelections).forEach(arr=>arr.forEach(s=>{if(!all.includes(s))all.push(s);}));return all.join(";")}
 
 // ── SCREEN NAVIGATION ────────────────────────────────────────────
 
