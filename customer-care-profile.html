@@ -1856,8 +1856,7 @@ function normalizeGSTHSTInput(el){el.value=el.value.normalize("NFKC").toUpperCas
 
 function validateHST(){const el=document.getElementById("f_hst");const
 err=document.getElementById("hstError");const
-registered=document.getElementById("f_gstHstStatus").value==="Registered";normalizeGSTHSTInput(el);const clean=el.value;if(!clean&&!registered){err.classList.remove("show");el.classList.remove("error");return
-true;}const ok=/^[0-9]{9}RT[0-9]{4}$/.test(clean);if(!ok){const numericParts=clean.slice(0,9)+clean.slice(11);err.textContent=/[A-Z]/.test(numericParts)?"Use digits in the numeric positions (use 0, not the letter O), followed by RT and 4 digits.":"Enter a valid GST/HST account number, such as 123456789RT0001.";err.classList.add("show");el.classList.add("error");return
+registered=document.getElementById("f_gstHstStatus").value==="Registered";if(!registered){err.classList.remove("show");el.classList.remove("error");return true;}normalizeGSTHSTInput(el);const clean=el.value;const ok=/^[0-9]{9}RT[0-9]{4}$/.test(clean);if(!ok){const numericParts=clean.slice(0,9)+clean.slice(11);err.textContent=/[A-Z]/.test(numericParts)?"Use digits in the numeric positions (use 0, not the letter O), followed by RT and 4 digits.":"Enter a valid GST/HST account number, such as 123456789RT0001.";err.classList.add("show");el.classList.add("error");return
 false;}el.value=clean;err.classList.remove("show");el.classList.remove("error");return
 true;}
 
@@ -2204,7 +2203,7 @@ document.getElementById(id).addEventListener("change",syncBillingAddress);
 
 function goToScreen3(){const
 errors=[];if(!document.getElementById("f_facilityType").value){document.getElementById("facilityTypeError").classList.add("show");errors.push("Facility Type is required.");}else
-document.getElementById("facilityTypeError").classList.remove("show");const gstStatus=document.getElementById("f_gstHstStatus").value;if(!gstStatus){document.getElementById("gstHstStatusError").classList.add("show");errors.push("GST/HST Registration Status is required.");}else document.getElementById("gstHstStatusError").classList.remove("show");if(!validateHST())errors.push("A valid GST/HST Account Number is required when registered.");if(!validateBusinessNumber())errors.push("CRA Business Number must contain exactly 9 digits.");if(errors.length){showErrorSummary("screen2",errors);return;}document.getElementById("screen2Errors").classList.remove("show");goToScreen(3);}
+document.getElementById("facilityTypeError").classList.remove("show");const gstStatus=document.getElementById("f_gstHstStatus").value;if(!gstStatus){document.getElementById("gstHstStatusError").classList.add("show");errors.push("GST/HST Registration Status is required.");}else document.getElementById("gstHstStatusError").classList.remove("show");if(gstStatus==="Registered"&&!validateHST())errors.push("GST/HST Account Number format must be 9 digits + RT + 4 digits (for example, 123456789RT0001).");if(gstStatus!=="Registered"&&!validateBusinessNumber())errors.push("CRA Business Number must contain exactly 9 digits.");if(errors.length){showErrorSummary("screen2",errors);return;}document.getElementById("screen2Errors").classList.remove("show");goToScreen(3);}
 
 function goToScreen4(){const
 errors=[];if(!document.getElementById("f_firstName").value.trim()){document.getElementById("firstNameError").classList.add("show");errors.push("First name is required.");}else
