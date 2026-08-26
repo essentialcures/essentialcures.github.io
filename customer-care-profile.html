@@ -541,12 +541,14 @@ account name in the Essential Cures system exactly.</p></div>
 placeholder="you@yourorganisation.com" autocomplete="email"></div>
 
 <div class="form-group"><label>Reason for Submission
-<em>*</em></label><select id="gateReason"><option value="">— Select
+<em>*</em></label><select id="gateReason"
+onchange="updateGateReasonHint()"><option value="">— Select
 —</option><option value="new">New Profile — First Time
 Submission</option><option value="update">Update Existing
 Profile</option><option value="category">Add Product
 Categories</option></select><div class="field-error"
-id="gateReasonError">Please select a reason for submission.</div></div>
+id="gateReasonError">Please select a reason for submission.</div><p
+class="field-hint" id="gateReasonHint" style="display:none;"></p></div>
 
 </div>
 
@@ -1422,6 +1424,14 @@ onclick="showTerminate()">Cancel — Return to Website</button></div>
 <div class="error-summary" id="screen5Errors"><h4>Please correct the
 following</h4><ul id="screen5ErrorList"></ul></div>
 
+<div class="info-box" id="categoryIntroBanner" style="display:none;"><p><strong>Adding
+Product Categories:</strong> Your existing profile — organisation
+details, contact information, delivery and billing settings — stays
+exactly as it is on file. This submission only adds the product
+categories and sub-categories you select below to your account. If
+anything else on your profile needs to change, please use "Update
+Existing Profile" instead.</p></div>
+
 <div class="section-block purchasing-block">
 
 <p class="section-title"><span class="sec-icon">📦</span>Purchasing
@@ -1519,7 +1529,7 @@ other procurement notes."></textarea></div>
 
 <div class="nav-group"><button class="btn-primary"
 onclick="goToScreen6()">Continue to Procurement
-Intelligence</button><button class="btn-secondary"
+Intelligence</button><button class="btn-secondary" id="screen5BackBtn"
 onclick="goToScreen(4)">&#8592; Back — Delivery</button><button
 class="btn-terminate" onclick="showTerminate()">Cancel — Return to
 Website</button></div>
@@ -1724,7 +1734,7 @@ stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10
 style="font-size:12px;font-weight:700;color:var(--dark-navy);margin-bottom:2px;">Technical
 Issues</p><p
 style="font-size:12px;color:var(--cool-gray);margin-bottom:4px;">Problems
-with the form or system access please contact</p><a
+with the form, login, or system access please contact</p><a
 href="mailto:itsupport@essentialcures.com?subject=Technical Support -
 Customer Care Profile"
 style="font-size:12px;font-weight:600;color:var(--deep-blue);text-decoration:none;">itsupport@essentialcures.com</a></div></div>
@@ -2061,7 +2071,44 @@ document.getElementById("emailChangeSection").style.display="block";
 
 document.getElementById("emailCopyAddress").value=email;
 
-goToScreen(2);
+enterCategoryFlow();
+
+}
+
+// Sets expectations right on screen 1, before Verify is even clicked - "new" is
+// self-explanatory and left alone; "update" and "category" behave very differently
+// (full replace vs. additive-only) so both get a one-line heads-up here.
+function updateGateReasonHint(){
+const val=document.getElementById("gateReason").value;
+const hint=document.getElementById("gateReasonHint");
+if(val==="update"){
+hint.textContent="This will replace your entire profile with what you submit on the following screens - please include everything, including details that haven't changed, not just what's different.";
+hint.style.display="block";
+}else if(val==="category"){
+hint.textContent="This only adds new product categories to your account. Your organisation details, contact information, and delivery/billing settings stay exactly as they are on file - you won't be asked to re-enter them.";
+hint.style.display="block";
+}else{
+hint.style.display="none";
+}
+}
+
+// ── CATEGORY-ONLY SHORT FLOW ──────────────────────────────────────
+// "Add Product Categories" skips screens 2-4 (organisation/facility, primary
+// contact, delivery) entirely - none of that is being changed, and the sync
+// function already discards those fields for submissionType "category" even if
+// they were sent. Jumps straight to the Purchasing Profile screen (categories +
+// the handful of optional delta fields this submission type actually uses).
+function enterCategoryFlow(){
+
+const banner=document.getElementById("categoryIntroBanner");
+
+if(banner)banner.style.display="block";
+
+const backBtn=document.getElementById("screen5BackBtn");
+
+if(backBtn){backBtn.textContent="← Back — Start Over";backBtn.onclick=function(){goToScreen(1);};}
+
+goToScreen(5);
 
 }
 
@@ -2126,7 +2173,11 @@ document.getElementById("emailChangeSection").style.display=(submissionReason===
 
 document.getElementById("emailCopyAddress").value=email;
 
-goToScreen(2);
+// FIX: "Add Product Categories" no longer walks the full profile form - none of
+// that data changes for this submission type, and the backend already ignores it
+// for submissionType "category" anyway (see ec_sync_customer_profile_v3's overlay
+// loop). Jump straight to the categories screen instead of screen 2.
+if(submissionReason==="category"){enterCategoryFlow();}else{goToScreen(2);}
 
 } else if(data.status==="block"){
 
@@ -2264,10 +2315,23 @@ document.getElementById("emailCopyAddress").value=getEffectiveContactEmail();
 goToScreen(4);}
 
 function
-goToScreen5(){document.getElementById("screen4Errors").classList.remove("show");goToScreen(5);}
+goToScreen5(){document.getElementById("screen4Errors").classList.remove("show");
+// Reached via the normal 4->5 path (new/update flows) - make sure this screen is
+// showing its default state, not left over from a prior category-flow entry.
+const banner=document.getElementById("categoryIntroBanner");
+if(banner)banner.style.display="none";
+const backBtn=document.getElementById("screen5BackBtn");
+if(backBtn){backBtn.textContent="← Back — Delivery";backBtn.onclick=function(){goToScreen(4);};}
+goToScreen(5);}
 
 function
-goToScreen6(){document.getElementById("screen5Errors").classList.remove("show");goToScreen(6);}
+goToScreen6(){
+// The whole point of the "Add Product Categories" flow is the category selection -
+// nothing enforced that before, for any submission type. Scoping the check to
+// "category" only, since new/update have plenty of other required fields on this
+// screen already and changing that behaviour isn't part of this fix.
+if(submissionReason==="category"&&getCategoryPayload()===""){showErrorSummary("screen5",["Please select at least one product category to add before continuing."]);return;}
+document.getElementById("screen5Errors").classList.remove("show");goToScreen(6);}
 
 function goToScreen7(){const
 s6e=document.getElementById("screen6Errors");if(s6e)s6e.classList.remove("show");goToScreen(7);}
@@ -2290,10 +2354,20 @@ same=document.getElementById("f_billingSameAsPhysical").checked;if(same)return"S
 parts=[document.getElementById("f_billingStreet").value,document.getElementById("f_billingCity").value,document.getElementById("f_billingProvince").value,document.getElementById("f_billingPostal").value,document.getElementById("f_billingCountry").value];const
 joined=parts.filter(Boolean).join(", ");return joined||"Not specified";}
 
-function buildReview(){const days=selectedDeliveryDays.join(", ")||"Not specified";const
-sameAddr=document.getElementById("f_sameAsPhysical").checked;const
-contactEmail=getEffectiveContactEmail();const
-sections=[{head:"Organisation",rows:[["Organisation",document.getElementById("f_orgName").value],["Submission Type",submissionReason==="new"?"New Profile":submissionReason==="update"?"Update Existing":submissionReason==="category"?"Add Product Categories":""],["Facility Type",document.getElementById("f_facilityType").value||"Not specified"],["Facility Size",document.getElementById("f_facilitySize").value||"Not specified"],["Website",document.getElementById("f_website").value||"Not specified"],["Accreditation",document.getElementById("f_accreditation").value||"Not specified"],["GPO Member",document.getElementById("f_gpoMember").value==="true"?"Yes — "+(document.getElementById("f_gpoName").value||""):"No"],["How Did You Hear",document.getElementById("f_howDidYouHear").value||"Not specified"],["Referred By",document.getElementById("f_referredBy").value||"Not specified"],["Existing EC Customer",document.getElementById("f_previousCustomer").value==="true"?"Yes":"No"],["Physical Address",[document.getElementById("f_street").value,document.getElementById("f_city").value,document.getElementById("f_province").value,document.getElementById("f_postal").value,document.getElementById("f_country").value].filter(Boolean).join(", ")||"Not specified"],["GST/HST Registration",document.getElementById("f_gstHstStatus").value||"Not specified"],["GST/HST Account Number",document.getElementById("f_hst").value||"Not provided"],["CRA Business Number",document.getElementById("f_businessNumber").value||"Not provided"],["Tax Exempt",document.getElementById("f_taxExempt").value==="true"?"Yes":"No"],["Formulary Restrictions",document.getElementById("f_formularyRestrictions").value==="true"?"Yes":"No"]]},{head:"Primary Contact",rows:[["Name",document.getElementById("f_firstName").value+" "+document.getElementById("f_lastName").value],["Email",contactEmail],["Direct Phone",document.getElementById("f_phone").value||"Not specified"],["Organisation Phone",document.getElementById("f_orgPhone").value||"Not specified"],["Job Title",document.getElementById("f_jobTitle").value||"Not specified"],["Role",document.getElementById("f_contactRole").value||"Not specified"],["Preferred Contact",document.getElementById("f_preferredContact").value||"Not specified"],["Billing Contact",document.getElementById("f_billingContactName").value||"Not specified"],["Billing Email",document.getElementById("f_billingContactEmail").value||"Not specified"],["Billing Address",getBillingAddressSummary()],["Payment Method",document.getElementById("f_paymentMethod").value||"Not specified"]]},{head:"Delivery",rows:[["Delivery Address",sameAddr?"Same as physical address":[document.getElementById("f_deliveryStreet").value,document.getElementById("f_deliveryCity").value,document.getElementById("f_deliveryProvince").value,document.getElementById("f_deliveryPostal").value,document.getElementById("f_deliveryCountry").value].filter(Boolean).join(", ")||"Not specified"],["Receiving Hours",document.getElementById("f_receivingHours").value||"Not specified"],["Preferred Delivery Days",days],["Delivery Terms",document.getElementById("f_deliveryTerms").value||"Not specified"],["Dock Available",document.getElementById("f_dockAvailable").value==="true"?"Yes":document.getElementById("f_dockAvailable").value==="false"?"No":"Not specified"],["Cold Chain Required",document.getElementById("f_coldChain").value==="true"?"Yes":"No"],["Instructions",document.getElementById("f_deliveryInstructions").value||"Not specified"]]},{head:"Purchasing Profile",rows:[["Product Categories",getCategoryPayload().replace(/;/g,", ")||"Not specified"],["Sub-Categories",getSubCategoryPayload().replace(/;/g,", ")||"Not specified"],["Order Frequency",document.getElementById("f_orderFreq").value||"Not specified"],["Monthly Spend (CAD)",document.getElementById("f_monthlySpend").value?"CAD $"+document.getElementById("f_monthlySpend").value:"Not specified"],["Urgency",document.getElementById("f_urgency").value||"Not specified"]]},{head:"Procurement Intelligence",rows:[["Current Suppliers",document.getElementById("f_currentSuppliers").value||"Not provided"],["Brand Preferences",document.getElementById("f_brandPreferences").value||"Not provided"],["Products to Source",document.getElementById("f_productsToSource").value||"Not provided"],["Pain Points",document.getElementById("f_painPoints").value||"Not provided"],["Other Suppliers",document.getElementById("f_competitorSuppliers").value||"Not provided"]]},{head:"Consent",rows:[["CASL Consent","Yes — "+document.getElementById("f_caslType").value+" via "+document.getElementById("f_caslMethod").value]]}];let h="<table class='review-table'>";sections.forEach(sec=>{h+=`<tr><td colspan="2"><span class="review-section-head">${sec.head}</span></td></tr>`;sec.rows.forEach(r=>h+=`<tr><td>${r[0]}</td><td>${r[1]||'<em style="color:var(--cool-gray)">Not provided</em>'}</td></tr>`);});h+="</table>";document.getElementById("reviewSummary").innerHTML=h;}
+function buildReview(){const
+contactEmail=getEffectiveContactEmail();let sections;
+if(submissionReason==="category"){
+// FIX: category submissions never touch organisation/contact/delivery data (those
+// screens are skipped entirely - see enterCategoryFlow()), so showing the full
+// review table here would just be a wall of "Not specified" rows for sections the
+// customer never saw or answered. Show only what this submission actually covers.
+sections=[{head:"Organisation",rows:[["Organisation",document.getElementById("f_orgName").value],["Submission Type","Add Product Categories"],["Contact Email on File",contactEmail]]},{head:"Purchasing Profile",rows:[["Product Categories",getCategoryPayload().replace(/;/g,", ")||"Not specified"],["Sub-Categories",getSubCategoryPayload().replace(/;/g,", ")||"Not specified"],["Order Frequency",document.getElementById("f_orderFreq").value||"Not specified"],["Monthly Spend (CAD)",document.getElementById("f_monthlySpend").value?"CAD $"+document.getElementById("f_monthlySpend").value:"Not specified"],["Urgency",document.getElementById("f_urgency").value||"Not specified"]]},{head:"Procurement Intelligence",rows:[["Current Suppliers",document.getElementById("f_currentSuppliers").value||"Not provided"],["Brand Preferences",document.getElementById("f_brandPreferences").value||"Not provided"],["Products to Source",document.getElementById("f_productsToSource").value||"Not provided"],["Pain Points",document.getElementById("f_painPoints").value||"Not provided"],["Other Suppliers",document.getElementById("f_competitorSuppliers").value||"Not provided"]]},{head:"Consent",rows:[["CASL Consent","Yes — "+document.getElementById("f_caslType").value+" via "+document.getElementById("f_caslMethod").value]]}];
+}else{
+const days=selectedDeliveryDays.join(", ")||"Not specified";const
+sameAddr=document.getElementById("f_sameAsPhysical").checked;
+sections=[{head:"Organisation",rows:[["Organisation",document.getElementById("f_orgName").value],["Submission Type",submissionReason==="new"?"New Profile":submissionReason==="update"?"Update Existing":""],["Facility Type",document.getElementById("f_facilityType").value||"Not specified"],["Facility Size",document.getElementById("f_facilitySize").value||"Not specified"],["Website",document.getElementById("f_website").value||"Not specified"],["Accreditation",document.getElementById("f_accreditation").value||"Not specified"],["GPO Member",document.getElementById("f_gpoMember").value==="true"?"Yes — "+(document.getElementById("f_gpoName").value||""):"No"],["How Did You Hear",document.getElementById("f_howDidYouHear").value||"Not specified"],["Referred By",document.getElementById("f_referredBy").value||"Not specified"],["Existing EC Customer",document.getElementById("f_previousCustomer").value==="true"?"Yes":"No"],["Physical Address",[document.getElementById("f_street").value,document.getElementById("f_city").value,document.getElementById("f_province").value,document.getElementById("f_postal").value,document.getElementById("f_country").value].filter(Boolean).join(", ")||"Not specified"],["GST/HST Registration",document.getElementById("f_gstHstStatus").value||"Not specified"],["GST/HST Account Number",document.getElementById("f_hst").value||"Not provided"],["CRA Business Number",document.getElementById("f_businessNumber").value||"Not provided"],["Tax Exempt",document.getElementById("f_taxExempt").value==="true"?"Yes":"No"],["Formulary Restrictions",document.getElementById("f_formularyRestrictions").value==="true"?"Yes":"No"]]},{head:"Primary Contact",rows:[["Name",document.getElementById("f_firstName").value+" "+document.getElementById("f_lastName").value],["Email",contactEmail],["Direct Phone",document.getElementById("f_phone").value||"Not specified"],["Organisation Phone",document.getElementById("f_orgPhone").value||"Not specified"],["Job Title",document.getElementById("f_jobTitle").value||"Not specified"],["Role",document.getElementById("f_contactRole").value||"Not specified"],["Preferred Contact",document.getElementById("f_preferredContact").value||"Not specified"],["Billing Contact",document.getElementById("f_billingContactName").value||"Not specified"],["Billing Email",document.getElementById("f_billingContactEmail").value||"Not specified"],["Billing Address",getBillingAddressSummary()],["Payment Method",document.getElementById("f_paymentMethod").value||"Not specified"]]},{head:"Delivery",rows:[["Delivery Address",sameAddr?"Same as physical address":[document.getElementById("f_deliveryStreet").value,document.getElementById("f_deliveryCity").value,document.getElementById("f_deliveryProvince").value,document.getElementById("f_deliveryPostal").value,document.getElementById("f_deliveryCountry").value].filter(Boolean).join(", ")||"Not specified"],["Receiving Hours",document.getElementById("f_receivingHours").value||"Not specified"],["Preferred Delivery Days",days],["Delivery Terms",document.getElementById("f_deliveryTerms").value||"Not specified"],["Dock Available",document.getElementById("f_dockAvailable").value==="true"?"Yes":document.getElementById("f_dockAvailable").value==="false"?"No":"Not specified"],["Cold Chain Required",document.getElementById("f_coldChain").value==="true"?"Yes":"No"],["Instructions",document.getElementById("f_deliveryInstructions").value||"Not specified"]]},{head:"Purchasing Profile",rows:[["Product Categories",getCategoryPayload().replace(/;/g,", ")||"Not specified"],["Sub-Categories",getSubCategoryPayload().replace(/;/g,", ")||"Not specified"],["Order Frequency",document.getElementById("f_orderFreq").value||"Not specified"],["Monthly Spend (CAD)",document.getElementById("f_monthlySpend").value?"CAD $"+document.getElementById("f_monthlySpend").value:"Not specified"],["Urgency",document.getElementById("f_urgency").value||"Not specified"]]},{head:"Procurement Intelligence",rows:[["Current Suppliers",document.getElementById("f_currentSuppliers").value||"Not provided"],["Brand Preferences",document.getElementById("f_brandPreferences").value||"Not provided"],["Products to Source",document.getElementById("f_productsToSource").value||"Not provided"],["Pain Points",document.getElementById("f_painPoints").value||"Not provided"],["Other Suppliers",document.getElementById("f_competitorSuppliers").value||"Not provided"]]},{head:"Consent",rows:[["CASL Consent","Yes — "+document.getElementById("f_caslType").value+" via "+document.getElementById("f_caslMethod").value]]}];
+}
+let h="<table class='review-table'>";sections.forEach(sec=>{h+=`<tr><td colspan="2"><span class="review-section-head">${sec.head}</span></td></tr>`;sec.rows.forEach(r=>h+=`<tr><td>${r[0]}</td><td>${r[1]||'<em style="color:var(--cool-gray)">Not provided</em>'}</td></tr>`);});h+="</table>";document.getElementById("reviewSummary").innerHTML=h;}
 
 // ── SUBMIT ───────────────────────────────────────────────────────
 
