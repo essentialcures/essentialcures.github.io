@@ -1121,14 +1121,13 @@ style="background:#F0F7FF;color:var(--deep-blue);font-weight:600;"><p
 class="field-hint">Pre-filled from verification.</p></div>
 
 <div class="form-group"><label>Direct Phone / Mobile</label><input
-type="tel" id="f_phone" placeholder="+12045550000"
-autocomplete="tel" maxlength="16"
-oninput="this.value=this.value.replace(/[^\d+]/g,'').replace(/(?!^)\+/g,'')"
-onblur="validatePhoneField('f_phone')"><p class="field-hint">Digits
-only, with country code (e.g. +12045550000).</p><div
-class="field-error" id="f_phoneError">Enter a valid phone number
-with country code — digits only, 8–16 characters starting with
-+.</div></div>
+type="tel" id="f_phone" placeholder="(204) 442-2555"
+autocomplete="tel" maxlength="14"
+oninput="formatCanadianPhoneInput(this)"
+onblur="validatePhoneField('f_phone')"><p class="field-hint">Canadian
+number, 10 digits (area code + number) - +1/1 prefix optional.</p><div
+class="field-error" id="f_phoneError">Enter a valid 10-digit Canadian
+phone number, e.g. (204) 442-2555.</div></div>
 
 </div>
 
@@ -1168,13 +1167,13 @@ authorized profile contact and may replace the registered email.</label></div></
 <div class="form-grid">
 
 <div class="form-group"><label>Organisation Main Phone</label><input
-type="tel" id="f_orgPhone" placeholder="+12045550100" maxlength="16"
-oninput="this.value=this.value.replace(/[^\d+]/g,'').replace(/(?!^)\+/g,'')"
+type="tel" id="f_orgPhone" placeholder="(204) 442-2555" maxlength="14"
+oninput="formatCanadianPhoneInput(this)"
 onblur="validatePhoneField('f_orgPhone')"><p
-class="field-hint">Switchboard or main reception line. Digits only,
-with country code.</p><div class="field-error"
-id="f_orgPhoneError">Enter a valid phone number with country code —
-digits only, 8–16 characters starting with +.</div></div>
+class="field-hint">Switchboard or main reception line. Canadian
+number, 10 digits.</p><div class="field-error"
+id="f_orgPhoneError">Enter a valid 10-digit Canadian phone number,
+e.g. (204) 442-2555.</div></div>
 
 <div class="form-group"><label>Job Title</label><input type="text"
 id="f_jobTitle" placeholder="e.g. Director of Procurement"></div>
@@ -1234,7 +1233,10 @@ type="text" id="f_billingContactName" placeholder="Full name"></div>
 
 <div class="form-group"><label>Billing Contact Email</label><input
 type="email" id="f_billingContactEmail"
-placeholder="billing@organisation.com"></div>
+placeholder="billing@organisation.com"
+onblur="validateBillingContactEmailField()"><div class="field-error"
+id="billingContactEmailError">Enter a valid email address, e.g.
+billing@organisation.com.</div></div>
 
 </div>
 
@@ -1923,16 +1925,56 @@ function validateBusinessNumber(){const el=document.getElementById("f_businessNu
 err=document.getElementById("businessNumberError");const raw=el.value.trim();if(!raw){err.classList.remove("show");el.classList.remove("error");return true;}const clean=raw.replace(/\D/g,"");const
 ok=/^\d{9}$/.test(clean);if(!ok){err.classList.add("show");el.classList.add("error");return false;}el.value=clean;err.classList.remove("show");el.classList.remove("error");return true;}
 
-// Phone: digits only, MUST start with "+" followed by the country dialing
-// code, 7–15 digits after the "+" per the ITU-T E.164 international
-// numbering standard (min 7 covers short national numbers, max 15 is the
-// E.164 cap). Not required by itself here — callers decide whether a
-// blank value is acceptable for that field; this only validates FORMAT
-// (including the country code) when the field is non-blank.
-function isValidPhoneValue(v){return /^\+[1-9]\d{6,14}$/.test(v);}
+// Phone (Faisal, 2026-08-26: "considering client base in canada lets
+// restrict this to Canadian format... accept +1 or 1 or without that
+// (only number)... display number in format (204) 442 2555"). This form's
+// two phone fields (Direct Phone/Mobile, Organisation Main Phone) are now
+// North American Numbering Plan (NANP)/Canada-specific rather than generic
+// E.164 - the supplier form stays international since it deals with
+// suppliers outside Canada too.
+//
+// formatCanadianPhoneInput: live oninput mask. Strips everything but
+// digits, drops a leading "1" country-code digit if present (a valid NANP
+// area code can never itself start with "1", so this is always safe/
+// correct), keeps at most the remaining 10 digits, and progressively
+// renders them as "(XXX) XXX-XXXX" as the user types - this is what makes
+// "+120444225559080"-style unbounded input impossible: there are only ever
+// 10 digits to format, typing past that has nothing left to add.
+function formatCanadianPhoneInput(el){let
+raw=el.value.replace(/\D/g,"");if(raw.length>0&&raw.charAt(0)==="1"){raw=raw.slice(1);}raw=raw.slice(0,10);let
+out=raw;if(raw.length>6){out="("+raw.slice(0,3)+") "+raw.slice(3,6)+"-"+raw.slice(6);}else
+if(raw.length>3){out="("+raw.slice(0,3)+") "+raw.slice(3);}else
+if(raw.length>0){out="("+raw;}el.value=out;}
+// isValidCanadianPhoneValue: accepts the masked "(XXX) XXX-XXXX" display
+// value (or any other digit arrangement, e.g. a pasted "+12045550123") and
+// checks it reduces to exactly 10 digits forming a plausible NANP number -
+// area code and exchange code both required to start 2-9 (0/1 are reserved
+// prefixes in the North American Numbering Plan, so a "0"/"1"-led area or
+// exchange code is never a real number).
+function isValidCanadianPhoneValue(v){let
+d=(v||"").replace(/\D/g,"");if(d.length===11&&d.charAt(0)==="1"){d=d.slice(1);}return/^[2-9]\d{2}[2-9]\d{6}$/.test(d);}
+// toE164Canada: what actually gets submitted in the payload. The visible
+// field shows the pretty "(204) 442-2555" mask for readability, but Zoho's
+// Phone/Mobile fields get the normalized "+12044422555" so the value stays
+// consistent and unambiguous regardless of what the user actually typed
+// (with/without a leading 1, with/without a +). Returns "" if the field
+// isn't a valid 10-digit number (i.e. it's blank or still invalid).
+function toE164Canada(v){let
+d=(v||"").replace(/\D/g,"");if(d.length===11&&d.charAt(0)==="1"){d=d.slice(1);}if(d.length!==10){return"";}return"+1"+d;}
 function validatePhoneField(fieldId){const el=document.getElementById(fieldId);const
 err=document.getElementById(fieldId+"Error");const v=el.value.trim();if(!v){err.classList.remove("show");el.classList.remove("error");return true;}const
-ok=isValidPhoneValue(v);if(!ok){err.classList.add("show");el.classList.add("error");return false;}err.classList.remove("show");el.classList.remove("error");return true;}
+ok=isValidCanadianPhoneValue(v);if(!ok){err.classList.add("show");el.classList.add("error");return false;}err.classList.remove("show");el.classList.remove("error");return true;}
+// Billing Contact Email (Faisal, 2026-08-26: "accepts anything, lock for
+// email patterns"). Optional field - blank is fine, but anything typed
+// must match the same email shape already enforced elsewhere on this form
+// (f_newEmail's validator, goToScreen4) rather than relying on the
+// type="email" attribute alone, which this form's custom screen-by-screen
+// JS validation never actually triggers browser-native checking on.
+function validateBillingContactEmailField(){const
+el=document.getElementById("f_billingContactEmail");const
+err=document.getElementById("billingContactEmailError");const
+v=el.value.trim();if(!v){err.classList.remove("show");el.classList.remove("error");return true;}const
+ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);if(!ok){err.classList.add("show");el.classList.add("error");return false;}err.classList.remove("show");el.classList.remove("error");return true;}
 
 // ── FACILITY MAPS ────────────────────────────────────────────────
 
@@ -2338,7 +2380,7 @@ document.getElementById("lastNameError").classList.remove("show");if(emailChange
 ne=document.getElementById("f_newEmail").value.trim();if(!ne||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ne)){document.getElementById("newEmailError").classList.add("show");errors.push("New email address is required and must be valid.");}else
 document.getElementById("newEmailError").classList.remove("show");const
 ce=document.getElementById("f_confirmNewEmail").value.trim();if(ce!==ne){document.getElementById("confirmNewEmailError").classList.add("show");errors.push("New email address confirmation must match.");}else
-document.getElementById("confirmNewEmailError").classList.remove("show");if(!document.getElementById("f_confirmEmailChange").checked)errors.push("Please confirm the registered email change.");}if(!validatePhoneField("f_phone"))errors.push("Direct Phone / Mobile must be digits only with a country code, 8–16 characters (e.g. +12045550000).");if(!validatePhoneField("f_orgPhone"))errors.push("Organisation Main Phone must be digits only with a country code, 8–16 characters (e.g. +12045550100).");if(errors.length){showErrorSummary("screen3",errors);return;}document.getElementById("screen3Errors").classList.remove("show");
+document.getElementById("confirmNewEmailError").classList.remove("show");if(!document.getElementById("f_confirmEmailChange").checked)errors.push("Please confirm the registered email change.");}if(!validatePhoneField("f_phone"))errors.push("Direct Phone / Mobile must be a valid 10-digit Canadian number (e.g. (204) 442-2555).");if(!validatePhoneField("f_orgPhone"))errors.push("Organisation Main Phone must be a valid 10-digit Canadian number (e.g. (204) 442-2555).");if(!validateBillingContactEmailField())errors.push("Billing Contact Email must be a valid email address.");if(errors.length){showErrorSummary("screen3",errors);return;}document.getElementById("screen3Errors").classList.remove("show");
 // Refresh the summary-email field here too - this is the earliest point after
 // the user has finished answering the email-change question that we know the
 // final effective email for certain.
@@ -2453,9 +2495,9 @@ contactFirstName:document.getElementById("f_firstName").value.trim(),
 
 contactLastName:document.getElementById("f_lastName").value.trim(),
 
-contactPhone:document.getElementById("f_phone").value.trim(),
+contactPhone:toE164Canada(document.getElementById("f_phone").value),
 
-orgPhone:document.getElementById("f_orgPhone").value.trim(),
+orgPhone:toE164Canada(document.getElementById("f_orgPhone").value),
 
 contactJobTitle:document.getElementById("f_jobTitle").value.trim(),
 
