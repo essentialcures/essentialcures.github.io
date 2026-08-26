@@ -945,8 +945,9 @@ value="None">None</option></select></div>
 
 <div class="form-group"><label>Organisation Website <span class="opt">(if
 applicable)</span></label><input type="url" id="f_website"
-placeholder="https://www.example.ca" autocomplete="url"><p
-class="field-hint">Enter the organisation's official website.</p></div>
+placeholder="https://www.example.ca" autocomplete="url"
+onblur="checkWebsiteField()"><p id="websiteHint"
+class="field-hint">Enter the organisation's official website (e.g. www.example.ca) — the https:// will be added automatically.</p></div>
 
 </div>
 
@@ -1858,6 +1859,25 @@ document.getElementById("emailCopyAddress").value=getEffectiveContactEmail();}
 function
 getEffectiveContactEmail(){return(emailChanged&&document.getElementById("f_newEmail")?.value.trim())?document.getElementById("f_newEmail").value.trim():document.getElementById("f_email").value;}
 
+// FIX: Zoho's "Website" field on Accounts is a strict URL-typed field - it requires
+// a scheme (http:// or https://) AND a real domain shape (something.tld), or the
+// whole zoho.crm.createRecord call is rejected with INVALID_DATA, which kills the
+// ENTIRE draft creation (not just that field). Two distinct cases caused this:
+// (1) a real domain typed without a scheme, e.g. "essentialcures.com" - fixed by
+// prepending https:// automatically; (2) not a domain at all, e.g. random text with
+// no ".com"/".ca" - prepending a scheme to that still isn't a valid URL, so this is
+// rejected client-side instead of being sent and blowing up the whole submission.
+const WEBSITE_DOMAIN_PATTERN=/^https?:\/\/([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}(:\d+)?(\/[^\s]*)?$/i;
+function normalizeWebsiteUrl(raw){const
+v=(raw||"").trim();if(v==="")return"";const
+withScheme=/^https?:\/\//i.test(v)?v:"https://"+v;return WEBSITE_DOMAIN_PATTERN.test(withScheme)?withScheme:"";}
+function checkWebsiteField(){const
+el=document.getElementById("f_website");const
+hint=document.getElementById("websiteHint");const
+raw=el.value.trim();if(raw===""){hint.textContent="Enter the organisation's official website (e.g. www.example.ca) — the https:// will be added automatically.";hint.style.color="";return;}
+if(normalizeWebsiteUrl(raw)===""){hint.textContent="That doesn't look like a valid website (need something like www.example.ca) — it will be left blank on the profile unless corrected.";hint.style.color="#b3261e";}
+else{hint.textContent="Enter the organisation's official website (e.g. www.example.ca) — the https:// will be added automatically.";hint.style.color="";}}
+
 function formatNumber(el){const
 raw=el.value.replace(/[^0-9]/g,"");if(!raw){el.value="";return;}el.value=parseInt(raw,10).toLocaleString("en-CA");}
 
@@ -2352,7 +2372,7 @@ facilitySize:document.getElementById("f_facilitySize").value.trim(),
 
 facilityAccreditation:document.getElementById("f_accreditation").value,
 
-website:document.getElementById("f_website").value.trim(),
+website:normalizeWebsiteUrl(document.getElementById("f_website").value),
 
 gpoMember:document.getElementById("f_gpoMember").value,
 
