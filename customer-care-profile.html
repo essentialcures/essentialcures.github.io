@@ -18,6 +18,8 @@
 href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,500&display=swap"
 rel="stylesheet">
 
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
 <style>
 
 :root{
@@ -230,6 +232,11 @@ var(--deep-blue);padding:14px 16px;border-radius:0 6px 6px
 #E8ECF0;border-top:3px solid
 var(--deep-blue);border-radius:50%;animation:spin 0.8s linear
 infinite;margin:24px auto;}
+
+.turnstile-group{margin:22px 0;}
+.turnstile-group label{display:block;font-size:13px;font-weight:600;color:var(--dark-navy);margin-bottom:8px;}
+.turnstile-error{display:none;font-size:12.5px;color:var(--red);margin-top:6px;}
+.turnstile-error.show{display:block;}
 
 .spinner.show{display:block;}
 
@@ -551,6 +558,14 @@ id="gateReasonError">Please select a reason for submission.</div><p
 class="field-hint" id="gateReasonHint" style="display:none;"></p></div>
 
 </div>
+
+<div class="turnstile-group"><label>Verify you are human
+<em>*</em></label><div class="cf-turnstile"
+data-sitekey="0x4AAAAAAEFjJFkYOcO5d-uj"
+data-callback="onTurnstileSuccess"
+data-expired-callback="onTurnstileExpired"></div><p
+class="turnstile-error" id="turnstileError">Please complete the
+verification above before continuing.</p></div>
 
 <div class="spinner" id="verifySpinner"></div>
 
@@ -1826,6 +1841,12 @@ let submissionReason="";
 
 let emailChanged=false;
 
+let turnstileVerified=false;
+
+function onTurnstileSuccess(){turnstileVerified=true;document.getElementById("turnstileError").classList.remove("show");}
+
+function onTurnstileExpired(){turnstileVerified=false;}
+
 let selectedDeliveryDays=[];
 
 // ── MODALS ────────────────────────────────────────────────────────
@@ -2208,6 +2229,8 @@ if(!reason){document.getElementById("gateReasonError").classList.add("show");ret
 document.getElementById("gateReasonError").classList.remove("show");
 
 if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errEl.textContent="Please enter a valid email address.";errEl.style.display="block";return;}
+
+if(!turnstileVerified){document.getElementById("turnstileError").classList.add("show");return;}
 
 spinner.classList.add("show");
 
