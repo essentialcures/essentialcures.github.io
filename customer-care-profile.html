@@ -1121,8 +1121,14 @@ style="background:#F0F7FF;color:var(--deep-blue);font-weight:600;"><p
 class="field-hint">Pre-filled from verification.</p></div>
 
 <div class="form-group"><label>Direct Phone / Mobile</label><input
-type="tel" id="f_phone" placeholder="+1 (204) 555-0000"
-autocomplete="tel"></div>
+type="tel" id="f_phone" placeholder="+12045550000"
+autocomplete="tel" maxlength="16"
+oninput="this.value=this.value.replace(/[^\d+]/g,'').replace(/(?!^)\+/g,'')"
+onblur="validatePhoneField('f_phone')"><p class="field-hint">Digits
+only, with country code (e.g. +12045550000).</p><div
+class="field-error" id="f_phoneError">Enter a valid phone number
+with country code — digits only, 8–16 characters starting with
++.</div></div>
 
 </div>
 
@@ -1162,8 +1168,13 @@ authorized profile contact and may replace the registered email.</label></div></
 <div class="form-grid">
 
 <div class="form-group"><label>Organisation Main Phone</label><input
-type="tel" id="f_orgPhone" placeholder="+1 (204) 555-0100"><p
-class="field-hint">Switchboard or main reception line.</p></div>
+type="tel" id="f_orgPhone" placeholder="+12045550100" maxlength="16"
+oninput="this.value=this.value.replace(/[^\d+]/g,'').replace(/(?!^)\+/g,'')"
+onblur="validatePhoneField('f_orgPhone')"><p
+class="field-hint">Switchboard or main reception line. Digits only,
+with country code.</p><div class="field-error"
+id="f_orgPhoneError">Enter a valid phone number with country code —
+digits only, 8–16 characters starting with +.</div></div>
 
 <div class="form-group"><label>Job Title</label><input type="text"
 id="f_jobTitle" placeholder="e.g. Director of Procurement"></div>
@@ -1912,6 +1923,17 @@ function validateBusinessNumber(){const el=document.getElementById("f_businessNu
 err=document.getElementById("businessNumberError");const raw=el.value.trim();if(!raw){err.classList.remove("show");el.classList.remove("error");return true;}const clean=raw.replace(/\D/g,"");const
 ok=/^\d{9}$/.test(clean);if(!ok){err.classList.add("show");el.classList.add("error");return false;}el.value=clean;err.classList.remove("show");el.classList.remove("error");return true;}
 
+// Phone: digits only, MUST start with "+" followed by the country dialing
+// code, 7–15 digits after the "+" per the ITU-T E.164 international
+// numbering standard (min 7 covers short national numbers, max 15 is the
+// E.164 cap). Not required by itself here — callers decide whether a
+// blank value is acceptable for that field; this only validates FORMAT
+// (including the country code) when the field is non-blank.
+function isValidPhoneValue(v){return /^\+[1-9]\d{6,14}$/.test(v);}
+function validatePhoneField(fieldId){const el=document.getElementById(fieldId);const
+err=document.getElementById(fieldId+"Error");const v=el.value.trim();if(!v){err.classList.remove("show");el.classList.remove("error");return true;}const
+ok=isValidPhoneValue(v);if(!ok){err.classList.add("show");el.classList.add("error");return false;}err.classList.remove("show");el.classList.remove("error");return true;}
+
 // ── FACILITY MAPS ────────────────────────────────────────────────
 
 const FACILITY_UNIT_MAP={"Hospital - WRHA":["Beds"],"Hospital - Independent":["Beds"],"Long-Term Care":["Residents"],"Community Health":["Staff"],"Dental":["Exam Rooms","Staff"],"Private Clinic":["Exam Rooms","Staff"],"Pharmacy":["Staff"],"Government":["Staff"],"Other":["Beds","Residents","Staff","Exam Rooms"]};
@@ -2316,7 +2338,7 @@ document.getElementById("lastNameError").classList.remove("show");if(emailChange
 ne=document.getElementById("f_newEmail").value.trim();if(!ne||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ne)){document.getElementById("newEmailError").classList.add("show");errors.push("New email address is required and must be valid.");}else
 document.getElementById("newEmailError").classList.remove("show");const
 ce=document.getElementById("f_confirmNewEmail").value.trim();if(ce!==ne){document.getElementById("confirmNewEmailError").classList.add("show");errors.push("New email address confirmation must match.");}else
-document.getElementById("confirmNewEmailError").classList.remove("show");if(!document.getElementById("f_confirmEmailChange").checked)errors.push("Please confirm the registered email change.");}if(errors.length){showErrorSummary("screen3",errors);return;}document.getElementById("screen3Errors").classList.remove("show");
+document.getElementById("confirmNewEmailError").classList.remove("show");if(!document.getElementById("f_confirmEmailChange").checked)errors.push("Please confirm the registered email change.");}if(!validatePhoneField("f_phone"))errors.push("Direct Phone / Mobile must be digits only with a country code, 8–16 characters (e.g. +12045550000).");if(!validatePhoneField("f_orgPhone"))errors.push("Organisation Main Phone must be digits only with a country code, 8–16 characters (e.g. +12045550100).");if(errors.length){showErrorSummary("screen3",errors);return;}document.getElementById("screen3Errors").classList.remove("show");
 // Refresh the summary-email field here too - this is the earliest point after
 // the user has finished answering the email-change question that we know the
 // final effective email for certain.
