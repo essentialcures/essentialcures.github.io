@@ -1164,20 +1164,18 @@ class="form-group" style="margin-bottom:0;"><label>Email
 Changed?</label><select id="f_emailChanged"
 onchange="handleEmailChange()"><option value="No">No — same email as
 before</option><option value="Yes">Yes — I have a new email
-address</option></select></div><div class="form-group"
-id="newEmailGroup" style="display:none;margin-bottom:0;"><label>New
-Email Address <em>*</em></label><input type="email" id="f_newEmail"
-placeholder="newemail@organisation.com"><div class="field-error"
-id="newEmailError">Please enter a valid email
-address.</div></div><div class="form-group"
-id="confirmNewEmailGroup" style="display:none;margin-bottom:0;"><label>Confirm New
-Email Address <em>*</em></label><input type="email" id="f_confirmNewEmail"
-placeholder="Re-enter the new email address"><div class="field-error"
-id="confirmNewEmailError">The email addresses must match.</div></div></div><div
-id="emailChangeAcknowledgement" style="display:none;margin-top:12px;"
-class="same-address-wrap"><input type="checkbox" id="f_confirmEmailChange"><label
-for="f_confirmEmailChange">I confirm that this new address belongs to the
-authorized profile contact and may replace the registered email.</label></div></div></div>
+address</option></select></div></div>
+<!-- Faisal, 2026-08-26: this used to let someone type ANY new email here and
+have it silently replace the registered contact email with no server-side
+verification tying it back to the account on file (parking lot item 21). It
+is no longer a self-service field - a real email change is a support request,
+verified by a person, not a form field a submitter fills in themselves. -->
+<div id="emailChangeNotice" style="display:none;margin-top:12px;background:#fff;border:1px
+solid #F0D080;border-radius:6px;padding:12px 14px;font-size:13px;color:var(--dark-navy);">Registered
+email changes can't be made through this form. Please continue this
+submission using your current registered email above, then contact
+<strong>itsupport@essentialcures.com</strong> to have your registered
+email updated on file.</div></div></div>
 
 <div class="form-grid">
 
@@ -1901,16 +1899,16 @@ idx=selectedDeliveryDays.indexOf(val);if(idx>-1)selectedDeliveryDays.splice(idx,
 selectedDeliveryDays.push(val);}
 
 function handleEmailChange(){const
-v=document.getElementById("f_emailChanged").value;emailChanged=(v==="Yes");document.getElementById("newEmailGroup").style.display=emailChanged?"block":"none";document.getElementById("confirmNewEmailGroup").style.display=emailChanged?"block":"none";document.getElementById("emailChangeAcknowledgement").style.display=emailChanged?"flex":"none";if(!emailChanged){document.getElementById("f_newEmail").value="";document.getElementById("f_confirmNewEmail").value="";document.getElementById("f_confirmEmailChange").checked=false;}
-// Keep the summary-email field (screen 8 / final confirmation) in sync the
-// moment the user answers this question, not just at submit time - this used
-// to only get set once, at gate time, off the ORIGINAL registered email, and
-// never refreshed, so the review/summary screens kept showing the old address
-// even after the user supplied a new one here.
-document.getElementById("emailCopyAddress").value=getEffectiveContactEmail();}
+v=document.getElementById("f_emailChanged").value;emailChanged=(v==="Yes");document.getElementById("emailChangeNotice").style.display=emailChanged?"block":"none";}
 
+// Faisal, 2026-08-26: this used to return a self-declared "new email" typed
+// on this screen instead of the email actually verified through the gate -
+// that let a submission go through under a completely different, unverified
+// address (parking lot item 21). It now always returns the gate-verified
+// email, full stop; a real email change is a support request, not a form
+// field (see emailChangeNotice above).
 function
-getEffectiveContactEmail(){return(emailChanged&&document.getElementById("f_newEmail")?.value.trim())?document.getElementById("f_newEmail").value.trim():document.getElementById("f_email").value;}
+getEffectiveContactEmail(){return document.getElementById("f_email").value;}
 
 // FIX: Zoho's "Website" field on Accounts is a strict URL-typed field - it requires
 // a scheme (http:// or https://) AND a real domain shape (something.tld), or the
@@ -1988,7 +1986,8 @@ ok=isValidCanadianPhoneValue(v);if(!ok){err.classList.add("show");el.classList.a
 // Billing Contact Email (Faisal, 2026-08-26: "accepts anything, lock for
 // email patterns"). Optional field - blank is fine, but anything typed
 // must match the same email shape already enforced elsewhere on this form
-// (f_newEmail's validator, goToScreen4) rather than relying on the
+// (f_newEmail's validator, goToScreen4 - superseded 2026-08-26, see
+// emailChangeNotice) rather than relying on the
 // type="email" attribute alone, which this form's custom screen-by-screen
 // JS validation never actually triggers browser-native checking on.
 function validateBillingContactEmailField(){const
@@ -2399,11 +2398,13 @@ document.getElementById("facilityTypeError").classList.remove("show");const gstS
 function goToScreen4(){const
 errors=[];if(!document.getElementById("f_firstName").value.trim()){document.getElementById("firstNameError").classList.add("show");errors.push("First name is required.");}else
 document.getElementById("firstNameError").classList.remove("show");if(!document.getElementById("f_lastName").value.trim()){document.getElementById("lastNameError").classList.add("show");errors.push("Last name is required.");}else
-document.getElementById("lastNameError").classList.remove("show");if(emailChanged){const
-ne=document.getElementById("f_newEmail").value.trim();if(!ne||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ne)){document.getElementById("newEmailError").classList.add("show");errors.push("New email address is required and must be valid.");}else
-document.getElementById("newEmailError").classList.remove("show");const
-ce=document.getElementById("f_confirmNewEmail").value.trim();if(ce!==ne){document.getElementById("confirmNewEmailError").classList.add("show");errors.push("New email address confirmation must match.");}else
-document.getElementById("confirmNewEmailError").classList.remove("show");if(!document.getElementById("f_confirmEmailChange").checked)errors.push("Please confirm the registered email change.");}if(!validatePhoneField("f_phone"))errors.push("Direct Phone / Mobile must be a valid 10-digit Canadian number (e.g. (204) 442-2555).");if(!validatePhoneField("f_orgPhone"))errors.push("Organisation Main Phone must be a valid 10-digit Canadian number (e.g. (204) 442-2555).");if(!validateBillingContactEmailField())errors.push("Billing Contact Email must be a valid email address.");if(errors.length){showErrorSummary("screen3",errors);return;}document.getElementById("screen3Errors").classList.remove("show");
+document.getElementById("lastNameError").classList.remove("show");
+// Faisal, 2026-08-26: "Email Changed? Yes" is no longer a path that continues -
+// registered email changes are a support request (see emailChangeNotice), not
+// something this form accepts and forwards. Block right here rather than
+// silently accepting a self-declared new email with no verification behind it.
+if(emailChanged){errors.push("Registered email changes can't be submitted through this form. Please select \"No\" above and continue with your current registered email, then contact itsupport@essentialcures.com to update it.");}
+if(!validatePhoneField("f_phone"))errors.push("Direct Phone / Mobile must be a valid 10-digit Canadian number (e.g. (204) 442-2555).");if(!validatePhoneField("f_orgPhone"))errors.push("Organisation Main Phone must be a valid 10-digit Canadian number (e.g. (204) 442-2555).");if(!validateBillingContactEmailField())errors.push("Billing Contact Email must be a valid email address.");if(errors.length){showErrorSummary("screen3",errors);return;}document.getElementById("screen3Errors").classList.remove("show");
 // Refresh the summary-email field here too - this is the earliest point after
 // the user has finished answering the email-change question that we know the
 // final effective email for certain.
