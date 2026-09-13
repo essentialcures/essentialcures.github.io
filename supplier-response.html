@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Order Confirmation — Essential Cures</title>
+<style>
+  body {
+    font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 24px 12px;
+    color: #2c3e50;
+  }
+  .card {
+    max-width: 620px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 2px solid #005090;
+  }
+  .header img { width: 56px; display: block; }
+  .header .divider { width: 2px; background: #005090; align-self: stretch; margin: 0 16px; }
+  .header .brand-name { margin: 0; font-size: 16px; font-weight: bold; color: #005090; letter-spacing: 1px; }
+  .header .brand-tag { margin: 4px 0 0; font-size: 11px; color: #4a8b2c; font-weight: bold; font-style: italic; }
+  .body-pad { padding: 20px; }
+  .status-msg { text-align: center; padding: 40px 20px; font-size: 14px; color: #6b7c8c; }
+  .status-msg.error { color: #b03030; }
+  h2 { font-size: 15px; color: #003060; margin: 0 0 8px; }
+  p.deal-name { font-size: 13px; color: #6b7c8c; margin: 0 0 16px; }
+  .already-note { background: #fff8e1; border-left: 4px solid #d4a017; padding: 12px 14px; font-size: 13px; margin-bottom: 16px; }
+  .not-binding-note { background: #e8f5e9; border-left: 4px solid #4a8b2c; padding: 12px 14px; font-size: 13px; margin-bottom: 20px; font-style: italic; color: #276414; }
+  .line-item {
+    border: 1px solid #dce1e6;
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    background: #f9fafb;
+  }
+  .line-item .line-title { font-size: 14px; font-weight: bold; color: #003060; margin-bottom: 2px; }
+  .line-item .line-meta { font-size: 12px; color: #6b7c8c; margin-bottom: 12px; }
+  .line-item .line-fields { display: flex; flex-wrap: wrap; gap: 10px; }
+  .line-item .field-group { flex: 1; min-width: 150px; }
+  .line-item label.field-label { display: block; font-size: 11px; font-weight: bold; color: #6b7c8c; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  select, input[type="date"], input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #dce1e6;
+    border-radius: 4px;
+    padding: 9px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    background: #fff;
+  }
+  .section-label { font-size: 12px; font-weight: bold; color: #003060; text-transform: uppercase; letter-spacing: 0.5px; margin: 20px 0 8px; }
+  label.field-label-standalone { display: block; font-size: 12px; color: #6b7c8c; margin-bottom: 6px; }
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #dce1e6;
+    border-radius: 4px;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    resize: vertical;
+    min-height: 60px;
+    margin-bottom: 16px;
+  }
+  .submit-btn {
+    width: 100%;
+    background: #4a8b2c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  .submit-btn:disabled { background: #a9c79a; cursor: not-allowed; }
+  .close-btn {
+    width: 100%;
+    background: #f7f9fb;
+    color: #2c3e50;
+    border: 1px solid #dce1e6;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .footer {
+    display: flex;
+  }
+  .footer div { flex: 1; text-align: center; padding: 10px 0; font-size: 11px; font-style: italic; font-weight: bold; color: #fff; }
+  .footer .green { background: #4a8b2c; }
+  .footer .blue { background: #005090; }
+
+/* Technical support floating block, matching the other EC forms exactly —
+   a vertical navy side-tab attached to a white content card. */
+.tech-support-wrap {
+  position: fixed;
+  left: 0;
+  top: 40%;
+  display: flex;
+  align-items: stretch;
+  z-index: 1000;
+}
+.tech-support-tab {
+  background: #003060;
+  color: #fff;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+.tech-support-box {
+  max-width: 320px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  padding: 20px;
+  position: relative;
+}
+.tech-support-box h3 { margin: 0 0 10px; font-size: 15px; color: #003060; }
+.tech-support-box p { margin: 0 0 12px; font-size: 13px; color: #4a4a4a; line-height: 1.5; }
+.tech-support-box a { color: #005090; font-weight: bold; text-decoration: underline; }
+.tech-support-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  cursor: pointer;
+  color: #888;
+  font-size: 16px;
+  background: none;
+  border: none;
+}
+@media (max-width: 480px) {
+  .tech-support-wrap { left: 0; right: 0; top: auto; bottom: 0; }
+  .tech-support-box { max-width: none; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc.">
+    <div class="divider"></div>
+    <div>
+      <p class="brand-name">ESSENTIAL CURES INC.</p>
+      <p class="brand-tag">Compliant Solutions. Confident Care.</p>
+    </div>
+  </div>
+  <div id="content" class="body-pad">
+    <div class="status-msg">Loading your confirmation request…</div>
+  </div>
+  <div class="footer">
+    <div class="green">Compliant Solutions. Confident Care.</div>
+    <div class="blue">Quality Built In. Not Bolted On.</div>
+  </div>
+</div>
+
+<div class="tech-support-wrap" id="techSupportBox">
+  <div class="tech-support-tab">Technical Support</div>
+  <div class="tech-support-box">
+    <button class="tech-support-close" onclick="document.getElementById('techSupportBox').style.display='none'">✕</button>
+    <h3>Technical Issues?</h3>
+    <p>Having trouble with the form? Email our EC-IT Support team with a description of the problem and we will get back to you promptly.</p>
+    <a href="mailto:itsupport@essentialcures.com">Email IT Support</a>
+  </div>
+</div>
+
+<script>
+// CONFIGURE THIS: your deployed Worker's base URL — same Worker as the
+// proposal response page, just a different route.
+const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
+
+const params = new URLSearchParams(window.location.search);
+const token = params.get('token');
+const cm44Id = params.get('id');
+const contentEl = document.getElementById('content');
+let lastGateData = null;
+
+function showError(msg) {
+  contentEl.innerHTML = `<div class="status-msg error">${msg}</div>`;
+}
+
+async function loadConfirmation() {
+  if (!token || !cm44Id) {
+    showError('This link is missing a required parameter. Please use the link from your confirmation request email.');
+    return;
+  }
+  try {
+    const resp = await fetch(`${WORKER_BASE}/api/supplier/gate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cm44Id, token }),
+    });
+    const data = await resp.json();
+    if (data.status !== 'allow') {
+      showError(data.message || 'This confirmation link is invalid or has expired.');
+      return;
+    }
+    lastGateData = data;
+    renderForm(data);
+  } catch (err) {
+    showError('Something went wrong loading your confirmation request. Please try again or contact us directly.');
+  }
+}
+
+function renderForm(data) {
+  // Same pattern as the customer proposal response page: an already-
+  // submitted response does NOT block a new submission — it shows a note
+  // and pre-fills every field with the prior answer, so resubmitting is
+  // really just updating (supports the "a few lines now, the rest later"
+  // workflow suppliers actually use).
+  const alreadyBlock = data.alreadyConfirmed
+    ? `<div class="already-note">You already submitted a confirmation for this order. Your previous answers are shown below — update anything that has changed and submit again to record the update.</div>`
+    : '';
+
+  const linesHtml = data.lines.map((line, idx) => {
+    const acc = line.existingAcceptanceStatus || '';
+    const conf = line.existingConfirmationStatus || '';
+    const avail = line.existingExpectedAvailability || '';
+    return `
+      <div class="line-item" data-dli="${line.dliId}" data-rowid="${line.rowId}">
+        <div class="line-title">${line.productName}</div>
+        <div class="line-meta">Qty ${line.qty} &middot; Delivery: ${line.deliveryCity} &middot; Courier</div>
+        <div class="line-fields">
+          <div class="field-group">
+            <label class="field-label">Status</label>
+            <select class="acceptance-select">
+              <option value="">Select</option>
+              <option value="Accepted" ${acc === 'Accepted' ? 'selected' : ''}>Accepted</option>
+              <option value="Declined" ${acc === 'Declined' ? 'selected' : ''}>Declined</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Fulfillment</label>
+            <select class="confirmation-select">
+              <option value="">Select</option>
+              <option value="Confirmed-Immediate" ${conf === 'Confirmed-Immediate' ? 'selected' : ''}>Confirmed - Immediate</option>
+              <option value="Confirmed-Backorder" ${conf === 'Confirmed-Backorder' ? 'selected' : ''}>Confirmed - Backorder</option>
+              <option value="Refused" ${conf === 'Refused' ? 'selected' : ''}>Refused</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Expected Ship Date</label>
+            <input type="date" class="availability-input" value="${avail}">
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  contentEl.innerHTML = `
+    <h2>Pre-Order Confirmation</h2>
+    <p class="deal-name">${data.dealReference || ''} &middot; ${data.supplierName || ''}</p>
+    ${alreadyBlock}
+    <div class="not-binding-note">This is a pre-order confirmation and not a formal purchase order. It carries no binding obligation on either party.</div>
+    <div class="section-label">Order Lines — Please Confirm Each</div>
+    ${linesHtml}
+    <div class="section-label">Additional Information</div>
+    <label class="field-label-standalone" for="comments">Comments (optional)</label>
+    <textarea id="comments">${(lastGateData.existingComments || '')}</textarea>
+    <label class="field-label-standalone" for="deliveryInstructions">Delivery Instructions or Special Arrangements (optional)</label>
+    <textarea id="deliveryInstructions">${(lastGateData.existingDeliveryInstructions || '')}</textarea>
+    <label class="field-label-standalone" for="confirmationReference">Your Reference / PO Acknowledgement Number (optional)</label>
+    <input type="text" id="confirmationReference" placeholder="e.g. your internal order number">
+    <button class="submit-btn" id="submitBtn" style="margin-top:16px;">Submit Confirmation</button>
+  `;
+
+  // Re-check completeness on every change so the submit button only
+  // enables once every line has both a status and a fulfillment selected.
+  contentEl.querySelectorAll('.acceptance-select, .confirmation-select').forEach(el => {
+    el.addEventListener('change', updateSubmitState);
+  });
+  updateSubmitState();
+
+  document.getElementById('submitBtn').addEventListener('click', submitConfirmation);
+}
+
+function updateSubmitState() {
+  const btn = document.getElementById('submitBtn');
+  if (!btn) return;
+  const lineEls = contentEl.querySelectorAll('.line-item');
+  let allComplete = true;
+  lineEls.forEach(el => {
+    const acc = el.querySelector('.acceptance-select').value;
+    const conf = el.querySelector('.confirmation-select').value;
+    if (!acc || !conf) allComplete = false;
+  });
+  btn.disabled = !allComplete;
+  btn.textContent = allComplete ? 'Submit Confirmation' : 'Complete every line above to continue';
+}
+
+async function submitConfirmation() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  const lines = Array.from(contentEl.querySelectorAll('.line-item')).map(el => ({
+    dliId: el.getAttribute('data-dli'),
+    rowId: el.getAttribute('data-rowid'),
+    acceptanceStatus: el.querySelector('.acceptance-select').value,
+    confirmationStatus: el.querySelector('.confirmation-select').value,
+    expectedAvailability: el.querySelector('.availability-input').value,
+  }));
+  const comments = document.getElementById('comments').value;
+  const deliveryInstructions = document.getElementById('deliveryInstructions').value;
+  const confirmationReference = document.getElementById('confirmationReference').value;
+
+  try {
+    const resp = await fetch(`${WORKER_BASE}/api/supplier/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cm44Id, token, lines, comments, deliveryInstructions, confirmationReference }),
+    });
+    const data = await resp.json();
+    if (data.status !== 'success') {
+      throw new Error(data.message || data.reason || 'Failed to submit your confirmation.');
+    }
+    showThankYou();
+  } catch (err) {
+    btn.disabled = false;
+    updateSubmitState();
+    alert(err.message || 'Something went wrong. Please try again.');
+  }
+}
+
+// Shared "submit then close" pattern — same requirement noted for the
+// customer proposal response page, to be applied there too when it's next
+// touched. window.close() only works reliably when the tab was opened by
+// script; for a link opened from an email client it will usually silently
+// no-op, so the visible message is the real UX, not the close attempt.
+function showThankYou() {
+  contentEl.innerHTML = `
+    <div class="status-msg">Thank you. Your confirmation has been recorded.<br><br>You may now close this window.</div>
+    <button class="close-btn" id="closeBtn">Close This Window</button>
+  `;
+  document.getElementById('closeBtn').addEventListener('click', () => {
+    window.close();
+  });
+}
+
+loadConfirmation();
+</script>
+</body>
+</html>
