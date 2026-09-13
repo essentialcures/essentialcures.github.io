@@ -211,7 +211,13 @@ async function loadConfirmation() {
     });
     const data = await resp.json();
     if (data.status !== 'allow') {
-      showError(data.message || 'This confirmation link is invalid or has expired.');
+      // Show whatever the backend actually said — 'reason' covers Worker-
+      // level errors (unknown route, Zoho auth failure) that never reach
+      // the Deluge function at all, 'message' covers real gate rejections
+      // from cm43_confirmation_gate_v1 itself. Masking this behind a
+      // generic fallback made a real upstream problem look like an
+      // expired-link issue.
+      showError(data.message || data.reason || 'This confirmation link is invalid or has expired.');
       return;
     }
     lastGateData = data;
@@ -234,7 +240,7 @@ function renderForm(data) {
   const linesHtml = data.lines.map((line, idx) => {
     const acc = line.existingAcceptanceStatus || '';
     const conf = line.existingConfirmationStatus || '';
-    const avail = line.existingExpectedAvailability || '';
+    const leadDays = line.existingConfirmedLeadTimeDays || line.onFileLeadTimeDays || '';
     return `
       <div class="line-item" data-dli="${line.dliId}" data-rowid="${line.rowId}">
         <div class="line-title">${line.productName}</div>
@@ -258,8 +264,8 @@ function renderForm(data) {
             </select>
           </div>
           <div class="field-group">
-            <label class="field-label">Expected Ship Date</label>
-            <input type="date" class="availability-input" value="${avail}">
+            <label class="field-label">Shipping Days (Upon Confirmed PO)</label>
+            <input type="number" min="0" step="1" class="leadtime-input" value="${leadDays}" placeholder="e.g. ${line.onFileLeadTimeDays || '5'}">
           </div>
         </div>
       </div>
@@ -317,7 +323,7 @@ async function submitConfirmation() {
     rowId: el.getAttribute('data-rowid'),
     acceptanceStatus: el.querySelector('.acceptance-select').value,
     confirmationStatus: el.querySelector('.confirmation-select').value,
-    expectedAvailability: el.querySelector('.availability-input').value,
+    confirmedLeadTimeDays: el.querySelector('.leadtime-input').value,
   }));
   const comments = document.getElementById('comments').value;
   const deliveryInstructions = document.getElementById('deliveryInstructions').value;
