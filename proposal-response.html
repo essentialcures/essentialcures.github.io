@@ -96,6 +96,54 @@
   .footer .green { background: #4a8b2c; }
   .footer .blue { background: #005090; }
   .already-note { background: #fff8e1; border-left: 4px solid #d4a017; padding: 12px 14px; font-size: 13px; margin-bottom: 16px; }
+
+/* Technical support floating block, matching the other EC forms exactly —
+   a vertical navy side-tab attached to a white content card. */
+.tech-support-wrap {
+  position: fixed;
+  left: 0;
+  top: 40%;
+  display: flex;
+  align-items: stretch;
+  z-index: 1000;
+}
+.tech-support-tab {
+  background: #003060;
+  color: #fff;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+.tech-support-box {
+  max-width: 320px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  padding: 20px;
+  position: relative;
+}
+.tech-support-box h3 { margin: 0 0 10px; font-size: 15px; color: #003060; }
+.tech-support-box p { margin: 0 0 12px; font-size: 13px; color: #4a4a4a; line-height: 1.5; }
+.tech-support-box a { color: #005090; font-weight: bold; text-decoration: underline; }
+.tech-support-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  cursor: pointer;
+  color: #888;
+  font-size: 16px;
+  background: none;
+  border: none;
+}
+@media (max-width: 480px) {
+  .tech-support-wrap { left: 0; right: 0; top: auto; bottom: 0; }
+  .tech-support-box { max-width: none; }
+}
 </style>
 </head>
 <body>
@@ -117,12 +165,23 @@
   </div>
 </div>
 
+<div class="tech-support-wrap" id="techSupportBox">
+  <div class="tech-support-tab">Technical Support</div>
+  <div class="tech-support-box">
+    <button class="tech-support-close" onclick="document.getElementById('techSupportBox').style.display='none'">✕</button>
+    <h3>Technical Issues?</h3>
+    <p>Having trouble with the form? Email our EC-IT Support team with a description of the problem and we will get back to you promptly.</p>
+    <a href="mailto:itsupport@essentialcures.com">Email IT Support</a>
+  </div>
+</div>
+
 <script>
 // CONFIGURE THIS: your deployed Worker's base URL
 const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
 
 const params = new URLSearchParams(window.location.search);
 const token = params.get('token');
+const proposalId = params.get('id');
 const contentEl = document.getElementById('content');
 let selectedDecision = null;
 
@@ -131,7 +190,7 @@ function showError(msg) {
 }
 
 async function loadProposal() {
-  if (!token) {
+  if (!token || !proposalId) {
     showError('This link is missing a required parameter. Please use the link from your proposal email.');
     return;
   }
@@ -139,7 +198,7 @@ async function loadProposal() {
     const resp = await fetch(`${WORKER_BASE}/api/proposal/gate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ responseToken: token }),
+      body: JSON.stringify({ proposalId, responseToken: token }),
     });
     const data = await resp.json();
     if (data.status !== 'success') {
@@ -172,7 +231,7 @@ function renderForm(data) {
       </div>
     </div>
     <div class="extra-choices">
-      <button type="button" data-value="Both">I'd like both quoted</button>
+      <button type="button" data-value="Both Options">I'd like both quoted</button>
       <button type="button" data-value="Declined">Not proceeding</button>
     </div>
     <label class="remarks-label" for="remarks">Comments or questions (optional)</label>
@@ -206,7 +265,7 @@ async function submitResponse() {
     const resp = await fetch(`${WORKER_BASE}/api/proposal/submit`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ responseToken: token, decision: selectedDecision, remarks }),
+      body: JSON.stringify({ proposalId, responseToken: token, decision: selectedDecision, remarks }),
     });
     const data = await resp.json();
     if (data.status !== 'success') {
