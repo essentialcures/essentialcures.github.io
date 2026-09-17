@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Respond to Your Quote — Essential Cures</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep-blue:#005090;--med-blue:#0070B0;--dark-navy:#003060;
+  --leaf-green:#4A8B2C;--lime:#8FC23C;--slate:#2C3E50;
+  --cool-gray:#6B7C8C;--light-bg:#F7F9FB;--white:#FFFFFF;--red:#C0392B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
+
+.doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+.doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+.doc-header-table td{vertical-align:middle;border:1px solid #CCC;font-family:Calibri,Arial,sans-serif;}
+.doc-header-left{width:12%;text-align:center;padding:4px;}
+.doc-header-left img{height:80px;width:auto;display:block;margin:0 auto;}
+.doc-header-middle{width:88%;text-align:center;padding:10px 16px;}
+.doc-header-middle .org-name{font-size:16px;font-weight:700;color:var(--deep-blue);letter-spacing:1px;margin-bottom:2px;}
+.doc-header-middle .tagline{font-size:12px;color:var(--leaf-green);font-style:italic;font-weight:600;margin-bottom:4px;}
+.doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
+.doc-header-stripe1{height:4px;background:var(--deep-blue);}
+.doc-header-stripe2{height:4px;background:var(--lime);}
+
+.main{flex:1;max-width:720px;margin:0 auto;width:100%;padding:48px 40px;}
+.form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:40px;}
+
+.status-msg{text-align:center;padding:40px 20px;font-size:14px;color:var(--cool-gray);}
+.status-msg.error{color:var(--red);}
+h2{font-size:15px;color:var(--dark-navy);margin:0 0 8px;}
+p.deal-name{font-size:13px;color:var(--cool-gray);margin:0 0 16px;}
+.already-note{background:#FFF8E1;border-left:4px solid #D4A017;padding:12px 14px;font-size:13px;margin-bottom:16px;border-radius:0 6px 6px 0;}
+.summary-bar{display:flex;justify-content:space-between;border:1px solid #D4DAE0;border-radius:8px;padding:14px 18px;margin-bottom:20px;background:var(--light-bg);}
+.summary-bar .item .label{font-size:10px;color:var(--cool-gray);text-transform:uppercase;letter-spacing:0.5px;}
+.summary-bar .item .value{font-size:15px;font-weight:700;color:var(--dark-navy);margin-top:2px;}
+.section-label{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:20px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
+table.quote-table{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px;}
+table.quote-table th{background:var(--dark-navy);color:#fff;text-align:left;padding:8px 12px;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;}
+table.quote-table th.num{text-align:right;}
+table.quote-table td{padding:8px 12px;border-bottom:1px solid #F0F2F4;color:var(--slate);}
+table.quote-table td.num{text-align:right;}
+table.quote-table tr.divider-row td{background:var(--light-bg);font-weight:700;color:var(--dark-navy);border-top:2px solid var(--lime);border-bottom:1px solid #D4DAE0;}
+.terms-box{background:var(--light-bg);border-left:4px solid var(--cool-gray);border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;color:var(--slate);white-space:pre-line;margin-bottom:24px;}
+.decision-row{display:flex;gap:12px;margin-bottom:16px;}
+.decision-choice{flex:1;border:2px solid #D4DAE0;border-radius:8px;padding:16px;text-align:center;cursor:pointer;font-weight:700;font-size:14px;transition:border-color 0.15s;}
+.decision-choice.accept.selected{border-color:var(--leaf-green);background:#EBF5E8;color:var(--leaf-green);}
+.decision-choice.reject.selected{border-color:var(--red);background:#FDEDEC;color:var(--red);}
+label.remarks-label{display:block;font-size:12px;color:var(--cool-gray);margin-bottom:6px;}
+textarea{width:100%;box-sizing:border-box;border:1.5px solid #D4DAE0;border-radius:6px;padding:11px 14px;font-family:"Inter",sans-serif;font-size:14px;resize:vertical;min-height:80px;margin-bottom:20px;}
+textarea:focus{outline:none;border-color:var(--deep-blue);}
+.submit-btn{width:100%;background:var(--leaf-green);color:var(--white);border:none;border-radius:6px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;font-family:"Inter",sans-serif;}
+.submit-btn:disabled{background:#A9C79A;cursor:not-allowed;}
+.close-btn{width:100%;background:transparent;color:var(--cool-gray);border:1.5px solid #D4DAE0;border-radius:6px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px;font-family:"Inter",sans-serif;}
+
+.it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
+.it-tab{background:var(--dark-navy);color:#fff;padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;border:none;font-family:"Inter",sans-serif;}
+.it-panel{display:none;background:#fff;border:1px solid #E8ECF0;border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
+.it-panel.open{display:block;}
+.it-panel h4{font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
+.it-panel p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-bottom:10px;}
+.it-panel a{color:var(--deep-blue);font-weight:600;font-size:12px;}
+.it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;}
+
+footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
+.footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue) 60%,var(--cool-gray) 100%);margin-bottom:12px;}
+.footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
+.footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
+
+@media(max-width:700px){.main{padding:20px 12px;}.form-card{padding:24px 16px;border-radius:8px;}.doc-header-left{display:none;}.doc-header-middle{width:100%;}.summary-bar{flex-direction:column;gap:10px;}.decision-row{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <table class="doc-header-table"><tr>
+    <td class="doc-header-left"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></td>
+    <td class="doc-header-middle">
+      <div class="org-name">ESSENTIAL CURES INC.</div>
+      <div class="tagline">Compliant Solutions. Confident Care.</div>
+      <div class="doc-title">Respond to Your Quote</div>
+    </td>
+  </tr></table>
+  <div class="doc-header-stripe1"></div>
+  <div class="doc-header-stripe2"></div>
+</div>
+
+<main class="main"><div class="form-card">
+  <div id="content">
+    <div class="status-msg">Loading your quote…</div>
+  </div>
+  <div style="margin-top:24px;"><table style="width:100%;border-collapse:collapse;"><tr>
+    <td style="width:50%;background-color:#4A8B2C;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span></td>
+    <td style="width:50%;background-color:#0070B0;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Quality Built In. Not Bolted On.</span></td>
+  </tr></table></div>
+</div></main>
+
+<footer><div class="footer-line"></div><p class="footer-urls">essentialcures.com | essentialcures.ca</p><p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p></footer>
+
+<div class="it-float" id="itFloat">
+  <button class="it-tab" onclick="toggleIT()">Technical Support</button>
+  <div class="it-panel" id="itPanel">
+    <button class="it-close" onclick="toggleIT()">✕</button>
+    <h4>Technical Issues?</h4>
+    <p>Having trouble with the form? Email our EC-IT Support team with a description of the problem and we will get back to you promptly.</p>
+    <a href="mailto:itsupport@essentialcures.com">Email IT Support</a>
+  </div>
+</div>
+
+<script>
+function toggleIT(){document.getElementById("itPanel").classList.toggle("open");}
+
+// CONFIGURE THIS: your deployed Worker's base URL — same Worker as every
+// other response page, just different routes.
+const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
+
+const params = new URLSearchParams(window.location.search);
+const token = params.get('token');
+const quoteId = params.get('id');
+const contentEl = document.getElementById('content');
+let selectedDecision = null;
+
+function showError(msg) {
+  contentEl.innerHTML = `<div class="status-msg error">${msg}</div>`;
+}
+
+async function loadQuote() {
+  if (!token || !quoteId) {
+    showError('This link is missing a required parameter. Please use the link from your quote email.');
+    return;
+  }
+  try {
+    const resp = await fetch(`${WORKER_BASE}/api/quote/gate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quoteId, token }),
+    });
+    const data = await resp.json();
+    if (data.status !== 'allow') {
+      showError(data.message || data.reason || 'This quote link is invalid or has expired.');
+      return;
+    }
+    renderQuote(data);
+  } catch (err) {
+    showError('Something went wrong loading your quote. Please try again or contact us directly.');
+  }
+}
+
+function renderQuote(data) {
+  const alreadyBlock = data.alreadyResponded
+    ? `<div class="already-note">You already responded to this quote on ${data.existingDecisionDate} with: <strong>${data.existingDecision}</strong>. Submitting again below will update your response.</div>`
+    : '';
+
+  const rowsHtml = (data.lineItems || []).map(line => {
+    if (line.isDivider) {
+      return `<tr class="divider-row"><td colspan="4">${line.description}</td></tr>`;
+    }
+    return `<tr>
+      <td>${line.description}</td>
+      <td class="num">${line.quantity}</td>
+      <td class="num">$${line.unitPrice}</td>
+      <td class="num">$${line.lineTotal}</td>
+    </tr>`;
+  }).join('');
+
+  contentEl.innerHTML = `
+    <h2>Your Quote</h2>
+    <p class="deal-name">${data.dealName || ''}</p>
+    ${alreadyBlock}
+    <div class="summary-bar">
+      <div class="item"><div class="label">Quote Number</div><div class="value">${data.quoteNumber}</div></div>
+      <div class="item"><div class="label">Grand Total</div><div class="value">CAD $${data.grandTotal}</div></div>
+      <div class="item"><div class="label">Valid Until</div><div class="value">${data.validTill}</div></div>
+    </div>
+    <div class="section-label">Itemized Quote</div>
+    <table class="quote-table">
+      <thead><tr><th>Description</th><th class="num">Qty</th><th class="num">Unit Price</th><th class="num">Total</th></tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    ${data.termsText ? `<div class="section-label">Terms and Conditions</div><div class="terms-box">${data.termsText}</div>` : ''}
+    <div class="section-label">Your Decision</div>
+    <div class="decision-row">
+      <div class="decision-choice accept" data-value="Accepted">Accept This Quote</div>
+      <div class="decision-choice reject" data-value="Rejected">Decline This Quote</div>
+    </div>
+    <div id="feedbackWrap" style="display:none;">
+      <label class="remarks-label" for="feedback">What could we have done better? (optional — helps us improve future offers)</label>
+      <textarea id="feedback" placeholder="e.g. pricing, delivery time, product selection..."></textarea>
+    </div>
+    <button class="submit-btn" id="submitBtn" disabled>Select a decision above to continue</button>
+  `;
+
+  const choiceEls = contentEl.querySelectorAll('.decision-choice');
+  choiceEls.forEach(el => {
+    el.addEventListener('click', () => {
+      choiceEls.forEach(e => e.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedDecision = el.getAttribute('data-value');
+      document.getElementById('feedbackWrap').style.display = selectedDecision === 'Rejected' ? 'block' : 'none';
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = false;
+      btn.textContent = 'Submit My Response';
+    });
+  });
+
+  document.getElementById('submitBtn').addEventListener('click', submitResponse);
+}
+
+async function submitResponse() {
+  if (!selectedDecision) return;
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+  const feedbackEl = document.getElementById('feedback');
+  const feedback = feedbackEl ? feedbackEl.value : '';
+
+  try {
+    const resp = await fetch(`${WORKER_BASE}/api/quote/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quoteId, token, decision: selectedDecision, feedback }),
+    });
+    const data = await resp.json();
+    if (data.status !== 'success') {
+      throw new Error(data.message || data.reason || 'Failed to submit your response.');
+    }
+    showThankYou();
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Submit My Response';
+    alert(err.message || 'Something went wrong. Please try again.');
+  }
+}
+
+function showThankYou() {
+  contentEl.innerHTML = `
+    <div class="status-msg">Thank you. Your response has been recorded.<br><br>You may now close this window.</div>
+    <button class="close-btn" id="closeBtn">Close This Window</button>
+  `;
+  document.getElementById('closeBtn').addEventListener('click', () => {
+    window.close();
+  });
+}
+
+loadQuote();
+</script>
+</body>
+</html>
