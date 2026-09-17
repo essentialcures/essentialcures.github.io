@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Communication Preferences — Essential Cures</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep-blue:#005090;--med-blue:#0070B0;--dark-navy:#003060;
+  --leaf-green:#4A8B2C;--lime:#8FC23C;--slate:#2C3E50;
+  --cool-gray:#6B7C8C;--light-bg:#F7F9FB;--white:#FFFFFF;--red:#C0392B;--amber:#D4A017;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
+
+.doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+.doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+.doc-header-table td{vertical-align:middle;border:1px solid #CCC;font-family:Calibri,Arial,sans-serif;}
+.doc-header-left{width:12%;text-align:center;padding:4px;}
+.doc-header-left img{height:80px;width:auto;display:block;margin:0 auto;}
+.doc-header-middle{width:88%;text-align:center;padding:10px 16px;}
+.doc-header-middle .org-name{font-size:16px;font-weight:700;color:var(--deep-blue);letter-spacing:1px;margin-bottom:2px;}
+.doc-header-middle .tagline{font-size:12px;color:var(--leaf-green);font-style:italic;font-weight:600;margin-bottom:4px;}
+.doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
+.doc-header-stripe1{height:4px;background:var(--deep-blue);}
+.doc-header-stripe2{height:4px;background:var(--lime);}
+
+.main{flex:1;max-width:620px;margin:0 auto;width:100%;padding:48px 40px;}
+.form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:40px;}
+
+.status-msg{text-align:center;padding:40px 20px;font-size:14px;color:var(--cool-gray);}
+.status-msg.error{color:var(--red);}
+h2{font-size:15px;color:var(--dark-navy);margin:0 0 8px;}
+p.intro{font-size:13px;color:var(--cool-gray);margin:0 0 20px;line-height:1.6;}
+.section-label{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:20px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
+.pref-row{display:flex;align-items:center;justify-content:space-between;border:1px solid #D4DAE0;border-radius:8px;padding:14px 16px;margin-bottom:10px;background:var(--light-bg);}
+.pref-row .label{font-size:13px;font-weight:700;color:var(--slate);}
+.pref-row .sub{font-size:11px;color:var(--cool-gray);margin-top:2px;}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0;margin-left:16px;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;border-radius:24px;transition:0.15s;}
+.toggle .slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background-color:#fff;border-radius:50%;transition:0.15s;}
+.toggle input:checked + .slider{background-color:var(--leaf-green);}
+.toggle input:checked + .slider:before{transform:translateX(20px);}
+.casl-row{border:1px solid #E0B0B0;background:#FFF8F8;}
+.casl-note{background:#FFF8E1;border-left:4px solid var(--amber);padding:12px 14px;font-size:12px;margin:0 0 16px;line-height:1.5;border-radius:0 6px 6px 0;}
+.submit-btn{width:100%;background:var(--leaf-green);color:var(--white);border:none;border-radius:6px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:10px;font-family:"Inter",sans-serif;}
+.submit-btn:disabled{background:#A9C79A;cursor:not-allowed;}
+.close-btn{width:100%;background:transparent;color:var(--cool-gray);border:1.5px solid #D4DAE0;border-radius:6px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px;font-family:"Inter",sans-serif;}
+
+.it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
+.it-tab{background:var(--dark-navy);color:#fff;padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;border:none;font-family:"Inter",sans-serif;}
+.it-panel{display:none;background:#fff;border:1px solid #E8ECF0;border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
+.it-panel.open{display:block;}
+.it-panel h4{font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
+.it-panel p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-bottom:10px;}
+.it-panel a{color:var(--deep-blue);font-weight:600;font-size:12px;}
+.it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;}
+
+footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
+.footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue) 60%,var(--cool-gray) 100%);margin-bottom:12px;}
+.footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
+.footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
+
+@media(max-width:700px){.main{padding:20px 12px;}.form-card{padding:24px 16px;border-radius:8px;}.doc-header-left{display:none;}.doc-header-middle{width:100%;}}
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <table class="doc-header-table"><tr>
+    <td class="doc-header-left"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></td>
+    <td class="doc-header-middle">
+      <div class="org-name">ESSENTIAL CURES INC.</div>
+      <div class="tagline">Compliant Solutions. Confident Care.</div>
+      <div class="doc-title">Communication Preferences</div>
+    </td>
+  </tr></table>
+  <div class="doc-header-stripe1"></div>
+  <div class="doc-header-stripe2"></div>
+</div>
+
+<main class="main"><div class="form-card">
+  <div id="content">
+    <div class="status-msg">Loading your preferences…</div>
+  </div>
+  <div style="margin-top:24px;"><table style="width:100%;border-collapse:collapse;"><tr>
+    <td style="width:50%;background-color:#4A8B2C;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span></td>
+    <td style="width:50%;background-color:#0070B0;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Quality Built In. Not Bolted On.</span></td>
+  </tr></table></div>
+</div></main>
+
+<footer><div class="footer-line"></div><p class="footer-urls">essentialcures.com | essentialcures.ca</p><p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p></footer>
+
+<div class="it-float" id="itFloat">
+  <button class="it-tab" onclick="toggleIT()">Technical Support</button>
+  <div class="it-panel" id="itPanel">
+    <button class="it-close" onclick="toggleIT()">✕</button>
+    <h4>Technical Issues?</h4>
+    <p>Having trouble with this page? Email our EC-IT Support team with a description of the problem and we will get back to you promptly.</p>
+    <a href="mailto:itsupport@essentialcures.com">Email IT Support</a>
+  </div>
+</div>
+
+<script>
+function toggleIT(){document.getElementById("itPanel").classList.toggle("open");}
+
+// CONFIGURE THIS: your deployed Worker's base URL — same Worker as every
+// other response page, just different routes.
+const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
+
+const params = new URLSearchParams(window.location.search);
+const token = params.get('token');
+const contactId = params.get('id');
+const contentEl = document.getElementById('content');
+
+const CATEGORY_LABELS = {
+  'Marketing': { label: 'Marketing', sub: 'Newsletters, promotions, and product updates' },
+  'Sales_Promotional': { label: 'Sales & Promotional Offers', sub: 'Special pricing and time-limited offers' },
+};
+
+function showError(msg) {
+  contentEl.innerHTML = `<div class="status-msg error">${msg}</div>`;
+}
+
+async function loadPreferences() {
+  if (!token || !contactId) {
+    showError('This link is missing a required parameter. Please use the link from one of our emails.');
+    return;
+  }
+  try {
+    const resp = await fetch(`${WORKER_BASE}/api/preferences/gate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contactId, token }),
+    });
+    const data = await resp.json();
+    if (data.status !== 'allow') {
+      showError(data.message || data.reason || 'This preference link is invalid or has expired.');
+      return;
+    }
+    renderForm(data);
+  } catch (err) {
+    showError('Something went wrong loading your preferences. Please try again or contact us directly.');
+  }
+}
+
+function renderForm(data) {
+  const caslActive = data.caslGiven === 'Yes';
+
+  const categoryRows = (data.categories || []).map(cat => {
+    const info = CATEGORY_LABELS[cat.category] || { label: cat.category, sub: '' };
+    const checked = cat.status === 'Subscribed' ? 'checked' : '';
+    return `
+      <div class="pref-row" data-category="${cat.category}">
+        <div>
+          <div class="label">${info.label}</div>
+          <div class="sub">${info.sub}</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" class="category-toggle" ${checked}>
+          <span class="slider"></span>
+        </label>
+      </div>
+    `;
+  }).join('');
+
+  const caslSection = caslActive ? `
+    <div class="section-label">Order & Account Communications</div>
+    <div class="pref-row casl-row">
+      <div>
+        <div class="label">Proposals, Quotes & Order Updates</div>
+        <div class="sub">Required for us to send you proposals and quotes</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="caslToggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="casl-note" id="caslWarning" style="display:none;">
+      Turning this off means we will no longer be able to email you proposals, quotes, or order-related updates. Invoicing and delivery communications for any orders already in progress will continue regardless.
+    </div>
+  ` : `
+    <div class="section-label">Order & Account Communications</div>
+    <p class="intro">You are not currently opted in to receive proposals or quotes by email.</p>
+  `;
+
+  contentEl.innerHTML = `
+    <h2>Communication Preferences</h2>
+    <p class="intro">Manage which emails you receive from Essential Cures. Changes take effect immediately.</p>
+    ${caslSection}
+    <div class="section-label">Marketing & Promotions</div>
+    ${categoryRows}
+    <button class="submit-btn" id="submitBtn">Save Preferences</button>
+  `;
+
+  const caslToggle = document.getElementById('caslToggle');
+  if (caslToggle) {
+    caslToggle.addEventListener('change', () => {
+      document.getElementById('caslWarning').style.display = caslToggle.checked ? 'none' : 'block';
+    });
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', submitPreferences);
+}
+
+async function submitPreferences() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  const caslToggle = document.getElementById('caslToggle');
+  const caslOptOut = caslToggle ? !caslToggle.checked : false;
+
+  const preferences = Array.from(contentEl.querySelectorAll('.pref-row[data-category]')).map(row => ({
+    category: row.getAttribute('data-category'),
+    status: row.querySelector('.category-toggle').checked ? 'Subscribed' : 'Unsubscribed',
+  }));
+
+  try {
+    const resp = await fetch(`${WORKER_BASE}/api/preferences/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contactId, token, caslOptOut, preferences }),
+    });
+    const data = await resp.json();
+    if (data.status !== 'success') {
+      throw new Error(data.message || data.reason || 'Failed to save your preferences.');
+    }
+    showThankYou();
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Save Preferences';
+    alert(err.message || 'Something went wrong. Please try again.');
+  }
+}
+
+function showThankYou() {
+  contentEl.innerHTML = `
+    <div class="status-msg">Your preferences have been saved.<br><br>You may now close this window.</div>
+    <button class="close-btn" id="closeBtn">Close This Window</button>
+  `;
+  document.getElementById('closeBtn').addEventListener('click', () => {
+    window.close();
+  });
+}
+
+loadPreferences();
+</script>
+</body>
+</html>
