@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /forms/
+Disallow: /responses/
+Disallow: /portal/
