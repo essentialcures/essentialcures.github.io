@@ -27,7 +27,8 @@ body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;backgroun
 .doc-header-table td{vertical-align:middle;border:none;font-family:Calibri,Arial,sans-serif;}
 .doc-header-left{width:90px;text-align:center;padding:10px 8px;}
 .doc-header-left img{max-width:100%;height:auto;max-height:60px;display:block;margin:0 auto;}
-.doc-header-middle{text-align:center;padding:10px 16px;}
+.doc-header-sep{width:2px;background:var(--deep-blue);padding:0;}
+.doc-header-middle{text-align:left;padding:10px 16px;}
 .doc-header-middle .org-name{font-size:16px;font-weight:700;color:var(--deep-blue);letter-spacing:1px;margin-bottom:2px;}
 .doc-header-middle .tagline{font-size:12px;color:var(--leaf-green);font-style:italic;font-weight:600;margin-bottom:4px;}
 .doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
@@ -77,7 +78,7 @@ footer{background:var(--white);padding:24px 40px;max-width:540px;margin:0 auto 2
 .footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
 .footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
 
-@media(max-width:700px){.main{padding:20px 12px;}.form-card{padding:24px 16px;border-radius:8px;}.doc-header-left{display:none;}.doc-header-middle{width:100%;}footer{padding:20px 12px;}}
+@media(max-width:700px){.main{padding:20px 12px;}.form-card{padding:24px 16px;border-radius:8px;}.doc-header-left{display:none;}.doc-header-sep{display:none;}.doc-header-middle{width:100%;text-align:center;}footer{padding:20px 12px;}}
 </style>
 </head>
 <body>
@@ -85,6 +86,7 @@ footer{background:var(--white);padding:24px 40px;max-width:540px;margin:0 auto 2
 <div class="doc-header">
   <table class="doc-header-table"><tr>
     <td class="doc-header-left"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></td>
+    <td class="doc-header-sep"></td>
     <td class="doc-header-middle">
       <div class="org-name">ESSENTIAL CURES INC.</div>
       <div class="tagline">Compliant Solutions. Confident Care.</div>
