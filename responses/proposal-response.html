@@ -26,8 +26,11 @@ body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;backgroun
 .doc-header-middle .org-name{font-size:16px;font-weight:700;color:var(--deep-blue);letter-spacing:1px;margin-bottom:2px;}
 .doc-header-middle .tagline{font-size:12px;color:var(--leaf-green);font-style:italic;font-weight:600;margin-bottom:4px;}
 .doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
-.doc-header-stripe1{height:4px;background:var(--deep-blue);}
-.doc-header-stripe2{height:4px;background:var(--lime);}
+/* FIX: stripes now share the same max-width + margin:0 auto as
+   .doc-header-table above, so they align with the header/form instead of
+   stretching across the full browser width. */
+.doc-header-stripe1{height:4px;background:var(--deep-blue);max-width:620px;margin:0 auto;}
+.doc-header-stripe2{height:4px;background:var(--lime);max-width:620px;margin:0 auto;}
 
 .main{flex:1;max-width:620px;margin:0 auto;width:100%;padding:48px 40px;}
 .form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:40px;}
@@ -62,12 +65,17 @@ textarea:focus{outline:none;border-color:var(--deep-blue);}
 .it-panel a{color:var(--deep-blue);font-weight:600;font-size:12px;}
 .it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;}
 
-footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
+/* FIX: footer keeps its full-width white bar, but its content now sits in
+   an inner container sharing .main's max-width + margin:0 auto, instead of
+   fixed 60px side padding on the footer element itself (which doesn't
+   track the 620px content width on a wide viewport). */
+footer{background:var(--white);padding:24px 0;margin-top:auto;}
+.footer-inner{max-width:620px;margin:0 auto;padding:0 40px;}
 .footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue) 60%,var(--cool-gray) 100%);margin-bottom:12px;}
 .footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
 .footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
 
-@media(max-width:700px){.main{padding:20px 12px;}.form-card{padding:24px 16px;border-radius:8px;}.doc-header-left{display:none;}.doc-header-middle{width:100%;}}
+@media(max-width:700px){.main{padding:20px 12px;}.form-card{padding:24px 16px;border-radius:8px;}.doc-header-left{display:none;}.doc-header-middle{width:100%;}.footer-inner{padding:0 12px;}}
 </style>
 </head>
 <body>
@@ -95,7 +103,7 @@ footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
   </tr></table></div>
 </div></main>
 
-<footer><div class="footer-line"></div><p class="footer-urls">essentialcures.com | essentialcures.ca</p><p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p></footer>
+<footer><div class="footer-inner"><div class="footer-line"></div><p class="footer-urls">essentialcures.com | essentialcures.ca</p><p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p></div></footer>
 
 <div class="it-float" id="itFloat">
   <button class="it-tab" onclick="toggleIT()">Technical Support</button>
