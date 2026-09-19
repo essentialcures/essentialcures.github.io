@@ -34,7 +34,7 @@ body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;backgroun
 .doc-header-stripe1{height:4px;background:var(--deep-blue);}
 .doc-header-stripe2{height:4px;background:var(--lime);}
 
-.main{max-width:620px;margin:0 auto;width:100%;padding:48px 40px;}
+.main{max-width:620px;margin:0 auto;width:100%;padding:48px 40px 24px 40px;}
 .form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:40px;}
 
 .status-msg{text-align:center;padding:40px 20px;font-size:14px;color:var(--cool-gray);}
@@ -68,11 +68,11 @@ textarea:focus{outline:none;border-color:var(--deep-blue);}
 .it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;}
 
 /* Footer box itself (background included) matches the header/form's actual
-   540px rendered width — margin-top:auto still does the flex "push to
-   bottom of viewport" job, margin-right/left:auto centers it horizontally
-   (auto margins on a flex item's cross axis center it, same trick already
-   relied on for .main). */
-footer{background:var(--white);padding:24px 40px;max-width:540px;margin:24px auto 24px auto;}
+   540px rendered width. Flows directly after .main's natural content
+   height (no flex-grow on .main, no margin-top:auto here) so it always
+   sits right below the card regardless of viewport height, instead of
+   being pushed to the bottom of a tall window. */
+footer{background:var(--white);padding:24px 40px;max-width:540px;margin:0 auto 24px auto;}
 .footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue) 60%,var(--cool-gray) 100%);margin-bottom:12px;}
 .footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
 .footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
@@ -228,6 +228,7 @@ function showThankYou() {
   contentEl.innerHTML = `
     <div class="status-msg">Thank you. Your response has been recorded.<br><br>You may now close this window.</div>
     <button class="close-btn" id="closeBtn">Close This Window</button>
+    <p style="text-align:center;margin-top:16px;font-size:13px;"><a href="https://essentialcures.com" style="color:var(--deep-blue);font-weight:600;text-decoration:none;">Return to essentialcures.com</a></p>
   `;
   document.getElementById('closeBtn').addEventListener('click', () => {
     window.close();
