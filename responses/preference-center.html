@@ -266,6 +266,7 @@ function showThankYou() {
   contentEl.innerHTML = `
     <div class="status-msg">Your preferences have been saved.<br><br>You may now close this window.</div>
     <button class="close-btn" id="closeBtn">Close This Window</button>
+    <p style="text-align:center;margin-top:16px;font-size:13px;"><a href="https://essentialcures.com" style="color:var(--deep-blue);font-weight:600;text-decoration:none;">Return to essentialcures.com</a></p>
   `;
   document.getElementById('closeBtn').addEventListener('click', () => {
     window.close();
