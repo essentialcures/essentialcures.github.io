@@ -26,27 +26,33 @@ header{display:none!important;}
 .doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0
 2px 8px rgba(0,0,0,0.08);}
 .doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
-.doc-header-table td{vertical-align:middle;border:1px solid
-#CCC;font-family:Calibri,Arial,sans-serif;}
-.doc-header-left{width:12%;text-align:center;padding:4px;}
-.doc-header-left img{height:80px;width:auto;display:block;margin:0
+.doc-header-table td{vertical-align:middle;border:none;font-family:Calibri,Arial,sans-serif;}
+.doc-header-left{width:150px;text-align:center;padding:14px 14px;}
+.doc-header-left img{max-width:100%;height:auto;max-height:85px;display:block;margin:0
 auto;}
-.doc-header-middle{width:76%;text-align:center;padding:10px 16px;}
+.doc-header-sep{width:1px;background:#D4DAE0;padding:0;}
+.doc-header-middle{text-align:left;padding:10px 16px;}
 .doc-header-middle
 .org-name{font-size:16px;font-weight:700;color:var(--deep-blue);letter-spacing:1px;margin-bottom:2px;}
 .doc-header-middle
 .tagline{font-size:12px;color:var(--leaf-green);font-style:italic;font-weight:600;margin-bottom:4px;}
 .doc-header-middle
 .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
-.doc-header-right{width:12%;text-align:right;padding:4px 12px 4px 4px;}
+.doc-header-right{width:150px;text-align:right;padding:10px 14px 10px 4px;}
 .doc-header-right
 .doc-id{font-size:13px;font-weight:700;color:var(--deep-blue);margin-bottom:3px;}
 .doc-header-right
 .doc-meta{font-size:11px;color:var(--cool-gray);line-height:1.8;}
 .doc-header-stripe1{height:4px;background:var(--deep-blue);}
 .doc-header-stripe2{height:4px;background:var(--lime);}
-.main{flex:1;max-width:920px;margin:0 auto;width:100%;padding:48px
-40px;}
+/* ── Shared width rule: header, form-card, and footer all lock to
+   the SAME 840px box on desktop (this form's own content width,
+   given its two-column grids) and all collapse to 100% together on
+   mobile. Same technique as the other EC forms, sized for this
+   form's wider layout. ── */
+.boxed-840{width:840px;max-width:100%;box-sizing:border-box;margin-left:auto;margin-right:auto;}
+.main{flex:1;margin:0 auto;width:100%;padding:48px
+40px 0 40px;}
 .form-card{background:var(--white);border-radius:12px;box-shadow:0 4px
 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:40px;}
 .steps{display:flex;align-items:center;margin-bottom:36px;width:100%;overflow-x:auto;}
@@ -238,12 +244,12 @@ h4{font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
 p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-bottom:10px;}
 .it-panel a{color:var(--deep-blue);font-weight:600;font-size:12px;}
 .it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;}
-footer{background:var(--white);padding:0 60px 24px;margin-top:auto;}
+footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:24px;}
 .footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue)
 60%,var(--cool-gray) 100%);margin-bottom:12px;}
 .footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
 .footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
-@media(max-width:700px){.main{padding:20px 12px;}.form-card{padding:24px 16px;border-radius:8px;}.section-block{padding:18px 14px;}.form-grid,.category-picker-grid{grid-template-columns:1fr;}.form-span-all{grid-column:auto;}.steps{margin-bottom:24px;padding-bottom:6px;}.step-divider{min-width:14px;}.same-address-wrap{align-items:flex-start;}.btn-primary,.btn-secondary,.btn-terminate{min-height:48px;}.doc-header-left,.doc-header-right{display:none;}.doc-header-middle{width:100%;}.category-add-btn{min-height:46px;}}
+@media(max-width:900px){.boxed-840{width:100%;}.main{padding:20px 12px;}.form-card{padding:24px 16px;border-radius:8px;}.section-block{padding:18px 14px;}.form-grid,.category-picker-grid{grid-template-columns:1fr;}.form-span-all{grid-column:auto;}.steps{margin-bottom:24px;padding-bottom:6px;}.step-divider{min-width:14px;}.same-address-wrap{align-items:flex-start;}.btn-primary,.btn-secondary,.btn-terminate{min-height:48px;}.doc-header-left,.doc-header-right,.doc-header-sep{display:none;}.doc-header-middle{width:100%;text-align:center;}.category-add-btn{min-height:46px;}footer{padding:20px 12px;margin-top:24px;margin-bottom:24px;}}
 </style>
 </head>
 <body>
@@ -318,18 +324,18 @@ style="background:var(--red);color:var(--white);border:none;padding:14px;border-
 Cancel and Return to Website</button><button class="btn-secondary"
 onclick="dismissTerminate()">No, Continue My
 Profile</button></div></div></div>
-<div class="doc-header"><table class="doc-header-table"><tr><td
+<div class="doc-header boxed-840"><table class="doc-header-table"><tr><td
 class="doc-header-left"><img
 src="https://essentialcures.com/assets/images/essential-cures-logo.png"
-alt="Essential Cures Inc."></td><td class="doc-header-middle"><div
+alt="Essential Cures Inc."></td><td class="doc-header-sep"></td><td class="doc-header-middle"><div
 class="org-name">ESSENTIAL CURES INC.</div><div
 class="tagline">Compliant Solutions. Confident Care.</div><div
 class="doc-title">Customer Care Profile</div></td><td
-class="doc-header-right"><div class="doc-id">EC-SAL-FRM-002</div><div
+class="doc-header-sep"></td><td class="doc-header-right"><div class="doc-id">EC-SAL-FRM-002</div><div
 class="doc-meta">Rev: R01<br>Date: August 19,
 2026</div></td></tr></table><div class="doc-header-stripe1"></div><div
 class="doc-header-stripe2"></div></div>
-<main class="main"><div class="form-card">
+<main class="main"><div class="form-card boxed-840">
 <div class="steps"><div class="step"><div class="step-num active"
 id="stepNum1">1</div><span class="step-label active"
 id="stepLbl1">Verify</span></div><div class="step-divider"></div><div
@@ -1309,7 +1315,7 @@ style="width:50%;background-color:#0070B0;padding:8px
 style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Quality
 Built In. Not Bolted On.</span></td></tr></table></div>
 </div></main>
-<footer><div class="footer-line"></div><p
+<footer class="boxed-840"><div class="footer-line"></div><p
 class="footer-urls">essentialcures.com | essentialcures.ca</p><p
 class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights
 Reserved</p></footer>
