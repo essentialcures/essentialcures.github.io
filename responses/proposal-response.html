@@ -15,15 +15,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
-
-/* ── Shared width rule: header, form-card's rendered width, and footer
-   all lock to the SAME 540px box on desktop, and all collapse to 100%
-   together on mobile (see the media query at the bottom). Keeping this
-   in one class instead of three separate max-width declarations is what
-   keeps them from drifting out of sync again. ── */
 .boxed-540{width:540px;max-width:100%;box-sizing:border-box;margin-left:auto;margin-right:auto;}
-
-/* ── Branded document header, matching every other EC form exactly ── */
 .doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
 .doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
 .doc-header-table td{vertical-align:middle;border:none;font-family:Calibri,Arial,sans-serif;}
@@ -36,13 +28,8 @@ body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;backgroun
 .doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
 .doc-header-stripe1{height:4px;background:var(--deep-blue);}
 .doc-header-stripe2{height:4px;background:var(--lime);}
-
-/* .main is just the outer scroll padding; the 540px box lives on
-   .form-card itself now via .boxed-540, so header/card/footer all
-   measure identically regardless of .main's own padding. */
 .main{margin:0 auto;width:100%;padding:48px 40px 0 40px;}
 .form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:40px;}
-
 .status-msg{text-align:center;padding:40px 20px;font-size:14px;color:var(--cool-gray);}
 .status-msg.error{color:var(--red);}
 h2{font-size:15px;color:var(--dark-navy);margin:0 0 8px;}
@@ -62,8 +49,10 @@ textarea:focus{outline:none;border-color:var(--deep-blue);}
 .submit-btn:disabled{background:#A9C79A;cursor:not-allowed;}
 .close-btn{width:100%;background:transparent;color:var(--cool-gray);border:1.5px solid #D4DAE0;border-radius:6px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px;font-family:"Inter",sans-serif;}
 .already-note{background:#FFF8E1;border-left:4px solid #D4A017;padding:12px 14px;font-size:13px;margin-bottom:16px;border-radius:0 6px 6px 0;}
-
-/* ── Technical Support tab, identical to every other EC form ── */
+/* single-option total box */
+.single-total{background:#EBF3FA;border-left:5px solid var(--deep-blue);border-radius:6px;padding:16px 20px;margin-bottom:20px;}
+.single-total .label{font-size:12px;font-weight:bold;color:var(--cool-gray);letter-spacing:0.5px;margin-bottom:4px;}
+.single-total .amount{font-size:24px;font-weight:bold;color:var(--deep-blue);}
 .it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
 .it-tab{background:var(--dark-navy);color:#fff;padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;border:none;font-family:"Inter",sans-serif;}
 .it-panel{display:none;background:#fff;border:1px solid #E8ECF0;border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
@@ -72,15 +61,10 @@ textarea:focus{outline:none;border-color:var(--deep-blue);}
 .it-panel p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-bottom:10px;}
 .it-panel a{color:var(--deep-blue);font-weight:600;font-size:12px;}
 .it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;}
-
-/* Footer: same 540px box as header/card (via .boxed-540), with an
-   explicit 48px top margin so the card→footer gap matches the
-   48px header→card gap set by .main's padding-top. */
 footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:24px;}
 .footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue) 60%,var(--cool-gray) 100%);margin-bottom:12px;}
 .footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
 .footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
-
 @media(max-width:700px){
   .boxed-540{width:100%;}
   .main{padding:20px 12px;}
@@ -133,7 +117,6 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 <script>
 function toggleIT(){document.getElementById("itPanel").classList.toggle("open");}
 
-// CONFIGURE THIS: your deployed Worker's base URL
 const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
 
 const params = new URLSearchParams(window.location.search);
@@ -169,28 +152,51 @@ async function loadProposal() {
 }
 
 function renderForm(data) {
+  // Single-option intelligence: Option B is zero, blank, or equal to Option A
+  const optBRaw = parseFloat((data.optionBTotal || '0').toString().replace(/[^0-9.]/g, '')) || 0;
+  const optARaw = parseFloat((data.optionATotal || '0').toString().replace(/[^0-9.]/g, '')) || 0;
+  const isSingleOption = (optBRaw <= 0) || (optARaw > 0 && optBRaw === optARaw) || (data.isSingleOption === true);
+
   const alreadyBlock = data.alreadyResponded
     ? `<div class="already-note">You already responded to this proposal on ${data.existingDecisionDate} with: <strong>${data.existingDecision}</strong>. Submitting again below will update your response.</div>`
     : '';
+
+  let optionsHtml;
+  if (isSingleOption) {
+    // Single option: one total box, no Option B, no "both quoted" button
+    optionsHtml = `
+      <div class="single-total">
+        <div class="label">YOUR PROPOSAL TOTAL</div>
+        <div class="amount">$${data.optionATotal} CAD</div>
+      </div>
+      <div class="extra-choices">
+        <button type="button" data-value="Option A">Confirm My Order</button>
+        <button type="button" data-value="Declined">Not proceeding</button>
+      </div>`;
+  } else {
+    // Dual option: two choice cards + both quoted + declined
+    optionsHtml = `
+      <div class="options">
+        <div class="option-choice" data-value="Option A">
+          <div class="label">OPTION A</div>
+          <div class="amount">$${data.optionATotal} CAD</div>
+        </div>
+        <div class="option-choice" data-value="Option B - Specialist">
+          <div class="label">OPTION B - SPECIALIST</div>
+          <div class="amount">$${data.optionBTotal} CAD</div>
+        </div>
+      </div>
+      <div class="extra-choices">
+        <button type="button" data-value="Both Options">I'd like both quoted</button>
+        <button type="button" data-value="Declined">Not proceeding</button>
+      </div>`;
+  }
 
   contentEl.innerHTML = `
     <h2>Your Proposal</h2>
     <p class="deal-name">${data.dealName || ''}</p>
     ${alreadyBlock}
-    <div class="options">
-      <div class="option-choice" data-value="Option A">
-        <div class="label">OPTION A</div>
-        <div class="amount">$${data.optionATotal} CAD</div>
-      </div>
-      <div class="option-choice" data-value="Option B - Specialist">
-        <div class="label">OPTION B - SPECIALIST</div>
-        <div class="amount">$${data.optionBTotal} CAD</div>
-      </div>
-    </div>
-    <div class="extra-choices">
-      <button type="button" data-value="Both Options">I'd like both quoted</button>
-      <button type="button" data-value="Declined">Not proceeding</button>
-    </div>
+    ${optionsHtml}
     <label class="remarks-label" for="remarks">Comments or questions (optional)</label>
     <textarea id="remarks" placeholder="Let us know if you have any questions or requests..."></textarea>
     <button class="submit-btn" id="submitBtn" disabled>Select an option above to continue</button>
@@ -236,16 +242,13 @@ async function submitResponse() {
   }
 }
 
-// Submit-then-close pattern, matching every other EC response page.
 function showThankYou() {
   contentEl.innerHTML = `
     <div class="status-msg">Thank you. Your response has been recorded.<br><br>You may now close this window.</div>
     <button class="close-btn" id="closeBtn">Close This Window</button>
     <p style="text-align:center;margin-top:16px;font-size:13px;"><a href="https://essentialcures.com" style="color:var(--deep-blue);font-weight:600;text-decoration:none;">Return to essentialcures.com</a></p>
   `;
-  document.getElementById('closeBtn').addEventListener('click', () => {
-    window.close();
-  });
+  document.getElementById('closeBtn').addEventListener('click', () => { window.close(); });
 }
 
 loadProposal();
