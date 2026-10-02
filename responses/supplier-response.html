@@ -15,15 +15,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
-
-/* ── Shared width rule: header, form-card, and footer all lock to the
-   SAME 540px box on desktop, and all collapse to 100% together on
-   mobile (see the media query at the bottom). Same technique as the
-   proposal-response, communication-preferences, and quote-response
-   forms. ── */
 .boxed-540{width:540px;max-width:100%;box-sizing:border-box;margin-left:auto;margin-right:auto;}
-
-/* ── Branded document header, matching every other EC form exactly ── */
 .doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
 .doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
 .doc-header-table td{vertical-align:middle;border:none;font-family:Calibri,Arial,sans-serif;}
@@ -36,36 +28,43 @@ body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;backgroun
 .doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
 .doc-header-stripe1{height:4px;background:var(--deep-blue);}
 .doc-header-stripe2{height:4px;background:var(--lime);}
-
-/* .main is just the outer scroll padding; the 540px box lives on
-   .form-card itself via .boxed-540, so header/card/footer all
-   measure identically regardless of .main's own padding. */
 .main{margin:0 auto;width:100%;padding:48px 40px 0 40px;}
 .form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:40px;}
-
 .status-msg{text-align:center;padding:40px 20px;font-size:14px;color:var(--cool-gray);}
 .status-msg.error{color:var(--red);}
 h2{font-size:15px;color:var(--dark-navy);margin:0 0 8px;}
 p.deal-name{font-size:13px;color:var(--cool-gray);margin:0 0 16px;}
 .already-note{background:#FFF8E1;border-left:4px solid #D4A017;padding:12px 14px;font-size:13px;margin-bottom:16px;border-radius:0 6px 6px 0;}
 .not-binding-note{background:#E8F5E9;border-left:4px solid var(--leaf-green);padding:12px 14px;font-size:13px;margin-bottom:20px;font-style:italic;color:#276414;border-radius:0 6px 6px 0;}
+.section-label{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:24px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
+/* Line item card */
 .line-item{border:1px solid #D4DAE0;border-radius:8px;padding:16px 18px;margin-bottom:12px;background:var(--light-bg);}
 .line-item .line-title{font-size:14px;font-weight:700;color:var(--dark-navy);margin-bottom:2px;}
-.line-item .line-meta{font-size:12px;color:var(--cool-gray);margin-bottom:12px;}
-.line-item .line-fields{display:flex;flex-wrap:wrap;gap:10px;}
-.line-item .field-group{flex:1;min-width:150px;}
-.line-item label.field-label{display:block;font-size:11px;font-weight:700;color:var(--cool-gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
-select,input[type="number"],input[type="text"]{width:100%;box-sizing:border-box;border:1.5px solid #D4DAE0;border-radius:6px;padding:10px 12px;font-family:"Inter",sans-serif;font-size:13px;background:var(--white);color:var(--slate);}
-select:focus,input:focus{outline:none;border-color:var(--deep-blue);}
-.section-label{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:24px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
+.line-item .line-meta{font-size:12px;color:var(--cool-gray);margin-bottom:14px;}
+/* Fulfilment mode buttons */
+.fulfilment-group{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.fulfilment-btn{flex:1;min-width:130px;border:2px solid #D4DAE0;border-radius:6px;padding:10px 12px;font-size:12px;font-weight:600;color:var(--cool-gray);background:var(--white);cursor:pointer;text-align:center;transition:all 0.15s;font-family:"Inter",sans-serif;}
+.fulfilment-btn:hover{border-color:var(--deep-blue);color:var(--deep-blue);}
+.fulfilment-btn.selected-instock{border-color:var(--leaf-green);background:#EBF5E8;color:#276414;}
+.fulfilment-btn.selected-backorder{border-color:#D4A017;background:#FFF8E1;color:#7D5A00;}
+.fulfilment-btn.selected-unable{border-color:var(--red);background:#FDECEC;color:var(--red);}
+/* Day fields */
+.day-fields{display:flex;gap:10px;margin-bottom:4px;}
+.day-field{flex:1;}
+.day-field label{display:block;font-size:11px;font-weight:700;color:var(--cool-gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+.day-field input{width:100%;box-sizing:border-box;border:1.5px solid #D4DAE0;border-radius:6px;padding:10px 12px;font-family:"Inter",sans-serif;font-size:13px;background:var(--white);color:var(--slate);}
+.day-field input:focus{outline:none;border-color:var(--deep-blue);}
+.day-field input:disabled{background:#F2F4F6;color:#B0B8C0;}
+.total-days-note{font-size:11px;color:var(--cool-gray);margin-top:4px;min-height:16px;}
+/* Global fields */
 label.field-label-standalone{display:block;font-size:12px;color:var(--cool-gray);margin-bottom:6px;}
-textarea{width:100%;box-sizing:border-box;border:1.5px solid #D4DAE0;border-radius:6px;padding:11px 14px;font-family:"Inter",sans-serif;font-size:14px;resize:vertical;min-height:60px;margin-bottom:16px;}
-textarea:focus{outline:none;border-color:var(--deep-blue);}
+textarea,input[type="text"]{width:100%;box-sizing:border-box;border:1.5px solid #D4DAE0;border-radius:6px;padding:11px 14px;font-family:"Inter",sans-serif;font-size:14px;resize:vertical;}
+textarea{min-height:60px;margin-bottom:16px;}
+input[type="text"]{margin-bottom:16px;}
+textarea:focus,input[type="text"]:focus{outline:none;border-color:var(--deep-blue);}
 .submit-btn{width:100%;background:var(--leaf-green);color:var(--white);border:none;border-radius:6px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:16px;font-family:"Inter",sans-serif;}
 .submit-btn:disabled{background:#A9C79A;cursor:not-allowed;}
 .close-btn{width:100%;background:transparent;color:var(--cool-gray);border:1.5px solid #D4DAE0;border-radius:6px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px;font-family:"Inter",sans-serif;}
-
-/* ── Technical Support tab, identical to every other EC form ── */
 .it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
 .it-tab{background:var(--dark-navy);color:#fff;padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;border:none;font-family:"Inter",sans-serif;}
 .it-panel{display:none;background:#fff;border:1px solid #E8ECF0;border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
@@ -74,15 +73,10 @@ textarea:focus{outline:none;border-color:var(--deep-blue);}
 .it-panel p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-bottom:10px;}
 .it-panel a{color:var(--deep-blue);font-weight:600;font-size:12px;}
 .it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;}
-
-/* Footer: same 540px box as header/card (via .boxed-540), with an
-   explicit 48px top margin so the card→footer gap matches the
-   48px header→card gap set by .main's padding-top. */
 footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:24px;}
 .footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue) 60%,var(--cool-gray) 100%);margin-bottom:12px;}
 .footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
 .footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
-
 @media(max-width:700px){
   .boxed-540{width:100%;}
   .main{padding:20px 12px;}
@@ -91,6 +85,7 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
   .doc-header-sep{display:none;}
   .doc-header-middle{width:100%;text-align:center;}
   footer{padding:20px 12px;margin-top:24px;margin-bottom:24px;}
+  .fulfilment-btn{min-width:100px;}
 }
 </style>
 </head>
@@ -135,8 +130,6 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 <script>
 function toggleIT(){document.getElementById("itPanel").classList.toggle("open");}
 
-// CONFIGURE THIS: your deployed Worker's base URL — same Worker as the
-// proposal response page, just a different route.
 const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
 
 const params = new URLSearchParams(window.location.search);
@@ -174,40 +167,45 @@ async function loadConfirmation() {
 
 function renderForm(data) {
   const alreadyBlock = data.alreadyConfirmed
-    ? `<div class="already-note">You already submitted a confirmation for this order. Your previous answers are shown below — update anything that has changed and submit again to record the update.</div>`
+    ? `<div class="already-note">You already submitted a confirmation for this order. Your previous answers are shown below — update anything that has changed and submit again.</div>`
     : '';
 
   const linesHtml = data.lines.map((line, idx) => {
-    const acc = line.existingAcceptanceStatus || '';
-    const conf = line.existingConfirmationStatus || '';
-    const leadDays = line.existingConfirmedLeadTimeDays || line.onFileLeadTimeDays || '';
+    const existingMode = line.existingFulfilmentMode || '';
+    const existingAvail = line.existingAvailabilityDays || '';
+    const existingShipping = line.existingShippingDays || line.onFileLeadTimeDays || '';
+
     return `
-      <div class="line-item" data-dli="${line.dliId}" data-rowid="${line.rowId}">
+      <div class="line-item" data-rowid="${line.rowId}" data-dliid="${line.dliId}">
         <div class="line-title">${line.productName}</div>
-        <div class="line-meta">Qty ${line.qty} &middot; Delivery: ${line.deliveryCity} &middot; Courier</div>
-        <div class="line-fields">
-          <div class="field-group">
-            <label class="field-label">Status</label>
-            <select class="acceptance-select">
-              <option value="">Select</option>
-              <option value="Accepted" ${acc === 'Accepted' ? 'selected' : ''}>Accepted</option>
-              <option value="Declined" ${acc === 'Declined' ? 'selected' : ''}>Declined</option>
-            </select>
+        <div class="line-meta">Qty ${line.qty} &middot; UOM: ${line.uom || '—'} &middot; Delivery: ${line.deliveryCity} &middot; Courier</div>
+        <div class="fulfilment-group">
+          <button type="button" class="fulfilment-btn${existingMode === 'In Stock - Ready to Ship' ? ' selected-instock' : ''}"
+            data-mode="In Stock - Ready to Ship" onclick="selectFulfilment(this, ${idx})">
+            ✓ In Stock
+          </button>
+          <button type="button" class="fulfilment-btn${existingMode === 'Backorder' ? ' selected-backorder' : ''}"
+            data-mode="Backorder" onclick="selectFulfilment(this, ${idx})">
+            ⏳ Backorder
+          </button>
+          <button type="button" class="fulfilment-btn${existingMode === 'Unable to Supply' ? ' selected-unable' : ''}"
+            data-mode="Unable to Supply" onclick="selectFulfilment(this, ${idx})">
+            ✕ Unable to Supply
+          </button>
+        </div>
+        <div class="day-fields" id="dayFields_${idx}" style="${existingMode === 'Unable to Supply' ? 'display:none' : ''}">
+          <div class="day-field" id="availGroup_${idx}" style="${existingMode === 'In Stock - Ready to Ship' || existingMode === '' ? 'display:none' : ''}">
+            <label>Availability Days</label>
+            <input type="number" min="0" step="1" class="avail-input" id="avail_${idx}"
+              value="${existingAvail}" placeholder="Days until in stock">
           </div>
-          <div class="field-group">
-            <label class="field-label">Fulfillment</label>
-            <select class="confirmation-select">
-              <option value="">Select</option>
-              <option value="Confirmed-Immediate" ${conf === 'Confirmed-Immediate' ? 'selected' : ''}>Confirmed - Immediate</option>
-              <option value="Confirmed-Backorder" ${conf === 'Confirmed-Backorder' ? 'selected' : ''}>Confirmed - Backorder</option>
-              <option value="Refused" ${conf === 'Refused' ? 'selected' : ''}>Refused</option>
-            </select>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Shipping Days (Upon Confirmed PO)</label>
-            <input type="number" min="0" step="1" class="leadtime-input" value="${leadDays}" placeholder="e.g. ${line.onFileLeadTimeDays || '5'}">
+          <div class="day-field">
+            <label>Shipping Days</label>
+            <input type="number" min="0" step="1" class="shipping-input" id="shipping_${idx}"
+              value="${existingShipping}" placeholder="Transit days">
           </div>
         </div>
+        <div class="total-days-note" id="totalNote_${idx}"></div>
       </div>
     `;
   }).join('');
@@ -221,48 +219,127 @@ function renderForm(data) {
     ${linesHtml}
     <div class="section-label">Additional Information</div>
     <label class="field-label-standalone" for="comments">Comments (optional)</label>
-    <textarea id="comments">${(lastGateData.existingComments || '')}</textarea>
+    <textarea id="comments">${lastGateData.existingComments || ''}</textarea>
     <label class="field-label-standalone" for="deliveryInstructions">Delivery Instructions or Special Arrangements (optional)</label>
-    <textarea id="deliveryInstructions">${(lastGateData.existingDeliveryInstructions || '')}</textarea>
+    <textarea id="deliveryInstructions">${lastGateData.existingDeliveryInstructions || ''}</textarea>
     <label class="field-label-standalone" for="confirmationReference">Your Reference / PO Acknowledgement Number (optional)</label>
     <input type="text" id="confirmationReference" placeholder="e.g. your internal order number">
-    <button class="submit-btn" id="submitBtn">Submit Confirmation</button>
+    <button class="submit-btn" id="submitBtn" disabled>Select a fulfilment status for every line above</button>
   `;
 
-  contentEl.querySelectorAll('.acceptance-select, .confirmation-select').forEach(el => {
-    el.addEventListener('change', updateSubmitState);
+  // Recompute totals for any pre-filled lines
+  data.lines.forEach((line, idx) => {
+    if (line.existingFulfilmentMode) updateTotalNote(idx);
   });
-  updateSubmitState();
 
-  document.getElementById('submitBtn').addEventListener('click', submitConfirmation);
+  updateSubmitState();
+}
+
+function selectFulfilment(btn, idx) {
+  const card = btn.closest('.line-item');
+  card.querySelectorAll('.fulfilment-btn').forEach(b => {
+    b.classList.remove('selected-instock','selected-backorder','selected-unable');
+  });
+  const mode = btn.getAttribute('data-mode');
+  if (mode === 'In Stock - Ready to Ship') {
+    btn.classList.add('selected-instock');
+    document.getElementById('dayFields_' + idx).style.display = '';
+    document.getElementById('availGroup_' + idx).style.display = 'none';
+    const availInput = document.getElementById('avail_' + idx);
+    if (availInput) availInput.value = '0';
+  } else if (mode === 'Backorder') {
+    btn.classList.add('selected-backorder');
+    document.getElementById('dayFields_' + idx).style.display = '';
+    document.getElementById('availGroup_' + idx).style.display = '';
+  } else if (mode === 'Unable to Supply') {
+    btn.classList.add('selected-unable');
+    document.getElementById('dayFields_' + idx).style.display = 'none';
+  }
+  updateTotalNote(idx);
+  updateSubmitState();
+}
+
+function updateTotalNote(idx) {
+  const noteEl = document.getElementById('totalNote_' + idx);
+  if (!noteEl) return;
+  const card = document.querySelector(`.line-item:nth-child(${idx + 1})`);
+  // Find selected mode
+  const selectedBtn = document.querySelector(`[data-rowid] .fulfilment-btn.selected-instock, [data-rowid] .fulfilment-btn.selected-backorder, [data-rowid] .fulfilment-btn.selected-unable`);
+
+  const availEl = document.getElementById('avail_' + idx);
+  const shippingEl = document.getElementById('shipping_' + idx);
+  if (!shippingEl) { noteEl.textContent = ''; return; }
+
+  const avail = parseInt(availEl ? availEl.value : '0') || 0;
+  const shipping = parseInt(shippingEl.value) || 0;
+  const total = avail + shipping;
+
+  const dayFields = document.getElementById('dayFields_' + idx);
+  if (dayFields && dayFields.style.display !== 'none') {
+    noteEl.textContent = total > 0 ? `Total delivery estimate: ${total} day${total !== 1 ? 's' : ''} from PO date` : '';
+  } else {
+    noteEl.textContent = '';
+  }
 }
 
 function updateSubmitState() {
   const btn = document.getElementById('submitBtn');
   if (!btn) return;
-  const lineEls = contentEl.querySelectorAll('.line-item');
-  let allComplete = true;
-  lineEls.forEach(el => {
-    const acc = el.querySelector('.acceptance-select').value;
-    const conf = el.querySelector('.confirmation-select').value;
-    if (!acc || !conf) allComplete = false;
+  const cards = contentEl.querySelectorAll('.line-item');
+  let allSelected = true;
+  cards.forEach(card => {
+    const hasSelection = card.querySelector('.selected-instock, .selected-backorder, .selected-unable');
+    if (!hasSelection) allSelected = false;
   });
-  btn.disabled = !allComplete;
-  btn.textContent = allComplete ? 'Submit Confirmation' : 'Complete every line above to continue';
+  btn.disabled = !allSelected;
+  btn.textContent = allSelected ? 'Submit Confirmation' : 'Select a fulfilment status for every line above';
 }
+
+// Wire up day field inputs for live total notes
+document.addEventListener('input', e => {
+  if (e.target.classList.contains('avail-input') || e.target.classList.contains('shipping-input')) {
+    const id = e.target.id;
+    const idx = parseInt(id.split('_')[1]);
+    if (!isNaN(idx)) updateTotalNote(idx);
+  }
+});
 
 async function submitConfirmation() {
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
   btn.textContent = 'Submitting…';
 
-  const lines = Array.from(contentEl.querySelectorAll('.line-item')).map(el => ({
-    dliId: el.getAttribute('data-dli'),
-    rowId: el.getAttribute('data-rowid'),
-    acceptanceStatus: el.querySelector('.acceptance-select').value,
-    confirmationStatus: el.querySelector('.confirmation-select').value,
-    confirmedLeadTimeDays: el.querySelector('.leadtime-input').value,
-  }));
+  const lines = Array.from(contentEl.querySelectorAll('.line-item')).map((card, idx) => {
+    const selectedBtn = card.querySelector('.selected-instock, .selected-backorder, .selected-unable');
+    const mode = selectedBtn ? selectedBtn.getAttribute('data-mode') : '';
+    const availEl = document.getElementById('avail_' + idx);
+    const shippingEl = document.getElementById('shipping_' + idx);
+    const avail = parseInt(availEl ? availEl.value : '0') || 0;
+    const shipping = parseInt(shippingEl ? shippingEl.value : '0') || 0;
+
+    // Map Fulfilment_Mode to legacy acceptance/confirmation fields for downstream functions
+    let lineAcceptanceStatus = 'Accepted';
+    let lineConfirmationStatus = 'Confirmed-Immediate';
+    if (mode === 'Backorder') {
+      lineConfirmationStatus = 'Confirmed-Backorder';
+    } else if (mode === 'Unable to Supply') {
+      lineAcceptanceStatus = 'Declined';
+      lineConfirmationStatus = 'Refused';
+    }
+
+    return {
+      rowId: card.getAttribute('data-rowid'),
+      dliId: card.getAttribute('data-dliid'),
+      fulfilmentMode: mode,
+      availabilityDays: avail,
+      shippingDays: shipping,
+      confirmedLeadTimeDays: avail + shipping,
+      // Legacy fields — kept for cm43_confirmation_response_v1 compatibility
+      acceptanceStatus: lineAcceptanceStatus,
+      confirmationStatus: lineConfirmationStatus,
+    };
+  });
+
   const comments = document.getElementById('comments').value;
   const deliveryInstructions = document.getElementById('deliveryInstructions').value;
   const confirmationReference = document.getElementById('confirmationReference').value;
@@ -285,15 +362,19 @@ async function submitConfirmation() {
   }
 }
 
+document.addEventListener('click', e => {
+  if (e.target && e.target.id === 'submitBtn' && !e.target.disabled) {
+    submitConfirmation();
+  }
+});
+
 function showThankYou() {
   contentEl.innerHTML = `
     <div class="status-msg">Thank you. Your confirmation has been recorded.<br><br>You may now close this window.</div>
     <button class="close-btn" id="closeBtn">Close This Window</button>
     <p style="text-align:center;margin-top:16px;font-size:13px;"><a href="https://essentialcures.com" style="color:var(--deep-blue);font-weight:600;text-decoration:none;">Return to essentialcures.com</a></p>
   `;
-  document.getElementById('closeBtn').addEventListener('click', () => {
-    window.close();
-  });
+  document.getElementById('closeBtn').addEventListener('click', () => { window.close(); });
 }
 
 loadConfirmation();
