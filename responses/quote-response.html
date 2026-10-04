@@ -2,195 +2,104 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Respond to Your Quote — Essential Cures</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── Base reset ── */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: Calibri, Arial, sans-serif; font-size: 13px; color: #2C3E50; line-height: 1.6; background: #F2F4F7; min-height: 100vh; }
-
-/* ── Page shell ── */
-.page-wrap { max-width: 780px; margin: 0 auto; background: #fff; box-shadow: 0 2px 24px rgba(0,0,0,0.10); }
-
-/* ── Sticky header ── */
-.site-header { position: sticky; top: 0; z-index: 200; background: #fff; border-bottom: 1px solid #E0E6ED; }
-.header-inner { display: flex; align-items: center; padding: 10px 20px; gap: 16px; }
-.header-logo { width: 60px; flex-shrink: 0; }
-.header-logo img { width: 100%; display: block; }
-.header-divider { width: 1px; background: #C5D8EA; align-self: stretch; }
-.header-text { flex: 1; }
-.header-org { font-size: 15px; font-weight: 700; color: #005090; letter-spacing: 0.5px; }
-.header-tagline { font-size: 11px; color: #4A8B2C; font-style: italic; font-weight: 600; }
-.header-doc { font-size: 12px; font-weight: 700; color: #003060; }
-.header-stripe { height: 3px; background: linear-gradient(90deg, #005090 50%, #4A8B2C 100%); }
-
-/* ── Content area ── */
-.content { padding: 24px 32px 40px; }
-
-/* ── Meta row: 4 coloured tiles ── */
-.meta-row { display: flex; gap: 8px; margin-bottom: 16px; }
-.meta-tile { flex: 1; padding: 10px 14px; }
-.meta-tile.blue { background: #EAF2FB; border-left: 3px solid #005090; }
-.meta-tile.green { background: #EAF4E3; border-left: 3px solid #4A8B2C; }
-.meta-label { font-size: 9px; font-weight: 700; color: #6B7C8C; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
-.meta-value { font-size: 13px; font-weight: 700; }
-.meta-value.blue { color: #005090; }
-.meta-value.green { color: #3A7A1E; }
-
-/* ── Option notice banner ── */
-.option-notice { border-left: 3px solid #4A8B2C; background: #EAF4E3; padding: 8px 14px; font-size: 11px; color: #1B4A1B; margin-bottom: 16px; }
-
-/* ── Address boxes ── */
-.address-row { display: flex; gap: 16px; margin-bottom: 16px; }
-.address-box { flex: 1; padding: 12px 14px; background: #F7F9FB; border-left: 3px solid #005090; }
-.address-title { font-size: 10px; font-weight: 700; color: #005090; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-.address-text { font-size: 12px; color: #2C3E50; line-height: 1.6; }
-
-/* ── Contact bar ── */
-.contact-bar { border-left: 3px solid #005090; background: #F0F4F8; padding: 7px 14px; font-size: 12px; color: #6B7C8C; margin-bottom: 6px; }
-.contact-bar strong { color: #2C3E50; }
-
-/* ── Section label ── */
-.section-label { font-size: 11px; font-weight: 700; color: #003060; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 5px; border-bottom: 2px solid #8FC23C; margin: 18px 0 10px; }
-
-/* ── Line items table ── */
-table.items-table { width: 100%; border-collapse: collapse; margin-bottom: 0; font-size: 12px; }
-table.items-table th { background: #005090; color: #fff; padding: 8px 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-table.items-table th.r { text-align: right; }
-table.items-table th.c { text-align: center; }
-table.items-table td { padding: 8px 10px; border-bottom: 1px solid #E8ECEF; color: #2C3E50; }
-table.items-table td.r { text-align: right; }
-table.items-table td.c { text-align: center; }
-table.items-table tr:nth-child(even) td { background: #F7F9FB; }
-
-/* ── Totals block ── */
-.totals-wrap { display: flex; justify-content: flex-end; margin: 16px 0; }
-table.totals-table { width: 300px; border-collapse: collapse; font-size: 12px; }
-table.totals-table td { padding: 6px 10px; border-bottom: 1px solid #E8ECEF; }
-table.totals-table .lbl { color: #6B7C8C; }
-table.totals-table .val { text-align: right; font-weight: 700; color: #2C3E50; }
-table.totals-table .grand td { background: #005090; color: #fff; font-size: 14px; font-weight: 700; padding: 10px 12px; border-bottom: none; }
-table.totals-table .grand .val { text-align: right; }
+/* ── Exact styles from ec_quote_template_final ── */
+body, html { margin: 0; padding: 0; font-family: Calibri, Arial, sans-serif; font-size: 13px; color: rgb(44, 62, 80); background: rgb(235, 238, 242); }
+table { border-collapse: collapse; }
+.main { width: 720px; table-layout: fixed; margin: 0 auto; background: rgb(255, 255, 255); }
+.meta-label { margin: 0 0 4px 0; font-size: 10px; color: rgb(107, 124, 140); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+.meta-value { margin: 0; font-size: 13px; font-weight: bold; }
+.meta-blue { color: rgb(0, 80, 144); }
+.meta-green { color: rgb(58, 122, 30); }
+.address-box { width: 48%; vertical-align: top; padding: 12px 14px; background: rgb(247, 249, 251); border-left: 4px solid rgb(0, 80, 144); }
+.address-title { font-size: 11px; font-weight: bold; color: rgb(0, 80, 144); text-transform: uppercase; letter-spacing: 1px; margin: 0 0 6px 0; }
+.address-text { font-size: 12px; color: rgb(44, 62, 80); line-height: 1.6; margin: 0; }
+.address-gap { width: 4%; }
+.items-table { width: 100%; }
+.items-header td { background-color: rgb(0, 80, 144); color: rgb(255, 255, 255); padding: 8px 10px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+.items-row td { background-color: rgb(255, 255, 255); padding: 8px 10px; font-size: 12px; border-bottom: 1px solid rgb(232, 236, 239); }
+.items-row-alt td { background-color: rgb(247, 249, 251); padding: 8px 10px; font-size: 12px; border-bottom: 1px solid rgb(232, 236, 239); }
+.col-no { width: 5%; text-align: center; }
+.col-product { width: 42%; }
+.col-qty { width: 10%; text-align: center; }
+.col-price { width: 20%; text-align: right; }
+.col-disc { width: 8%; text-align: center; }
+.col-total { width: 15%; text-align: right; }
+.totals-table { width: 300px; margin: 0 0 0 auto; }
+.totals-row td { padding: 6px 10px; font-size: 12px; border-bottom: 1px solid rgb(232, 236, 239); }
+.totals-label { color: rgb(107, 124, 140); text-align: left; }
+.totals-value { color: rgb(44, 62, 80); text-align: right; font-weight: bold; }
+.totals-grand td { padding: 10px 12px; background-color: rgb(0, 80, 144); color: rgb(255, 255, 255); font-size: 14px; font-weight: bold; }
+.totals-grand-label { text-align: left; }
+.totals-grand-value { text-align: right; }
+.tagline-green { width: 50%; background-color: rgb(74, 139, 44); padding: 10px 16px; text-align: center; }
+.tagline-blue { width: 50%; background-color: rgb(0, 80, 144); padding: 10px 16px; text-align: center; }
+.tagline-text { margin: 0; font-size: 11px; font-style: italic; font-weight: bold; color: rgb(255, 255, 255); }
+.footer-web { font-size: 11px; color: rgb(107, 124, 140); margin: 0; }
+.footer-copy { font-size: 8px; color: rgb(158, 158, 158); font-style: italic; margin: 2px 0 0 0; }
 
 /* ── Delivery block ── */
-.delivery-block { border-left: 3px solid #0070B0; background: #EBF5FB; padding: 14px 16px; margin-bottom: 16px; }
-.delivery-heading { font-size: 10px; font-weight: 700; color: #003060; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-.delivery-range { font-size: 16px; font-weight: 700; color: #005090; margin-bottom: 4px; }
-.delivery-note { font-size: 11px; color: #6B7C8C; font-style: italic; margin-bottom: 10px; }
-table.delivery-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-table.delivery-table th { background: #005090; color: #fff; padding: 6px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px; text-align: left; }
-table.delivery-table td { padding: 6px 10px; border-bottom: 1px solid #CBE3F0; color: #2C3E50; }
-table.delivery-table tr:last-child td { border-bottom: none; }
+.delivery-block { border-left: 4px solid rgb(0, 112, 176); background: rgb(235, 245, 251); padding: 12px 14px; }
+.delivery-heading { font-size: 10px; font-weight: bold; color: rgb(0, 48, 96); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 6px 0; }
+.delivery-range { font-size: 15px; font-weight: bold; color: rgb(0, 80, 144); margin: 0 0 4px 0; }
+.delivery-note { font-size: 11px; color: rgb(107, 124, 140); font-style: italic; margin: 0 0 10px 0; }
+.delivery-table { width: 100%; font-size: 12px; }
+.delivery-table th { background: rgb(0, 80, 144); color: rgb(255,255,255); padding: 6px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px; text-align: left; font-weight: bold; }
+.delivery-table td { padding: 6px 10px; border-bottom: 1px solid rgb(203, 227, 240); color: rgb(44, 62, 80); }
 
 /* ── Payment block ── */
-.payment-block { border-left: 3px solid #4A8B2C; background: #EAF4E3; padding: 14px 16px; margin-bottom: 16px; }
-.payment-heading { font-size: 10px; font-weight: 700; color: #1B4A1B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-.payment-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid #C5DEB8; }
-.payment-row:last-child { border-bottom: none; font-weight: 700; font-size: 13px; color: #1B4A1B; padding-top: 8px; margin-top: 2px; }
-.payment-lbl { color: #3A7A1E; }
-.payment-val { font-weight: 600; color: #1B4A1B; }
-
-/* ── Terms box ── */
-.terms-box { border-left: 3px solid #005090; background: #F7F9FB; padding: 12px 16px; font-size: 12px; color: #2C3E50; line-height: 1.6; white-space: pre-line; margin-bottom: 16px; }
+.payment-block { border-left: 4px solid rgb(74, 139, 44); background: rgb(234, 244, 227); padding: 12px 14px; }
+.payment-heading { font-size: 10px; font-weight: bold; color: rgb(27, 74, 27); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 8px 0; }
+.payment-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid rgb(197, 222, 184); }
+.payment-row.grand { border-bottom: none; font-weight: bold; font-size: 13px; color: rgb(27, 74, 27); padding-top: 8px; margin-top: 2px; }
+.payment-lbl { color: rgb(58, 122, 30); }
+.payment-val { font-weight: 600; color: rgb(27, 74, 27); }
 
 /* ── Decision block ── */
-.decision-row { display: flex; gap: 12px; margin: 10px 0 14px; }
-.decision-btn { flex: 1; padding: 14px; border: 2px solid #D4DAE0; border-radius: 6px; text-align: center; cursor: pointer; font-weight: 700; font-size: 14px; font-family: inherit; background: #fff; color: #2C3E50; transition: all 0.15s; }
-.decision-btn.accept:hover, .decision-btn.accept.selected { border-color: #4A8B2C; background: #EAF4E3; color: #3A7A1E; }
-.decision-btn.decline:hover, .decision-btn.decline.selected { border-color: #C0392B; background: #FDEDEC; color: #C0392B; }
-.feedback-label { display: block; font-size: 11px; color: #6B7C8C; margin-bottom: 5px; margin-top: 4px; }
-textarea { width: 100%; border: 1.5px solid #D4DAE0; border-radius: 5px; padding: 10px 12px; font-family: inherit; font-size: 13px; resize: vertical; min-height: 70px; margin-bottom: 16px; }
-textarea:focus { outline: none; border-color: #005090; }
-.submit-btn { width: 100%; background: #4A8B2C; color: #fff; border: none; border-radius: 5px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
-.submit-btn:disabled { background: #A9C79A; cursor: not-allowed; }
-
-/* ── Contact support ── */
-.support-block { border-left: 3px solid #4A8B2C; background: #EAF4E3; padding: 12px 16px; margin-top: 20px; }
-.support-block p { font-size: 12px; color: #1B4A1B; font-style: italic; line-height: 1.6; }
-.support-block a { color: #005090; font-weight: 700; }
-.support-block .org-line { font-size: 12px; font-weight: 700; color: #005090; margin-top: 6px; font-style: normal; }
-
-/* ── Tagline bar ── */
-.tagline-bar { display: flex; margin-top: 20px; }
-.tagline-green { flex: 1; background: #4A8B2C; padding: 10px 16px; text-align: center; }
-.tagline-blue { flex: 1; background: #005090; padding: 10px 16px; text-align: center; }
-.tagline-text { font-size: 11px; font-style: italic; font-weight: 700; color: #fff; font-family: Calibri, Arial, sans-serif; }
-
-/* ── Footer ── */
-.site-footer { padding: 12px 32px; border-top: 2px solid #6495B4; }
-.footer-urls { font-size: 11px; color: #6B7C8C; }
-.footer-copy { font-size: 9px; color: #B0B8C0; font-style: italic; margin-top: 2px; }
+.decision-wrap { padding: 16px; background: rgb(240, 244, 248); border-left: 4px solid rgb(0, 80, 144); }
+.decision-title { font-size: 11px; font-weight: bold; color: rgb(0, 80, 144); text-transform: uppercase; margin: 0 0 14px 0; letter-spacing: 0.5px; }
+.decision-row { display: flex; gap: 12px; margin-bottom: 14px; }
+.decision-btn { flex: 1; padding: 14px; border: 2px solid rgb(212, 218, 224); border-radius: 5px; text-align: center; cursor: pointer; font-weight: bold; font-size: 14px; font-family: Calibri, Arial, sans-serif; background: rgb(255,255,255); color: rgb(44, 62, 80); transition: all 0.15s; }
+.decision-btn.accept.selected { border-color: rgb(74, 139, 44); background: rgb(234, 244, 227); color: rgb(58, 122, 30); }
+.decision-btn.decline.selected { border-color: rgb(192, 57, 43); background: rgb(253, 237, 236); color: rgb(192, 57, 43); }
+.feedback-label { display: block; font-size: 12px; color: rgb(107, 124, 140); margin-bottom: 5px; }
+textarea { width: 100%; box-sizing: border-box; border: 1.5px solid rgb(212, 218, 224); border-radius: 4px; padding: 10px 12px; font-family: Calibri, Arial, sans-serif; font-size: 13px; resize: vertical; min-height: 70px; margin-bottom: 14px; }
+textarea:focus { outline: none; border-color: rgb(0, 80, 144); }
+.submit-btn { width: 100%; background: rgb(74, 139, 44); color: rgb(255,255,255); border: none; border-radius: 5px; padding: 14px; font-size: 15px; font-weight: bold; cursor: pointer; font-family: Calibri, Arial, sans-serif; }
+.submit-btn:disabled { background: rgb(169, 199, 154); cursor: not-allowed; }
+.close-btn { width: 100%; background: transparent; color: rgb(107, 124, 140); border: 1.5px solid rgb(212, 218, 224); border-radius: 5px; padding: 12px; font-size: 13px; cursor: pointer; margin-top: 10px; font-family: Calibri, Arial, sans-serif; }
 
 /* ── Status/loading ── */
-.status-msg { text-align: center; padding: 48px 20px; font-size: 14px; color: #6B7C8C; }
-.status-msg.error { color: #C0392B; }
+.status-msg { text-align: center; padding: 48px 20px; font-size: 14px; color: rgb(107, 124, 140); }
+.status-msg.error { color: rgb(192, 57, 43); }
+.already-note { background: rgb(255, 248, 225); border-left: 4px solid rgb(212, 160, 23); padding: 10px 14px; font-size: 12px; margin-bottom: 14px; }
 
-/* ── IT support tab ── */
+/* ── IT support ── */
 .it-float { position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 500; }
-.it-tab { background: #003060; color: #fff; padding: 10px 7px; border-radius: 0 6px 6px 0; cursor: pointer; writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); font-size: 11px; font-weight: 600; border: none; font-family: inherit; }
-.it-panel { display: none; background: #fff; border: 1px solid #E8ECF0; border-left: none; border-radius: 0 8px 8px 0; padding: 16px; width: 220px; box-shadow: 4px 0 16px rgba(0,0,0,0.1); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); }
+.it-tab { background: rgb(0, 48, 96); color: #fff; padding: 10px 7px; border-radius: 0 6px 6px 0; cursor: pointer; writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); font-size: 11px; font-weight: bold; border: none; font-family: Calibri, Arial, sans-serif; }
+.it-panel { display: none; background: #fff; border: 1px solid rgb(232, 236, 240); border-left: none; border-radius: 0 8px 8px 0; padding: 16px; width: 220px; box-shadow: 4px 0 16px rgba(0,0,0,0.10); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); }
 .it-panel.open { display: block; }
-.it-panel h4 { font-size: 13px; font-weight: 700; color: #003060; margin-bottom: 8px; }
-.it-panel p { font-size: 12px; color: #6B7C8C; line-height: 1.6; margin-bottom: 10px; }
-.it-panel a { color: #005090; font-weight: 600; font-size: 12px; }
-.it-close { float: right; background: none; border: none; cursor: pointer; color: #6B7C8C; font-size: 16px; }
+.it-panel h4 { font-size: 13px; font-weight: bold; color: rgb(0, 48, 96); margin-bottom: 8px; }
+.it-panel p { font-size: 12px; color: rgb(107, 124, 140); line-height: 1.6; margin-bottom: 10px; }
+.it-panel a { color: rgb(0, 80, 144); font-weight: bold; font-size: 12px; }
+.it-close { float: right; background: none; border: none; cursor: pointer; color: rgb(107, 124, 140); font-size: 16px; }
 
-/* ── Close btn (thank you) ── */
-.close-btn { width: 100%; background: transparent; color: #6B7C8C; border: 1.5px solid #D4DAE0; border-radius: 5px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 10px; font-family: inherit; }
-
-@media (max-width: 700px) {
-  .content { padding: 16px; }
-  .meta-row { flex-wrap: wrap; }
-  .meta-tile { flex: 1 1 45%; }
-  .address-row { flex-direction: column; }
+@media (max-width: 760px) {
+  .main { width: 100% !important; }
+  table[width="720"] { width: 100% !important; }
   .decision-row { flex-direction: column; }
-  .tagline-bar { flex-direction: column; }
-  .header-inner { padding: 10px 14px; }
-  .header-logo { width: 44px; }
 }
 </style>
 </head>
 <body>
 
-<div class="page-wrap">
+<div id="root">
+  <div class="status-msg">Loading your quote&hellip;</div>
+</div>
 
-  <!-- STICKY HEADER -->
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="header-logo"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></div>
-      <div class="header-divider"></div>
-      <div class="header-text">
-        <div class="header-org">ESSENTIAL CURES INC.</div>
-        <div class="header-tagline">Compliant Solutions. Confident Care.</div>
-        <div class="header-doc">Respond to Your Quote</div>
-      </div>
-    </div>
-    <div class="header-stripe"></div>
-  </header>
-
-  <!-- PAGE CONTENT -->
-  <div class="content">
-    <div id="content"><div class="status-msg">Loading your quote&hellip;</div></div>
-  </div>
-
-  <!-- TAGLINE BAR (always visible) -->
-  <div class="tagline-bar">
-    <div class="tagline-green"><span class="tagline-text">Compliant Solutions. Confident Care.</span></div>
-    <div class="tagline-blue"><span class="tagline-text">Quality Built In. Not Bolted On.</span></div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="site-footer">
-    <div class="footer-urls">essentialcures.com &nbsp;|&nbsp; essentialcures.ca</div>
-    <div class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved &nbsp;|&nbsp; BN 768552978 &nbsp;|&nbsp; Winnipeg, MB</div>
-  </footer>
-
-</div><!-- end page-wrap -->
-
-<!-- IT Support tab -->
 <div class="it-float" id="itFloat">
   <button class="it-tab" onclick="toggleIT()">Technical Support</button>
   <div class="it-panel" id="itPanel">
@@ -208,7 +117,6 @@ const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
 const params = new URLSearchParams(window.location.search);
 const token = params.get('token');
 const quoteId = params.get('id');
-const contentEl = document.getElementById('content');
 let selectedDecision = null;
 
 function fmt(n) {
@@ -217,8 +125,14 @@ function fmt(n) {
   return num.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+function fmtQty(n) {
+  const num = parseInt(n, 10);
+  if (isNaN(num)) return n;
+  return num.toLocaleString('en-CA');
+}
+
 function showError(msg) {
-  contentEl.innerHTML = `<div class="status-msg error">${msg}</div>`;
+  document.getElementById('root').innerHTML = `<div class="status-msg error">${msg}</div>`;
 }
 
 async function loadQuote() {
@@ -231,150 +145,328 @@ async function loadQuote() {
     });
     const data = await resp.json();
     if (data.status !== 'allow') { showError(data.message || data.reason || 'This quote link is invalid or has expired.'); return; }
-    renderQuote(data);
-  } catch (err) {
+    renderPage(data);
+  } catch(e) {
     showError('Something went wrong loading your quote. Please try again or contact us directly.');
   }
 }
 
-function renderDeliveryBlock(ds) {
+function buildDeliveryBlock(ds) {
   if (!ds) return '';
-  const partialNote = ds.partialShipment
-    ? 'Products ship from different suppliers — partial shipments expected. Full order completes within the maximum lead time shown above.'
+  const note = ds.partialShipment
+    ? 'Products ship from different suppliers — partial shipments expected. Full order completes within the maximum lead time.'
     : 'All products ship together from a single fulfilment.';
   const rows = (ds.productLines || []).map(pl =>
     `<tr><td>${pl.product}</td><td>${pl.leadDays && pl.leadDays !== '0' ? pl.leadDays + ' days' : 'Pending confirmation'}</td><td>${pl.fulfilmentMode || '—'}</td></tr>`
   ).join('');
   return `
-    <div class="section-label">Estimated Delivery</div>
-    <div class="delivery-block">
-      <div class="delivery-heading">Delivery Timeline</div>
-      <div class="delivery-range">${ds.leadTimeRange}</div>
-      <div class="delivery-note">${partialNote}</div>
-      ${rows ? `<table class="delivery-table"><thead><tr><th>Product</th><th>Lead Time</th><th>Fulfilment</th></tr></thead><tbody>${rows}</tbody></table>` : ''}
-    </div>`;
+  <tr><td style="padding: 16px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="width:4px;background:rgb(0,112,176);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:12px 14px">
+        <div class="delivery-block">
+          <p class="delivery-heading">Estimated Delivery</p>
+          <p class="delivery-range">${ds.leadTimeRange}</p>
+          <p class="delivery-note">${note}</p>
+          ${rows ? `<table class="delivery-table"><thead><tr><th>Product</th><th>Lead Time</th><th>Fulfilment</th></tr></thead><tbody>${rows}</tbody></table>` : ''}
+        </div>
+      </td>
+    </tr></tbody></table>
+  </td></tr>`;
 }
 
-function renderPaymentBlock(ds, grandTotal) {
+function buildPaymentBlock(ds, grandTotal) {
   if (!ds) return '';
   const advance = parseFloat(ds.totalAdvanceAmount || '0');
-  const total = parseFloat(grandTotal || '0');
   if (advance <= 0) return '';
+  const total = parseFloat(grandTotal || '0');
   const balance = Math.max(0, total - advance);
   return `
-    <div class="section-label">Payment Plan</div>
-    <div class="payment-block">
-      <div class="payment-heading">Progressive Payment Structure</div>
-      <div class="payment-row"><span class="payment-lbl">Advance Payment — on order confirmation</span><span class="payment-val">CAD $${fmt(advance)}</span></div>
-      <div class="payment-row"><span class="payment-lbl">Balance on delivery</span><span class="payment-val">CAD $${fmt(balance)}</span></div>
-      <div class="payment-row"><span class="payment-lbl">Order Total</span><span class="payment-val">CAD $${fmt(total)}</span></div>
-    </div>`;
+  <tr><td style="padding: 10px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:12px 14px">
+        <div class="payment-block">
+          <p class="payment-heading">Payment Plan — Progressive Payment Structure</p>
+          <div class="payment-row"><span class="payment-lbl">Advance Payment (on order confirmation)</span><span class="payment-val">CAD $${fmt(advance)}</span></div>
+          <div class="payment-row"><span class="payment-lbl">Balance on delivery</span><span class="payment-val">CAD $${fmt(balance)}</span></div>
+          <div class="payment-row grand"><span class="payment-lbl">Order Total</span><span class="payment-val">CAD $${fmt(total)}</span></div>
+        </div>
+      </td>
+    </tr></tbody></table>
+  </td></tr>`;
 }
 
-function renderQuote(data) {
+function renderPage(data) {
+  const isDualOption = data.siblingQuote != null;
+  const quoteOption = data.quoteOption || '';
+  const hasDiscount = data.discountAmount && parseFloat(data.discountAmount) > 0;
+  const hasSavings = data.savingsAmount && parseFloat(data.savingsAmount) > 0;
+
   const alreadyBlock = data.alreadyResponded
-    ? `<div style="background:#FFF8E1;border-left:3px solid #D4A017;padding:10px 14px;font-size:13px;margin-bottom:14px;">You already responded on <strong>${data.existingDecisionDate}</strong> with: <strong>${data.existingDecision}</strong>. Submitting again will update your response.</div>`
+    ? `<div class="already-note">You already responded to this quote on <strong>${data.existingDecisionDate}</strong> with: <strong>${data.existingDecision}</strong>. Submitting again will update your response.</div>`
     : '';
 
-  const optionLabel = data.quoteOption || 'Option A';
-  const optionClass = optionLabel.includes('B') ? 'green' : 'blue';
-
-  const rows = (data.lineItems || []).map((line, i) => {
-    if (line.isDivider) return `<tr><td colspan="4" style="background:#F7F9FB;font-weight:700;border-top:2px solid #8FC23C;">${line.description}</td></tr>`;
-    const bg = i % 2 === 0 ? '' : 'style="background:#F7F9FB;"';
-    return `<tr ${bg}>
-      <td>${line.description}</td>
-      <td class="c">${Number(line.quantity).toLocaleString('en-CA')}</td>
-      <td class="r">CAD $${fmt(line.unitPrice)}</td>
-      <td class="r">CAD $${fmt(line.lineTotal)}</td>
+  // Line items rows
+  const lineRows = (data.lineItems || []).map((li, i) => {
+    if (li.isDivider) return `<tr><td colspan="5" style="background:rgb(247,249,251);font-weight:bold;border-top:2px solid rgb(143,194,60);padding:8px 10px;">${li.description}</td></tr>`;
+    const cls = i % 2 === 0 ? 'items-row' : 'items-row-alt';
+    return `<tr class="${cls}">
+      <td class="col-no">${i + 1}</td>
+      <td class="col-product"><strong>${li.description}</strong></td>
+      <td class="col-qty">${fmtQty(li.quantity)}</td>
+      <td class="col-price">CAD $${fmt(li.unitPrice)}</td>
+      <td class="col-total">CAD $${fmt(li.lineTotal)}</td>
     </tr>`;
   }).join('');
 
-  const deliveryHtml = renderDeliveryBlock(data.deliverySummary);
-  const paymentHtml = renderPaymentBlock(data.deliverySummary, data.grandTotal);
+  // Option notice — dual option only
+  const optionNotice = isDualOption ? `
+  <tr><td style="padding:10px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:8px 14px;background:rgb(234,244,227);font-size:11px;color:rgb(27,74,27)">
+        <strong>Note:</strong> Essential Cures provides two pricing options for your consideration.
+        <strong>Option A</strong> consolidates supply through a single source for simplified ordering.
+        <strong>Option B (Recommended)</strong> uses specialist suppliers per product category for optimised pricing and availability.
+        This document presents <strong>${quoteOption}</strong>.
+      </td>
+    </tr></tbody></table>
+  </td></tr>` : '';
 
-  contentEl.innerHTML = `
-    ${alreadyBlock}
+  // Savings row — only when savings data populated
+  const savingsRow = (hasSavings) ? `
+  <tr><td style="padding:10px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:8px 14px;background:rgb(234,244,227);font-size:12px;color:rgb(27,74,27)">
+        <strong style="color:rgb(58,122,30)">Estimated Savings:</strong>
+        &nbsp;CAD $${fmt(data.savingsAmount)}&nbsp;(${data.savingsPct || ''}% vs list price)
+      </td>
+    </tr></tbody></table>
+  </td></tr>` : '';
 
-    <!-- META ROW -->
-    <div class="meta-row">
-      <div class="meta-tile blue">
-        <div class="meta-label">Quote Number</div>
-        <div class="meta-value blue">${data.quoteNumber}</div>
-      </div>
-      <div class="meta-tile ${optionClass}">
-        <div class="meta-label">Quote Option</div>
-        <div class="meta-value ${optionClass}">${optionLabel}</div>
-      </div>
-      <div class="meta-tile blue">
-        <div class="meta-label">Valid Until</div>
-        <div class="meta-value blue">${data.validTill}</div>
-      </div>
-      <div class="meta-tile green">
-        <div class="meta-label">Enquiry Reference</div>
-        <div class="meta-value green" style="font-size:11px;">${data.dealName || ''}</div>
-      </div>
-    </div>
+  // Delivery and payment blocks
+  const deliveryBlock = buildDeliveryBlock(data.deliverySummary);
+  const paymentBlock = buildPaymentBlock(data.deliverySummary, data.grandTotal);
 
-    <!-- OPTION NOTICE -->
-    <div class="option-notice">
-      <strong>Note:</strong> Essential Cures provides two pricing options for your consideration.
-      <strong>Option A</strong> consolidates supply through a single source for simplified ordering.
-      <strong>Option B (Recommended)</strong> uses specialist suppliers per product category for optimised pricing and availability.
-      This document presents <strong>${optionLabel}</strong>.
-    </div>
+  // Terms
+  const termsBlock = data.termsText ? `
+  <tr><td style="padding:16px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:12px 16px;background:rgb(247,249,251)">
+        <p style="font-size:11px;font-weight:bold;color:rgb(0,80,144);text-transform:uppercase;margin:0 0 6px 0">Terms and Conditions</p>
+        <p style="font-size:12px;color:rgb(44,62,80);line-height:1.6;margin:0">${data.termsText}</p>
+      </td>
+    </tr></tbody></table>
+  </td></tr>` : '';
 
-    <!-- CONTACT BAR -->
-    <div class="contact-bar" style="margin-bottom:16px;">
-      Prepared by: <strong>${data.preparedBy || 'Essential Cures Inc.'}</strong>
-      &nbsp;&nbsp;|&nbsp;&nbsp; Questions? <a href="mailto:sales@essentialcures.com" style="color:#005090;font-weight:700;">sales@essentialcures.com</a>
-    </div>
+  document.getElementById('root').innerHTML = `
 
-    <!-- LINE ITEMS -->
-    <div class="section-label">Itemized Quote</div>
-    <table class="items-table">
-      <thead><tr>
-        <th>Product / Service Description</th>
-        <th class="c">Qty</th>
-        <th class="r">Unit Price (CAD)</th>
-        <th class="r">Total (CAD)</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-
-    <!-- TOTALS -->
-    <div class="totals-wrap">
-      <table class="totals-table">
-        <tr><td class="lbl">Sub Total</td><td class="val">CAD $${fmt(data.grandTotal)}</td></tr>
-        <tr><td class="lbl">Discount</td><td class="val">CAD $0.00</td></tr>
-        <tr><td class="lbl">Adjustment</td><td class="val">CAD $0.00</td></tr>
-        <tr class="grand"><td>GRAND TOTAL (CAD)</td><td class="val">CAD $${fmt(data.grandTotal)}</td></tr>
+<!-- ═══════════════ HEADER ═══════════════ -->
+<table width="720" cellpadding="0" cellspacing="0" style="table-layout:fixed;margin:0 auto;background:#fff;">
+  <tbody>
+  <tr>
+    <td style="width:90px;padding:8px 10px;text-align:center;vertical-align:middle;border-right:1px solid rgb(197,216,234)">
+      <img src="https://essentialcures.com/assets/images/essential-cures-logo.png" width="65" style="display:block;margin:0 auto">
+    </td>
+    <td style="width:510px;padding:8px 16px;text-align:center;vertical-align:middle;border-right:1px solid rgb(197,216,234)">
+      <p style="margin:0;font-size:17px;font-weight:bold;color:rgb(0,80,144);letter-spacing:1px">ESSENTIAL CURES INC.</p>
+      <p style="margin:4px 0;font-size:11px;font-style:italic;color:rgb(74,139,44)">Compliant Solutions. Confident Care.</p>
+      <p style="margin:6px 0 0 0;font-size:12px;font-weight:bold;color:rgb(0,80,144);letter-spacing:1px">QUOTATION &nbsp;|&nbsp; ${data.accountName || 'Essential Cures'}</p>
+    </td>
+    <td style="width:120px;padding:8px 2px 8px 4px;vertical-align:middle">
+      <table width="110" cellpadding="0" cellspacing="0" style="table-layout:fixed;margin:0 0 0 auto">
+        <tbody>
+        <tr><td style="width:28px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">No:</td><td style="width:82px;font-size:7px;font-weight:bold;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${data.quoteNumber}</td></tr>
+        <tr><td style="width:28px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">Rev:</td><td style="width:82px;font-size:7px;color:rgb(44,62,80);text-align:right;padding-bottom:3px">01</td></tr>
+        <tr><td style="width:28px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">Ref:</td><td style="width:82px;font-size:7px;color:rgb(44,62,80);text-align:right;padding-bottom:3px;word-break:break-all">${data.enquiryRef || ''}</td></tr>
+        <tr><td style="width:28px;font-size:7px;color:rgb(107,124,140)">Valid:</td><td style="width:82px;font-size:7px;color:rgb(44,62,80);text-align:right">${data.validTill}</td></tr>
+        </tbody>
       </table>
-    </div>
+    </td>
+  </tr>
+  <tr><td colspan="3" style="height:2px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td></tr>
+  <tr><td colspan="3" style="height:1px;background:rgb(255,255,255);font-size:0;line-height:0">&nbsp;</td></tr>
+  <tr><td colspan="3" style="height:2px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td></tr>
+  </tbody>
+</table>
 
-    ${deliveryHtml}
-    ${paymentHtml}
+<!-- ═══════════════ BODY ═══════════════ -->
+<table class="main" cellpadding="0" cellspacing="0">
+  <tbody>
 
-    ${data.termsText ? `<div class="section-label">Terms and Conditions</div><div class="terms-box">${data.termsText}</div>` : ''}
+  <!-- Already responded notice -->
+  ${data.alreadyResponded ? `<tr><td style="padding:12px 0 0 0">${alreadyBlock}</td></tr>` : ''}
 
-    <!-- DECISION -->
-    <div class="section-label">Your Decision</div>
-    <div class="decision-row">
-      <button class="decision-btn accept" data-value="Accepted">Accept This Quote</button>
-      <button class="decision-btn decline" data-value="Rejected">Decline This Quote</button>
-    </div>
-    <div id="feedbackWrap" style="display:none;">
-      <label class="feedback-label" for="feedback">What could we have done better? (optional)</label>
-      <textarea id="feedback" placeholder="e.g. pricing, delivery time, product selection..."></textarea>
-    </div>
-    <button class="submit-btn" id="submitBtn" disabled>Select a decision above to continue</button>
+  <!-- META ROW: Quote Number | Quote Option | Valid Until | Enquiry Ref -->
+  <tr><td style="padding:16px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed"><tbody><tr>
+      <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:12px 16px;background:rgb(234,242,251);vertical-align:middle">
+        <p class="meta-label">Quote Number</p>
+        <p class="meta-value meta-blue">${data.quoteNumber}</p>
+      </td>
+      <td style="width:16px">&nbsp;</td>
+      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:12px 16px;background:rgb(234,244,227);vertical-align:middle">
+        <p class="meta-label">Quote Option</p>
+        <p class="meta-value meta-green">${quoteOption}</p>
+      </td>
+      <td style="width:16px">&nbsp;</td>
+      <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:12px 16px;background:rgb(234,242,251);vertical-align:middle">
+        <p class="meta-label">Valid Until</p>
+        <p class="meta-value meta-blue">${data.validTill}</p>
+      </td>
+      <td style="width:16px">&nbsp;</td>
+      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:12px 16px;background:rgb(234,244,227);vertical-align:middle">
+        <p class="meta-label">Enquiry Reference</p>
+        <p class="meta-value meta-green" style="font-size:11px">${data.enquiryRef || ''}</p>
+      </td>
+    </tr></tbody></table>
+  </td></tr>
 
-    <!-- SUPPORT -->
-    <div class="support-block">
-      <p>Thank you for considering Essential Cures as your trusted partner. Should you have any questions or require revisions to this quotation, please contact your Essential Cures representative or email <a href="mailto:sales@essentialcures.com">sales@essentialcures.com</a>. We look forward to supporting your organization.</p>
-      <p class="org-line">Essential Cures Inc. &nbsp;|&nbsp; essentialcures.com &nbsp;|&nbsp; essentialcures.ca</p>
-    </div>
-  `;
+  ${optionNotice}
+
+  <!-- ADDRESS ROW -->
+  <tr><td style="padding:16px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td class="address-box">
+        <p class="address-title">Bill To</p>
+        <p class="address-text">
+          <strong>${data.accountName || ''}</strong><br>
+          ${data.billingStreet || ''}<br>
+          ${data.billingCity || ''}, ${data.billingState || ''}<br>
+          ${data.billingCountry || ''} &nbsp;${data.billingZip || ''}
+        </p>
+      </td>
+      <td class="address-gap"></td>
+      <td class="address-box">
+        <p class="address-title">Ship To</p>
+        <p class="address-text">
+          ${data.shippingStreet || ''}<br>
+          ${data.shippingCity || ''}, ${data.shippingState || ''}<br>
+          ${data.shippingCountry || ''} &nbsp;${data.shippingZip || ''}
+        </p>
+      </td>
+    </tr></tbody></table>
+  </td></tr>
+
+  <!-- CONTACT BAR -->
+  <tr><td style="padding:10px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:8px 14px;background:rgb(240,244,248);font-size:12px;color:rgb(107,124,140)">
+        Contact: <strong style="color:rgb(44,62,80)">${data.contactName || ''}</strong>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        Lead Source: <strong style="color:rgb(44,62,80)">${data.leadSource || ''}</strong>
+      </td>
+    </tr></tbody></table>
+  </td></tr>
+
+  <!-- LINE ITEMS -->
+  <tr><td style="padding:16px 0 0 0">
+    <table class="items-table" cellpadding="0" cellspacing="0">
+      <thead>
+      <tr class="items-header">
+        <td class="col-no">#</td>
+        <td class="col-product">Product / Service Description</td>
+        <td class="col-qty">Qty</td>
+        <td class="col-price">Unit Price (CAD)</td>
+        <td class="col-total">Total (CAD)</td>
+      </tr>
+      </thead>
+      <tbody>${lineRows}</tbody>
+    </table>
+  </td></tr>
+
+  <!-- TOTALS -->
+  <tr><td style="padding:16px 0 0 0">
+    <table class="totals-table" cellpadding="0" cellspacing="0">
+      <tbody>
+      <tr class="totals-row"><td class="totals-label">Sub Total</td><td class="totals-value">CAD $${fmt(data.grandTotal)}</td></tr>
+      ${hasDiscount ? `<tr class="totals-row"><td class="totals-label">Discount</td><td class="totals-value">CAD $${fmt(data.discountAmount)}</td></tr>` : ''}
+      <tr class="totals-row"><td class="totals-label">Adjustment</td><td class="totals-value">CAD $0.00</td></tr>
+      <tr class="totals-grand"><td class="totals-grand-label">GRAND TOTAL (CAD)</td><td class="totals-grand-value">CAD $${fmt(data.grandTotal)}</td></tr>
+      </tbody>
+    </table>
+  </td></tr>
+
+  ${savingsRow}
+  ${deliveryBlock}
+  ${paymentBlock}
+  ${termsBlock}
+
+  <!-- DECISION BLOCK — replaces Acceptance -->
+  <tr><td style="padding:16px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:16px;background:rgb(240,244,248)">
+        <p style="font-size:11px;font-weight:bold;color:rgb(0,80,144);text-transform:uppercase;margin:0 0 14px 0;letter-spacing:0.5px">Your Response</p>
+        <div class="decision-row">
+          <button class="decision-btn accept" data-value="Accepted">Accept This Quote</button>
+          <button class="decision-btn decline" data-value="Rejected">Decline This Quote</button>
+        </div>
+        <div id="feedbackWrap" style="display:none">
+          <label class="feedback-label" for="feedback">What could we have done better? (optional)</label>
+          <textarea id="feedback" placeholder="e.g. pricing, delivery time, product selection..."></textarea>
+        </div>
+        <button class="submit-btn" id="submitBtn" disabled>Select a decision above to continue</button>
+      </td>
+    </tr></tbody></table>
+  </td></tr>
+
+  <!-- CONTACT AND SUPPORT -->
+  <tr><td style="padding:16px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:12px 16px;background:rgb(234,244,227)">
+        <p style="font-size:11px;font-weight:bold;color:rgb(58,122,30);margin:0 0 6px 0;text-transform:uppercase">Contact and Support</p>
+        <p style="font-size:12px;color:rgb(27,74,27);line-height:1.6;margin:0;font-style:italic">Thank you for considering Essential Cures as your trusted partner. Should you have any questions or require revisions to this quotation, please contact your Essential Cures representative or email <a href="mailto:sales@essentialcures.com" style="color:rgb(0,80,144);font-style:italic;font-weight:bold">sales@essentialcures.com</a>. We look forward to supporting your organization.</p>
+        <p style="margin:8px 0 0 0;font-size:12px;font-weight:bold;color:rgb(0,80,144)">Essential Cures Inc. &nbsp;|&nbsp; essentialcures.com &nbsp;|&nbsp; essentialcures.ca</p>
+      </td>
+    </tr></tbody></table>
+  </td></tr>
+
+  <!-- TAGLINE BAR -->
+  <tr><td style="padding:16px 0 16px 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td class="tagline-green"><p class="tagline-text">Compliant Solutions. Confident Care.</p></td>
+      <td class="tagline-blue"><p class="tagline-text">Quality Built In. Not Bolted On.</p></td>
+    </tr></tbody></table>
+  </td></tr>
+
+  </tbody>
+</table>
+
+<!-- FOOTER -->
+<table width="720" cellpadding="0" cellspacing="0" style="table-layout:fixed;margin:0 auto;background:#fff">
+  <tbody>
+    <tr><td colspan="2" style="background:rgb(100,149,180);height:2px;font-size:0;line-height:0">&nbsp;</td></tr>
+    <tr>
+      <td style="vertical-align:bottom;padding-top:4px">
+        <p class="footer-web">essentialcures.com &nbsp;|&nbsp; essentialcures.ca</p>
+        <p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved &nbsp;|&nbsp; BN 768552978 &nbsp;|&nbsp; Winnipeg, MB</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
 
   document.querySelectorAll('.decision-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -397,25 +489,21 @@ async function submitResponse() {
   const feedback = (document.getElementById('feedback') || {}).value || '';
   try {
     const resp = await fetch(`${WORKER_BASE}/api/quote/submit`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ quoteId, token, decision: selectedDecision, feedback }),
     });
     const data = await resp.json();
-    if (data.status !== 'success') throw new Error(data.message || 'Failed to submit your response.');
-    showThankYou();
-  } catch (err) {
+    if (data.status !== 'success') throw new Error(data.message || 'Failed to submit.');
+    document.getElementById('root').innerHTML = `
+      <table class="main" cellpadding="0" cellspacing="0"><tbody><tr><td>
+        <div class="status-msg">Thank you. Your response has been recorded.<br><br>You may now close this window.</div>
+        <button class="close-btn" onclick="window.close()">Close This Window</button>
+        <p style="text-align:center;margin-top:14px;font-size:12px"><a href="https://essentialcures.com" style="color:rgb(0,80,144);font-weight:bold;text-decoration:none">Return to essentialcures.com</a></p>
+      </td></tr></tbody></table>`;
+  } catch(e) {
     btn.disabled = false; btn.textContent = 'Submit My Response';
-    alert(err.message || 'Something went wrong. Please try again.');
+    alert(e.message || 'Something went wrong. Please try again.');
   }
-}
-
-function showThankYou() {
-  contentEl.innerHTML = `
-    <div class="status-msg">Thank you. Your response has been recorded.<br><br>You may now close this window.</div>
-    <button class="close-btn" onclick="window.close()">Close This Window</button>
-    <p style="text-align:center;margin-top:14px;font-size:12px;"><a href="https://essentialcures.com" style="color:#005090;font-weight:700;text-decoration:none;">Return to essentialcures.com</a></p>
-  `;
 }
 
 loadQuote();
