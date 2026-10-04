@@ -8,140 +8,203 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --deep-blue:#005090;--med-blue:#0070B0;--dark-navy:#003060;
-  --leaf-green:#4A8B2C;--lime:#8FC23C;--slate:#2C3E50;
-  --cool-gray:#6B7C8C;--light-bg:#F7F9FB;--white:#FFFFFF;--red:#C0392B;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
-.boxed-540{width:680px;max-width:100%;box-sizing:border-box;margin-left:auto;margin-right:auto;}
-.doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
-.doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
-.doc-header-table td{vertical-align:middle;border:none;font-family:Calibri,Arial,sans-serif;}
-.doc-header-left{width:150px;text-align:center;padding:14px 14px;}
-.doc-header-left img{max-width:100%;height:auto;max-height:85px;display:block;margin:0 auto;}
-.doc-header-sep{width:1px;background:#D4DAE0;padding:0;}
-.doc-header-middle{text-align:left;padding:10px 16px;}
-.doc-header-middle .org-name{font-size:16px;font-weight:700;color:var(--deep-blue);letter-spacing:1px;margin-bottom:2px;}
-.doc-header-middle .tagline{font-size:12px;color:var(--leaf-green);font-style:italic;font-weight:600;margin-bottom:4px;}
-.doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
-.doc-header-stripe1{height:4px;background:var(--deep-blue);}
-.doc-header-stripe2{height:4px;background:var(--lime);}
-.main{margin:0 auto;width:100%;padding:48px 40px 0 40px;}
-.form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:40px;}
-.status-msg{text-align:center;padding:40px 20px;font-size:14px;color:var(--cool-gray);}
-.status-msg.error{color:var(--red);}
-h2{font-size:15px;color:var(--dark-navy);margin:0 0 8px;}
-p.deal-name{font-size:13px;color:var(--cool-gray);margin:0 0 16px;}
-.already-note{background:#FFF8E1;border-left:4px solid #D4A017;padding:12px 14px;font-size:13px;margin-bottom:16px;border-radius:0 6px 6px 0;}
-.summary-bar{display:flex;justify-content:space-between;border:1px solid #D4DAE0;border-radius:8px;padding:14px 18px;margin-bottom:20px;background:var(--light-bg);}
-.summary-bar .item .label{font-size:10px;color:var(--cool-gray);text-transform:uppercase;letter-spacing:0.5px;}
-.summary-bar .item .value{font-size:15px;font-weight:700;color:var(--dark-navy);margin-top:2px;}
-.section-label{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:20px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
-table.quote-table{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px;}
-table.quote-table th{background:var(--dark-navy);color:#fff;text-align:left;padding:8px 12px;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;}
-table.quote-table th.num{text-align:right;}
-table.quote-table td{padding:8px 12px;border-bottom:1px solid #F0F2F4;color:var(--slate);}
-table.quote-table td.num{text-align:right;}
-table.quote-table tr.divider-row td{background:var(--light-bg);font-weight:700;color:var(--dark-navy);border-top:2px solid var(--lime);border-bottom:1px solid #D4DAE0;}
+/* ── Base reset ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Calibri, Arial, sans-serif; font-size: 13px; color: #2C3E50; line-height: 1.6; background: #F2F4F7; min-height: 100vh; }
 
-/* Delivery summary block */
-.delivery-block{background:#EBF5FB;border-left:4px solid var(--med-blue);border-radius:0 8px 8px 0;padding:16px 18px;margin-bottom:20px;}
-.delivery-block .delivery-title{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
-.delivery-range{font-size:15px;font-weight:700;color:var(--deep-blue);margin-bottom:6px;}
-.delivery-partial{font-size:12px;color:var(--cool-gray);margin-bottom:12px;font-style:italic;}
-table.delivery-table{width:100%;border-collapse:collapse;font-size:12px;}
-table.delivery-table th{background:var(--deep-blue);color:#fff;padding:6px 10px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.3px;}
-table.delivery-table td{padding:6px 10px;border-bottom:1px solid #D4E8F5;color:var(--slate);}
+/* ── Page shell ── */
+.page-wrap { max-width: 780px; margin: 0 auto; background: #fff; box-shadow: 0 2px 24px rgba(0,0,0,0.10); }
 
-/* Payment plan block */
-.payment-block{background:#F0F7EC;border-left:4px solid var(--leaf-green);border-radius:0 8px 8px 0;padding:16px 18px;margin-bottom:20px;}
-.payment-block .payment-title{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;}
-.payment-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #D5EAC8;}
-.payment-row:last-child{border-bottom:none;font-weight:700;color:var(--dark-navy);}
-.payment-label{color:var(--cool-gray);}
-.payment-value{font-weight:600;color:var(--dark-navy);}
+/* ── Sticky header ── */
+.site-header { position: sticky; top: 0; z-index: 200; background: #fff; border-bottom: 1px solid #E0E6ED; }
+.header-inner { display: flex; align-items: center; padding: 10px 20px; gap: 16px; }
+.header-logo { width: 60px; flex-shrink: 0; }
+.header-logo img { width: 100%; display: block; }
+.header-divider { width: 1px; background: #C5D8EA; align-self: stretch; }
+.header-text { flex: 1; }
+.header-org { font-size: 15px; font-weight: 700; color: #005090; letter-spacing: 0.5px; }
+.header-tagline { font-size: 11px; color: #4A8B2C; font-style: italic; font-weight: 600; }
+.header-doc { font-size: 12px; font-weight: 700; color: #003060; }
+.header-stripe { height: 3px; background: linear-gradient(90deg, #005090 50%, #4A8B2C 100%); }
 
-.terms-box{background:var(--light-bg);border-left:4px solid var(--cool-gray);border-radius:0 6px 6px 0;padding:14px 18px;font-size:12px;color:var(--slate);white-space:pre-line;margin-bottom:24px;}
-.decision-row{display:flex;gap:12px;margin-bottom:16px;}
-.decision-choice{flex:1;border:2px solid #D4DAE0;border-radius:8px;padding:16px;text-align:center;cursor:pointer;font-weight:700;font-size:14px;transition:border-color 0.15s;}
-.decision-choice.accept.selected{border-color:var(--leaf-green);background:#EBF5E8;color:var(--leaf-green);}
-.decision-choice.reject.selected{border-color:var(--red);background:#FDEDEC;color:var(--red);}
-label.remarks-label{display:block;font-size:12px;color:var(--cool-gray);margin-bottom:6px;}
-textarea{width:100%;box-sizing:border-box;border:1.5px solid #D4DAE0;border-radius:6px;padding:11px 14px;font-family:"Inter",sans-serif;font-size:14px;resize:vertical;min-height:80px;margin-bottom:20px;}
-textarea:focus{outline:none;border-color:var(--deep-blue);}
-.submit-btn{width:100%;background:var(--leaf-green);color:var(--white);border:none;border-radius:6px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;font-family:"Inter",sans-serif;}
-.submit-btn:disabled{background:#A9C79A;cursor:not-allowed;}
-.close-btn{width:100%;background:transparent;color:var(--cool-gray);border:1.5px solid #D4DAE0;border-radius:6px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px;font-family:"Inter",sans-serif;}
-.it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
-.it-tab{background:var(--dark-navy);color:#fff;padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;border:none;font-family:"Inter",sans-serif;}
-.it-panel{display:none;background:#fff;border:1px solid #E8ECF0;border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
-.it-panel.open{display:block;}
-.it-panel h4{font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
-.it-panel p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-bottom:10px;}
-.it-panel a{color:var(--deep-blue);font-weight:600;font-size:12px;}
-.it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;}
-footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:24px;}
-.footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue) 60%,var(--cool-gray) 100%);margin-bottom:12px;}
-.footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
-.footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
-@media(max-width:700px){
-  .boxed-540{width:100%;}
-  .main{padding:20px 12px;}
-  .form-card{padding:24px 16px;border-radius:8px;}
-  .doc-header-left{display:none;}
-  .doc-header-sep{display:none;}
-  .doc-header-middle{width:100%;text-align:center;}
-  footer{padding:20px 12px;margin-top:24px;margin-bottom:24px;}
-  .summary-bar{flex-direction:column;gap:10px;}
-  .decision-row{flex-direction:column;}
+/* ── Content area ── */
+.content { padding: 24px 32px 40px; }
+
+/* ── Meta row: 4 coloured tiles ── */
+.meta-row { display: flex; gap: 8px; margin-bottom: 16px; }
+.meta-tile { flex: 1; padding: 10px 14px; }
+.meta-tile.blue { background: #EAF2FB; border-left: 3px solid #005090; }
+.meta-tile.green { background: #EAF4E3; border-left: 3px solid #4A8B2C; }
+.meta-label { font-size: 9px; font-weight: 700; color: #6B7C8C; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+.meta-value { font-size: 13px; font-weight: 700; }
+.meta-value.blue { color: #005090; }
+.meta-value.green { color: #3A7A1E; }
+
+/* ── Option notice banner ── */
+.option-notice { border-left: 3px solid #4A8B2C; background: #EAF4E3; padding: 8px 14px; font-size: 11px; color: #1B4A1B; margin-bottom: 16px; }
+
+/* ── Address boxes ── */
+.address-row { display: flex; gap: 16px; margin-bottom: 16px; }
+.address-box { flex: 1; padding: 12px 14px; background: #F7F9FB; border-left: 3px solid #005090; }
+.address-title { font-size: 10px; font-weight: 700; color: #005090; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+.address-text { font-size: 12px; color: #2C3E50; line-height: 1.6; }
+
+/* ── Contact bar ── */
+.contact-bar { border-left: 3px solid #005090; background: #F0F4F8; padding: 7px 14px; font-size: 12px; color: #6B7C8C; margin-bottom: 6px; }
+.contact-bar strong { color: #2C3E50; }
+
+/* ── Section label ── */
+.section-label { font-size: 11px; font-weight: 700; color: #003060; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 5px; border-bottom: 2px solid #8FC23C; margin: 18px 0 10px; }
+
+/* ── Line items table ── */
+table.items-table { width: 100%; border-collapse: collapse; margin-bottom: 0; font-size: 12px; }
+table.items-table th { background: #005090; color: #fff; padding: 8px 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+table.items-table th.r { text-align: right; }
+table.items-table th.c { text-align: center; }
+table.items-table td { padding: 8px 10px; border-bottom: 1px solid #E8ECEF; color: #2C3E50; }
+table.items-table td.r { text-align: right; }
+table.items-table td.c { text-align: center; }
+table.items-table tr:nth-child(even) td { background: #F7F9FB; }
+
+/* ── Totals block ── */
+.totals-wrap { display: flex; justify-content: flex-end; margin: 16px 0; }
+table.totals-table { width: 300px; border-collapse: collapse; font-size: 12px; }
+table.totals-table td { padding: 6px 10px; border-bottom: 1px solid #E8ECEF; }
+table.totals-table .lbl { color: #6B7C8C; }
+table.totals-table .val { text-align: right; font-weight: 700; color: #2C3E50; }
+table.totals-table .grand td { background: #005090; color: #fff; font-size: 14px; font-weight: 700; padding: 10px 12px; border-bottom: none; }
+table.totals-table .grand .val { text-align: right; }
+
+/* ── Delivery block ── */
+.delivery-block { border-left: 3px solid #0070B0; background: #EBF5FB; padding: 14px 16px; margin-bottom: 16px; }
+.delivery-heading { font-size: 10px; font-weight: 700; color: #003060; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.delivery-range { font-size: 16px; font-weight: 700; color: #005090; margin-bottom: 4px; }
+.delivery-note { font-size: 11px; color: #6B7C8C; font-style: italic; margin-bottom: 10px; }
+table.delivery-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.delivery-table th { background: #005090; color: #fff; padding: 6px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px; text-align: left; }
+table.delivery-table td { padding: 6px 10px; border-bottom: 1px solid #CBE3F0; color: #2C3E50; }
+table.delivery-table tr:last-child td { border-bottom: none; }
+
+/* ── Payment block ── */
+.payment-block { border-left: 3px solid #4A8B2C; background: #EAF4E3; padding: 14px 16px; margin-bottom: 16px; }
+.payment-heading { font-size: 10px; font-weight: 700; color: #1B4A1B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.payment-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid #C5DEB8; }
+.payment-row:last-child { border-bottom: none; font-weight: 700; font-size: 13px; color: #1B4A1B; padding-top: 8px; margin-top: 2px; }
+.payment-lbl { color: #3A7A1E; }
+.payment-val { font-weight: 600; color: #1B4A1B; }
+
+/* ── Terms box ── */
+.terms-box { border-left: 3px solid #005090; background: #F7F9FB; padding: 12px 16px; font-size: 12px; color: #2C3E50; line-height: 1.6; white-space: pre-line; margin-bottom: 16px; }
+
+/* ── Decision block ── */
+.decision-row { display: flex; gap: 12px; margin: 10px 0 14px; }
+.decision-btn { flex: 1; padding: 14px; border: 2px solid #D4DAE0; border-radius: 6px; text-align: center; cursor: pointer; font-weight: 700; font-size: 14px; font-family: inherit; background: #fff; color: #2C3E50; transition: all 0.15s; }
+.decision-btn.accept:hover, .decision-btn.accept.selected { border-color: #4A8B2C; background: #EAF4E3; color: #3A7A1E; }
+.decision-btn.decline:hover, .decision-btn.decline.selected { border-color: #C0392B; background: #FDEDEC; color: #C0392B; }
+.feedback-label { display: block; font-size: 11px; color: #6B7C8C; margin-bottom: 5px; margin-top: 4px; }
+textarea { width: 100%; border: 1.5px solid #D4DAE0; border-radius: 5px; padding: 10px 12px; font-family: inherit; font-size: 13px; resize: vertical; min-height: 70px; margin-bottom: 16px; }
+textarea:focus { outline: none; border-color: #005090; }
+.submit-btn { width: 100%; background: #4A8B2C; color: #fff; border: none; border-radius: 5px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.submit-btn:disabled { background: #A9C79A; cursor: not-allowed; }
+
+/* ── Contact support ── */
+.support-block { border-left: 3px solid #4A8B2C; background: #EAF4E3; padding: 12px 16px; margin-top: 20px; }
+.support-block p { font-size: 12px; color: #1B4A1B; font-style: italic; line-height: 1.6; }
+.support-block a { color: #005090; font-weight: 700; }
+.support-block .org-line { font-size: 12px; font-weight: 700; color: #005090; margin-top: 6px; font-style: normal; }
+
+/* ── Tagline bar ── */
+.tagline-bar { display: flex; margin-top: 20px; }
+.tagline-green { flex: 1; background: #4A8B2C; padding: 10px 16px; text-align: center; }
+.tagline-blue { flex: 1; background: #005090; padding: 10px 16px; text-align: center; }
+.tagline-text { font-size: 11px; font-style: italic; font-weight: 700; color: #fff; font-family: Calibri, Arial, sans-serif; }
+
+/* ── Footer ── */
+.site-footer { padding: 12px 32px; border-top: 2px solid #6495B4; }
+.footer-urls { font-size: 11px; color: #6B7C8C; }
+.footer-copy { font-size: 9px; color: #B0B8C0; font-style: italic; margin-top: 2px; }
+
+/* ── Status/loading ── */
+.status-msg { text-align: center; padding: 48px 20px; font-size: 14px; color: #6B7C8C; }
+.status-msg.error { color: #C0392B; }
+
+/* ── IT support tab ── */
+.it-float { position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 500; }
+.it-tab { background: #003060; color: #fff; padding: 10px 7px; border-radius: 0 6px 6px 0; cursor: pointer; writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); font-size: 11px; font-weight: 600; border: none; font-family: inherit; }
+.it-panel { display: none; background: #fff; border: 1px solid #E8ECF0; border-left: none; border-radius: 0 8px 8px 0; padding: 16px; width: 220px; box-shadow: 4px 0 16px rgba(0,0,0,0.1); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); }
+.it-panel.open { display: block; }
+.it-panel h4 { font-size: 13px; font-weight: 700; color: #003060; margin-bottom: 8px; }
+.it-panel p { font-size: 12px; color: #6B7C8C; line-height: 1.6; margin-bottom: 10px; }
+.it-panel a { color: #005090; font-weight: 600; font-size: 12px; }
+.it-close { float: right; background: none; border: none; cursor: pointer; color: #6B7C8C; font-size: 16px; }
+
+/* ── Close btn (thank you) ── */
+.close-btn { width: 100%; background: transparent; color: #6B7C8C; border: 1.5px solid #D4DAE0; border-radius: 5px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 10px; font-family: inherit; }
+
+@media (max-width: 700px) {
+  .content { padding: 16px; }
+  .meta-row { flex-wrap: wrap; }
+  .meta-tile { flex: 1 1 45%; }
+  .address-row { flex-direction: column; }
+  .decision-row { flex-direction: column; }
+  .tagline-bar { flex-direction: column; }
+  .header-inner { padding: 10px 14px; }
+  .header-logo { width: 44px; }
 }
 </style>
 </head>
 <body>
 
-<div class="doc-header boxed-540">
-  <table class="doc-header-table"><tr>
-    <td class="doc-header-left"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></td>
-    <td class="doc-header-sep"></td>
-    <td class="doc-header-middle">
-      <div class="org-name">ESSENTIAL CURES INC.</div>
-      <div class="tagline">Compliant Solutions. Confident Care.</div>
-      <div class="doc-title">Respond to Your Quote</div>
-    </td>
-  </tr></table>
-  <div class="doc-header-stripe1"></div>
-  <div class="doc-header-stripe2"></div>
-</div>
+<div class="page-wrap">
 
-<main class="main"><div class="form-card boxed-540">
-  <div id="content">
-    <div class="status-msg">Loading your quote&hellip;</div>
+  <!-- STICKY HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-logo"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></div>
+      <div class="header-divider"></div>
+      <div class="header-text">
+        <div class="header-org">ESSENTIAL CURES INC.</div>
+        <div class="header-tagline">Compliant Solutions. Confident Care.</div>
+        <div class="header-doc">Respond to Your Quote</div>
+      </div>
+    </div>
+    <div class="header-stripe"></div>
+  </header>
+
+  <!-- PAGE CONTENT -->
+  <div class="content">
+    <div id="content"><div class="status-msg">Loading your quote&hellip;</div></div>
   </div>
-  <div style="margin-top:24px;"><table style="width:100%;border-collapse:collapse;"><tr>
-    <td style="width:50%;background-color:#4A8B2C;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span></td>
-    <td style="width:50%;background-color:#0070B0;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Quality Built In. Not Bolted On.</span></td>
-  </tr></table></div>
-</div></main>
 
-<footer class="boxed-540"><div class="footer-line"></div><p class="footer-urls">essentialcures.com | essentialcures.ca</p><p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p></footer>
+  <!-- TAGLINE BAR (always visible) -->
+  <div class="tagline-bar">
+    <div class="tagline-green"><span class="tagline-text">Compliant Solutions. Confident Care.</span></div>
+    <div class="tagline-blue"><span class="tagline-text">Quality Built In. Not Bolted On.</span></div>
+  </div>
 
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-urls">essentialcures.com &nbsp;|&nbsp; essentialcures.ca</div>
+    <div class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved &nbsp;|&nbsp; BN 768552978 &nbsp;|&nbsp; Winnipeg, MB</div>
+  </footer>
+
+</div><!-- end page-wrap -->
+
+<!-- IT Support tab -->
 <div class="it-float" id="itFloat">
   <button class="it-tab" onclick="toggleIT()">Technical Support</button>
   <div class="it-panel" id="itPanel">
     <button class="it-close" onclick="toggleIT()">&#x2715;</button>
     <h4>Technical Issues?</h4>
-    <p>Having trouble with the form? Email our EC-IT Support team with a description of the problem and we will get back to you promptly.</p>
+    <p>Having trouble? Email our IT support team and we will respond promptly.</p>
     <a href="mailto:itsupport@essentialcures.com">Email IT Support</a>
   </div>
 </div>
 
 <script>
-function toggleIT(){document.getElementById("itPanel").classList.toggle("open");}
+function toggleIT(){ document.getElementById('itPanel').classList.toggle('open'); }
 
 const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
-
 const params = new URLSearchParams(window.location.search);
 const token = params.get('token');
 const quoteId = params.get('id');
@@ -159,10 +222,7 @@ function showError(msg) {
 }
 
 async function loadQuote() {
-  if (!token || !quoteId) {
-    showError('This link is missing a required parameter. Please use the link from your quote email.');
-    return;
-  }
+  if (!token || !quoteId) { showError('This link is missing a required parameter. Please use the link from your quote email.'); return; }
   try {
     const resp = await fetch(`${WORKER_BASE}/api/quote/gate`, {
       method: 'POST',
@@ -170,10 +230,7 @@ async function loadQuote() {
       body: JSON.stringify({ quoteId, token }),
     });
     const data = await resp.json();
-    if (data.status !== 'allow') {
-      showError(data.message || data.reason || 'This quote link is invalid or has expired.');
-      return;
-    }
+    if (data.status !== 'allow') { showError(data.message || data.reason || 'This quote link is invalid or has expired.'); return; }
     renderQuote(data);
   } catch (err) {
     showError('Something went wrong loading your quote. Please try again or contact us directly.');
@@ -182,31 +239,19 @@ async function loadQuote() {
 
 function renderDeliveryBlock(ds) {
   if (!ds) return '';
-
   const partialNote = ds.partialShipment
-    ? `<div class="delivery-partial">Products ship from different suppliers — partial shipments expected. Full order completes within the maximum lead time shown above.</div>`
-    : `<div class="delivery-partial">All products ship together from a single fulfilment.</div>`;
-
-  const productRows = (ds.productLines || []).map(pl => `
-    <tr>
-      <td>${pl.product}</td>
-      <td>${pl.leadDays && pl.leadDays !== '0' ? pl.leadDays + ' days' : 'Pending confirmation'}</td>
-      <td>${pl.fulfilmentMode || '—'}</td>
-    </tr>`).join('');
-
-  const productTable = productRows ? `
-    <table class="delivery-table" style="margin-top:10px;">
-      <thead><tr><th>Product</th><th>Lead Time</th><th>Fulfilment</th></tr></thead>
-      <tbody>${productRows}</tbody>
-    </table>` : '';
-
+    ? 'Products ship from different suppliers — partial shipments expected. Full order completes within the maximum lead time shown above.'
+    : 'All products ship together from a single fulfilment.';
+  const rows = (ds.productLines || []).map(pl =>
+    `<tr><td>${pl.product}</td><td>${pl.leadDays && pl.leadDays !== '0' ? pl.leadDays + ' days' : 'Pending confirmation'}</td><td>${pl.fulfilmentMode || '—'}</td></tr>`
+  ).join('');
   return `
     <div class="section-label">Estimated Delivery</div>
     <div class="delivery-block">
-      <div class="delivery-title">Delivery Timeline</div>
+      <div class="delivery-heading">Delivery Timeline</div>
       <div class="delivery-range">${ds.leadTimeRange}</div>
-      ${partialNote}
-      ${productTable}
+      <div class="delivery-note">${partialNote}</div>
+      ${rows ? `<table class="delivery-table"><thead><tr><th>Product</th><th>Lead Time</th><th>Fulfilment</th></tr></thead><tbody>${rows}</tbody></table>` : ''}
     </div>`;
 }
 
@@ -214,44 +259,34 @@ function renderPaymentBlock(ds, grandTotal) {
   if (!ds) return '';
   const advance = parseFloat(ds.totalAdvanceAmount || '0');
   const total = parseFloat(grandTotal || '0');
-  if (advance <= 0 && !ds.supplierPaymentTerms) return '';
-
-  const balance = total - advance;
-  const terms = ds.supplierPaymentTerms || 'Net 30';
-
+  if (advance <= 0) return '';
+  const balance = Math.max(0, total - advance);
   return `
     <div class="section-label">Payment Plan</div>
     <div class="payment-block">
-      <div class="payment-title">Progressive Payment Structure</div>
-      <div class="payment-row">
-        <span class="payment-label">Advance Payment (on order confirmation)</span>
-        <span class="payment-value">CAD $${fmt(advance)}</span>
-      </div>
-      <div class="payment-row">
-        <span class="payment-label">Balance on delivery (${terms})</span>
-        <span class="payment-value">CAD $${fmt(balance > 0 ? balance : 0)}</span>
-      </div>
-      <div class="payment-row">
-        <span class="payment-label">Order Total</span>
-        <span class="payment-value">CAD $${fmt(total)}</span>
-      </div>
+      <div class="payment-heading">Progressive Payment Structure</div>
+      <div class="payment-row"><span class="payment-lbl">Advance Payment — on order confirmation</span><span class="payment-val">CAD $${fmt(advance)}</span></div>
+      <div class="payment-row"><span class="payment-lbl">Balance on delivery</span><span class="payment-val">CAD $${fmt(balance)}</span></div>
+      <div class="payment-row"><span class="payment-lbl">Order Total</span><span class="payment-val">CAD $${fmt(total)}</span></div>
     </div>`;
 }
 
 function renderQuote(data) {
   const alreadyBlock = data.alreadyResponded
-    ? `<div class="already-note">You already responded to this quote on ${data.existingDecisionDate} with: <strong>${data.existingDecision}</strong>. Submitting again below will update your response.</div>`
+    ? `<div style="background:#FFF8E1;border-left:3px solid #D4A017;padding:10px 14px;font-size:13px;margin-bottom:14px;">You already responded on <strong>${data.existingDecisionDate}</strong> with: <strong>${data.existingDecision}</strong>. Submitting again will update your response.</div>`
     : '';
 
-  const rowsHtml = (data.lineItems || []).map(line => {
-    if (line.isDivider) {
-      return `<tr class="divider-row"><td colspan="4">${line.description}</td></tr>`;
-    }
-    return `<tr>
+  const optionLabel = data.quoteOption || 'Option A';
+  const optionClass = optionLabel.includes('B') ? 'green' : 'blue';
+
+  const rows = (data.lineItems || []).map((line, i) => {
+    if (line.isDivider) return `<tr><td colspan="4" style="background:#F7F9FB;font-weight:700;border-top:2px solid #8FC23C;">${line.description}</td></tr>`;
+    const bg = i % 2 === 0 ? '' : 'style="background:#F7F9FB;"';
+    return `<tr ${bg}>
       <td>${line.description}</td>
-      <td class="num">${Number(line.quantity).toLocaleString('en-CA')}</td>
-      <td class="num">CAD $${fmt(line.unitPrice)}</td>
-      <td class="num">CAD $${fmt(line.lineTotal)}</td>
+      <td class="c">${Number(line.quantity).toLocaleString('en-CA')}</td>
+      <td class="r">CAD $${fmt(line.unitPrice)}</td>
+      <td class="r">CAD $${fmt(line.lineTotal)}</td>
     </tr>`;
   }).join('');
 
@@ -259,62 +294,107 @@ function renderQuote(data) {
   const paymentHtml = renderPaymentBlock(data.deliverySummary, data.grandTotal);
 
   contentEl.innerHTML = `
-    <h2>Your Quote</h2>
-    <p class="deal-name">${data.dealName || ''}</p>
     ${alreadyBlock}
-    <div class="summary-bar">
-      <div class="item"><div class="label">Quote Number</div><div class="value">${data.quoteNumber}</div></div>
-      <div class="item"><div class="label">Grand Total</div><div class="value">CAD $${fmt(data.grandTotal)}</div></div>
-      <div class="item"><div class="label">Valid Until</div><div class="value">${data.validTill}</div></div>
+
+    <!-- META ROW -->
+    <div class="meta-row">
+      <div class="meta-tile blue">
+        <div class="meta-label">Quote Number</div>
+        <div class="meta-value blue">${data.quoteNumber}</div>
+      </div>
+      <div class="meta-tile ${optionClass}">
+        <div class="meta-label">Quote Option</div>
+        <div class="meta-value ${optionClass}">${optionLabel}</div>
+      </div>
+      <div class="meta-tile blue">
+        <div class="meta-label">Valid Until</div>
+        <div class="meta-value blue">${data.validTill}</div>
+      </div>
+      <div class="meta-tile green">
+        <div class="meta-label">Enquiry Reference</div>
+        <div class="meta-value green" style="font-size:11px;">${data.dealName || ''}</div>
+      </div>
     </div>
+
+    <!-- OPTION NOTICE -->
+    <div class="option-notice">
+      <strong>Note:</strong> Essential Cures provides two pricing options for your consideration.
+      <strong>Option A</strong> consolidates supply through a single source for simplified ordering.
+      <strong>Option B (Recommended)</strong> uses specialist suppliers per product category for optimised pricing and availability.
+      This document presents <strong>${optionLabel}</strong>.
+    </div>
+
+    <!-- CONTACT BAR -->
+    <div class="contact-bar" style="margin-bottom:16px;">
+      Prepared by: <strong>${data.preparedBy || 'Essential Cures Inc.'}</strong>
+      &nbsp;&nbsp;|&nbsp;&nbsp; Questions? <a href="mailto:sales@essentialcures.com" style="color:#005090;font-weight:700;">sales@essentialcures.com</a>
+    </div>
+
+    <!-- LINE ITEMS -->
     <div class="section-label">Itemized Quote</div>
-    <table class="quote-table">
+    <table class="items-table">
       <thead><tr>
-        <th>Description</th>
-        <th class="num">Qty</th>
-        <th class="num">Unit Price (CAD)</th>
-        <th class="num">Total (CAD)</th>
+        <th>Product / Service Description</th>
+        <th class="c">Qty</th>
+        <th class="r">Unit Price (CAD)</th>
+        <th class="r">Total (CAD)</th>
       </tr></thead>
-      <tbody>${rowsHtml}</tbody>
+      <tbody>${rows}</tbody>
     </table>
+
+    <!-- TOTALS -->
+    <div class="totals-wrap">
+      <table class="totals-table">
+        <tr><td class="lbl">Sub Total</td><td class="val">CAD $${fmt(data.grandTotal)}</td></tr>
+        <tr><td class="lbl">Discount</td><td class="val">CAD $0.00</td></tr>
+        <tr><td class="lbl">Adjustment</td><td class="val">CAD $0.00</td></tr>
+        <tr class="grand"><td>GRAND TOTAL (CAD)</td><td class="val">CAD $${fmt(data.grandTotal)}</td></tr>
+      </table>
+    </div>
+
     ${deliveryHtml}
     ${paymentHtml}
+
     ${data.termsText ? `<div class="section-label">Terms and Conditions</div><div class="terms-box">${data.termsText}</div>` : ''}
+
+    <!-- DECISION -->
     <div class="section-label">Your Decision</div>
     <div class="decision-row">
-      <div class="decision-choice accept" data-value="Accepted">Accept This Quote</div>
-      <div class="decision-choice reject" data-value="Rejected">Decline This Quote</div>
+      <button class="decision-btn accept" data-value="Accepted">Accept This Quote</button>
+      <button class="decision-btn decline" data-value="Rejected">Decline This Quote</button>
     </div>
     <div id="feedbackWrap" style="display:none;">
-      <label class="remarks-label" for="feedback">What could we have done better? (optional)</label>
+      <label class="feedback-label" for="feedback">What could we have done better? (optional)</label>
       <textarea id="feedback" placeholder="e.g. pricing, delivery time, product selection..."></textarea>
     </div>
     <button class="submit-btn" id="submitBtn" disabled>Select a decision above to continue</button>
+
+    <!-- SUPPORT -->
+    <div class="support-block">
+      <p>Thank you for considering Essential Cures as your trusted partner. Should you have any questions or require revisions to this quotation, please contact your Essential Cures representative or email <a href="mailto:sales@essentialcures.com">sales@essentialcures.com</a>. We look forward to supporting your organization.</p>
+      <p class="org-line">Essential Cures Inc. &nbsp;|&nbsp; essentialcures.com &nbsp;|&nbsp; essentialcures.ca</p>
+    </div>
   `;
 
-  const choiceEls = contentEl.querySelectorAll('.decision-choice');
-  choiceEls.forEach(el => {
-    el.addEventListener('click', () => {
-      choiceEls.forEach(e => e.classList.remove('selected'));
-      el.classList.add('selected');
-      selectedDecision = el.getAttribute('data-value');
+  document.querySelectorAll('.decision-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.decision-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedDecision = btn.dataset.value;
       document.getElementById('feedbackWrap').style.display = selectedDecision === 'Rejected' ? 'block' : 'none';
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = false;
-      btn.textContent = 'Submit My Response';
+      const sub = document.getElementById('submitBtn');
+      sub.disabled = false;
+      sub.textContent = 'Submit My Response';
     });
   });
-
   document.getElementById('submitBtn').addEventListener('click', submitResponse);
 }
 
 async function submitResponse() {
   if (!selectedDecision) return;
   const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = 'Submitting\u2026';
-  const feedbackEl = document.getElementById('feedback');
-  const feedback = feedbackEl ? feedbackEl.value : '';
+  btn.disabled = true; btn.textContent = 'Submitting\u2026';
+  const feedback = (document.getElementById('feedback') || {}).value || '';
   try {
     const resp = await fetch(`${WORKER_BASE}/api/quote/submit`, {
       method: 'POST',
@@ -322,11 +402,10 @@ async function submitResponse() {
       body: JSON.stringify({ quoteId, token, decision: selectedDecision, feedback }),
     });
     const data = await resp.json();
-    if (data.status !== 'success') throw new Error(data.message || data.reason || 'Failed to submit your response.');
+    if (data.status !== 'success') throw new Error(data.message || 'Failed to submit your response.');
     showThankYou();
   } catch (err) {
-    btn.disabled = false;
-    btn.textContent = 'Submit My Response';
+    btn.disabled = false; btn.textContent = 'Submit My Response';
     alert(err.message || 'Something went wrong. Please try again.');
   }
 }
@@ -334,10 +413,9 @@ async function submitResponse() {
 function showThankYou() {
   contentEl.innerHTML = `
     <div class="status-msg">Thank you. Your response has been recorded.<br><br>You may now close this window.</div>
-    <button class="close-btn" id="closeBtn">Close This Window</button>
-    <p style="text-align:center;margin-top:16px;font-size:13px;"><a href="https://essentialcures.com" style="color:var(--deep-blue);font-weight:600;text-decoration:none;">Return to essentialcures.com</a></p>
+    <button class="close-btn" onclick="window.close()">Close This Window</button>
+    <p style="text-align:center;margin-top:14px;font-size:12px;"><a href="https://essentialcures.com" style="color:#005090;font-weight:700;text-decoration:none;">Return to essentialcures.com</a></p>
   `;
-  document.getElementById('closeBtn').addEventListener('click', () => window.close());
 }
 
 loadQuote();
