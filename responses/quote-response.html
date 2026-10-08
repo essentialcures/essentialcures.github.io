@@ -397,7 +397,6 @@ function renderPage(data) {
       <tbody>
       <tr class="totals-row"><td class="totals-label">Sub Total</td><td class="totals-value">CAD $${fmt(data.grandTotal)}</td></tr>
       ${hasDiscount ? `<tr class="totals-row"><td class="totals-label">Discount</td><td class="totals-value">CAD $${fmt(data.discountAmount)}</td></tr>` : ''}
-      <tr class="totals-row"><td class="totals-label">Adjustment</td><td class="totals-value">CAD $0.00</td></tr>
       <tr class="totals-grand"><td class="totals-grand-label">GRAND TOTAL (CAD)</td><td class="totals-grand-value">CAD $${fmt(data.grandTotal)}</td></tr>
       </tbody>
     </table>
@@ -457,7 +456,7 @@ function renderPage(data) {
   <tbody>
     <tr><td colspan="2" style="background:rgb(100,149,180);height:2px;font-size:0;line-height:0">&nbsp;</td></tr>
     <tr>
-      <td style="vertical-align:bottom;padding-top:4px">
+      <td style="vertical-align:bottom;padding:4px 16px 8px 16px">
         <p class="footer-web">essentialcures.com &nbsp;|&nbsp; essentialcures.ca</p>
         <p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p>
       </td>
