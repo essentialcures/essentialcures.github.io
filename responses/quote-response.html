@@ -23,11 +23,10 @@ table { border-collapse: collapse; box-sizing: border-box; } *, *::before, *::af
 .items-row td { background-color: rgb(255, 255, 255); padding: 8px 10px; font-size: 12px; border-bottom: 1px solid rgb(232, 236, 239); }
 .items-row-alt td { background-color: rgb(247, 249, 251); padding: 8px 10px; font-size: 12px; border-bottom: 1px solid rgb(232, 236, 239); }
 .col-no { width: 5%; text-align: center; }
-.col-product { width: 32%; }
+.col-product { width: 42%; }
 .col-qty { width: 10%; text-align: center; }
 .col-price { width: 20%; text-align: right; }
 .col-disc { width: 8%; text-align: center; }
-.col-brand { width: 15%; font-style: italic; color: rgb(107, 124, 140); }
 .col-total { width: 15%; text-align: right; }
 .totals-table { width: 300px; margin: 0 0 0 auto; }
 .totals-row td { padding: 6px 10px; font-size: 12px; border-bottom: 1px solid rgb(232, 236, 239); }
@@ -218,7 +217,6 @@ function renderPage(data) {
     return `<tr class="${cls}">
       <td class="col-no">${i + 1}</td>
       <td class="col-product"><strong>${li.description}</strong></td>
-      <td class="col-brand">${li.preferredBrands || ''}</td>
       <td class="col-qty">${fmtQty(li.quantity)}</td>
       <td class="col-price">CAD $${fmt(li.unitPrice)}</td>
       <td class="col-total">CAD $${fmt(li.lineTotal)}</td>
@@ -226,19 +224,7 @@ function renderPage(data) {
   }).join('');
 
   // Option notice — dual option only
-  const optionNotice = isDualOption ? `
-  <tr><td style="padding:10px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:8px 14px;background:rgb(234,244,227);font-size:11px;color:rgb(27,74,27)">
-        <strong>Note:</strong> Essential Cures provides two pricing options for your consideration.
-        <strong>Option A</strong> consolidates supply through a single source for simplified ordering.
-        <strong>Option B (Recommended)</strong> uses specialist suppliers per product category for optimised pricing and availability.
-        This document presents <strong>${quoteOption}</strong>.
-      </td>
-    </tr></tbody></table>
-  </td></tr>` : '';
+  const optionNotice = '';
 
   // Savings row — only when savings data populated
   const savingsRow = (hasSavings) ? `
@@ -265,7 +251,7 @@ function renderPage(data) {
       <td style="width:8px">&nbsp;</td>
       <td style="padding:12px 16px;background:rgb(247,249,251)">
         <p style="font-size:11px;font-weight:bold;color:rgb(0,80,144);text-transform:uppercase;margin:0 0 6px 0">Terms and Conditions</p>
-        <p style="font-size:10px;color:rgb(44,62,80);line-height:1.6;margin:0;font-style:italic">${data.termsText}</p>
+        <p style="font-size:9px;color:rgb(44,62,80);line-height:1.6;margin:0;font-style:italic">${data.termsText}</p>
       </td>
     </tr></tbody></table>
   </td></tr>` : '';
@@ -281,15 +267,15 @@ function renderPage(data) {
     </td>
     <td style="width:510px;padding:8px 16px;text-align:center;vertical-align:middle;border-right:1px solid rgb(197,216,234)">
       <p style="margin:0;font-size:17px;font-weight:bold;color:rgb(0,80,144);letter-spacing:1px">ESSENTIAL CURES INC.</p>
-      <p style="margin:4px 0;font-size:11px;font-style:italic;color:rgb(74,139,44)">Compliant Solutions. Confident Care.</p>
+      <p style="margin:4px 0;font-size:11px;font-style:italic;font-weight:bold;color:rgb(74,139,44)">Compliant Solutions. Confident Care.</p>
       <p style="margin:6px 0 0 0;font-size:12px;font-weight:bold;color:rgb(0,80,144);letter-spacing:1px">QUOTATION &nbsp;|&nbsp; ${data.accountName || 'Essential Cures'}</p>
     </td>
-    <td style="width:110px;padding:8px 12px 8px 4px;vertical-align:middle">
-      <table width="94" cellpadding="0" cellspacing="0" style="table-layout:fixed;margin:0 0 0 auto">
+    <td style="width:90px;padding:8px 4px;vertical-align:middle">
+      <table width="82" cellpadding="0" cellspacing="0" style="table-layout:fixed;margin:0 0 0 auto">
         <tbody>
-        <tr><td style="width:28px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">No:</td><td style="width:66px;font-size:7px;font-weight:bold;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${data.quoteNumber}</td></tr>
-        <tr><td style="width:28px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">Rev:</td><td style="width:66px;font-size:7px;color:rgb(44,62,80);text-align:right;padding-bottom:3px">01</td></tr>
-        <tr><td style="font-size:7px;color:rgb(107,124,140);white-space:nowrap">Valid Through:</td><td style="font-size:7px;color:rgb(44,62,80);text-align:right">${data.validTill}</td></tr>
+        <tr><td style="width:22px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">No:</td><td style="width:60px;font-size:7px;font-weight:bold;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${data.quoteNumber}</td></tr>
+        <tr><td style="width:22px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">Rev:</td><td style="width:60px;font-size:7px;color:rgb(44,62,80);text-align:right;padding-bottom:3px">01</td></tr>
+        <tr><td style="width:22px;font-size:7px;color:rgb(107,124,140)">Valid:</td><td style="width:60px;font-size:7px;color:rgb(44,62,80);text-align:right">${data.validTill}</td></tr>
         </tbody>
       </table>
     </td>
@@ -320,19 +306,19 @@ function renderPage(data) {
       <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
       <td style="width:8px">&nbsp;</td>
       <td style="padding:12px 16px;background:rgb(234,244,227);vertical-align:middle">
-        ${isDualOption ? '<p class="meta-label">Quote Option</p><p class="meta-value meta-green">' + quoteOption + '</p>' : '<p class="meta-label">Valid Until</p><p class="meta-value meta-blue">' + data.validTill + '</p>'}
+        <p class="meta-label">Customer Reference</p><p class="meta-value meta-green">${(data.enquiryRef && data.enquiryRef !== data.dealName) ? data.enquiryRef : (data.quoteNumber || '')}</p>
       </td>
       <td style="width:16px">&nbsp;</td>
       <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
       <td style="width:8px">&nbsp;</td>
       <td style="padding:12px 16px;background:rgb(234,242,251);vertical-align:middle">
-        ${isDualOption ? '<p class="meta-label">Valid Until</p><p class="meta-value meta-blue">' + data.validTill + '</p>' : '<p class="meta-label">Status</p><p class="meta-value meta-green">' + (data.existingDecision || 'Sent to Customer') + '</p>'}
+        <p class="meta-label">Valid Until</p><p class="meta-value meta-blue">${data.validTill}</p>
       </td>
       <td style="width:16px">&nbsp;</td>
       <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
       <td style="width:8px">&nbsp;</td>
       <td style="padding:12px 16px;background:rgb(234,244,227);vertical-align:middle">
-        ${isDualOption ? '<p class="meta-label">Enquiry Reference</p><p class="meta-value meta-green" style="font-size:11px">' + (data.enquiryRef || '') + '</p>' : '<p class="meta-label">Status</p><p class="meta-value meta-green">' + (data.quoteStatus || '') + '</p>'}
+        ${isDualOption ? '<p class="meta-label">Enquiry Reference</p><p class="meta-value meta-green" style="font-size:11px">' + (data.enquiryRef || '') + '</p>' : '<p class="meta-label">Quote Date</p><p class="meta-value meta-green">' + (data.quoteDate || '') + '</p>'}
       </td>
     </tr></tbody></table>
   </td></tr>
@@ -383,7 +369,6 @@ function renderPage(data) {
       <tr class="items-header">
         <td class="col-no">#</td>
         <td class="col-product">Product / Service Description</td>
-        <td class="col-brand">Brand</td>
         <td class="col-qty">Qty</td>
         <td class="col-price">Unit Price (CAD)</td>
         <td class="col-total">Total (CAD)</td>
@@ -437,7 +422,7 @@ function renderPage(data) {
       <td style="width:8px">&nbsp;</td>
       <td style="padding:12px 16px;background:rgb(234,244,227)">
         <p style="font-size:11px;font-weight:bold;color:rgb(58,122,30);margin:0 0 6px 0;text-transform:uppercase">Contact and Support</p>
-        <p style="font-size:12px;color:rgb(27,74,27);line-height:1.6;margin:0;font-style:italic">Thank you for considering Essential Cures as your trusted partner. Should you have any questions or require revisions to this quotation, please contact your Essential Cures representative or email <a href="mailto:customercare@essentialcures.com" style="color:rgb(0,80,144);font-style:italic;font-weight:bold">customercare@essentialcures.com</a>. We look forward to supporting your organization.</p>
+        <p style="font-size:12px;color:rgb(27,74,27);line-height:1.6;margin:0;font-style:italic">Thank you for considering Essential Cures as your trusted partner. Should you have any questions or require revisions to this quotation, please contact your Essential Cures representative or email <a href="mailto:sales@essentialcures.com" style="color:rgb(0,80,144);font-style:italic;font-weight:bold">sales@essentialcures.com</a>. We look forward to supporting your organization.</p>
         
       </td>
     </tr></tbody></table>
@@ -459,9 +444,9 @@ function renderPage(data) {
   <tbody>
     <tr><td colspan="2" style="background:rgb(100,149,180);height:2px;font-size:0;line-height:0">&nbsp;</td></tr>
     <tr>
-      <td style="vertical-align:bottom;padding:4px 16px 8px 16px">
+      <td style="vertical-align:bottom;padding-top:4px">
         <p class="footer-web">essentialcures.com &nbsp;|&nbsp; essentialcures.ca</p>
-        <p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p>
+        <p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved &nbsp;|&nbsp; BN 768552978 &nbsp;|&nbsp; Winnipeg, MB</p>
       </td>
     </tr>
   </tbody>
