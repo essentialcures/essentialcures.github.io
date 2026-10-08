@@ -284,12 +284,12 @@ function renderPage(data) {
       <p style="margin:4px 0;font-size:11px;font-style:italic;color:rgb(74,139,44)">Compliant Solutions. Confident Care.</p>
       <p style="margin:6px 0 0 0;font-size:12px;font-weight:bold;color:rgb(0,80,144);letter-spacing:1px">QUOTATION &nbsp;|&nbsp; ${data.accountName || 'Essential Cures'}</p>
     </td>
-    <td style="width:110px;padding:8px 12px 8px 4px;vertical-align:middle">
-      <table width="94" cellpadding="0" cellspacing="0" style="table-layout:fixed;margin:0 0 0 auto">
+    <td style="width:100px;padding:8px 8px 8px 4px;vertical-align:middle">
+      <table width="80" cellpadding="0" cellspacing="0" style="table-layout:fixed;margin:0 0 0 auto">
         <tbody>
-        <tr><td style="width:28px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">No:</td><td style="width:66px;font-size:7px;font-weight:bold;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${data.quoteNumber}</td></tr>
-        <tr><td style="width:28px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">Rev:</td><td style="width:66px;font-size:7px;color:rgb(44,62,80);text-align:right;padding-bottom:3px">01</td></tr>
-        <tr><td style="font-size:7px;color:rgb(107,124,140);white-space:nowrap">Valid Through:</td><td style="font-size:7px;color:rgb(44,62,80);text-align:right">${data.validTill}</td></tr>
+        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">No:</td><td style="width:56px;font-size:7px;font-weight:bold;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${data.quoteNumber}</td></tr>
+        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">Rev:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right;padding-bottom:3px">01</td></tr>
+        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140)">Valid:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right">${data.validTill}</td></tr>
         </tbody>
       </table>
     </td>
@@ -320,19 +320,19 @@ function renderPage(data) {
       <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
       <td style="width:8px">&nbsp;</td>
       <td style="padding:12px 16px;background:rgb(234,244,227);vertical-align:middle">
-        ${isDualOption ? '<p class="meta-label">Quote Option</p><p class="meta-value meta-green">' + quoteOption + '</p>' : '<p class="meta-label">Valid Until</p><p class="meta-value meta-blue">' + data.validTill + '</p>'}
+        <p class="meta-label">Customer Reference</p><p class="meta-value meta-green" style="font-size:11px">${data.enquiryRef || data.quoteNumber || ''}</p>
       </td>
       <td style="width:16px">&nbsp;</td>
       <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
       <td style="width:8px">&nbsp;</td>
       <td style="padding:12px 16px;background:rgb(234,242,251);vertical-align:middle">
-        ${isDualOption ? '<p class="meta-label">Valid Until</p><p class="meta-value meta-blue">' + data.validTill + '</p>' : '<p class="meta-label">Status</p><p class="meta-value meta-green">' + (data.existingDecision || 'Sent to Customer') + '</p>'}
+        <p class="meta-label">Quote Date</p><p class="meta-value meta-blue">${data.quoteDate || ''}</p>
       </td>
       <td style="width:16px">&nbsp;</td>
       <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
       <td style="width:8px">&nbsp;</td>
       <td style="padding:12px 16px;background:rgb(234,244,227);vertical-align:middle">
-        ${isDualOption ? '<p class="meta-label">Enquiry Reference</p><p class="meta-value meta-green" style="font-size:11px">' + (data.enquiryRef || '') + '</p>' : '<p class="meta-label">Status</p><p class="meta-value meta-green">' + (data.quoteStatus || '') + '</p>'}
+        <p class="meta-label">Valid Through</p><p class="meta-value meta-green">${data.validTill || ''}</p>
       </td>
     </tr></tbody></table>
   </td></tr>
@@ -369,9 +369,7 @@ function renderPage(data) {
       <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
       <td style="width:8px">&nbsp;</td>
       <td style="padding:8px 14px;background:rgb(240,244,248);font-size:12px;color:rgb(107,124,140)">
-        Contact: <strong style="color:rgb(44,62,80)">${data.contactName || ''}</strong>
-        &nbsp;&nbsp;|&nbsp;&nbsp;
-        Lead Source: <strong style="color:rgb(44,62,80)">${data.leadSource || ''}</strong>
+        ${data.contactName ? 'Contact: <strong style="color:rgb(44,62,80)">' + data.contactName + '</strong>&nbsp;&nbsp;|&nbsp;&nbsp;' : ''}Lead Source: <strong style="color:rgb(44,62,80)">${data.leadSource || ''}</strong>
       </td>
     </tr></tbody></table>
   </td></tr>
@@ -459,7 +457,7 @@ function renderPage(data) {
   <tbody>
     <tr><td colspan="2" style="background:rgb(100,149,180);height:2px;font-size:0;line-height:0">&nbsp;</td></tr>
     <tr>
-      <td style="vertical-align:bottom;padding:4px 16px 8px 16px">
+      <td style="vertical-align:bottom;padding-top:4px">
         <p class="footer-web">essentialcures.com &nbsp;|&nbsp; essentialcures.ca</p>
         <p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p>
       </td>
