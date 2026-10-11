@@ -203,13 +203,17 @@ function buildPaymentBlock(ds, grandTotal) {
 function renderPage(data) {
   const isDualOption = data.siblingQuote != null;
   const quoteOption = data.quoteOption || '';
-  const quoteStatusVal = data.existingDecision || '';
   const hasDiscount = data.discountAmount && parseFloat(data.discountAmount) > 0;
   const hasSavings = data.savingsAmount && parseFloat(data.savingsAmount) > 0;
 
   const alreadyBlock = data.alreadyResponded
     ? `<div class="already-note">You already responded to this quote on <strong>${data.existingDecisionDate}</strong> with: <strong>${data.existingDecision}</strong>. Submitting again will update your response.</div>`
     : '';
+
+  // Sub Total: pre-tier when discount exists
+  const subTotal = hasDiscount
+    ? fmt(parseFloat(data.grandTotal) + parseFloat(data.discountAmount))
+    : fmt(data.grandTotal);
 
   // Line items rows
   const lineRows = (data.lineItems || []).map((li, i) => {
@@ -240,8 +244,8 @@ function renderPage(data) {
     </tr></tbody></table>
   </td></tr>` : '';
 
-  // Savings row — only when savings data populated
-  const savingsRow = (hasSavings) ? `
+  // Savings row
+  const savingsRow = hasSavings ? `
   <tr><td style="padding:10px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
       <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
@@ -253,11 +257,9 @@ function renderPage(data) {
     </tr></tbody></table>
   </td></tr>` : '';
 
-  // Delivery and payment blocks
   const deliveryBlock = buildDeliveryBlock(data.deliverySummary);
   const paymentBlock = buildPaymentBlock(data.deliverySummary, data.grandTotal);
 
-  // Terms
   const termsBlock = data.termsText ? `
   <tr><td style="padding:16px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
@@ -272,7 +274,7 @@ function renderPage(data) {
 
   document.getElementById('root').innerHTML = `
 
-<!-- ═══════════════ HEADER ═══════════════ -->
+<!-- HEADER -->
 <table width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed;background:#fff;">
   <tbody>
   <tr>
@@ -300,14 +302,13 @@ function renderPage(data) {
   </tbody>
 </table>
 
-<!-- ═══════════════ BODY ═══════════════ -->
+<!-- BODY -->
 <table class="main" cellpadding="0" cellspacing="0">
   <tbody>
 
-  <!-- Already responded notice -->
   ${data.alreadyResponded ? `<tr><td style="padding:12px 0 0 0">${alreadyBlock}</td></tr>` : ''}
 
-  <!-- META ROW: Quote Number | Quote Option | Valid Until | Enquiry Ref -->
+  <!-- META ROW -->
   <tr><td style="padding:16px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed"><tbody><tr>
       <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
@@ -391,11 +392,11 @@ function renderPage(data) {
     </table>
   </td></tr>
 
-  <!-- TOTALS -->
+  <!-- TOTALS — v2: Sub Total shows pre-tier amount when discount exists -->
   <tr><td style="padding:16px 0 0 0">
     <table class="totals-table" cellpadding="0" cellspacing="0">
       <tbody>
-      <tr class="totals-row"><td class="totals-label">Sub Total</td><td class="totals-value">${fmt(data.grandTotal)}</td></tr>
+      <tr class="totals-row"><td class="totals-label">Sub Total</td><td class="totals-value">${subTotal}</td></tr>
       ${hasDiscount ? `<tr class="totals-row"><td class="totals-label">Discount</td><td class="totals-value">${fmt(data.discountAmount)}</td></tr>` : ''}
       <tr class="totals-grand"><td class="totals-grand-label">GRAND TOTAL (CAD)</td><td class="totals-grand-value">${fmt(data.grandTotal)}</td></tr>
       </tbody>
@@ -407,7 +408,7 @@ function renderPage(data) {
   ${paymentBlock}
   ${termsBlock}
 
-  <!-- DECISION BLOCK — replaces Acceptance -->
+  <!-- DECISION BLOCK -->
   <tr><td style="padding:16px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
       <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
@@ -435,7 +436,15 @@ function renderPage(data) {
       <td style="padding:12px 16px;background:rgb(234,244,227)">
         <p style="font-size:11px;font-weight:bold;color:rgb(58,122,30);margin:0 0 6px 0;text-transform:uppercase">Contact and Support</p>
         <p style="font-size:12px;color:rgb(27,74,27);line-height:1.6;margin:0;font-style:italic">Thank you for considering Essential Cures as your trusted partner. Should you have any questions or require revisions to this quotation, please contact your Essential Cures representative or email <a href="mailto:customercare@essentialcures.com" style="color:rgb(0,80,144);font-style:italic;font-weight:bold">customercare@essentialcures.com</a>. We look forward to supporting your organization.</p>
-        
+      </td>
+    </tr></tbody></table>
+  </td></tr>
+
+  <!-- CONFIDENTIALITY STATEMENT — v2 -->
+  <tr><td style="padding:12px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="padding:12px 16px;border-top:1px solid rgb(220,225,230);border-bottom:1px solid rgb(220,225,230)">
+        <p style="margin:0;font-size:10px;color:rgb(107,124,140);line-height:1.6">This document and its contents are confidential to Essential Cures Inc. and are shared exclusively with the intended recipient for the purpose of evaluating a commercial opportunity. The recipient agrees to maintain the confidentiality of all information herein and not to reproduce, distribute, or disclose it to any third party without the prior written consent of Essential Cures Inc.</p>
       </td>
     </tr></tbody></table>
   </td></tr>
