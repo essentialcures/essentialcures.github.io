@@ -312,6 +312,8 @@ function renderPage(data) {
       </td>
     </tr></tbody></table>
   </td></tr>` : ''}
+  ${buildDeliveryBlock(sb.deliverySummary)}
+  ${buildPaymentBlock(sb.deliverySummary, sb.grandTotal)}
   <tr><td style="padding:16px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
       <td style="padding:12px 16px;background:rgb(240,244,248);border-left:4px solid rgb(0,80,144)">
@@ -325,8 +327,9 @@ function renderPage(data) {
   </td></tr>`;
   }
 
-  const deliveryBlock = buildDeliveryBlock(data.deliverySummary);
-  const paymentBlock = buildPaymentBlock(data.deliverySummary, data.grandTotal);
+  // Delivery and payment — per option for dual, shared for single
+  const deliveryBlock = isDualOption ? '' : buildDeliveryBlock(data.deliverySummary);
+  const paymentBlock = isDualOption ? '' : buildPaymentBlock(data.deliverySummary, data.grandTotal);
 
   const termsBlock = data.termsText ? `
   <tr><td style="padding:16px 0 0 0">
@@ -479,6 +482,7 @@ function renderPage(data) {
   </td></tr>
 
   ${isDualOption ? '' : savingsRow}
+  ${isDualOption ? buildDeliveryBlock(data.deliverySummary) + buildPaymentBlock(data.deliverySummary, data.grandTotal) : ''}
   ${optionBSection}
   ${deliveryBlock}
   ${paymentBlock}
