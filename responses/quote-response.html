@@ -241,7 +241,7 @@ function renderPage(data) {
     </tr></tbody></table>
   </td></tr>` : '';
 
-  // Savings row
+  // Savings row — Option A (single option or dual)
   const savingsRow = hasSavings ? `
   <tr><td style="padding:10px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
@@ -253,6 +253,77 @@ function renderPage(data) {
       </td>
     </tr></tbody></table>
   </td></tr>` : '';
+
+  // Option B section — dual option only
+  let optionBSection = '';
+  if (isDualOption && data.siblingQuote) {
+    const sb = data.siblingQuote;
+    const sbHasDiscount = sb.discountAmount && parseFloat(sb.discountAmount) > 0;
+    const sbHasSavings = sb.savingsAmount && parseFloat(sb.savingsAmount) > 0;
+    const sbSubTotal = sbHasDiscount
+      ? fmt(parseFloat(sb.grandTotal) + parseFloat(sb.discountAmount))
+      : fmt(sb.grandTotal);
+    const sbLineRows = (sb.lineItems || []).map((li, i) => {
+      const cls = i % 2 === 0 ? 'items-row' : 'items-row-alt';
+      return `<tr class="${cls}">
+        <td class="col-no">${i + 1}</td>
+        <td class="col-product"><strong>${li.description}</strong></td>
+        <td class="col-brand">${li.preferredBrands || ''}</td>
+        <td class="col-qty">${fmtQty(li.quantity)}</td>
+        <td class="col-price">${fmt(li.unitPrice)}</td>
+        <td class="col-total">${fmt(li.lineTotal)}</td>
+      </tr>`;
+    }).join('');
+    optionBSection = `
+  <tr><td style="padding:16px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="padding:10px 14px;background:rgb(74,139,44);border-radius:3px 3px 0 0">
+        <p style="margin:0;font-size:12px;font-weight:bold;color:rgb(255,255,255);letter-spacing:1px;text-transform:uppercase">OPTION B — CLINICAL GRADE</p>
+      </td>
+    </tr></tbody></table>
+  </td></tr>
+  <tr><td style="padding:4px 0 0 0">
+    <table class="items-table" cellpadding="0" cellspacing="0">
+      <thead><tr class="items-header">
+        <td class="col-no">#</td>
+        <td class="col-product">Product / Service Description</td>
+        <td class="col-brand">Brand</td>
+        <td class="col-qty">Qty</td>
+        <td class="col-price">Unit Price (CAD)</td>
+        <td class="col-total">Total (CAD)</td>
+      </tr></thead>
+      <tbody>${sbLineRows}</tbody>
+    </table>
+  </td></tr>
+  <tr><td style="padding:10px 0 0 0">
+    <table class="totals-table" cellpadding="0" cellspacing="0"><tbody>
+      <tr class="totals-row"><td class="totals-label">Sub Total</td><td class="totals-value">${sbSubTotal}</td></tr>
+      ${sbHasDiscount ? `<tr class="totals-row"><td class="totals-label">Discount</td><td class="totals-value">${fmt(sb.discountAmount)}</td></tr>` : ''}
+      <tr><td style="padding:10px 12px;background:rgb(74,139,44);color:rgb(255,255,255);font-size:14px;font-weight:bold">TOTAL (CAD)</td><td style="padding:10px 12px;background:rgb(74,139,44);color:rgb(255,255,255);font-size:14px;font-weight:bold;text-align:right">${fmt(sb.grandTotal)}</td></tr>
+    </tbody></table>
+  </td></tr>
+  ${sbHasSavings ? `<tr><td style="padding:10px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:8px 14px;background:rgb(234,244,227);font-size:12px;color:rgb(27,74,27)">
+        <strong style="color:rgb(58,122,30)">Estimated Savings:</strong>
+        &nbsp;${fmt(sb.savingsAmount)}&nbsp;(${sb.savingsPct || ''}% vs list price)
+      </td>
+    </tr></tbody></table>
+  </td></tr>` : ''}
+  <tr><td style="padding:16px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="padding:12px 16px;background:rgb(240,244,248);border-left:4px solid rgb(0,80,144)">
+        <p style="margin:0 0 8px 0;font-size:11px;font-weight:bold;color:rgb(0,80,144);text-transform:uppercase;letter-spacing:0.5px">Pricing Summary — Both Options</p>
+        <table width="100%" cellpadding="0" cellspacing="0"><tbody>
+          <tr><td style="font-size:12px;color:rgb(44,62,80);padding:4px 0"><strong>Option A — Cost Optimized</strong></td><td style="font-size:13px;font-weight:bold;color:rgb(0,80,144);text-align:right">${fmt(data.grandTotal)}</td></tr>
+          <tr><td style="font-size:12px;color:rgb(44,62,80);padding:4px 0"><strong>Option B — Clinical Grade</strong></td><td style="font-size:13px;font-weight:bold;color:rgb(74,139,44);text-align:right">${fmt(sb.grandTotal)}</td></tr>
+        </tbody></table>
+      </td>
+    </tr></tbody></table>
+  </td></tr>`;
+  }
 
   const deliveryBlock = buildDeliveryBlock(data.deliverySummary);
   const paymentBlock = buildPaymentBlock(data.deliverySummary, data.grandTotal);
@@ -372,8 +443,15 @@ function renderPage(data) {
     </tr></tbody></table>
   </td></tr>
 
-  <!-- LINE ITEMS -->
-  <tr><td style="padding:16px 0 0 0">
+  <!-- LINE ITEMS — Option A header shown for dual option only -->
+  ${isDualOption ? `<tr><td style="padding:16px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="padding:10px 14px;background:rgb(0,80,144);border-radius:3px 3px 0 0">
+        <p style="margin:0;font-size:12px;font-weight:bold;color:rgb(255,255,255);letter-spacing:1px;text-transform:uppercase">OPTION A — COST OPTIMIZED</p>
+      </td>
+    </tr></tbody></table>
+  </td></tr>` : ''}
+  <tr><td style="padding:${isDualOption ? '4' : '16'}px 0 0 0">
     <table class="items-table" cellpadding="0" cellspacing="0">
       <thead>
       <tr class="items-header">
@@ -395,12 +473,13 @@ function renderPage(data) {
       <tbody>
       <tr class="totals-row"><td class="totals-label">Sub Total</td><td class="totals-value">${subTotal}</td></tr>
       ${hasDiscount ? `<tr class="totals-row"><td class="totals-label">Discount</td><td class="totals-value">${fmt(data.discountAmount)}</td></tr>` : ''}
-      <tr class="totals-grand"><td class="totals-grand-label">GRAND TOTAL (CAD)</td><td class="totals-grand-value">${fmt(data.grandTotal)}</td></tr>
+      <tr class="totals-grand"><td class="totals-grand-label">${isDualOption ? 'TOTAL (CAD)' : 'GRAND TOTAL (CAD)'}</td><td class="totals-grand-value">${fmt(data.grandTotal)}</td></tr>
       </tbody>
     </table>
   </td></tr>
 
-  ${savingsRow}
+  ${isDualOption ? '' : savingsRow}
+  ${optionBSection}
   ${deliveryBlock}
   ${paymentBlock}
   ${termsBlock}
