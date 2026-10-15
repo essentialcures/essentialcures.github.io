@@ -966,7 +966,7 @@ function renderHub() {
 
   const payClear = payNA || payDone;
   const poClear = h.poState !== 'received';
-  const s5 = payClear && poClear ? { node: 'current', text: 'In preparation', cls: 'await' } : { node: 'pending', text: 'Pending', cls: 'muted' };
+  const s5 = payClear && poClear ? { node: 'current', text: 'In Progress', cls: 'await' } : { node: 'pending', text: 'Pending', cls: 'muted' };
 
   const lineAfter3 = poDone || h.poState === 'none' ? 'done' : '';
   const lineAfter4 = payClear ? 'done' : '';
