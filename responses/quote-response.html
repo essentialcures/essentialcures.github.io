@@ -66,12 +66,19 @@ table { border-collapse: collapse; box-sizing: border-box; } *, *::before, *::af
 .decision-btn { flex: 1; padding: 14px; border: 2px solid rgb(212, 218, 224); border-radius: 5px; text-align: center; cursor: pointer; font-weight: bold; font-size: 14px; font-family: Calibri, Arial, sans-serif; background: rgb(255,255,255); color: rgb(44, 62, 80); transition: all 0.15s; }
 .decision-btn.accept.selected { border-color: rgb(74, 139, 44); background: rgb(234, 244, 227); color: rgb(58, 122, 30); }
 .decision-btn.decline.selected { border-color: rgb(192, 57, 43); background: rgb(253, 237, 236); color: rgb(192, 57, 43); }
-.feedback-label { display: block; font-size: 12px; color: rgb(107, 124, 140); margin-bottom: 5px; }
-textarea { width: 100%; box-sizing: border-box; border: 1.5px solid rgb(212, 218, 224); border-radius: 4px; padding: 10px 12px; font-family: Calibri, Arial, sans-serif; font-size: 13px; resize: vertical; min-height: 70px; margin-bottom: 14px; }
-textarea:focus { outline: none; border-color: rgb(0, 80, 144); }
 .submit-btn { width: 100%; background: rgb(74, 139, 44); color: rgb(255,255,255); border: none; border-radius: 5px; padding: 14px; font-size: 15px; font-weight: bold; cursor: pointer; font-family: Calibri, Arial, sans-serif; }
 .submit-btn:disabled { background: rgb(169, 199, 154); cursor: not-allowed; }
 .close-btn { width: 100%; background: transparent; color: rgb(107, 124, 140); border: 1.5px solid rgb(212, 218, 224); border-radius: 5px; padding: 12px; font-size: 13px; cursor: pointer; margin-top: 10px; font-family: Calibri, Arial, sans-serif; }
+
+/* ── Decision errors and payment step ── */
+.form-error { color: rgb(192, 57, 43); font-size: 12px; margin: 0 0 10px 0; }
+.confirm-note { background: rgb(234, 244, 227); border-left: 4px solid rgb(74, 139, 44); padding: 12px 14px; font-size: 13px; color: rgb(27, 74, 27); margin-bottom: 16px; }
+.pay-form { background: rgb(240, 244, 248); border-left: 4px solid rgb(0, 80, 144); padding: 16px; }
+.pay-title { font-size: 11px; font-weight: bold; color: rgb(0, 80, 144); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; }
+.pay-intro { font-size: 12px; color: rgb(44, 62, 80); line-height: 1.6; margin: 0 0 14px 0; }
+.pay-label { display: block; font-size: 12px; font-weight: bold; color: rgb(44, 62, 80); margin: 0 0 5px 0; }
+.pay-input { width: 100%; border: 1.5px solid rgb(212, 218, 224); border-radius: 4px; padding: 10px 12px; font-family: Calibri, Arial, sans-serif; font-size: 13px; margin-bottom: 14px; background: rgb(255, 255, 255); }
+.pay-input:focus { outline: none; border-color: rgb(0, 80, 144); }
 
 /* ── Status/loading ── */
 .status-msg { text-align: center; padding: 48px 20px; font-size: 14px; color: rgb(107, 124, 140); }
@@ -115,10 +122,12 @@ textarea:focus { outline: none; border-color: rgb(0, 80, 144); }
 function toggleIT(){ document.getElementById('itPanel').classList.toggle('open'); }
 
 const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
+const RESPONSE_BASE = 'https://ec-customer-response-worker.faisal-khan-e13.workers.dev';
 const params = new URLSearchParams(window.location.search);
 const token = params.get('token');
 const quoteId = params.get('id');
 let selectedDecision = null;
+let quoteData = null;
 
 function fmt(n) {
   const num = parseFloat(n);
@@ -201,21 +210,19 @@ function buildPaymentBlock(ds, grandTotal) {
 }
 
 function renderPage(data) {
+  quoteData = data;
   const isDualOption = data.siblingQuote != null;
-  const quoteOption = data.quoteOption || '';
   const hasDiscount = data.discountAmount && parseFloat(data.discountAmount) > 0;
   const hasSavings = data.savingsAmount && parseFloat(data.savingsAmount) > 0;
 
   const alreadyBlock = data.alreadyResponded
-    ? `<div class="already-note">You already responded to this quote on <strong>${data.existingDecisionDate}</strong> with: <strong>${data.existingDecision}</strong>. Submitting again will update your response.</div>`
+    ? `<div class="already-note">You already responded to this quote on <strong>${data.existingDecisionDate}</strong> with: <strong>${data.existingDecision}</strong>.</div>`
     : '';
 
-  // Sub Total: pre-tier when discount exists
   const subTotal = hasDiscount
     ? fmt(parseFloat(data.grandTotal) + parseFloat(data.discountAmount))
     : fmt(data.grandTotal);
 
-  // Line items rows
   const lineRows = (data.lineItems || []).map((li, i) => {
     if (li.isDivider) return `<tr><td colspan="5" style="background:rgb(247,249,251);font-weight:bold;border-top:2px solid rgb(143,194,60);padding:8px 10px;">${li.description}</td></tr>`;
     const cls = i % 2 === 0 ? 'items-row' : 'items-row-alt';
@@ -229,7 +236,6 @@ function renderPage(data) {
     </tr>`;
   }).join('');
 
-  // Option notice — dual option only
   const optionNotice = isDualOption ? `
   <tr><td style="padding:10px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
@@ -241,7 +247,6 @@ function renderPage(data) {
     </tr></tbody></table>
   </td></tr>` : '';
 
-  // Savings row — Option A (single option or dual)
   const savingsRow = hasSavings ? `
   <tr><td style="padding:10px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
@@ -254,7 +259,6 @@ function renderPage(data) {
     </tr></tbody></table>
   </td></tr>` : '';
 
-  // Option B section — dual option only
   let optionBSection = '';
   if (isDualOption && data.siblingQuote) {
     const sb = data.siblingQuote;
@@ -327,7 +331,6 @@ function renderPage(data) {
   </td></tr>`;
   }
 
-  // Delivery and payment — per option for dual, shared for single
   const deliveryBlock = isDualOption ? '' : buildDeliveryBlock(data.deliverySummary);
   const paymentBlock = isDualOption ? '' : buildPaymentBlock(data.deliverySummary, data.grandTotal);
 
@@ -446,7 +449,6 @@ function renderPage(data) {
     </tr></tbody></table>
   </td></tr>
 
-  <!-- LINE ITEMS — Option A header shown for dual option only -->
   ${isDualOption ? `<tr><td style="padding:16px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
       <td style="padding:10px 14px;background:rgb(0,80,144);border-radius:3px 3px 0 0">
@@ -470,7 +472,6 @@ function renderPage(data) {
     </table>
   </td></tr>
 
-  <!-- TOTALS — v2: Sub Total shows pre-tier amount when discount exists -->
   <tr><td style="padding:16px 0 0 0">
     <table class="totals-table" cellpadding="0" cellspacing="0">
       <tbody>
@@ -488,7 +489,7 @@ function renderPage(data) {
   ${paymentBlock}
   ${termsBlock}
 
-  <!-- DECISION BLOCK — conditional dual/single -->
+  <!-- DECISION BLOCK -->
   <tr><td style="padding:16px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
       <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
@@ -497,21 +498,17 @@ function renderPage(data) {
         <p style="font-size:11px;font-weight:bold;color:rgb(0,80,144);text-transform:uppercase;margin:0 0 14px 0;letter-spacing:0.5px">Your Response</p>
         ${isDualOption ? `
         <div class="decision-row">
-          <button class="decision-btn accept" data-value="Option A Selected" style="border-color:rgb(0,80,144)">Select Option A</button>
-          <button class="decision-btn accept" data-value="Option B Selected" style="border-color:rgb(74,139,44)">Select Option B</button>
+          <button class="decision-btn accept" data-value="Option A" style="border-color:rgb(0,80,144)">Select Option A</button>
+          <button class="decision-btn accept" data-value="Option B - Specialist" style="border-color:rgb(74,139,44)">Select Option B</button>
         </div>
         <div class="decision-row">
-          <button class="decision-btn accept" data-value="Both Options Selected" style="border-color:rgb(107,124,140)">Select Both Options</button>
-          <button class="decision-btn decline" data-value="Rejected">Decline All Options</button>
+          <button class="decision-btn decline" data-value="Declined">Decline All Options</button>
         </div>` : `
         <div class="decision-row">
-          <button class="decision-btn accept" data-value="Accepted">Accept This Quote</button>
-          <button class="decision-btn decline" data-value="Rejected">Decline This Quote</button>
+          <button class="decision-btn accept" data-value="Option A">Accept This Quote</button>
+          <button class="decision-btn decline" data-value="Declined">Decline This Quote</button>
         </div>`}
-        <div id="feedbackWrap" style="display:none">
-          <label class="feedback-label" for="feedback">What could we have done better? (optional)</label>
-          <textarea id="feedback" placeholder="e.g. pricing, delivery time, product selection..."></textarea>
-        </div>
+        <div class="form-error" id="decisionError"></div>
         <button class="submit-btn" id="submitBtn" disabled>Select a decision above to continue</button>
       </td>
     </tr></tbody></table>
@@ -529,7 +526,7 @@ function renderPage(data) {
     </tr></tbody></table>
   </td></tr>
 
-  <!-- CONFIDENTIALITY STATEMENT — v2 -->
+  <!-- CONFIDENTIALITY STATEMENT -->
   <tr><td style="padding:12px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
       <td style="padding:12px 16px;border-top:1px solid rgb(220,225,230);border-bottom:1px solid rgb(220,225,230)">
@@ -568,7 +565,7 @@ function renderPage(data) {
       document.querySelectorAll('.decision-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       selectedDecision = btn.dataset.value;
-      document.getElementById('feedbackWrap').style.display = selectedDecision === 'Rejected' ? 'block' : 'none';
+      document.getElementById('decisionError').textContent = '';
       const sub = document.getElementById('submitBtn');
       sub.disabled = false;
       sub.textContent = 'Submit My Response';
@@ -588,11 +585,22 @@ function getOptionFigures(decision) {
 }
 
 async function postJson(path, payload) {
-  const resp = await fetch(`${RESPONSE_BASE}${path}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 45000);
+  let resp;
+  try {
+    resp = await fetch(`${RESPONSE_BASE}${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: ctrl.signal,
+    });
+  } catch (e) {
+    clearTimeout(timer);
+    if (e.name === 'AbortError') throw new Error('The request took too long to complete. Please try again, or contact customercare@essentialcures.com.');
+    throw new Error('Unable to reach Essential Cures. Please check your connection and try again.');
+  }
+  clearTimeout(timer);
   let data;
   try { data = await resp.json(); } catch {
     throw new Error('The server returned an unexpected response (HTTP ' + resp.status + ').');
