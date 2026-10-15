@@ -577,27 +577,119 @@ function renderPage(data) {
   document.getElementById('submitBtn').addEventListener('click', submitResponse);
 }
 
+function getOptionFigures(decision) {
+  const d = quoteData || {};
+  if (decision === 'Option B - Specialist' && d.siblingQuote) {
+    const ds = d.siblingQuote.deliverySummary || {};
+    return { advance: parseFloat(ds.totalAdvanceAmount || '0'), total: parseFloat(d.siblingQuote.grandTotal || '0'), label: 'Option B' };
+  }
+  const ds = d.deliverySummary || {};
+  return { advance: parseFloat(ds.totalAdvanceAmount || '0'), total: parseFloat(d.grandTotal || '0'), label: d.siblingQuote ? 'Option A' : 'your order' };
+}
+
+async function postJson(path, payload) {
+  const resp = await fetch(`${RESPONSE_BASE}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  let data;
+  try { data = await resp.json(); } catch {
+    throw new Error('The server returned an unexpected response (HTTP ' + resp.status + ').');
+  }
+  if (data.status !== 'ok') throw new Error(data.message || data.reason || 'The request could not be completed.');
+  return data;
+}
+
+function pageShell(inner) {
+  return `<table class="main" cellpadding="0" cellspacing="0"><tbody><tr><td style="padding:24px">${inner}</td></tr></tbody></table>`;
+}
+
+function showThankYou(message) {
+  document.getElementById('root').innerHTML = pageShell(`
+    <div class="status-msg">${message}<br><br>You may now close this window.</div>
+    <button class="close-btn" onclick="window.close()">Close This Window</button>
+    <p style="text-align:center;margin-top:14px;font-size:12px"><a href="https://essentialcures.com" style="color:rgb(0,80,144);font-weight:bold;text-decoration:none">Return to essentialcures.com</a></p>`);
+}
+
 async function submitResponse() {
   if (!selectedDecision) return;
   const btn = document.getElementById('submitBtn');
-  btn.disabled = true; btn.textContent = 'Submitting\u2026';
-  const feedback = (document.getElementById('feedback') || {}).value || '';
+  const errBox = document.getElementById('decisionError');
+  btn.disabled = true;
+  btn.textContent = 'Submitting\u2026';
+  errBox.textContent = '';
   try {
-    const resp = await fetch(`${WORKER_BASE}/api/quote/submit`, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ quoteId, token, decision: selectedDecision, feedback }),
+    const result = await postJson('/api/quote/decision', { quoteId, token, decision: selectedDecision });
+    if (selectedDecision === 'Declined') { showThankYou(result.message); return; }
+    const fig = getOptionFigures(selectedDecision);
+    if (fig.advance > 0) { renderPaymentStep(fig, result.message); }
+    else { showThankYou(result.message); }
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = 'Submit My Response';
+    errBox.textContent = e.message;
+  }
+}
+
+function renderPaymentStep(fig, decisionMsg) {
+  const today = new Date().toISOString().slice(0, 10);
+  document.getElementById('root').innerHTML = pageShell(`
+    <div class="confirm-note">${decisionMsg}</div>
+    <div class="pay-form">
+      <p class="pay-title">Advance Payment Details</p>
+      <p class="pay-intro">The advance payment for ${fig.label} is <strong>CAD ${fmt(fig.advance)}</strong> against an order total of CAD ${fmt(fig.total)}. Once your payment has been sent, please record the details below. Our team will verify receipt and release your order to fulfilment.</p>
+      <label class="pay-label" for="payAmount">Amount Paid (CAD)</label>
+      <input class="pay-input" id="payAmount" type="number" min="0.01" step="0.01" value="${fig.advance.toFixed(2)}">
+      <label class="pay-label" for="payMethod">Payment Method</label>
+      <select class="pay-input" id="payMethod">
+        <option value="Wire Transfer">Wire Transfer</option>
+        <option value="Cheque">Cheque</option>
+        <option value="Credit Card">Credit Card</option>
+        <option value="Cash">Cash</option>
+        <option value="Other">Other</option>
+      </select>
+      <label class="pay-label" for="payRef">Transaction Reference</label>
+      <input class="pay-input" id="payRef" type="text" maxlength="100" placeholder="Bank transfer or cheque reference number">
+      <label class="pay-label" for="payDate">Payment Date</label>
+      <input class="pay-input" id="payDate" type="date" value="${today}" max="${today}">
+      <div class="form-error" id="payError"></div>
+      <button class="submit-btn" id="payBtn">Submit Payment Details</button>
+      <button class="close-btn" id="payLaterBtn">I Will Submit Payment Details Later</button>
+    </div>`);
+  document.getElementById('payBtn').addEventListener('click', submitPayment);
+  document.getElementById('payLaterBtn').addEventListener('click', () => {
+    const qn = (quoteData && quoteData.quoteNumber) || 'your quote number';
+    showThankYou(`Your order decision has been recorded. Once payment has been made, please email the payment details to <a href="mailto:customercare@essentialcures.com" style="color:rgb(0,80,144);font-weight:bold">customercare@essentialcures.com</a> quoting ${qn}.`);
+  });
+}
+
+async function submitPayment() {
+  const btn = document.getElementById('payBtn');
+  const errBox = document.getElementById('payError');
+  const amount = parseFloat(document.getElementById('payAmount').value);
+  const method = document.getElementById('payMethod').value;
+  const ref = document.getElementById('payRef').value.trim();
+  const pDate = document.getElementById('payDate').value;
+  errBox.textContent = '';
+  if (isNaN(amount) || amount <= 0) { errBox.textContent = 'Please enter the amount paid.'; return; }
+  if (!ref) { errBox.textContent = 'Please enter the transaction reference.'; return; }
+  if (!pDate) { errBox.textContent = 'Please enter the payment date.'; return; }
+  btn.disabled = true;
+  btn.textContent = 'Submitting\u2026';
+  try {
+    const result = await postJson('/api/payment/submit', {
+      quoteId, token,
+      paymentMethod: method,
+      transactionReference: ref,
+      amountSubmitted: amount.toFixed(2),
+      paymentDate: pDate,
     });
-    const data = await resp.json();
-    if (data.status !== 'success') throw new Error(data.message || 'Failed to submit.');
-    document.getElementById('root').innerHTML = `
-      <table class="main" cellpadding="0" cellspacing="0"><tbody><tr><td>
-        <div class="status-msg">Thank you. Your response has been recorded.<br><br>You may now close this window.</div>
-        <button class="close-btn" onclick="window.close()">Close This Window</button>
-        <p style="text-align:center;margin-top:14px;font-size:12px"><a href="https://essentialcures.com" style="color:rgb(0,80,144);font-weight:bold;text-decoration:none">Return to essentialcures.com</a></p>
-      </td></tr></tbody></table>`;
-  } catch(e) {
-    btn.disabled = false; btn.textContent = 'Submit My Response';
-    alert(e.message || 'Something went wrong. Please try again.');
+    showThankYou(`Thank you. Your payment details have been recorded under reference <strong>${result.paymentId || ''}</strong>. Our team will verify receipt and confirm your order shortly.`);
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = 'Submit Payment Details';
+    errBox.textContent = e.message;
   }
 }
 
