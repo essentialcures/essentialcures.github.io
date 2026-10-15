@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Respond to Your Quote — Essential Cures</title>
 <meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ── Exact styles from ec_quote_template_final ── */
 body, html { margin: 0; padding: 0; font-family: Calibri, Arial, sans-serif; font-size: 13px; color: rgb(44, 62, 80); background: rgb(235, 238, 242); min-width: 100%; } .page-shell { width: 720px; margin: 24px auto; background: rgb(255,255,255); box-shadow: 0 2px 20px rgba(0,0,0,0.10); display: block; overflow: hidden; }
@@ -100,6 +103,83 @@ table { border-collapse: collapse; box-sizing: border-box; } *, *::before, *::af
   table[width="720"] { width: 100% !important; }
   .decision-row { flex-direction: column; }
 }
+
+/* -- Order hub (approved design, Oct 2026) -- */
+.hb { font-family: 'IBM Plex Sans', 'Segoe UI', Calibri, sans-serif; color: #1F2B37; font-variant-numeric: tabular-nums; }
+.hb-sec { padding: 24px 28px 8px; }
+.hb-h1 { margin: 0 0 6px; font-size: 24px; font-weight: 600; color: #00294D; line-height: 1.25; }
+.hb-h1:focus { outline: none; }
+.hb-lead { margin: 0 0 20px; font-size: 15px; line-height: 1.6; color: #3D4B58; }
+.hb-sum { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 16px 18px; background: #F4F6F8; border-radius: 4px; }
+.hb-sum dt { font-size: 12px; color: #556472; margin: 0 0 4px; }
+.hb-sum dd { margin: 0; font-size: 14px; font-weight: 500; }
+.hb-h2 { margin: 0 0 18px; font-size: 17px; font-weight: 600; color: #00294D; }
+.hb-road { list-style: none; margin: 0; padding: 0; display: flex; }
+.hb-step { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; position: relative; }
+.hb-line { position: absolute; top: 15px; left: 50%; width: 100%; height: 2px; background: #C9D2DB; }
+.hb-line.done { background: #005090; }
+.hb-node { position: relative; z-index: 1; width: 32px; height: 32px; box-sizing: border-box; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex: none; }
+.hb-node.done { background: #005090; color: #FFFFFF; }
+.hb-node.current { background: #FFFFFF; border: 2px solid #005090; color: #005090; }
+.hb-node.review { background: #E6EFF7; border: 2px solid #005090; color: #005090; }
+.hb-node.pending, .hb-node.na { background: #FFFFFF; border: 2px solid #C9D2DB; color: #7A8794; }
+.hb-stxt { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.hb-sname { font-size: 13px; font-weight: 600; }
+.hb-sstat { font-size: 12px; }
+.hb-sstat.complete { color: #2F6B1A; }
+.hb-sstat.await { color: #005090; font-weight: 500; }
+.hb-sstat.review { color: #8A4B00; font-weight: 500; }
+.hb-sstat.muted { color: #556472; }
+.hb-sdate { font-size: 12px; color: #556472; }
+.hb-alert { margin: 16px 28px 0; padding: 12px 14px; border: 1px solid #E7C17A; background: #FFF8E8; border-radius: 4px; font-size: 13px; line-height: 1.55; color: #5C3D00; }
+.hb-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 20px; padding: 24px 28px 8px; }
+.hb-panel { border: 1px solid #D8DEE4; border-radius: 6px; display: flex; flex-direction: column; }
+.hb-ph { padding: 20px 22px 14px; border-bottom: 1px solid #E6EAEE; }
+.hb-pt { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.hb-pt h2 { margin: 0; font-size: 17px; font-weight: 600; color: #00294D; }
+.hb-pt span { font-size: 13px; color: #556472; }
+.hb-pb { padding: 16px 22px 22px; display: flex; flex-direction: column; gap: 14px; }
+.hb-seg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid #B9C4CF; border-radius: 4px; overflow: hidden; }
+.hb-seg button { min-height: 44px; border: none; background: #FFFFFF; color: #00294D; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; padding: 0 12px; }
+.hb-seg button[aria-pressed="true"] { background: #005090; color: #FFFFFF; }
+.hb-rec { margin: 0; font-size: 13px; color: #2F6B1A; }
+.hb-note { margin: 0; font-size: 13px; line-height: 1.55; color: #3D4B58; }
+.hb-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.hb-field { display: flex; flex-direction: column; gap: 6px; }
+.hb-lbl { font-size: 13px; font-weight: 500; }
+.hb-in { height: 44px; width: 100%; box-sizing: border-box; padding: 0 12px; border: 1px solid #9AA8B5; border-radius: 4px; font-family: inherit; font-size: 15px; color: #1F2B37; background: #FFFFFF; }
+.hb-drop { border: 1px dashed #9AA8B5; border-radius: 4px; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; background: #F9FAFB; text-align: center; }
+.hb-drop.over { border-color: #005090; background: #EEF5FB; }
+.hb-pick { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 1px solid #005090; border-radius: 4px; color: #005090; font-size: 14px; font-weight: 500; cursor: pointer; background: #FFFFFF; }
+.hb-file { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.hb-hint { font-size: 12px; color: #556472; }
+.hb-fname { font-size: 13px; font-weight: 500; color: #00294D; }
+.hb-fname:empty { display: none; }
+.hb-btn { height: 46px; border: none; border-radius: 4px; background: #005090; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.hb-btn:disabled { background: #8FA9C2; cursor: not-allowed; }
+.hb-err { margin: 0; font-size: 13px; color: #B42318; }
+.hb-err:empty { display: none; }
+.hb-kv { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; padding: 12px 14px; background: #F4F6F8; border-radius: 4px; font-size: 14px; }
+.hb-kv dt { color: #556472; }
+.hb-kv dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
+.hb-kv dd.review { color: #8A4B00; }
+.hb-kv dd.complete { color: #2F6B1A; }
+.hb-amt { margin: 10px 0 0; display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; font-size: 14px; }
+.hb-amt dt { color: #3D4B58; }
+.hb-amt dd { margin: 0; }
+.hb-amt dd.due { font-weight: 600; color: #00294D; }
+.hb [hidden] { display: none !important; }
+.hb input:focus-visible, .hb select:focus-visible, .hb button:focus-visible, .hb a:focus-visible, .hb .hb-drop:focus-within .hb-pick { outline: 2px solid #005090; outline-offset: 2px; }
+@media (max-width: 640px) {
+  .hb-sec, .hb-panels { padding-left: 16px; padding-right: 16px; }
+  .hb-alert { margin-left: 16px; margin-right: 16px; }
+  .hb-sum { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hb-grid2 { grid-template-columns: 1fr; }
+  .hb-road { flex-direction: column; gap: 18px; }
+  .hb-step { flex-direction: row; align-items: flex-start; text-align: left; gap: 14px; }
+  .hb-line { display: none; }
+  .hb-stxt { align-items: flex-start; }
+}
 </style>
 </head>
 <body>
@@ -155,7 +235,12 @@ async function loadQuote() {
     });
     const data = await resp.json();
     if (data.status !== 'allow') { showError(data.message || data.reason || 'This quote link is invalid or has expired.'); return; }
-    if (data.decisionRecorded) { quoteData = data; renderResumeState(data); return; }
+    if (data.decisionRecorded) {
+      quoteData = data;
+      if (data.customerDecision === 'Declined') { showDeclined(); return; }
+      initHub(data, data.customerDecision);
+      return;
+    }
     renderPage(data);
   } catch(e) {
     showError('Something went wrong loading your quote. Please try again or contact us directly.');
@@ -575,27 +660,39 @@ function renderPage(data) {
   document.getElementById('submitBtn').addEventListener('click', submitResponse);
 }
 
+/* ---------------- Shared helpers ---------------- */
 function getOptionFigures(decision) {
   const d = quoteData || {};
   if (decision === 'Option B - Specialist' && d.siblingQuote) {
     const ds = d.siblingQuote.deliverySummary || {};
-    return { advance: parseFloat(ds.totalAdvanceAmount || '0'), total: parseFloat(d.siblingQuote.grandTotal || '0'), label: 'Option B' };
+    return { advance: parseFloat(ds.totalAdvanceAmount || '0'), total: parseFloat(d.siblingQuote.grandTotal || '0') };
   }
   const ds = d.deliverySummary || {};
-  return { advance: parseFloat(ds.totalAdvanceAmount || '0'), total: parseFloat(d.grandTotal || '0'), label: d.siblingQuote ? 'Option A' : 'your order' };
+  return { advance: parseFloat(ds.totalAdvanceAmount || '0'), total: parseFloat(d.grandTotal || '0') };
 }
 
-async function postJson(path, payload) {
+function esc(v) {
+  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function fmtDate(iso) {
+  if (!iso || iso.length < 10) return '';
+  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const y = iso.slice(0, 4), mo = parseInt(iso.slice(5, 7), 10), dd = parseInt(iso.slice(8, 10), 10);
+  if (!mo || !dd) return '';
+  return dd + ' ' + m[mo - 1] + ' ' + y;
+}
+
+function todayIso() { return new Date().toISOString().slice(0, 10); }
+
+async function sendRequest(path, body, isForm, timeoutMs) {
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 45000);
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs || 45000);
   let resp;
   try {
-    resp = await fetch(`${RESPONSE_BASE}${path}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      signal: ctrl.signal,
-    });
+    const opts = { method: 'POST', body: isForm ? body : JSON.stringify(body), signal: ctrl.signal };
+    if (!isForm) opts.headers = { 'Content-Type': 'application/json' };
+    resp = await fetch(`${RESPONSE_BASE}${path}`, opts);
   } catch (e) {
     clearTimeout(timer);
     if (e.name === 'AbortError') throw new Error('The request took too long to complete. Please try again, or contact customercare@essentialcures.com.');
@@ -610,6 +707,8 @@ async function postJson(path, payload) {
   return data;
 }
 
+function postJson(path, payload) { return sendRequest(path, payload, false, 45000); }
+
 function pageShell(inner) {
   return `<table class="main" cellpadding="0" cellspacing="0"><tbody><tr><td style="padding:24px">${inner}</td></tr></tbody></table>`;
 }
@@ -621,6 +720,12 @@ function showThankYou(message) {
     <p style="text-align:center;margin-top:14px;font-size:12px"><a href="https://essentialcures.com" style="color:rgb(0,80,144);font-weight:bold;text-decoration:none">Return to essentialcures.com</a></p>`);
 }
 
+function showDeclined() {
+  const qn = (quoteData && quoteData.quoteNumber) || 'this quotation';
+  showThankYou(`Your response declining quotation ${esc(qn)} has been recorded. Should you wish to revisit this quotation, please contact <a href="mailto:customercare@essentialcures.com" style="color:rgb(0,80,144);font-weight:bold">customercare@essentialcures.com</a>.`);
+}
+
+/* ---------------- Decision submit ---------------- */
 async function submitResponse() {
   if (!selectedDecision) return;
   const btn = document.getElementById('submitBtn');
@@ -629,11 +734,10 @@ async function submitResponse() {
   btn.textContent = 'Submitting\u2026';
   errBox.textContent = '';
   try {
-    const result = await postJson('/api/quote/decision', { quoteId, token, decision: selectedDecision });
-    if (selectedDecision === 'Declined') { showThankYou(result.message); return; }
-    const fig = getOptionFigures(selectedDecision);
-    if (fig.advance > 0) { renderPaymentStep(fig, result.message); }
-    else { showThankYou(result.message); }
+    await postJson('/api/quote/decision', { quoteId, token, decision: selectedDecision });
+    if (selectedDecision === 'Declined') { showDeclined(); return; }
+    quoteData.decisionRecorded = true;
+    initHub(quoteData, selectedDecision);
   } catch (e) {
     btn.disabled = false;
     btn.textContent = 'Submit My Response';
@@ -641,74 +745,373 @@ async function submitResponse() {
   }
 }
 
-function renderPaymentStep(fig, decisionMsg) {
-  const today = new Date().toISOString().slice(0, 10);
-  document.getElementById('root').innerHTML = pageShell(`
-    <div class="confirm-note">${decisionMsg}</div>
-    <div class="pay-form">
-      <p class="pay-title">Advance Payment Details</p>
-      <p class="pay-intro">The advance payment for ${fig.label} is <strong>CAD ${fmt(fig.advance)}</strong> against an order total of CAD ${fmt(fig.total)}. Once your payment has been sent, please record the details below. Our team will verify receipt and release your order to fulfilment.</p>
-      <label class="pay-label" for="payAmount">Amount Paid (CAD)</label>
-      <input class="pay-input" id="payAmount" type="number" min="0.01" step="0.01" value="${fig.advance.toFixed(2)}">
-      <label class="pay-label" for="payMethod">Payment Method</label>
-      <select class="pay-input" id="payMethod">
-        <option value="Wire Transfer">Wire Transfer</option>
-        <option value="Cheque">Cheque</option>
-        <option value="Credit Card">Credit Card</option>
-        <option value="Cash">Cash</option>
-        <option value="Other">Other</option>
-      </select>
-      <label class="pay-label" for="payRef">Transaction Reference</label>
-      <input class="pay-input" id="payRef" type="text" maxlength="100" placeholder="Bank transfer or cheque reference number">
-      <label class="pay-label" for="payDate">Payment Date</label>
-      <input class="pay-input" id="payDate" type="date" value="${today}" max="${today}">
-      <div class="form-error" id="payError"></div>
-      <button class="submit-btn" id="payBtn">Submit Payment Details</button>
-      <button class="close-btn" id="payLaterBtn">I Will Submit Payment Details Later</button>
-    </div>`);
-  document.getElementById('payBtn').addEventListener('click', submitPayment);
-  document.getElementById('payLaterBtn').addEventListener('click', () => {
-    const qn = (quoteData && quoteData.quoteNumber) || 'your quote number';
-    showThankYou(`Your order decision has been recorded. Once payment has been made, please return to this same link at any time to submit your payment details. For assistance, contact <a href="mailto:customercare@essentialcures.com" style="color:rgb(0,80,144);font-weight:bold">customercare@essentialcures.com</a> quoting ${qn}.`);
-  });
+/* ---------------- Order hub ---------------- */
+let hub = null;
+let hubFile = null;
+const DOC_TYPES = { 'application/pdf': true, 'image/jpeg': true, 'image/png': true };
+const DOC_MAX = 10 * 1024 * 1024;
+
+function initHub(data, decision) {
+  const fig = getOptionFigures(decision);
+  const isDual = !!data.siblingQuote;
+  const isB = decision === 'Option B - Specialist';
+  hub = {
+    decision: decision,
+    quoteNumber: isDual && isB ? (data.siblingQuote.quoteNumber || data.quoteNumber) : data.quoteNumber,
+    optionLabel: isDual ? (isB ? 'Option B, Clinical Grade' : 'Option A, Cost Optimized') : 'Quotation accepted',
+    optionShort: isDual ? (isB ? 'Option B' : 'Option A') : 'this quotation',
+    total: fig.total,
+    advance: fig.advance,
+    advanceRequired: fig.advance > 0 || data.advanceRequired === true,
+    poState: data.poState || 'none',
+    poNumber: data.poNumber || '',
+    poDate: data.poDate || '',
+    payState: data.paymentState || 'none',
+    payRef: data.paymentRef || '',
+    notice: ''
+  };
+  hubFile = null;
+  renderHub();
 }
 
-function renderResumeState(data) {
-  const decision = data.customerDecision || '';
-  const ref = data.paymentRef || '';
-  const qn = data.quoteNumber || 'your quotation';
-  if (decision === 'Declined') {
-    showThankYou(`Your response declining quotation ${qn} has been recorded. Should you wish to revisit this quotation, please contact <a href="mailto:customercare@essentialcures.com" style="color:rgb(0,80,144);font-weight:bold">customercare@essentialcures.com</a>.`);
-    return;
+function hubStep(n, name, node, statusText, statusCls, date, lineCls, last) {
+  return `<li class="hb-step"${node === 'current' ? ' aria-current="step"' : ''}>
+    ${last ? '' : `<span class="hb-line ${lineCls}" aria-hidden="true"></span>`}
+    <span class="hb-node ${node}">${n}</span>
+    <span class="hb-stxt">
+      <span class="hb-sname">${name}</span>
+      <span class="hb-sstat ${statusCls}">${statusText}</span>
+      ${date ? `<span class="hb-sdate">${date}</span>` : ''}
+    </span>
+  </li>`;
+}
+
+function brandHeader() {
+  const d = quoteData;
+  return `<table width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed;background:#fff;">
+  <tbody>
+  <tr>
+    <td style="width:90px;padding:8px 10px;text-align:center;vertical-align:middle;border-right:1px solid rgb(197,216,234)">
+      <img src="https://essentialcures.com/assets/images/essential-cures-logo.png" width="65" alt="Essential Cures" style="display:block;margin:0 auto">
+    </td>
+    <td style="width:510px;padding:8px 16px;text-align:center;vertical-align:middle;border-right:1px solid rgb(197,216,234)">
+      <p style="margin:0;font-size:17px;font-weight:bold;color:rgb(0,80,144);letter-spacing:1px">ESSENTIAL CURES INC.</p>
+      <p style="margin:4px 0;font-size:11px;font-style:italic;color:rgb(74,139,44)">Compliant Solutions. Confident Care.</p>
+      <p style="margin:6px 0 0 0;font-size:12px;font-weight:bold;color:rgb(0,80,144);letter-spacing:1px">ORDER STATUS &nbsp;|&nbsp; ${esc(d.accountName || 'Essential Cures')}</p>
+    </td>
+    <td style="width:100px;padding:8px 8px 8px 4px;vertical-align:middle">
+      <table width="80" cellpadding="0" cellspacing="0" style="table-layout:fixed;margin:0 0 0 auto">
+        <tbody>
+        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">No:</td><td style="width:56px;font-size:7px;font-weight:bold;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${esc(hub.quoteNumber)}</td></tr>
+        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">Date:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${esc(d.quoteDate || '')}</td></tr>
+        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140)">Valid:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right">${esc(d.validTill || '')}</td></tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  <tr><td colspan="3" style="height:2px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td></tr>
+  <tr><td colspan="3" style="height:1px;background:rgb(255,255,255);font-size:0;line-height:0">&nbsp;</td></tr>
+  <tr><td colspan="3" style="height:2px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td></tr>
+  </tbody>
+</table>`;
+}
+
+function brandFooter() {
+  return `<table class="main" cellpadding="0" cellspacing="0"><tbody>
+  <tr><td style="padding:16px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
+      <td style="width:8px">&nbsp;</td>
+      <td style="padding:12px 16px;background:rgb(234,244,227)">
+        <p style="font-size:11px;font-weight:bold;color:rgb(58,122,30);margin:0 0 6px 0;text-transform:uppercase">Contact and Support</p>
+        <p style="font-size:12px;color:rgb(27,74,27);line-height:1.6;margin:0;font-style:italic">Thank you for choosing Essential Cures as your trusted partner. Should you have any questions about your order, please contact your Essential Cures representative or email <a href="mailto:customercare@essentialcures.com" style="color:rgb(0,80,144);font-style:italic;font-weight:bold">customercare@essentialcures.com</a>. We look forward to supporting your organization.</p>
+      </td>
+    </tr></tbody></table>
+  </td></tr>
+  <tr><td style="padding:12px 0 0 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td style="padding:12px 16px;border-top:1px solid rgb(220,225,230);border-bottom:1px solid rgb(220,225,230)">
+        <p style="margin:0;font-size:10px;color:rgb(107,124,140);line-height:1.6">This document and its contents are confidential to Essential Cures Inc. and are shared exclusively with the intended recipient for the purpose of evaluating a commercial opportunity. The recipient agrees to maintain the confidentiality of all information herein and not to reproduce, distribute, or disclose it to any third party without the prior written consent of Essential Cures Inc.</p>
+      </td>
+    </tr></tbody></table>
+  </td></tr>
+  <tr><td style="padding:16px 0 16px 0">
+    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
+      <td class="tagline-green"><p class="tagline-text">Compliant Solutions. Confident Care.</p></td>
+      <td class="tagline-blue"><p class="tagline-text">Quality Built In. Not Bolted On.</p></td>
+    </tr></tbody></table>
+  </td></tr>
+  </tbody></table>
+  <table width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed;background:#fff"><tbody>
+    <tr><td colspan="2" style="background:rgb(100,149,180);height:2px;font-size:0;line-height:0">&nbsp;</td></tr>
+    <tr><td style="vertical-align:bottom;padding:4px 16px 8px 16px">
+      <p class="footer-web">essentialcures.com &nbsp;|&nbsp; essentialcures.ca</p>
+      <p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p>
+    </td></tr>
+  </tbody></table>`;
+}
+
+function emailBox(subject, intro, footnote) {
+  return `<div class="hb-note" style="display:flex;flex-direction:column;gap:12px">
+    <p class="hb-note">${intro}</p>
+    <dl class="hb-kv">
+      <dt>Email</dt><dd><a href="mailto:customercare@essentialcures.com?subject=${encodeURIComponent(subject)}">customercare@essentialcures.com</a></dd>
+      <dt>Subject</dt><dd>${esc(subject)}</dd>
+    </dl>
+    <p class="hb-hint">${footnote}</p>
+  </div>`;
+}
+
+function poPanelBody() {
+  const h = hub;
+  if (h.poState === 'received' || h.poState === 'verified') {
+    const verified = h.poState === 'verified';
+    return `<dl class="hb-kv">
+      <dt>Purchase Order Number</dt><dd>${esc(h.poNumber || 'Not provided')}</dd>
+      <dt>Purchase Order Date</dt><dd>${esc(fmtDate(h.poDate) || 'Not provided')}</dd>
+      <dt>Status</dt><dd class="${verified ? 'complete' : 'review'}">${verified ? 'Verified' : 'Under review'}</dd>
+    </dl>
+    <p class="hb-hint">If any detail above is incorrect, please contact us quoting ${esc(h.quoteNumber)}.</p>`;
   }
-  const fig = getOptionFigures(decision);
-  const optText = fig.label === 'your order' ? 'this quotation' : fig.label;
-  if (data.paymentState === 'verified') {
-    showThankYou(`Your order for ${optText} is confirmed. Your advance payment (reference <strong>${ref}</strong>) has been verified, and your order has been released to fulfilment.`);
-    return;
+  return `<div class="hb-seg" role="group" aria-label="Purchase order submission method">
+      <button type="button" data-seg="po" data-mode="online" aria-pressed="true">Submit Online</button>
+      <button type="button" data-seg="po" data-mode="email" aria-pressed="false">Send by Email</button>
+    </div>
+    <div id="po-online" style="display:flex;flex-direction:column;gap:14px">
+      <p class="hb-rec">Recommended. Online submissions are recorded immediately and reviewed within one business day.</p>
+      <div class="hb-grid2">
+        <div class="hb-field"><label class="hb-lbl" for="po-num">Purchase Order Number</label><input class="hb-in" id="po-num" type="text" maxlength="40" autocomplete="off"></div>
+        <div class="hb-field"><label class="hb-lbl" for="po-date">Purchase Order Date</label><input class="hb-in" id="po-date" type="date" max="${todayIso()}"></div>
+      </div>
+      <div class="hb-field">
+        <span class="hb-lbl" id="po-doc-l">Purchase Order Document</span>
+        <div class="hb-drop" id="po-drop">
+          <span style="font-size:14px;color:#3D4B58">Drag your file here, or</span>
+          <label class="hb-pick" for="po-file">Select File</label>
+          <input class="hb-file" id="po-file" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" aria-labelledby="po-doc-l">
+          <span class="hb-fname" id="po-fname" aria-live="polite"></span>
+          <span class="hb-hint">PDF, JPG or PNG, up to 10 MB</span>
+        </div>
+      </div>
+      <p class="hb-err" id="po-err" role="alert"></p>
+      <button type="button" class="hb-btn" id="po-submit">Submit Purchase Order</button>
+    </div>
+    <div id="po-email" hidden>
+      ${emailBox('Purchase Order, ' + h.quoteNumber, 'Please email your purchase order to the address below, quoting your quotation number in the subject line.', 'Emailed documents are recorded manually and may take longer to appear on this page.')}
+    </div>`;
+}
+
+function payPanelBody() {
+  const h = hub;
+  if (h.payState === 'pending' || h.payState === 'verified') {
+    const verified = h.payState === 'verified';
+    return `<dl class="hb-kv">
+      <dt>Payment Reference</dt><dd>${esc(h.payRef || 'Recorded')}</dd>
+      <dt>Status</dt><dd class="${verified ? 'complete' : 'review'}">${verified ? 'Verified' : 'Under review'}</dd>
+    </dl>
+    <p class="hb-hint">If any detail is incorrect, please contact us quoting ${esc(h.quoteNumber)}.</p>`;
   }
-  if (data.paymentState === 'pending') {
-    showThankYou(`Your order for ${optText} is confirmed. Your payment details (reference <strong>${ref}</strong>) have been received and are pending verification by our team.`);
-    return;
+  return `<div class="hb-seg" role="group" aria-label="Payment submission method">
+      <button type="button" data-seg="pay" data-mode="online" aria-pressed="true">Submit Online</button>
+      <button type="button" data-seg="pay" data-mode="email" aria-pressed="false">Send by Email</button>
+    </div>
+    <div id="pay-online" style="display:flex;flex-direction:column;gap:14px">
+      <p class="hb-rec">Recommended. Once your payment has been sent, record its details here so our team can match it promptly.</p>
+      <div class="hb-grid2">
+        <div class="hb-field"><label class="hb-lbl" for="pay-amt">Amount Paid, CAD</label><input class="hb-in" id="pay-amt" type="number" min="0.01" step="0.01" value="${h.advance.toFixed(2)}"></div>
+        <div class="hb-field"><label class="hb-lbl" for="pay-date">Payment Date</label><input class="hb-in" id="pay-date" type="date" value="${todayIso()}" max="${todayIso()}"></div>
+      </div>
+      <div class="hb-grid2">
+        <div class="hb-field"><label class="hb-lbl" for="pay-method">Payment Method</label>
+          <select class="hb-in" id="pay-method">
+            <option value="Wire Transfer">Wire transfer</option>
+            <option value="Cheque">Cheque</option>
+            <option value="Credit Card">Credit card</option>
+            <option value="Cash">Cash</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="hb-field"><label class="hb-lbl" for="pay-ref">Transaction Reference</label><input class="hb-in" id="pay-ref" type="text" maxlength="100" aria-describedby="pay-ref-h" autocomplete="off"></div>
+      </div>
+      <span class="hb-hint" id="pay-ref-h">The reference shown on your bank confirmation or cheque.</span>
+      <p class="hb-err" id="pay-err" role="alert"></p>
+      <button type="button" class="hb-btn" id="pay-submit">Record Payment</button>
+    </div>
+    <div id="pay-email" hidden>
+      ${emailBox('Advance Payment, ' + h.quoteNumber, 'Once payment has been sent, please email your remittance advice to the address below, quoting your quotation number.', 'Emailed remittances are matched manually and may take longer to appear on this page.')}
+    </div>`;
+}
+
+function renderHub() {
+  const h = hub, d = quoteData;
+  const poDone = h.poState === 'verified';
+  const payNA = !h.advanceRequired;
+  const payDone = h.payState === 'verified';
+
+  let s3 = { node: 'current', text: 'Awaiting, optional', cls: 'await', date: '' };
+  if (h.poState === 'received') s3 = { node: 'review', text: 'Under review', cls: 'review', date: h.poDate ? 'Received ' + fmtDate(h.poDate) : '' };
+  if (poDone) s3 = { node: 'done', text: 'Complete', cls: 'complete', date: '' };
+
+  let s4 = { node: 'current', text: 'Awaiting', cls: 'await' };
+  if (payNA) s4 = { node: 'na', text: 'Not required', cls: 'muted' };
+  else if (h.payState === 'pending') s4 = { node: 'review', text: 'Under review', cls: 'review' };
+  else if (payDone) s4 = { node: 'done', text: 'Complete', cls: 'complete' };
+
+  const payClear = payNA || payDone;
+  const poClear = h.poState !== 'received';
+  const s5 = payClear && poClear ? { node: 'current', text: 'In preparation', cls: 'await' } : { node: 'pending', text: 'Pending', cls: 'muted' };
+
+  const lineAfter3 = poDone || h.poState === 'none' ? 'done' : '';
+  const lineAfter4 = payClear ? 'done' : '';
+
+  let title, lead;
+  if (h.advanceRequired && h.payState === 'none') {
+    title = 'Your Order Has Been Accepted';
+    lead = `Thank you for selecting ${esc(h.optionShort)}. To release your order to fulfilment, please complete the advance payment below. If your organization issues purchase orders, you may also provide yours. Each item can be submitted online or sent by email, and you may return to this page at any time using the link in your quotation email.`;
+  } else if (h.payState === 'pending' || h.poState === 'received') {
+    title = 'Your Submissions Are Under Review';
+    lead = 'Thank you. Our team will confirm your submissions, normally within one business day, and you will receive an email once your order moves to fulfilment.';
+  } else {
+    title = 'Your Order Is Confirmed';
+    lead = 'Your order is being prepared for fulfilment. You will receive an email as it progresses. If your organization issues purchase orders, you may still provide yours below.';
   }
-  if (fig.advance > 0) {
-    renderPaymentStep(fig, `Your acceptance of ${optText} has already been recorded. Please submit your advance payment details below.`);
-    return;
+
+  const payPanel = h.advanceRequired
+    ? `<div class="hb-panel">
+        <div class="hb-ph">
+          <div class="hb-pt"><h2>Advance Payment</h2><span>Required</span></div>
+          <dl class="hb-amt">
+            <dt>Advance due on confirmation</dt><dd class="due">CAD ${fmt(h.advance)}</dd>
+            <dt>Balance due on delivery</dt><dd>CAD ${fmt(Math.max(0, h.total - h.advance))}</dd>
+          </dl>
+        </div>
+        <div class="hb-pb">${payPanelBody()}</div>
+      </div>`
+    : `<div class="hb-panel">
+        <div class="hb-ph"><div class="hb-pt"><h2>Advance Payment</h2><span>Not required</span></div></div>
+        <div class="hb-pb"><p class="hb-note">No advance payment is required for this order. Payment terms are as stated on your quotation.</p></div>
+      </div>`;
+
+  document.getElementById('root').innerHTML = `
+  ${brandHeader()}
+  <div class="hb">
+    <section class="hb-sec" aria-labelledby="hb-title">
+      <h1 class="hb-h1" id="hb-title" tabindex="-1">${title}</h1>
+      <p class="hb-lead">${lead}</p>
+      <dl class="hb-sum">
+        <div><dt>Quotation</dt><dd>${esc(h.quoteNumber)}</dd></div>
+        <div><dt>Your Reference</dt><dd>${esc(d.enquiryRef || h.quoteNumber)}</dd></div>
+        <div><dt>Selected Option</dt><dd>${esc(h.optionLabel)}</dd></div>
+        <div><dt>Order Total</dt><dd>CAD ${fmt(h.total)}</dd></div>
+      </dl>
+    </section>
+    ${h.notice ? `<div class="hb-alert" role="status">${esc(h.notice)}</div>` : ''}
+    <section class="hb-sec" aria-labelledby="hb-road-h">
+      <h2 class="hb-h2" id="hb-road-h">Order Progress</h2>
+      <ol class="hb-road">
+        ${hubStep(1, 'Quotation Issued', 'done', 'Complete', 'complete', fmtDate(d.quoteDate), 'done', false)}
+        ${hubStep(2, 'Option Selected', 'done', 'Complete', 'complete', '', 'done', false)}
+        ${hubStep(3, 'Purchase Order', s3.node, s3.text, s3.cls, s3.date, lineAfter3, false)}
+        ${hubStep(4, 'Advance Payment', s4.node, s4.text, s4.cls, '', lineAfter4, false)}
+        ${hubStep(5, 'Order Fulfilment', s5.node, s5.text, s5.cls, '', '', true)}
+      </ol>
+    </section>
+    <section class="hb-panels" aria-label="Order items">
+      <div class="hb-panel">
+        <div class="hb-ph">
+          <div class="hb-pt"><h2>Purchase Order</h2><span>Optional</span></div>
+          <p class="hb-note" style="margin-top:8px">If your organization issues purchase orders, please provide yours here so your reference appears on our invoice.</p>
+        </div>
+        <div class="hb-pb">${poPanelBody()}</div>
+      </div>
+      ${payPanel}
+    </section>
+  </div>
+  ${brandFooter()}`;
+
+  bindHub();
+  window.scrollTo(0, 0);
+}
+
+function bindHub() {
+  document.querySelectorAll('.hb-seg button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = btn.dataset.seg, mode = btn.dataset.mode;
+      document.querySelectorAll(`.hb-seg button[data-seg="${panel}"]`).forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      const online = document.getElementById(panel + '-online');
+      const email = document.getElementById(panel + '-email');
+      if (online) online.hidden = mode !== 'online';
+      if (email) email.hidden = mode !== 'email';
+      if (online && mode === 'online') online.style.display = 'flex';
+    });
+  });
+
+  const fileInput = document.getElementById('po-file');
+  const drop = document.getElementById('po-drop');
+  if (fileInput && drop) {
+    fileInput.addEventListener('change', () => setPoFile(fileInput.files && fileInput.files[0]));
+    ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+    ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+    drop.addEventListener('drop', e => { const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (f) setPoFile(f); });
   }
-  showThankYou(`Your order for ${optText} is confirmed. No advance payment is required.`);
+  const poBtn = document.getElementById('po-submit');
+  if (poBtn) poBtn.addEventListener('click', submitPo);
+  const payBtn = document.getElementById('pay-submit');
+  if (payBtn) payBtn.addEventListener('click', submitPayment);
+}
+
+function setPoFile(f) {
+  const err = document.getElementById('po-err');
+  const name = document.getElementById('po-fname');
+  err.textContent = '';
+  if (!f) { hubFile = null; name.textContent = ''; return; }
+  if (!DOC_TYPES[f.type]) { hubFile = null; name.textContent = ''; err.textContent = 'The document must be a PDF, JPG or PNG file.'; return; }
+  if (f.size > DOC_MAX) { hubFile = null; name.textContent = ''; err.textContent = 'The document exceeds the 10 MB limit. Please reduce its size or send it by email.'; return; }
+  hubFile = f;
+  const kb = f.size / 1024;
+  name.textContent = `Selected: ${f.name} (${kb >= 1024 ? (kb / 1024).toFixed(1) + ' MB' : Math.max(1, Math.round(kb)) + ' KB'})`;
+}
+
+async function submitPo() {
+  const btn = document.getElementById('po-submit');
+  const err = document.getElementById('po-err');
+  const num = document.getElementById('po-num').value.trim();
+  const pDate = document.getElementById('po-date').value;
+  err.textContent = '';
+  if (!num && !hubFile) { err.textContent = 'Please enter your purchase order number or attach the document.'; return; }
+  btn.disabled = true;
+  btn.textContent = 'Submitting\u2026';
+  try {
+    const fd = new FormData();
+    fd.append('quoteId', quoteId);
+    fd.append('token', token);
+    fd.append('poNumber', num);
+    fd.append('poDate', pDate);
+    if (hubFile) fd.append('poDocument', hubFile, hubFile.name);
+    const result = await sendRequest('/api/po/submit', fd, true, 60000);
+    hub.poState = 'received';
+    hub.poNumber = num;
+    hub.poDate = pDate || todayIso();
+    hub.notice = result.attachmentMessage || '';
+    renderHub();
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = 'Submit Purchase Order';
+    err.textContent = e.message;
+  }
 }
 
 async function submitPayment() {
-  const btn = document.getElementById('payBtn');
-  const errBox = document.getElementById('payError');
-  const amount = parseFloat(document.getElementById('payAmount').value);
-  const method = document.getElementById('payMethod').value;
-  const ref = document.getElementById('payRef').value.trim();
-  const pDate = document.getElementById('payDate').value;
-  errBox.textContent = '';
-  if (isNaN(amount) || amount <= 0) { errBox.textContent = 'Please enter the amount paid.'; return; }
-  if (!ref) { errBox.textContent = 'Please enter the transaction reference.'; return; }
-  if (!pDate) { errBox.textContent = 'Please enter the payment date.'; return; }
+  const btn = document.getElementById('pay-submit');
+  const err = document.getElementById('pay-err');
+  const amount = parseFloat(document.getElementById('pay-amt').value);
+  const method = document.getElementById('pay-method').value;
+  const ref = document.getElementById('pay-ref').value.trim();
+  const pDate = document.getElementById('pay-date').value;
+  err.textContent = '';
+  if (isNaN(amount) || amount <= 0) { err.textContent = 'Please enter the amount paid.'; return; }
+  if (!ref) { err.textContent = 'Please enter the transaction reference.'; return; }
+  if (!pDate) { err.textContent = 'Please enter the payment date.'; return; }
   btn.disabled = true;
   btn.textContent = 'Submitting\u2026';
   try {
@@ -719,11 +1122,14 @@ async function submitPayment() {
       amountSubmitted: amount.toFixed(2),
       paymentDate: pDate,
     });
-    showThankYou(`Thank you. Your payment details have been recorded under reference <strong>${result.paymentId || ''}</strong>. Our team will verify receipt and confirm your order shortly.`);
+    hub.payState = 'pending';
+    hub.payRef = result.paymentId || '';
+    hub.notice = '';
+    renderHub();
   } catch (e) {
     btn.disabled = false;
-    btn.textContent = 'Submit Payment Details';
-    errBox.textContent = e.message;
+    btn.textContent = 'Record Payment';
+    err.textContent = e.message;
   }
 }
 
