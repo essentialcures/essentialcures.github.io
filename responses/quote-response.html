@@ -168,6 +168,15 @@ table { border-collapse: collapse; box-sizing: border-box; } *, *::before, *::af
 .hb-amt dt { color: #3D4B58; }
 .hb-amt dd { margin: 0; }
 .hb-amt dd.due { font-weight: 600; color: #00294D; }
+.hb-tbox { overflow-x: auto; border: 1px solid #D8DEE4; border-radius: 6px; }
+.hb-table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 14px; }
+.hb-table th { text-align: left; padding: 11px 16px; font-size: 12px; font-weight: 600; color: #3D4B58; background: #F4F6F8; border-bottom: 1px solid #D8DEE4; }
+.hb-table td { padding: 13px 16px; border-bottom: 1px solid #E6EAEE; color: #3D4B58; overflow-wrap: anywhere; }
+.hb-table tr:last-child td { border-bottom: none; }
+.hb-table td.hb-tl { font-weight: 500; color: #1F2B37; }
+.hb-table td.review { color: #8A4B00; font-weight: 500; }
+.hb-table td.complete { color: #2F6B1A; font-weight: 500; }
+.hb-table td.muted { color: #556472; }
 .hb [hidden] { display: none !important; }
 .hb input:focus-visible, .hb select:focus-visible, .hb button:focus-visible, .hb a:focus-visible, .hb .hb-drop:focus-within .hb-pick { outline: 2px solid #005090; outline-offset: 2px; }
 @media (max-width: 640px) {
@@ -972,11 +981,12 @@ function renderHub() {
     lead = 'Thank you. Our team will confirm your submissions, normally within one business day, and you will receive an email once your order moves to fulfilment.';
   } else {
     title = 'Your Order Is Confirmed';
-    lead = 'Your order is being prepared for fulfilment. You will receive an email as it progresses. If your organization issues purchase orders, you may still provide yours below.';
+    lead = 'Your order is being prepared for fulfilment. You will receive an email as it progresses.' + (h.poState === 'none' ? ' If your organization issues purchase orders, you may still provide yours below.' : '');
   }
 
-  const payPanel = h.advanceRequired
-    ? `<div class="hb-panel">
+  const openPo = h.poState === 'none';
+  const openPay = h.advanceRequired && h.payState === 'none';
+  const payPanel = `<div class="hb-panel">
         <div class="hb-ph">
           <div class="hb-pt"><h2>Advance Payment</h2><span>Required</span></div>
           <dl class="hb-amt">
@@ -985,11 +995,29 @@ function renderHub() {
           </dl>
         </div>
         <div class="hb-pb">${payPanelBody()}</div>
-      </div>`
-    : `<div class="hb-panel">
-        <div class="hb-ph"><div class="hb-pt"><h2>Advance Payment</h2><span>Not required</span></div></div>
-        <div class="hb-pb"><p class="hb-note">No advance payment is required for this order. Payment terms are as stated on your quotation.</p></div>
       </div>`;
+
+  const rows = [];
+  if (!openPo) {
+    const v = h.poState === 'verified';
+    rows.push(`<tr><td class="hb-tl">Purchase Order</td><td>${esc(h.poNumber || 'Document provided')}</td><td>${h.poDate ? 'Dated ' + esc(fmtDate(h.poDate)) : 'Date not provided'}</td><td class="${v ? 'complete' : 'review'}">${v ? 'Verified' : 'Under review'}</td></tr>`);
+  }
+  if (!h.advanceRequired) {
+    rows.push(`<tr><td class="hb-tl">Advance Payment</td><td>Not applicable</td><td>No advance is required for this order</td><td class="muted">Not required</td></tr>`);
+  } else if (!openPay) {
+    const v = h.payState === 'verified';
+    rows.push(`<tr><td class="hb-tl">Advance Payment</td><td>${esc(h.payRef || 'Recorded')}</td><td>CAD ${fmt(h.advance)} advance</td><td class="${v ? 'complete' : 'review'}">${v ? 'Verified' : 'Under review'}</td></tr>`);
+  }
+  const subsTable = rows.length ? `<section class="hb-sec" aria-labelledby="hb-subs-h">
+      <h2 class="hb-h2" id="hb-subs-h" style="margin-bottom:12px">Submissions Received</h2>
+      <div class="hb-tbox">
+        <table class="hb-table">
+          <thead><tr><th scope="col">Item</th><th scope="col">Reference</th><th scope="col">Details</th><th scope="col">Status</th></tr></thead>
+          <tbody>${rows.join('')}</tbody>
+        </table>
+      </div>
+      <p class="hb-hint" style="margin:12px 0 0">If any detail above is incorrect, please contact us quoting ${esc(h.quoteNumber)}.</p>
+    </section>` : '';
 
   document.getElementById('root').innerHTML = `
   ${brandHeader()}
@@ -1015,16 +1043,17 @@ function renderHub() {
         ${hubStep(5, 'Order Fulfilment', s5.node, s5.text, s5.cls, '', '', true)}
       </ol>
     </section>
-    <section class="hb-panels" aria-label="Order items">
-      <div class="hb-panel">
+    ${(openPo || openPay) ? `<section class="hb-panels" aria-label="Items awaiting your action">
+      ${openPo ? `<div class="hb-panel">
         <div class="hb-ph">
           <div class="hb-pt"><h2>Purchase Order</h2><span>Optional</span></div>
           <p class="hb-note" style="margin-top:8px">If your organization issues purchase orders, please provide yours here so your reference appears on our invoice.</p>
         </div>
         <div class="hb-pb">${poPanelBody()}</div>
-      </div>
-      ${payPanel}
-    </section>
+      </div>` : ''}
+      ${openPay ? payPanel : ''}
+    </section>` : ''}
+    ${subsTable}
     ${(h.poState === 'none' || (h.advanceRequired && h.payState === 'none')) ? `
     <section class="hb-sec" aria-label="Submit order details" style="padding-top:8px;padding-bottom:16px">
       <div style="display:flex;flex-direction:column;gap:10px">
