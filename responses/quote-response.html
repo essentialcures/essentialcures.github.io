@@ -894,7 +894,6 @@ function poPanelBody() {
         </div>
       </div>
       <p class="hb-err" id="po-err" role="alert"></p>
-      <button type="button" class="hb-btn" id="po-submit">Submit Purchase Order</button>
     </div>
     <div id="po-email" hidden>
       ${emailBox('Purchase Order, ' + h.quoteNumber, 'Please email your purchase order to the address below, quoting your quotation number in the subject line.', 'Emailed documents are recorded manually and may take longer to appear on this page.')}
@@ -935,7 +934,6 @@ function payPanelBody() {
       </div>
       <span class="hb-hint" id="pay-ref-h">The reference shown on your bank confirmation or cheque.</span>
       <p class="hb-err" id="pay-err" role="alert"></p>
-      <button type="button" class="hb-btn" id="pay-submit">Record Payment</button>
     </div>
     <div id="pay-email" hidden>
       ${emailBox('Advance Payment, ' + h.quoteNumber, 'Once payment has been sent, please email your remittance advice to the address below, quoting your quotation number.', 'Emailed remittances are matched manually and may take longer to appear on this page.')}
@@ -967,7 +965,8 @@ function renderHub() {
   let title, lead;
   if (h.advanceRequired && h.payState === 'none') {
     title = 'Your Order Has Been Accepted';
-    const validNote = d.validTill ? ` This page remains available through the link in your quotation email until ${esc(fmtDate(d.validTill))}.` : '';     lead = `Thank you for selecting ${esc(h.optionShort)}. To release your order to fulfilment, please complete the advance payment below. If your organization issues purchase orders, you may also provide yours. Each item can be submitted online or sent by email.${validNote}`;
+    const validNote = d.validTill ? ` This page remains available through the link in your quotation email until ${esc(fmtDate(d.validTill))}.` : '';
+    lead = `Thank you for selecting ${esc(h.optionShort)}. To release your order to fulfilment, please complete the advance payment below. If your organization issues purchase orders, you may also provide yours. Each item can be submitted online or sent by email.${validNote}`;
   } else if (h.payState === 'pending' || h.poState === 'received') {
     title = 'Your Submissions Are Under Review';
     lead = 'Thank you. Our team will confirm your submissions, normally within one business day, and you will receive an email once your order moves to fulfilment.';
@@ -1026,6 +1025,14 @@ function renderHub() {
       </div>
       ${payPanel}
     </section>
+    ${(h.poState === 'none' || (h.advanceRequired && h.payState === 'none')) ? `
+    <section class="hb-sec" aria-label="Submit order details" style="padding-top:8px;padding-bottom:16px">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <p class="hb-err" id="all-err" role="alert"></p>
+        <button type="button" class="hb-btn" id="all-submit">Submit Order Details</button>
+        <p class="hb-hint" style="margin:0">Submits each section you have completed online. Sections set to Send by Email are not included.</p>
+      </div>
+    </section>` : ''}
   </div>
   ${brandFooter()}`;
 
@@ -1054,10 +1061,8 @@ function bindHub() {
     ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
     drop.addEventListener('drop', e => { const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (f) setPoFile(f); });
   }
-  const poBtn = document.getElementById('po-submit');
-  if (poBtn) poBtn.addEventListener('click', submitPo);
-  const payBtn = document.getElementById('pay-submit');
-  if (payBtn) payBtn.addEventListener('click', submitPayment);
+  const allBtn = document.getElementById('all-submit');
+  if (allBtn) allBtn.addEventListener('click', submitAll);
 }
 
 function setPoFile(f) {
@@ -1072,64 +1077,88 @@ function setPoFile(f) {
   name.textContent = `Selected: ${f.name} (${kb >= 1024 ? (kb / 1024).toFixed(1) + ' MB' : Math.max(1, Math.round(kb)) + ' KB'})`;
 }
 
-async function submitPo() {
-  const btn = document.getElementById('po-submit');
-  const err = document.getElementById('po-err');
-  const num = document.getElementById('po-num').value.trim();
-  const pDate = document.getElementById('po-date').value;
-  err.textContent = '';
-  if (!num && !hubFile) { err.textContent = 'Please enter your purchase order number or attach the document.'; return; }
-  btn.disabled = true;
-  btn.textContent = 'Submitting\u2026';
-  try {
-    const fd = new FormData();
-    fd.append('quoteId', quoteId);
-    fd.append('token', token);
-    fd.append('poNumber', num);
-    fd.append('poDate', pDate);
-    if (hubFile) fd.append('poDocument', hubFile, hubFile.name);
-    const result = await sendRequest('/api/po/submit', fd, true, 60000);
-    hub.poState = 'received';
-    hub.poNumber = num;
-    hub.poDate = pDate || todayIso();
-    hub.notice = result.attachmentMessage || '';
-    renderHub();
-  } catch (e) {
-    btn.disabled = false;
-    btn.textContent = 'Submit Purchase Order';
-    err.textContent = e.message;
-  }
-}
+async function submitAll() {
+  const btn = document.getElementById('all-submit');
+  const allErr = document.getElementById('all-err');
+  const poErr = document.getElementById('po-err');
+  const payErr = document.getElementById('pay-err');
+  [allErr, poErr, payErr].forEach(el => { if (el) el.textContent = ''; });
 
-async function submitPayment() {
-  const btn = document.getElementById('pay-submit');
-  const err = document.getElementById('pay-err');
-  const amount = parseFloat(document.getElementById('pay-amt').value);
-  const method = document.getElementById('pay-method').value;
-  const ref = document.getElementById('pay-ref').value.trim();
-  const pDate = document.getElementById('pay-date').value;
-  err.textContent = '';
-  if (isNaN(amount) || amount <= 0) { err.textContent = 'Please enter the amount paid.'; return; }
-  if (!ref) { err.textContent = 'Please enter the transaction reference.'; return; }
-  if (!pDate) { err.textContent = 'Please enter the payment date.'; return; }
+  const poBox = document.getElementById('po-online');
+  const payBox = document.getElementById('pay-online');
+  const poOnline = !!poBox && !poBox.hidden;
+  const payOnline = !!payBox && !payBox.hidden;
+
+  const poNum = poOnline ? document.getElementById('po-num').value.trim() : '';
+  const poDate = poOnline ? document.getElementById('po-date').value : '';
+  const doPo = poOnline && (poNum !== '' || !!hubFile);
+
+  const payRef = payOnline ? document.getElementById('pay-ref').value.trim() : '';
+  const doPay = payOnline && payRef !== '';
+  let amount = 0, method = '', payDate = '';
+  if (payOnline) {
+    amount = parseFloat(document.getElementById('pay-amt').value);
+    method = document.getElementById('pay-method').value;
+    payDate = document.getElementById('pay-date').value;
+  }
+
+  if (!doPo && !doPay) {
+    allErr.textContent = 'Please complete at least one section online, or choose Send by Email for each item.';
+    return;
+  }
+  if (doPay) {
+    if (isNaN(amount) || amount <= 0) { payErr.textContent = 'Please enter the amount paid.'; return; }
+    if (!payDate) { payErr.textContent = 'Please enter the payment date.'; return; }
+  }
+
   btn.disabled = true;
   btn.textContent = 'Submitting\u2026';
-  try {
-    const result = await postJson('/api/payment/submit', {
-      quoteId, token,
-      paymentMethod: method,
-      transactionReference: ref,
-      amountSubmitted: amount.toFixed(2),
-      paymentDate: pDate,
-    });
-    hub.payState = 'pending';
-    hub.payRef = result.paymentId || '';
-    hub.notice = '';
+  const notices = [];
+  let anySuccess = false;
+
+  if (doPo) {
+    try {
+      const fd = new FormData();
+      fd.append('quoteId', quoteId);
+      fd.append('token', token);
+      fd.append('poNumber', poNum);
+      fd.append('poDate', poDate);
+      if (hubFile) fd.append('poDocument', hubFile, hubFile.name);
+      const r = await sendRequest('/api/po/submit', fd, true, 60000);
+      hub.poState = 'received';
+      hub.poNumber = poNum;
+      hub.poDate = poDate || todayIso();
+      if (r.attachmentMessage) notices.push(r.attachmentMessage);
+      anySuccess = true;
+    } catch (e) {
+      notices.push('Your purchase order could not be submitted: ' + e.message);
+    }
+  }
+
+  if (doPay) {
+    try {
+      const r = await postJson('/api/payment/submit', {
+        quoteId, token,
+        paymentMethod: method,
+        transactionReference: payRef,
+        amountSubmitted: amount.toFixed(2),
+        paymentDate: payDate,
+      });
+      hub.payState = 'pending';
+      hub.payRef = r.paymentId || '';
+      anySuccess = true;
+    } catch (e) {
+      notices.push('Your payment details could not be recorded: ' + e.message);
+    }
+  }
+
+  if (anySuccess) {
+    hub.notice = notices.join(' ');
     renderHub();
-  } catch (e) {
+  } else {
     btn.disabled = false;
-    btn.textContent = 'Record Payment';
-    err.textContent = e.message;
+    btn.textContent = 'Submit Order Details';
+    allErr.textContent = notices.join(' ');
   }
 }
 
