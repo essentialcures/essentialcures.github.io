@@ -967,7 +967,7 @@ function renderHub() {
   let title, lead;
   if (h.advanceRequired && h.payState === 'none') {
     title = 'Your Order Has Been Accepted';
-    lead = `Thank you for selecting ${esc(h.optionShort)}. To release your order to fulfilment, please complete the advance payment below. If your organization issues purchase orders, you may also provide yours. Each item can be submitted online or sent by email, and you may return to this page at any time using the link in your quotation email.`;
+    const validNote = d.validTill ? ` This page remains available through the link in your quotation email until ${esc(fmtDate(d.validTill))}.` : '';     lead = `Thank you for selecting ${esc(h.optionShort)}. To release your order to fulfilment, please complete the advance payment below. If your organization issues purchase orders, you may also provide yours. Each item can be submitted online or sent by email.${validNote}`;
   } else if (h.payState === 'pending' || h.poState === 'received') {
     title = 'Your Submissions Are Under Review';
     lead = 'Thank you. Our team will confirm your submissions, normally within one business day, and you will receive an email once your order moves to fulfilment.';
