@@ -947,7 +947,7 @@ function renderHub() {
   const payDone = h.payState === 'verified';
 
   let s3 = { node: 'current', text: 'Awaiting, optional', cls: 'await', date: '' };
-  if (h.poState === 'received') s3 = { node: 'review', text: 'Under review', cls: 'review', date: h.poDate ? 'Received ' + fmtDate(h.poDate) : '' };
+  if (h.poState === 'received') s3 = { node: 'review', text: 'Under review', cls: 'review', date: h.poReceived ? 'Received ' + fmtDate(h.poReceived) : '' };
   if (poDone) s3 = { node: 'done', text: 'Complete', cls: 'complete', date: '' };
 
   let s4 = { node: 'current', text: 'Awaiting', cls: 'await' };
@@ -1127,7 +1127,8 @@ async function submitAll() {
       const r = await sendRequest('/api/po/submit', fd, true, 60000);
       hub.poState = 'received';
       hub.poNumber = poNum;
-      hub.poDate = poDate || todayIso();
+      hub.poDate = poDate;
+      hub.poReceived = todayIso();
       if (r.attachmentMessage) notices.push(r.attachmentMessage);
       anySuccess = true;
     } catch (e) {
