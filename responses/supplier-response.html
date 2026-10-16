@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pre-Order Confirmation — Essential Cures</title>
+<title>Pre-Order Confirmation | Essential Cures</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -36,27 +36,24 @@ h2{font-size:15px;color:var(--dark-navy);margin:0 0 8px;}
 p.deal-name{font-size:13px;color:var(--cool-gray);margin:0 0 16px;}
 .already-note{background:#FFF8E1;border-left:4px solid #D4A017;padding:12px 14px;font-size:13px;margin-bottom:16px;border-radius:0 6px 6px 0;}
 .not-binding-note{background:#E8F5E9;border-left:4px solid var(--leaf-green);padding:12px 14px;font-size:13px;margin-bottom:20px;font-style:italic;color:#276414;border-radius:0 6px 6px 0;}
+.guide-note{font-size:12px;color:var(--cool-gray);background:var(--light-bg);border:1px solid #E8ECF0;border-radius:6px;padding:10px 12px;margin-bottom:16px;line-height:1.6;}
 .section-label{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:24px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
-/* Line item card */
 .line-item{border:1px solid #D4DAE0;border-radius:8px;padding:16px 18px;margin-bottom:12px;background:var(--light-bg);}
 .line-item .line-title{font-size:14px;font-weight:700;color:var(--dark-navy);margin-bottom:2px;}
 .line-item .line-meta{font-size:12px;color:var(--cool-gray);margin-bottom:14px;}
-/* Fulfilment mode buttons */
 .fulfilment-group{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
 .fulfilment-btn{flex:1;min-width:130px;border:2px solid #D4DAE0;border-radius:6px;padding:10px 12px;font-size:12px;font-weight:600;color:var(--cool-gray);background:var(--white);cursor:pointer;text-align:center;transition:all 0.15s;font-family:"Inter",sans-serif;}
 .fulfilment-btn:hover{border-color:var(--deep-blue);color:var(--deep-blue);}
 .fulfilment-btn.selected-instock{border-color:var(--leaf-green);background:#EBF5E8;color:#276414;}
 .fulfilment-btn.selected-backorder{border-color:#D4A017;background:#FFF8E1;color:#7D5A00;}
 .fulfilment-btn.selected-unable{border-color:var(--red);background:#FDECEC;color:var(--red);}
-/* Day fields */
-.day-fields{display:flex;gap:10px;margin-bottom:4px;}
-.day-field{flex:1;}
-.day-field label{display:block;font-size:11px;font-weight:700;color:var(--cool-gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+.day-fields{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+.day-field{flex:1;min-width:130px;}
+.day-field label{display:block;font-size:11px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+.day-field .hint{display:block;font-size:11px;color:var(--cool-gray);margin-bottom:6px;line-height:1.4;min-height:30px;}
 .day-field input{width:100%;box-sizing:border-box;border:1.5px solid #D4DAE0;border-radius:6px;padding:10px 12px;font-family:"Inter",sans-serif;font-size:13px;background:var(--white);color:var(--slate);}
 .day-field input:focus{outline:none;border-color:var(--deep-blue);}
-.day-field input:disabled{background:#F2F4F6;color:#B0B8C0;}
-.total-days-note{font-size:11px;color:var(--cool-gray);margin-top:4px;min-height:16px;}
-/* Global fields */
+.total-days-note{font-size:12px;font-weight:600;color:var(--dark-navy);margin-top:8px;min-height:18px;}
 label.field-label-standalone{display:block;font-size:12px;color:var(--cool-gray);margin-bottom:6px;}
 textarea,input[type="text"]{width:100%;box-sizing:border-box;border:1.5px solid #D4DAE0;border-radius:6px;padding:11px 14px;font-family:"Inter",sans-serif;font-size:14px;resize:vertical;}
 textarea{min-height:60px;margin-bottom:16px;}
@@ -86,6 +83,8 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
   .doc-header-middle{width:100%;text-align:center;}
   footer{padding:20px 12px;margin-top:24px;margin-bottom:24px;}
   .fulfilment-btn{min-width:100px;}
+  .day-field{min-width:100%;}
+  .day-field .hint{min-height:0;}
 }
 </style>
 </head>
@@ -107,7 +106,7 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 
 <main class="main"><div class="form-card boxed-540">
   <div id="content">
-    <div class="status-msg">Loading your confirmation request…</div>
+    <div class="status-msg">Loading your confirmation request.</div>
   </div>
   <div style="margin-top:24px;"><table style="width:100%;border-collapse:collapse;"><tr>
     <td style="width:50%;background-color:#4A8B2C;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span></td>
@@ -120,9 +119,9 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 <div class="it-float" id="itFloat">
   <button class="it-tab" onclick="toggleIT()">Technical Support</button>
   <div class="it-panel" id="itPanel">
-    <button class="it-close" onclick="toggleIT()">✕</button>
+    <button class="it-close" onclick="toggleIT()" aria-label="Close">&times;</button>
     <h4>Technical Issues?</h4>
-    <p>Having trouble with the form? Email our EC-IT Support team with a description of the problem and we will get back to you promptly.</p>
+    <p>Having trouble with the form? Email our IT Support team with a description of the problem and we will respond promptly.</p>
     <a href="mailto:itsupport@essentialcures.com">Email IT Support</a>
   </div>
 </div>
@@ -131,6 +130,9 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 function toggleIT(){document.getElementById("itPanel").classList.toggle("open");}
 
 const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
+const MODE_INSTOCK = 'In Stock - Ready to Ship';
+const MODE_BACKORDER = 'Backorder';
+const MODE_UNABLE = 'Unable to Supply';
 
 const params = new URLSearchParams(window.location.search);
 const token = params.get('token');
@@ -138,8 +140,16 @@ const cm44Id = params.get('id');
 const contentEl = document.getElementById('content');
 let lastGateData = null;
 
+function esc(v) {
+  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function numOrBlank(v) {
+  if (v === null || v === undefined || v === '' || v === 'null') return '';
+  const n = parseInt(v, 10);
+  return isNaN(n) ? '' : String(n);
+}
 function showError(msg) {
-  contentEl.innerHTML = `<div class="status-msg error">${msg}</div>`;
+  contentEl.innerHTML = `<div class="status-msg error">${esc(msg)}</div>`;
 }
 
 async function loadConfirmation() {
@@ -167,42 +177,42 @@ async function loadConfirmation() {
 
 function renderForm(data) {
   const alreadyBlock = data.alreadyConfirmed
-    ? `<div class="already-note">You already submitted a confirmation for this order. Your previous answers are shown below — update anything that has changed and submit again.</div>`
+    ? `<div class="already-note">You already submitted a confirmation for this order. Your previous answers are shown below. Update anything that has changed and submit again.</div>`
     : '';
 
   const linesHtml = data.lines.map((line, idx) => {
-    const existingMode = line.existingFulfilmentMode || '';
-    const existingAvail = line.existingAvailabilityDays || '';
-    const existingShipping = line.existingShippingDays || line.onFileLeadTimeDays || '';
+    const mode = line.existingFulfilmentMode || '';
+    const avail = numOrBlank(line.existingAvailabilityDays);
+    const fulfil = numOrBlank(line.existingOrderFulfilmentDays);
+    const transit = numOrBlank(line.existingTransitDays != null ? line.existingTransitDays : line.existingShippingDays);
+    const onFile = numOrBlank(line.onFileLeadTimeDays);
+    const onFileTxt = onFile !== '' ? ` &middot; Lead time on file: ${onFile} business days` : '';
+    const showDays = mode === MODE_INSTOCK || mode === MODE_BACKORDER;
 
     return `
-      <div class="line-item" data-rowid="${line.rowId}" data-dliid="${line.dliId}">
-        <div class="line-title">${line.productName}</div>
-        <div class="line-meta">Qty ${line.qty} &middot; UOM: ${line.uom || '—'} &middot; Delivery: ${line.deliveryCity} &middot; Courier</div>
+      <div class="line-item" data-rowid="${esc(line.rowId)}" data-dliid="${esc(line.dliId)}" data-mode="${esc(mode)}" data-idx="${idx}">
+        <div class="line-title">${esc(line.productName)}</div>
+        <div class="line-meta">Qty ${esc(line.qty)} &middot; UOM: ${esc(line.uom || 'Not specified')} &middot; Delivery: ${esc(line.deliveryCity || 'Not specified')}${onFileTxt}</div>
         <div class="fulfilment-group">
-          <button type="button" class="fulfilment-btn${existingMode === 'In Stock - Ready to Ship' ? ' selected-instock' : ''}"
-            data-mode="In Stock - Ready to Ship" onclick="selectFulfilment(this, ${idx})">
-            ✓ In Stock
-          </button>
-          <button type="button" class="fulfilment-btn${existingMode === 'Backorder' ? ' selected-backorder' : ''}"
-            data-mode="Backorder" onclick="selectFulfilment(this, ${idx})">
-            ⏳ Backorder
-          </button>
-          <button type="button" class="fulfilment-btn${existingMode === 'Unable to Supply' ? ' selected-unable' : ''}"
-            data-mode="Unable to Supply" onclick="selectFulfilment(this, ${idx})">
-            ✕ Unable to Supply
-          </button>
+          <button type="button" class="fulfilment-btn${mode === MODE_INSTOCK ? ' selected-instock' : ''}" data-mode="${MODE_INSTOCK}" onclick="selectFulfilment(this, ${idx})">In Stock</button>
+          <button type="button" class="fulfilment-btn${mode === MODE_BACKORDER ? ' selected-backorder' : ''}" data-mode="${MODE_BACKORDER}" onclick="selectFulfilment(this, ${idx})">Backorder</button>
+          <button type="button" class="fulfilment-btn${mode === MODE_UNABLE ? ' selected-unable' : ''}" data-mode="${MODE_UNABLE}" onclick="selectFulfilment(this, ${idx})">Unable to Supply</button>
         </div>
-        <div class="day-fields" id="dayFields_${idx}" style="${existingMode === 'Unable to Supply' ? 'display:none' : ''}">
-          <div class="day-field" id="availGroup_${idx}" style="${existingMode === 'In Stock - Ready to Ship' || existingMode === '' ? 'display:none' : ''}">
-            <label>Availability Days</label>
-            <input type="number" min="0" step="1" class="avail-input" id="avail_${idx}"
-              value="${existingAvail}" placeholder="Days until in stock">
+        <div class="day-fields" id="dayFields_${idx}" style="${showDays ? '' : 'display:none'}">
+          <div class="day-field" id="availGroup_${idx}" style="${mode === MODE_BACKORDER ? '' : 'display:none'}">
+            <label for="avail_${idx}">Available In (days)</label>
+            <span class="hint">Business days until stock is available</span>
+            <input type="number" min="1" step="1" class="day-input" id="avail_${idx}" value="${avail}" placeholder="e.g. 10">
           </div>
           <div class="day-field">
-            <label>Shipping Days</label>
-            <input type="number" min="0" step="1" class="shipping-input" id="shipping_${idx}"
-              value="${existingShipping}" placeholder="Transit days">
+            <label for="fulfil_${idx}">Order Fulfilment (days)</label>
+            <span class="hint">Business days to pick, pack and dispatch</span>
+            <input type="number" min="0" step="1" class="day-input" id="fulfil_${idx}" value="${fulfil}" placeholder="e.g. 2">
+          </div>
+          <div class="day-field">
+            <label for="transit_${idx}">Transit (days)</label>
+            <span class="hint">Business days in transit with the carrier</span>
+            <input type="number" min="0" step="1" class="day-input" id="transit_${idx}" value="${transit}" placeholder="e.g. 3">
           </div>
         </div>
         <div class="total-days-note" id="totalNote_${idx}"></div>
@@ -212,71 +222,88 @@ function renderForm(data) {
 
   contentEl.innerHTML = `
     <h2>Pre-Order Confirmation</h2>
-    <p class="deal-name">${data.dealReference || ''} &middot; ${data.supplierName || ''}</p>
+    <p class="deal-name">${esc(data.dealReference || '')} &middot; ${esc(data.supplierName || '')}</p>
     ${alreadyBlock}
     <div class="not-binding-note">This is a pre-order confirmation and not a formal purchase order. It carries no binding obligation on either party.</div>
-    <div class="section-label">Order Lines — Please Confirm Each</div>
+    <div class="section-label">Order Lines: Please Confirm Each</div>
+    <div class="guide-note">For each line, select its availability, then enter the business days you need. The total lead time is counted from the date you receive our purchase order.</div>
     ${linesHtml}
     <div class="section-label">Additional Information</div>
     <label class="field-label-standalone" for="comments">Comments (optional)</label>
-    <textarea id="comments">${lastGateData.existingComments || ''}</textarea>
+    <textarea id="comments">${esc(lastGateData.existingComments || '')}</textarea>
     <label class="field-label-standalone" for="deliveryInstructions">Delivery Instructions or Special Arrangements (optional)</label>
-    <textarea id="deliveryInstructions">${lastGateData.existingDeliveryInstructions || ''}</textarea>
+    <textarea id="deliveryInstructions">${esc(lastGateData.existingDeliveryInstructions || '')}</textarea>
     <label class="field-label-standalone" for="confirmationReference">Your Reference / PO Acknowledgement Number (optional)</label>
     <input type="text" id="confirmationReference" placeholder="e.g. your internal order number">
-    <button class="submit-btn" id="submitBtn" disabled>Select a fulfilment status for every line above</button>
+    <button class="submit-btn" id="submitBtn" disabled>Complete every line above to submit</button>
   `;
 
-  // Recompute totals for any pre-filled lines
-  data.lines.forEach((line, idx) => {
-    if (line.existingFulfilmentMode) updateTotalNote(idx);
-  });
-
+  data.lines.forEach((line, idx) => updateTotalNote(idx));
   updateSubmitState();
 }
 
+function getCard(idx) {
+  return contentEl.querySelector(`.line-item[data-idx="${idx}"]`);
+}
+
 function selectFulfilment(btn, idx) {
-  const card = btn.closest('.line-item');
-  card.querySelectorAll('.fulfilment-btn').forEach(b => {
-    b.classList.remove('selected-instock','selected-backorder','selected-unable');
-  });
+  const card = getCard(idx);
+  card.querySelectorAll('.fulfilment-btn').forEach(b => b.classList.remove('selected-instock','selected-backorder','selected-unable'));
   const mode = btn.getAttribute('data-mode');
-  if (mode === 'In Stock - Ready to Ship') {
+  card.setAttribute('data-mode', mode);
+  const dayFields = document.getElementById('dayFields_' + idx);
+  const availGroup = document.getElementById('availGroup_' + idx);
+  if (mode === MODE_INSTOCK) {
     btn.classList.add('selected-instock');
-    document.getElementById('dayFields_' + idx).style.display = '';
-    document.getElementById('availGroup_' + idx).style.display = 'none';
-    const availInput = document.getElementById('avail_' + idx);
-    if (availInput) availInput.value = '0';
-  } else if (mode === 'Backorder') {
+    dayFields.style.display = '';
+    availGroup.style.display = 'none';
+  } else if (mode === MODE_BACKORDER) {
     btn.classList.add('selected-backorder');
-    document.getElementById('dayFields_' + idx).style.display = '';
-    document.getElementById('availGroup_' + idx).style.display = '';
-  } else if (mode === 'Unable to Supply') {
+    dayFields.style.display = '';
+    availGroup.style.display = '';
+  } else {
     btn.classList.add('selected-unable');
-    document.getElementById('dayFields_' + idx).style.display = 'none';
+    dayFields.style.display = 'none';
   }
   updateTotalNote(idx);
   updateSubmitState();
 }
 
+function readDays(id) {
+  const el = document.getElementById(id);
+  if (!el || el.value === '') return null;
+  const n = parseInt(el.value, 10);
+  return isNaN(n) || n < 0 ? null : n;
+}
+
+function lineState(idx) {
+  const card = getCard(idx);
+  const mode = card ? card.getAttribute('data-mode') : '';
+  const avail = readDays('avail_' + idx);
+  const fulfil = readDays('fulfil_' + idx);
+  const transit = readDays('transit_' + idx);
+  let complete = false;
+  let total = null;
+  if (mode === MODE_UNABLE) {
+    complete = true;
+  } else if (mode === MODE_INSTOCK) {
+    complete = fulfil !== null && transit !== null;
+    if (complete) total = fulfil + transit;
+  } else if (mode === MODE_BACKORDER) {
+    complete = avail !== null && avail > 0 && fulfil !== null && transit !== null;
+    if (complete) total = avail + fulfil + transit;
+  }
+  return { mode, avail, fulfil, transit, complete, total };
+}
+
 function updateTotalNote(idx) {
   const noteEl = document.getElementById('totalNote_' + idx);
   if (!noteEl) return;
-  const card = document.querySelector(`.line-item:nth-child(${idx + 1})`);
-  // Find selected mode
-  const selectedBtn = document.querySelector(`[data-rowid] .fulfilment-btn.selected-instock, [data-rowid] .fulfilment-btn.selected-backorder, [data-rowid] .fulfilment-btn.selected-unable`);
-
-  const availEl = document.getElementById('avail_' + idx);
-  const shippingEl = document.getElementById('shipping_' + idx);
-  if (!shippingEl) { noteEl.textContent = ''; return; }
-
-  const avail = parseInt(availEl ? availEl.value : '0') || 0;
-  const shipping = parseInt(shippingEl.value) || 0;
-  const total = avail + shipping;
-
-  const dayFields = document.getElementById('dayFields_' + idx);
-  if (dayFields && dayFields.style.display !== 'none') {
-    noteEl.textContent = total > 0 ? `Total delivery estimate: ${total} day${total !== 1 ? 's' : ''} from PO date` : '';
+  const s = lineState(idx);
+  if (s.mode === MODE_INSTOCK || s.mode === MODE_BACKORDER) {
+    noteEl.textContent = s.total !== null
+      ? `Total lead time: ${s.total} business day${s.total !== 1 ? 's' : ''} from receipt of our purchase order`
+      : '';
   } else {
     noteEl.textContent = '';
   }
@@ -286,57 +313,39 @@ function updateSubmitState() {
   const btn = document.getElementById('submitBtn');
   if (!btn) return;
   const cards = contentEl.querySelectorAll('.line-item');
-  let allSelected = true;
+  let allComplete = true;
   cards.forEach(card => {
-    const hasSelection = card.querySelector('.selected-instock, .selected-backorder, .selected-unable');
-    if (!hasSelection) allSelected = false;
+    const idx = parseInt(card.getAttribute('data-idx'), 10);
+    if (!lineState(idx).complete) allComplete = false;
   });
-  btn.disabled = !allSelected;
-  btn.textContent = allSelected ? 'Submit Confirmation' : 'Select a fulfilment status for every line above';
+  btn.disabled = !allComplete;
+  btn.textContent = allComplete ? 'Submit Confirmation' : 'Complete every line above to submit';
 }
 
-// Wire up day field inputs for live total notes
 document.addEventListener('input', e => {
-  if (e.target.classList.contains('avail-input') || e.target.classList.contains('shipping-input')) {
-    const id = e.target.id;
-    const idx = parseInt(id.split('_')[1]);
-    if (!isNaN(idx)) updateTotalNote(idx);
+  if (e.target.classList.contains('day-input')) {
+    const idx = parseInt(e.target.id.split('_')[1], 10);
+    if (!isNaN(idx)) { updateTotalNote(idx); updateSubmitState(); }
   }
 });
 
 async function submitConfirmation() {
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  btn.textContent = 'Submitting…';
+  btn.textContent = 'Submitting...';
 
-  const lines = Array.from(contentEl.querySelectorAll('.line-item')).map((card, idx) => {
-    const selectedBtn = card.querySelector('.selected-instock, .selected-backorder, .selected-unable');
-    const mode = selectedBtn ? selectedBtn.getAttribute('data-mode') : '';
-    const availEl = document.getElementById('avail_' + idx);
-    const shippingEl = document.getElementById('shipping_' + idx);
-    const avail = parseInt(availEl ? availEl.value : '0') || 0;
-    const shipping = parseInt(shippingEl ? shippingEl.value : '0') || 0;
-
-    // Map Fulfilment_Mode to legacy acceptance/confirmation fields for downstream functions
-    let lineAcceptanceStatus = 'Accepted';
-    let lineConfirmationStatus = 'Confirmed-Immediate';
-    if (mode === 'Backorder') {
-      lineConfirmationStatus = 'Confirmed-Backorder';
-    } else if (mode === 'Unable to Supply') {
-      lineAcceptanceStatus = 'Declined';
-      lineConfirmationStatus = 'Refused';
-    }
-
+  const lines = Array.from(contentEl.querySelectorAll('.line-item')).map(card => {
+    const idx = parseInt(card.getAttribute('data-idx'), 10);
+    const s = lineState(idx);
+    const isUnable = s.mode === MODE_UNABLE;
     return {
       rowId: card.getAttribute('data-rowid'),
       dliId: card.getAttribute('data-dliid'),
-      fulfilmentMode: mode,
-      availabilityDays: avail,
-      shippingDays: shipping,
-      confirmedLeadTimeDays: avail + shipping,
-      // Legacy fields — kept for cm43_confirmation_response_v1 compatibility
-      acceptanceStatus: lineAcceptanceStatus,
-      confirmationStatus: lineConfirmationStatus,
+      fulfilmentMode: s.mode,
+      availabilityDays: (!isUnable && s.mode === MODE_BACKORDER) ? s.avail : 0,
+      orderFulfilmentDays: isUnable ? 0 : s.fulfil,
+      shippingDays: isUnable ? 0 : s.transit,
+      confirmedLeadTimeDays: isUnable ? 0 : s.total,
     };
   });
 
@@ -352,11 +361,10 @@ async function submitConfirmation() {
     });
     const data = await resp.json();
     if (data.status !== 'success') {
-      throw new Error(data.message || data.reason || 'Failed to submit your confirmation.');
+      throw new Error(data.message || data.reason || 'Your confirmation could not be submitted.');
     }
     showThankYou();
   } catch (err) {
-    btn.disabled = false;
     updateSubmitState();
     alert(err.message || 'Something went wrong. Please try again.');
   }
