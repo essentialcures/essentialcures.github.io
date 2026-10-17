@@ -231,6 +231,7 @@ function renderPage(){
     : '';
 
   const linesHtml = poData.allFullyShipped ? '' : buildLinesSection();
+  if(poData.lineFetchNote){ console.warn('EC line fetch:', poData.lineFetchNote); }
 
   contentEl.innerHTML = `
     <h2>Supplier Purchase Order</h2>
@@ -254,6 +255,12 @@ function renderPage(){
 }
 
 function buildLinesSection(){
+  if(!poData.lineItems || poData.lineItems.length === 0){
+    return `
+      <div class="section-label">Order Lines</div>
+      <div class="ack-note"><span class="ack-title">No order lines found on this purchase order</span>
+      We could not load the product lines for this order. Please contact procurement@essentialcures.com and quote reference ${esc(poData.poNumber || '')}.</div>`;
+  }
   const lines = (poData.lineItems || []).map((line, idx) => {
     if(line.fullyShipped){
       return `
