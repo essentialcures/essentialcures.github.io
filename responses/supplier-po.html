@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Supplier PO — Essential Cures Inc.</title>
+<style>
+:root {
+  --blue: #005090;
+  --blue-light: #EAF2FB;
+  --blue-mid: #C5D8EA;
+  --green: #4A8B2C;
+  --green-light: #EAF4E3;
+  --text: #2C3E50;
+  --muted: #6B7C8C;
+  --bg: #F7F9FB;
+  --white: #ffffff;
+  --border: #E8ECEF;
+  --red: #C0392B;
+  --red-light: #FDECEA;
+  --amber: #D68910;
+  --amber-light: #FEF9E7;
+  --radius: 4px;
+  font-size: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --blue: #4A9FD4;
+    --blue-light: #0D1F2D;
+    --blue-mid: #1A3A52;
+    --green: #5FAD38;
+    --green-light: #0D1F0A;
+    --text: #E8EDF2;
+    --muted: #8FA3B1;
+    --bg: #0F1923;
+    --white: #162130;
+    --border: #1E3347;
+    --red-light: #2D0E0B;
+    --amber-light: #1F1500;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Calibri, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+/* ── Header ── */
+.header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 64px;
+}
+.header-logo { height: 38px; }
+.header-divider {
+  width: 1px; height: 32px;
+  background: var(--border);
+}
+.header-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--blue);
+  letter-spacing: 0.5px;
+}
+.header-subtitle {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--green);
+  margin-left: auto;
+}
+.stripe-bar {
+  height: 5px;
+  background: linear-gradient(to right, var(--blue) 50%, var(--green) 50%);
+}
+
+/* ── Layout ── */
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 28px 20px 0;
+}
+
+/* ── Loading / Error states ── */
+.state-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 48px 32px;
+  text-align: center;
+}
+.state-card .icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+.state-card h2 {
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.state-card p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── PO Header card ── */
+.po-header {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.po-header-top {
+  background: var(--blue);
+  color: #fff;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.po-header-top h1 {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.po-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.2);
+  letter-spacing: 0.3px;
+}
+.po-badge.approved { background: rgba(74,139,44,0.7); }
+.po-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0;
+}
+.po-meta-item {
+  padding: 14px 20px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.po-meta-item:last-child { border-right: none; }
+.po-meta-label {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+.po-meta-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ── Acknowledgement banner ── */
+.ack-banner {
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+}
+.ack-banner.pending {
+  background: var(--amber-light);
+  border: 1px solid #F0CA4D;
+  color: var(--amber);
+}
+.ack-banner.done {
+  background: var(--green-light);
+  border: 1px solid #A8D5A2;
+  color: var(--green);
+}
+.ack-banner-icon { font-size: 20px; flex-shrink: 0; }
+.ack-banner-text { flex: 1; }
+.ack-banner-text strong { display: block; margin-bottom: 2px; }
+.btn-ack {
+  background: var(--amber);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.btn-ack:hover { background: #B7770D; }
+
+/* ── Section heading ── */
+.section-heading {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--border);
+}
+
+/* ── Line items table ── */
+.lines-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 24px;
+  font-size: 13px;
+}
+.lines-table th {
+  background: var(--blue);
+  color: #fff;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.lines-table th.center { text-align: center; }
+.lines-table td {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.lines-table tr:last-child td { border-bottom: none; }
+.lines-table tr.shipped-row { opacity: 0.5; }
+.lines-table tr.shipped-row td { background: var(--bg); }
+.shipped-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--green);
+  background: var(--green-light);
+  border: 1px solid #A8D5A2;
+  border-radius: 20px;
+  padding: 2px 8px;
+}
+.select-cb { width: 16px; height: 16px; cursor: pointer; accent-color: var(--blue); }
+.qty-input {
+  width: 70px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--white);
+  text-align: center;
+}
+.qty-input:focus { outline: none; border-color: var(--blue); }
+.qty-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.qty-badge.outstanding { background: var(--blue-light); color: var(--blue); }
+.qty-badge.zero { background: var(--green-light); color: var(--green); }
+
+/* ── Lot entry ── */
+.lot-section {
+  background: var(--bg);
+  border: 1px dashed var(--blue-mid);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-top: 8px;
+}
+.lot-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.lot-row {
+  display: grid;
+  grid-template-columns: 1fr 140px 80px 28px;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.lot-row:last-of-type { margin-bottom: 0; }
+.lot-input {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--white);
+}
+.lot-input:focus { outline: none; border-color: var(--blue); }
+.lot-input.error { border-color: var(--red); background: var(--red-light); }
+.btn-remove-lot {
+  width: 28px; height: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--white);
+  color: var(--red);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.btn-remove-lot:hover { background: var(--red-light); border-color: var(--red); }
+.btn-add-lot {
+  background: none;
+  border: 1px dashed var(--blue-mid);
+  border-radius: var(--radius);
+  color: var(--blue);
+  font-size: 12px;
+  font-family: inherit;
+  padding: 5px 12px;
+  cursor: pointer;
+  margin-top: 8px;
+  width: 100%;
+}
+.btn-add-lot:hover { background: var(--blue-light); }
+.lot-qty-summary {
+  font-size: 11px;
+  margin-top: 6px;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  display: inline-block;
+}
+.lot-qty-summary.match { background: var(--green-light); color: var(--green); }
+.lot-qty-summary.mismatch { background: var(--red-light); color: var(--red); }
+.lot-row-labels {
+  display: grid;
+  grid-template-columns: 1fr 140px 80px 28px;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.lot-row-labels span {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Shipment block ── */
+.shipment-block {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.shipment-block-header {
+  background: var(--blue-light);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--blue);
+}
+.shipment-block-body { padding: 20px; }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-field.full { grid-column: 1 / -1; }
+.form-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-label .required { color: var(--red); margin-left: 2px; }
+.form-select, .form-input, .form-textarea {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--white);
+}
+.form-select:focus, .form-input:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(0,80,144,0.08);
+}
+.form-textarea { resize: vertical; min-height: 72px; }
+.method-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.method-option {
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.method-option:hover { border-color: var(--blue-mid); }
+.method-option.selected {
+  border-color: var(--blue);
+  background: var(--blue-light);
+}
+.method-option input[type="radio"] { accent-color: var(--blue); }
+.method-option-label { font-size: 13px; font-weight: 700; color: var(--text); }
+.method-option-sub { font-size: 11px; color: var(--muted); }
+
+/* ── Courier / Own vehicle conditional fields ── */
+.conditional-fields { display: none; }
+.conditional-fields.visible { display: contents; }
+
+/* ── Submit button ── */
+.submit-area {
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.submit-summary {
+  font-size: 12px;
+  color: var(--muted);
+}
+.submit-summary strong { color: var(--text); }
+.btn-submit {
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 12px 32px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.btn-submit:hover { background: #003D70; }
+.btn-submit:disabled {
+  background: var(--muted);
+  cursor: not-allowed;
+}
+
+/* ── Validation message ── */
+.validation-msg {
+  background: var(--red-light);
+  border: 1px solid #F5A9A9;
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--red);
+  margin-top: 12px;
+  display: none;
+}
+.validation-msg.visible { display: block; }
+
+/* ── Previous shipments ── */
+.prev-shipments {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.prev-shipment-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.prev-shipment-row:last-child { border-bottom: none; }
+.prev-dn { font-weight: 700; color: var(--blue); }
+.prev-status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: var(--blue-light);
+  color: var(--blue);
+}
+.prev-status.delivered { background: var(--green-light); color: var(--green); }
+.btn-download-dn {
+  background: none;
+  border: 1px solid var(--blue-mid);
+  border-radius: var(--radius);
+  color: var(--blue);
+  font-size: 12px;
+  font-family: inherit;
+  padding: 5px 12px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-download-dn:hover { background: var(--blue-light); }
+
+/* ── Success state ── */
+.success-card {
+  background: var(--white);
+  border: 1px solid #A8D5A2;
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.success-icon { font-size: 48px; margin-bottom: 16px; }
+.success-card h2 { font-size: 20px; color: var(--green); margin-bottom: 8px; }
+.success-card p { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+.btn-download-pdf {
+  display: inline-block;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 12px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+  margin-bottom: 12px;
+}
+.btn-download-pdf:hover { background: #003D70; }
+.btn-ship-more {
+  display: inline-block;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 24px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  font-family: inherit;
+  margin-left: 12px;
+}
+.btn-ship-more:hover { background: var(--bg); }
+
+/* ── All shipped banner ── */
+.all-shipped-banner {
+  background: var(--green-light);
+  border: 1px solid #A8D5A2;
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.all-shipped-banner h3 { color: var(--green); font-size: 16px; margin-bottom: 6px; }
+.all-shipped-banner p { font-size: 13px; color: var(--muted); }
+
+/* ── Footer ── */
+.page-footer {
+  margin-top: 40px;
+  padding: 16px 20px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+.page-footer a { color: var(--blue); text-decoration: none; }
+
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .method-toggle { grid-template-columns: 1fr; }
+  .lot-row { grid-template-columns: 1fr 110px 60px 28px; }
+  .po-meta { grid-template-columns: 1fr 1fr; }
+  .submit-area { flex-direction: column; align-items: stretch; }
+  .btn-submit { text-align: center; }
+  .header-subtitle { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <img src="https://i.ibb.co/B2VgZGwQ/Essential-Cures-Final-Logo.png" class="header-logo" alt="Essential Cures">
+    <div class="header-divider"></div>
+    <span class="header-title">ESSENTIAL CURES INC.</span>
+    <span class="header-subtitle">Compliant Solutions. Confident Care.</span>
+  </div>
+  <div class="stripe-bar"></div>
+</div>
+
+<div class="container" id="app">
+  <!-- Loading state -->
+  <div class="state-card" id="state-loading">
+    <div class="spinner"></div>
+    <h2>Loading your purchase order</h2>
+    <p>Please wait while we retrieve your order details.</p>
+  </div>
+
+  <!-- Error state -->
+  <div class="state-card" id="state-error" style="display:none;">
+    <div class="icon">⚠️</div>
+    <h2 id="error-title">This link is no longer active</h2>
+    <p id="error-message">This purchase order link has expired or is invalid. Please contact <a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a> if you need assistance.</p>
+  </div>
+
+  <!-- Main content -->
+  <div id="state-main" style="display:none;">
+
+    <!-- PO Header -->
+    <div class="po-header" id="po-header-card">
+      <div class="po-header-top">
+        <h1 id="po-title">Purchase Order</h1>
+        <span class="po-badge approved">Approved</span>
+      </div>
+      <div class="po-meta" id="po-meta"></div>
+    </div>
+
+    <!-- Acknowledgement banner -->
+    <div id="ack-banner" class="ack-banner pending">
+      <div class="ack-banner-icon">📋</div>
+      <div class="ack-banner-text">
+        <strong>Please acknowledge this purchase order</strong>
+        Confirm you have received and reviewed this PO before recording any shipments.
+      </div>
+      <button class="btn-ack" id="btn-ack" onclick="acknowledgeOrder()">Acknowledge PO</button>
+    </div>
+
+    <!-- Previous shipments -->
+    <div id="prev-shipments-section" style="display:none;">
+      <p class="section-heading">Previous Shipments</p>
+      <div class="prev-shipments" id="prev-shipments-list"></div>
+    </div>
+
+    <!-- All shipped banner -->
+    <div id="all-shipped-banner" class="all-shipped-banner" style="display:none;">
+      <h3>All lines fully shipped</h3>
+      <p>Every line on this purchase order has been fully dispatched. Thank you for your prompt fulfilment.</p>
+    </div>
+
+    <!-- Success card (shown after submit) -->
+    <div id="success-card" class="success-card" style="display:none;">
+      <div class="success-icon">✅</div>
+      <h2>Shipment recorded</h2>
+      <p id="success-message">Your shipment has been logged successfully. Download your delivery note below — print it and include it with the parcel.</p>
+      <a id="btn-download-pdf" class="btn-download-pdf" href="#" target="_blank">Download Delivery Note (PDF)</a>
+      <button class="btn-ship-more" onclick="showShipmentForm()">Record Another Shipment</button>
+    </div>
+
+    <!-- Line items section -->
+    <div id="lines-section">
+      <p class="section-heading">Order Lines</p>
+      <table class="lines-table" id="lines-table">
+        <thead>
+          <tr>
+            <th style="width:40px;" class="center">Ship</th>
+            <th>Product</th>
+            <th class="center" style="width:80px;">Ordered</th>
+            <th class="center" style="width:80px;">Shipped</th>
+            <th class="center" style="width:90px;">Outstanding</th>
+            <th class="center" style="width:90px;">Ship Now</th>
+          </tr>
+        </thead>
+        <tbody id="lines-body"></tbody>
+      </table>
+
+      <!-- Lot entries (dynamically inserted per selected line) -->
+      <div id="lot-entries"></div>
+
+      <!-- Shipment block -->
+      <div class="shipment-block" id="shipment-block" style="display:none;">
+        <div class="shipment-block-header">Shipment Details</div>
+        <div class="shipment-block-body">
+          <div class="form-grid">
+
+            <!-- Delivery method -->
+            <div class="form-field full">
+              <label class="form-label">Delivery Method <span class="required">*</span></label>
+              <div class="method-toggle">
+                <label class="method-option" id="method-courier" onclick="setMethod('Courier')">
+                  <input type="radio" name="deliveryMethod" value="Courier">
+                  <div>
+                    <div class="method-option-label">🚚 Courier</div>
+                    <div class="method-option-sub">FedEx, Purolator, Canada Post, etc.</div>
+                  </div>
+                </label>
+                <label class="method-option" id="method-own" onclick="setMethod('Own Vehicle')">
+                  <input type="radio" name="deliveryMethod" value="Own Vehicle">
+                  <div>
+                    <div class="method-option-label">🏭 Own Vehicle</div>
+                    <div class="method-option-sub">Direct delivery by your team</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Dispatch date (always shown) -->
+            <div class="form-field">
+              <label class="form-label" for="dispatch-date">Dispatch Date <span class="required">*</span></label>
+              <input type="date" id="dispatch-date" class="form-input">
+            </div>
+
+            <!-- Courier fields -->
+            <div class="form-field conditional-fields" id="courier-fields-1">
+              <label class="form-label" for="carrier">Carrier <span class="required">*</span></label>
+              <select id="carrier" class="form-select">
+                <option value="">Select carrier</option>
+                <option>FedEx</option>
+                <option>Purolator</option>
+                <option>Canada Post</option>
+                <option>UPS</option>
+                <option>DHL</option>
+                <option>Canpar</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-field conditional-fields" id="courier-fields-2">
+              <label class="form-label" for="tracking-number">Tracking Number <span class="required">*</span></label>
+              <input type="text" id="tracking-number" class="form-input" placeholder="e.g. 1Z999AA10123456784">
+            </div>
+
+            <!-- Own vehicle fields -->
+            <div class="form-field conditional-fields" id="own-fields-1">
+              <label class="form-label" for="driver-name">Driver Name <span class="required">*</span></label>
+              <input type="text" id="driver-name" class="form-input" placeholder="Full name of driver">
+            </div>
+            <div class="form-field conditional-fields" id="own-fields-2">
+              <label class="form-label" for="vehicle-plate">Vehicle Plate <span class="optional" style="color:var(--muted);font-weight:400;"> (optional)</span></label>
+              <input type="text" id="vehicle-plate" class="form-input" placeholder="e.g. ABC 1234">
+            </div>
+            <div class="form-field conditional-fields" id="own-fields-3">
+              <label class="form-label" for="expected-delivery">Expected Delivery Date <span class="required">*</span></label>
+              <input type="date" id="expected-delivery" class="form-input">
+            </div>
+
+            <!-- Notes (always shown) -->
+            <div class="form-field full">
+              <label class="form-label" for="supplier-notes">Notes <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
+              <textarea id="supplier-notes" class="form-textarea" placeholder="Any special handling instructions, substitution notes, or comments for Essential Cures"></textarea>
+            </div>
+
+          </div>
+
+          <div class="validation-msg" id="validation-msg"></div>
+
+          <div class="submit-area">
+            <div class="submit-summary" id="submit-summary">Select lines above to record a shipment.</div>
+            <button class="btn-submit" id="btn-submit" onclick="submitShipment()" disabled>Generate Delivery Note &amp; Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /state-main -->
+</div>
+
+<div class="page-footer">
+  <strong>Essential Cures Inc.</strong> &nbsp;|&nbsp;
+  <a href="https://essentialcures.com">essentialcures.com</a> &nbsp;|&nbsp;
+  Questions? <a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a>
+</div>
+
+<script>
+const WORKER = 'https://ec-supplier-po-worker.faisal-khan-e13.workers.dev';
+const token = new URLSearchParams(window.location.search).get('token');
+let poData = null;
+let selectedMethod = null;
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function init() {
+  if (!token) {
+    showError('Invalid Link', 'This purchase order link is missing required information. Please use the link provided in your email from Essential Cures.');
+    return;
+  }
+  try {
+    const res = await fetch(`${WORKER}/api/po/gate?token=${encodeURIComponent(token)}`);
+    const data = await res.json();
+    if (!data.success) {
+      showError('Link Not Active', data.error || 'This link is no longer valid.');
+      return;
+    }
+    poData = data;
+    renderPage();
+  } catch (e) {
+    showError('Connection Error', 'Unable to load your purchase order. Please check your connection and try again.');
+  }
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function renderPage() {
+  document.getElementById('state-loading').style.display = 'none';
+  document.getElementById('state-main').style.display = 'block';
+
+  // PO header
+  document.getElementById('po-title').textContent = poData.poNumber || 'Purchase Order';
+  document.getElementById('po-meta').innerHTML = `
+    <div class="po-meta-item">
+      <div class="po-meta-label">PO Reference</div>
+      <div class="po-meta-value">${esc(poData.poNumber)}</div>
+    </div>
+    <div class="po-meta-item">
+      <div class="po-meta-label">Supplier</div>
+      <div class="po-meta-value">${esc(poData.supplierName)}</div>
+    </div>
+    <div class="po-meta-item">
+      <div class="po-meta-label">Deliver To</div>
+      <div class="po-meta-value">${esc(poData.customerName)}</div>
+    </div>
+    <div class="po-meta-item" style="border-right:none;">
+      <div class="po-meta-label">Due Date</div>
+      <div class="po-meta-value">${formatDate(poData.dueDate)}</div>
+    </div>
+  `;
+
+  // Acknowledgement banner
+  if (poData.acknowledged) {
+    const banner = document.getElementById('ack-banner');
+    banner.className = 'ack-banner done';
+    banner.innerHTML = `
+      <div class="ack-banner-icon">✅</div>
+      <div class="ack-banner-text">
+        <strong>PO Acknowledged</strong>
+        Acknowledged on ${formatDate(poData.acknowledgedDate)}. You can now record shipments below.
+      </div>
+    `;
+  }
+
+  // Previous shipments
+  if (poData.existingShipments && poData.existingShipments.length > 0) {
+    document.getElementById('prev-shipments-section').style.display = 'block';
+    document.getElementById('prev-shipments-list').innerHTML = poData.existingShipments.map(s => `
+      <div class="prev-shipment-row">
+        <span class="prev-dn">${esc(s.dnNumber)}</span>
+        <span style="font-size:12px;color:var(--muted);">${formatDate(s.dispatchDate)}</span>
+        <span class="prev-status ${s.status === 'Delivered' ? 'delivered' : ''}">${esc(s.status)}</span>
+        <a class="btn-download-dn" href="${WORKER}/api/po/pdf?token=${encodeURIComponent(token)}&dn=${s.id}" target="_blank">Download DN</a>
+      </div>
+    `).join('');
+  }
+
+  // All shipped
+  if (poData.allFullyShipped) {
+    document.getElementById('all-shipped-banner').style.display = 'block';
+  }
+
+  // Line items
+  renderLines();
+
+  // Set today as default dispatch date
+  document.getElementById('dispatch-date').value = today();
+}
+
+function renderLines() {
+  const tbody = document.getElementById('lines-body');
+  tbody.innerHTML = (poData.lineItems || []).map((line, i) => {
+    const shipped = line.fullyShipped;
+    return `
+    <tr class="${shipped ? 'shipped-row' : ''}" id="line-row-${i}">
+      <td class="center">
+        ${shipped
+          ? '<span class="shipped-badge">Done</span>'
+          : `<input type="checkbox" class="select-cb" id="cb-${i}" onchange="onLineToggle(${i})" ${!poData.acknowledged ? 'disabled title="Acknowledge the PO first"' : ''}>`
+        }
+      </td>
+      <td>
+        <div style="font-weight:700;font-size:13px;">${esc(line.productName)}</div>
+        ${line.productCode ? `<div style="font-size:11px;color:var(--muted);">${esc(line.productCode)}</div>` : ''}
+      </td>
+      <td class="center">${line.quantityOrdered} ${esc(line.uom)}</td>
+      <td class="center">${line.quantityShipped}</td>
+      <td class="center">
+        <span class="qty-badge ${line.quantityOutstanding > 0 ? 'outstanding' : 'zero'}">
+          ${line.quantityOutstanding}
+        </span>
+      </td>
+      <td class="center">
+        ${shipped ? '—' : `<input type="number" class="qty-input" id="qty-${i}" value="${line.quantityOutstanding}" min="1" max="${line.quantityOutstanding}" onchange="onQtyChange(${i})" disabled>`}
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Line selection ────────────────────────────────────────────────────────────
+function onLineToggle(i) {
+  const cb = document.getElementById(`cb-${i}`);
+  const qtyInput = document.getElementById(`qty-${i}`);
+  qtyInput.disabled = !cb.checked;
+  if (cb.checked) qtyInput.focus();
+  updateLotEntries();
+  updateShipmentBlock();
+}
+
+function onQtyChange(i) {
+  const line = poData.lineItems[i];
+  const qtyInput = document.getElementById(`qty-${i}`);
+  let val = parseInt(qtyInput.value) || 0;
+  if (val < 1) val = 1;
+  if (val > line.quantityOutstanding) val = line.quantityOutstanding;
+  qtyInput.value = val;
+  updateLotEntries();
+  updateSummary();
+}
+
+function getSelectedLines() {
+  return (poData.lineItems || []).map((line, i) => {
+    const cb = document.getElementById(`cb-${i}`);
+    if (!cb || !cb.checked) return null;
+    const qty = parseInt(document.getElementById(`qty-${i}`).value) || 0;
+    return { index: i, line, qty };
+  }).filter(Boolean);
+}
+
+// ── Lot entries ───────────────────────────────────────────────────────────────
+function updateLotEntries() {
+  const selected = getSelectedLines();
+  const container = document.getElementById('lot-entries');
+
+  if (selected.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = selected.map(({ index: i, line, qty }) => `
+    <div class="lot-section" id="lot-section-${i}">
+      <div class="lot-section-title">Lot / Batch Details — ${esc(line.productName)}</div>
+      <div class="lot-row-labels">
+        <span>Lot / Batch Number</span>
+        <span>Expiry Date</span>
+        <span>Qty</span>
+        <span></span>
+      </div>
+      <div id="lot-rows-${i}">
+        <div class="lot-row" id="lot-row-${i}-0">
+          <input type="text" class="lot-input" id="lot-num-${i}-0" placeholder="e.g. LOT-2024-001">
+          <input type="date" class="lot-input" id="lot-exp-${i}-0">
+          <input type="number" class="lot-input" id="lot-qty-${i}-0" placeholder="Qty" min="1" value="${qty}" onchange="updateLotSummary(${i})">
+          <button class="btn-remove-lot" onclick="removeLotRow(${i},0)" title="Remove">×</button>
+        </div>
+      </div>
+      <button class="btn-add-lot" onclick="addLotRow(${i})">+ Add another lot / batch</button>
+      <div class="lot-qty-summary" id="lot-summary-${i}"></div>
+    </div>
+  `).join('');
+
+  selected.forEach(({ index: i, qty }) => updateLotSummary(i));
+}
+
+function addLotRow(lineIdx) {
+  const container = document.getElementById(`lot-rows-${lineIdx}`);
+  const rows = container.querySelectorAll('.lot-row');
+  const n = rows.length;
+  const div = document.createElement('div');
+  div.className = 'lot-row';
+  div.id = `lot-row-${lineIdx}-${n}`;
+  div.innerHTML = `
+    <input type="text" class="lot-input" id="lot-num-${lineIdx}-${n}" placeholder="e.g. LOT-2024-001">
+    <input type="date" class="lot-input" id="lot-exp-${lineIdx}-${n}">
+    <input type="number" class="lot-input" id="lot-qty-${lineIdx}-${n}" placeholder="Qty" min="1" onchange="updateLotSummary(${lineIdx})">
+    <button class="btn-remove-lot" onclick="removeLotRow(${lineIdx},${n})" title="Remove">×</button>
+  `;
+  container.appendChild(div);
+  document.getElementById(`lot-num-${lineIdx}-${n}`).focus();
+}
+
+function removeLotRow(lineIdx, rowIdx) {
+  const row = document.getElementById(`lot-row-${lineIdx}-${rowIdx}`);
+  const container = document.getElementById(`lot-rows-${lineIdx}`);
+  if (container.querySelectorAll('.lot-row').length <= 1) return; // Keep at least one
+  row.remove();
+  updateLotSummary(lineIdx);
+}
+
+function updateLotSummary(lineIdx) {
+  const cb = document.getElementById(`cb-${lineIdx}`);
+  if (!cb || !cb.checked) return;
+  const shipQty = parseInt(document.getElementById(`qty-${lineIdx}`).value) || 0;
+  const lotRows = document.getElementById(`lot-rows-${lineIdx}`).querySelectorAll('.lot-row');
+  let lotTotal = 0;
+  lotRows.forEach((row, n) => {
+    const qtyEl = document.getElementById(`lot-qty-${lineIdx}-${n}`);
+    if (qtyEl) lotTotal += parseInt(qtyEl.value) || 0;
+  });
+  const el = document.getElementById(`lot-summary-${lineIdx}`);
+  if (!el) return;
+  if (lotTotal === shipQty) {
+    el.className = 'lot-qty-summary match';
+    el.textContent = `✓ Lot quantities match: ${lotTotal} of ${shipQty}`;
+  } else {
+    el.className = 'lot-qty-summary mismatch';
+    el.textContent = `Lot total: ${lotTotal} — must equal ${shipQty}`;
+  }
+  updateSubmitButton();
+}
+
+function getLotData(lineIdx) {
+  const rows = document.getElementById(`lot-rows-${lineIdx}`);
+  if (!rows) return [];
+  return Array.from(rows.querySelectorAll('.lot-row')).map((row, n) => ({
+    lotBatchNumber: (document.getElementById(`lot-num-${lineIdx}-${n}`)?.value || '').trim(),
+    expiryDate: document.getElementById(`lot-exp-${lineIdx}-${n}`)?.value || '',
+    quantity: parseInt(document.getElementById(`lot-qty-${lineIdx}-${n}`)?.value) || 0,
+  }));
+}
+
+// ── Shipment block ────────────────────────────────────────────────────────────
+function updateShipmentBlock() {
+  const selected = getSelectedLines();
+  const block = document.getElementById('shipment-block');
+  block.style.display = selected.length > 0 ? 'block' : 'none';
+  updateSummary();
+  updateSubmitButton();
+}
+
+function updateSummary() {
+  const selected = getSelectedLines();
+  const totalUnits = selected.reduce((s, { qty }) => s + qty, 0);
+  const el = document.getElementById('submit-summary');
+  if (selected.length === 0) {
+    el.innerHTML = 'Select lines above to record a shipment.';
+  } else {
+    el.innerHTML = `<strong>${selected.length}</strong> line${selected.length > 1 ? 's' : ''}, <strong>${totalUnits}</strong> unit${totalUnits !== 1 ? 's' : ''} selected for this shipment.`;
+  }
+}
+
+function updateSubmitButton() {
+  const selected = getSelectedLines();
+  const btn = document.getElementById('btn-submit');
+  if (selected.length === 0 || !selectedMethod) {
+    btn.disabled = true;
+    return;
+  }
+  // Check all lot summaries match
+  const allMatch = selected.every(({ index: i, qty }) => {
+    const lots = getLotData(i);
+    const total = lots.reduce((s, l) => s + l.quantity, 0);
+    return total === qty;
+  });
+  btn.disabled = !allMatch;
+}
+
+// ── Delivery method ───────────────────────────────────────────────────────────
+function setMethod(method) {
+  selectedMethod = method;
+  document.getElementById('method-courier').classList.toggle('selected', method === 'Courier');
+  document.getElementById('method-own').classList.toggle('selected', method === 'Own Vehicle');
+
+  const courierFields = ['courier-fields-1', 'courier-fields-2'];
+  const ownFields = ['own-fields-1', 'own-fields-2', 'own-fields-3'];
+
+  courierFields.forEach(id => {
+    document.getElementById(id).classList.toggle('visible', method === 'Courier');
+  });
+  ownFields.forEach(id => {
+    document.getElementById(id).classList.toggle('visible', method === 'Own Vehicle');
+  });
+
+  updateSubmitButton();
+}
+
+// ── Acknowledge ───────────────────────────────────────────────────────────────
+async function acknowledgeOrder() {
+  const btn = document.getElementById('btn-ack');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  try {
+    const res = await fetch(`${WORKER}/api/po/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, action: 'acknowledge' }),
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error || 'Failed to acknowledge');
+    poData.acknowledged = true;
+    poData.acknowledgedDate = new Date().toISOString();
+    const banner = document.getElementById('ack-banner');
+    banner.className = 'ack-banner done';
+    banner.innerHTML = `
+      <div class="ack-banner-icon">✅</div>
+      <div class="ack-banner-text">
+        <strong>PO Acknowledged</strong>
+        Acknowledged on ${formatDate(new Date().toISOString())}. You can now record shipments below.
+      </div>
+    `;
+    // Enable checkboxes
+    document.querySelectorAll('.select-cb').forEach(cb => cb.disabled = false);
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = 'Acknowledge PO';
+    showValidation('Unable to save acknowledgement: ' + e.message);
+  }
+}
+
+// ── Submit shipment ───────────────────────────────────────────────────────────
+async function submitShipment() {
+  clearValidation();
+  const selected = getSelectedLines();
+
+  if (!selectedMethod) { showValidation('Please select a delivery method.'); return; }
+  if (!document.getElementById('dispatch-date').value) { showValidation('Please enter the dispatch date.'); return; }
+
+  if (selectedMethod === 'Courier') {
+    if (!document.getElementById('carrier').value) { showValidation('Please select the carrier.'); return; }
+    if (!document.getElementById('tracking-number').value.trim()) { showValidation('Please enter the tracking number.'); return; }
+  }
+  if (selectedMethod === 'Own Vehicle') {
+    if (!document.getElementById('driver-name').value.trim()) { showValidation('Please enter the driver name.'); return; }
+    if (!document.getElementById('expected-delivery').value) { showValidation('Please enter the expected delivery date.'); return; }
+  }
+
+  // Build selected lines payload
+  const selectedLinesPayload = selected.map(({ index: i, line, qty }) => ({
+    dliId: line.id,
+    productName: line.productName,
+    productCode: line.productCode,
+    uom: line.uom,
+    quantityOrdered: line.quantityOrdered,
+    quantityShipped: line.quantityShipped,
+    quantityOutstanding: line.quantityOutstanding,
+    quantityThisShipment: qty,
+    lots: getLotData(i),
+  }));
+
+  const payload = {
+    deliveryMethod: selectedMethod,
+    dispatchDate: document.getElementById('dispatch-date').value,
+    carrier: document.getElementById('carrier')?.value || '',
+    trackingNumber: document.getElementById('tracking-number')?.value.trim() || '',
+    driverName: document.getElementById('driver-name')?.value.trim() || '',
+    vehiclePlate: document.getElementById('vehicle-plate')?.value.trim() || '',
+    expectedDeliveryDate: document.getElementById('expected-delivery')?.value || '',
+    supplierNotes: document.getElementById('supplier-notes').value.trim(),
+    selectedLines: selectedLinesPayload,
+  };
+
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  try {
+    const res = await fetch(`${WORKER}/api/po/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, action: 'submit_shipment', payload }),
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error || 'Submission failed');
+
+    // Show success
+    const pdfUrl = `${WORKER}/api/po/pdf?token=${encodeURIComponent(token)}&dn=${data.shipmentId}`;
+    document.getElementById('btn-download-pdf').href = pdfUrl;
+    document.getElementById('success-message').textContent =
+      `Shipment ${data.dnNumber} has been recorded — ${data.linesShipped} line(s), ${data.unitsShipped} unit(s). Download your delivery note below, print it, and include it with the parcel.`;
+    document.getElementById('success-card').style.display = 'block';
+    document.getElementById('lines-section').style.display = 'none';
+
+    // Reload PO data to update quantities
+    const refreshRes = await fetch(`${WORKER}/api/po/gate?token=${encodeURIComponent(token)}`);
+    const refreshData = await refreshRes.json();
+    if (refreshData.success) {
+      poData = refreshData;
+      if (refreshData.existingShipments && refreshData.existingShipments.length > 0) {
+        document.getElementById('prev-shipments-section').style.display = 'block';
+        document.getElementById('prev-shipments-list').innerHTML = refreshData.existingShipments.map(s => `
+          <div class="prev-shipment-row">
+            <span class="prev-dn">${esc(s.dnNumber)}</span>
+            <span style="font-size:12px;color:var(--muted);">${formatDate(s.dispatchDate)}</span>
+            <span class="prev-status ${s.status === 'Delivered' ? 'delivered' : ''}">${esc(s.status)}</span>
+            <a class="btn-download-dn" href="${WORKER}/api/po/pdf?token=${encodeURIComponent(token)}&dn=${s.id}" target="_blank">Download DN</a>
+          </div>
+        `).join('');
+      }
+    }
+
+  } catch (e) {
+    showValidation('Submission failed: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = 'Generate Delivery Note & Submit';
+  }
+}
+
+function showShipmentForm() {
+  document.getElementById('success-card').style.display = 'none';
+  document.getElementById('lines-section').style.display = 'block';
+  renderLines();
+  document.getElementById('lot-entries').innerHTML = '';
+  document.getElementById('shipment-block').style.display = 'none';
+  document.getElementById('btn-submit').disabled = true;
+  document.getElementById('btn-submit').textContent = 'Generate Delivery Note & Submit';
+  selectedMethod = null;
+  document.getElementById('method-courier').classList.remove('selected');
+  document.getElementById('method-own').classList.remove('selected');
+  if (poData.allFullyShipped) {
+    document.getElementById('all-shipped-banner').style.display = 'block';
+    document.getElementById('lines-section').style.display = 'none';
+  }
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function showError(title, message) {
+  document.getElementById('state-loading').style.display = 'none';
+  document.getElementById('state-error').style.display = 'block';
+  document.getElementById('error-title').textContent = title;
+  document.getElementById('error-message').innerHTML = message;
+}
+
+function showValidation(msg) {
+  const el = document.getElementById('validation-msg');
+  el.textContent = msg;
+  el.classList.add('visible');
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function clearValidation() {
+  document.getElementById('validation-msg').classList.remove('visible');
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatDate(d) {
+  if (!d) return '—';
+  try {
+    return new Date(d).toLocaleDateString('en-CA', { year:'numeric', month:'long', day:'numeric' });
+  } catch { return d; }
+}
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
