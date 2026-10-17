@@ -52,15 +52,14 @@ h2{font-size:20px;font-weight:600;color:var(--navy);margin:40px 0 18px;}
 .ftr{padding:10px 20px 16px;}
 .ftr p{font-size:13px;color:var(--muted);}
 .ftr p.c{font-size:11px;font-style:italic;color:#9E9E9E;margin-top:2px;}
-.actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;}
-.btn{flex:1;min-width:200px;display:inline-flex;align-items:center;justify-content:center;padding:13px 18px;border-radius:6px;font-family:inherit;font-size:15px;font-weight:600;text-decoration:none;cursor:pointer;}
+.actions{display:flex;justify-content:center;margin-top:28px;}
+.btn{min-width:260px;display:inline-flex;align-items:center;justify-content:center;padding:13px 18px;border-radius:6px;font-family:inherit;font-size:15px;font-weight:600;text-decoration:none;cursor:pointer;}
 .btn-primary{background:var(--blue);color:var(--white);border:2px solid var(--blue);}
 .btn-primary:hover{background:#004478;}
 .btn-secondary{background:var(--white);color:var(--muted);border:2px solid var(--rule);}
 .btn-secondary:hover{border-color:var(--blue);color:var(--blue);}
 .btn:focus-visible{outline:2px solid var(--blue);outline-offset:3px;}
-.close-hint{font-size:13px;color:var(--muted);margin-top:8px;min-height:18px;}
-@media print{.actions,.close-hint{display:none;}}
+@media print{.actions{display:none;}}
 a:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
 @media (max-width:640px){
   .sheet{margin:0;}
@@ -119,9 +118,7 @@ a:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
     <p class="note">This guide summarises our ordering process. Your purchase order and supplier agreement set out the full terms.</p>
     <div class="actions">
       <a class="btn btn-primary" href="https://essentialcures.com">Visit essentialcures.com</a>
-      <button type="button" class="btn btn-secondary" id="closeBtn">Close This Page</button>
     </div>
-    <p class="close-hint" id="closeHint" aria-live="polite"></p>
   </main>
   <div class="taglines"><div class="g">Compliant Solutions. Confident Care.</div><div class="b">Quality Built In. Not Bolted On.</div></div>
   <footer>
@@ -129,13 +126,5 @@ a:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
     <div class="ftr"><p>essentialcures.com | essentialcures.ca</p><p class="c">&copy; 2026 Essential Cures Inc. All Rights Reserved</p></div>
   </footer>
 </div>
-<script>
-document.getElementById('closeBtn').addEventListener('click',function(){
-  window.close();
-  setTimeout(function(){
-    document.getElementById('closeHint').textContent='Your browser kept this tab open. You may close it using the tab controls.';
-  },300);
-});
-</script>
 </body>
 </html>
