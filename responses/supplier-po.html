@@ -98,6 +98,18 @@ textarea:focus,input[type="text"]:focus{outline:none;border-color:var(--deep-blu
 .all-done strong{display:block;margin-bottom:2px;}
 .validation-msg{background:#FDECEC;border-left:4px solid var(--red);padding:11px 14px;font-size:13px;color:var(--red);border-radius:0 6px 6px 0;margin-top:14px;display:none;}
 .validation-msg.visible{display:block;}
+.wait-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(0,48,96,0.55);align-items:center;justify-content:center;padding:20px;}
+.wait-overlay.open{display:flex;}
+.wait-card{background:var(--white);border-radius:12px;box-shadow:0 8px 40px rgba(0,48,96,0.25);max-width:420px;width:100%;overflow:hidden;}
+.wait-card-stripe1{height:4px;background:var(--deep-blue);}
+.wait-card-stripe2{height:4px;background:var(--lime);}
+.wait-card-body{padding:32px 28px;text-align:center;}
+.wait-spinner{width:38px;height:38px;border:3px solid #E8ECF0;border-top-color:var(--deep-blue);border-radius:50%;animation:ecspin 0.8s linear infinite;margin:0 auto 18px;}
+@keyframes ecspin{to{transform:rotate(360deg);}}
+.wait-title{font-size:15px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
+.wait-text{font-size:13px;color:var(--cool-gray);line-height:1.7;margin-bottom:14px;}
+.wait-warn{background:#FFF8E1;border-left:4px solid var(--amber);padding:10px 12px;font-size:12px;color:#7D5A00;text-align:left;border-radius:0 6px 6px 0;font-weight:600;}
+.wait-step{font-size:12px;color:var(--deep-blue);font-weight:600;margin-top:12px;min-height:16px;}
 .it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
 .it-tab{background:var(--dark-navy);color:#fff;padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;border:none;font-family:"Inter",sans-serif;}
 .it-panel{display:none;background:#fff;border:1px solid #E8ECF0;border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
@@ -155,6 +167,20 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 </div></main>
 
 <footer class="boxed-760"><div class="footer-line"></div><p class="footer-urls">essentialcures.com | essentialcures.ca</p><p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p></footer>
+
+<div class="wait-overlay" id="waitOverlay" role="status" aria-live="polite">
+  <div class="wait-card">
+    <div class="wait-card-stripe1"></div>
+    <div class="wait-card-stripe2"></div>
+    <div class="wait-card-body">
+      <div class="wait-spinner"></div>
+      <div class="wait-title" id="waitTitle">Submitting your shipment</div>
+      <p class="wait-text">We are recording your shipment against this purchase order and preparing your delivery note. This usually takes a few seconds.</p>
+      <div class="wait-warn">Please do not close, refresh, or navigate away from this page until it is finished.</div>
+      <div class="wait-step" id="waitStep"></div>
+    </div>
+  </div>
+</div>
 
 <div class="it-float" id="itFloat">
   <button class="it-tab" onclick="toggleIT()">Technical Support</button>
@@ -509,10 +535,46 @@ function clearValidation(){
   if(el) el.classList.remove('visible');
 }
 
+let waitStepTimer = null;
+function openWait(title){
+  const o = document.getElementById('waitOverlay');
+  if(!o) return;
+  if(title) document.getElementById('waitTitle').textContent = title;
+  document.getElementById('waitStep').textContent = '';
+  o.classList.add('open');
+  const steps = [
+    'Validating your lot and batch details.',
+    'Recording the shipment against this order.',
+    'Generating delivery note.',
+    'Almost there, finishing up.'
+  ];
+  let i = 0;
+  const stepEl = document.getElementById('waitStep');
+  stepEl.textContent = steps[0];
+  waitStepTimer = setInterval(function(){
+    i = i + 1;
+    if(i < steps.length){ stepEl.textContent = steps[i]; }
+  }, 2500);
+  window.addEventListener('beforeunload', warnOnLeave);
+}
+function closeWait(){
+  const o = document.getElementById('waitOverlay');
+  if(!o) return;
+  o.classList.remove('open');
+  if(waitStepTimer){ clearInterval(waitStepTimer); waitStepTimer = null; }
+  window.removeEventListener('beforeunload', warnOnLeave);
+}
+function warnOnLeave(e){
+  e.preventDefault();
+  e.returnValue = '';
+  return '';
+}
+
 async function acknowledgeOrder(){
   const btn = document.getElementById('ackBtn');
   btn.disabled = true;
-  btn.textContent = 'Saving.';
+  btn.textContent = 'Saving, please wait.';
+  openWait('Recording your acknowledgement');
   try{
     const resp = await fetch(`${WORKER_BASE}/api/po/submit`, {
       method: 'POST',
@@ -523,8 +585,10 @@ async function acknowledgeOrder(){
     if(!data.success) throw new Error(data.error || 'Your acknowledgement could not be saved.');
     poData.acknowledged = true;
     poData.acknowledgedDate = new Date().toISOString();
+    closeWait();
     renderPage();
   }catch(err){
+    closeWait();
     btn.disabled = false;
     btn.textContent = 'Acknowledge Purchase Order';
     alert(err.message || 'Something went wrong. Please try again.');
@@ -564,7 +628,8 @@ async function submitShipment(){
   };
 
   btn.disabled = true;
-  btn.textContent = 'Submitting.';
+  btn.textContent = 'Submitting your shipment, please wait.';
+  openWait('Submitting your shipment');
 
   try{
     const resp = await fetch(`${WORKER_BASE}/api/po/submit`, {
@@ -574,8 +639,10 @@ async function submitShipment(){
     });
     const data = await resp.json();
     if(!data.success) throw new Error(data.error || 'Your shipment could not be submitted.');
+    closeWait();
     showShipmentDone(data);
   }catch(err){
+    closeWait();
     showValidation(err.message || 'Something went wrong. Please try again.');
     updateSubmitState();
   }
