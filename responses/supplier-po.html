@@ -259,7 +259,8 @@ function buildLinesSection(){
     return `
       <div class="section-label">Order Lines</div>
       <div class="ack-note"><span class="ack-title">No order lines found on this purchase order</span>
-      We could not load the product lines for this order. Please contact procurement@essentialcures.com and quote reference ${esc(poData.poNumber || '')}.</div>`;
+      We could not load the product lines for this order. Please contact procurement@essentialcures.com and quote reference ${esc(poData.poNumber || '')}.
+      <div style="margin-top:10px;font-size:11px;color:#6B7C8C;font-family:monospace;word-break:break-all;">${esc(poData.lineFetchNote || 'no diagnostic returned')}</div></div>`;
   }
   const lines = (poData.lineItems || []).map((line, idx) => {
     if(line.fullyShipped){
