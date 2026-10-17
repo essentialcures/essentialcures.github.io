@@ -37,6 +37,11 @@ h2{font-size:15px;color:var(--dark-navy);margin:0 0 8px;}
 p.deal-name{font-size:13px;color:var(--cool-gray);margin:0 0 16px;}
 .section-label{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:24px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
 .guide-note{font-size:12px;color:var(--cool-gray);background:var(--light-bg);border:1px solid #E8ECF0;border-radius:6px;padding:10px 12px;margin-bottom:16px;line-height:1.6;}
+.guide-strip{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#EAF2FB;border-left:4px solid var(--deep-blue);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:16px;}
+.guide-strip-text{font-size:13px;color:var(--dark-navy);}
+.guide-strip-text strong{display:block;margin-bottom:1px;}
+.guide-strip-link{flex-shrink:0;background:var(--white);border:1.5px solid var(--deep-blue);border-radius:6px;color:var(--deep-blue);font-size:12px;font-weight:700;font-family:"Inter",sans-serif;padding:8px 16px;text-decoration:none;white-space:nowrap;}
+.guide-strip-link:hover{background:var(--deep-blue);color:var(--white);}
 .ack-note{background:#FFF8E1;border-left:4px solid var(--amber);padding:12px 14px;font-size:13px;margin-bottom:16px;border-radius:0 6px 6px 0;}
 .ack-note.done{background:#E8F5E9;border-left-color:var(--leaf-green);color:#276414;}
 .ack-note .ack-title{font-weight:700;display:block;margin-bottom:2px;}
@@ -217,6 +222,19 @@ function fmtDate(d){
   catch(e){ return d; }
 }
 function today(){ return new Date().toISOString().split('T')[0]; }
+function shiftDays(n){
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  return d.toISOString().split('T')[0];
+}
+// All date rules come from CM-36 via the gate. Nothing is hardcoded here.
+function bounds(){
+  return (poData && poData.dateBounds) ? poData.dateBounds : {};
+}
+function cfg(){
+  return (poData && poData.configs) ? poData.configs : {};
+}
+const SUPPLIER_GUIDE_URL = 'https://essentialcures.com/guides/supplier-ordering-guide';
 
 async function loadPO(){
   if(!token){
@@ -266,6 +284,13 @@ function renderPage(){
       <div class="po-meta-item"><div class="po-meta-label">PO Reference</div><div class="po-meta-value">${esc(poData.poNumber)}</div></div>
       <div class="po-meta-item"><div class="po-meta-label">Deliver To</div><div class="po-meta-value">${esc(poData.customerName || 'Not specified')}</div></div>
       <div class="po-meta-item"><div class="po-meta-label">Delivery Required By</div><div class="po-meta-value">${fmtDate(poData.dueDate)}</div></div>
+    </div>
+    <div class="guide-strip">
+      <div class="guide-strip-text">
+        <strong>Supplier Ordering Guide</strong>
+        How Essential Cures orders, confirms, dispatches and pays. Opens in a new tab.
+      </div>
+      <a class="guide-strip-link" href="${SUPPLIER_GUIDE_URL}" target="_blank" rel="noopener">Open Guide</a>
     </div>
     ${ackBlock}
     ${prevBlock}
@@ -337,7 +362,7 @@ function buildLinesSection(){
       <div class="day-field">
         <label for="dispatchDate">Dispatch Date</label>
         <span class="hint">The date goods leave your facility</span>
-        <input type="date" id="dispatchDate" onchange="updateSubmitState()">
+        <input type="date" id="dispatchDate" min="${bounds().dispatchMin || ''}" max="${bounds().dispatchMax || today()}" onchange="updateSubmitState()">
       </div>
       <div class="day-field" id="fldCarrier" style="display:none;">
         <label for="carrier">Carrier</label>
@@ -366,7 +391,7 @@ function buildLinesSection(){
       <div class="day-field" id="fldExpected" style="display:none;">
         <label for="expectedDelivery">Expected Delivery Date</label>
         <span class="hint">When goods will reach the customer</span>
-        <input type="date" id="expectedDelivery" onchange="updateSubmitState()">
+        <input type="date" id="expectedDelivery" min="${bounds().expectedMin || today()}" max="${bounds().expectedMax || ''}" onchange="updateSubmitState()">
       </div>
     </div>
     <div style="margin-top:20px;">
@@ -418,7 +443,7 @@ function addLotRow(idx, seedQty){
     </div>
     <div class="lot-col">
       <label for="lotExp_${idx}_${n}">Expiry Date</label>
-      <input type="date" id="lotExp_${idx}_${n}" onchange="updateSubmitState()">
+      <input type="date" id="lotExp_${idx}_${n}" min="${bounds().expiryMin || ''}" onchange="updateSubmitState()">
     </div>
     <div class="lot-col narrow">
       <label for="lotQty_${idx}_${n}">Quantity</label>
@@ -504,13 +529,20 @@ function updateSubmitState(){
     if(!document.getElementById('expectedDelivery').value) ready = false;
   }
   if(ready){
+    const minExpiry = bounds().expiryMin || '';
     for(const i of idxs){
       const shipQty = parseInt(document.getElementById('qty_' + i).value, 10) || 0;
       const lots = getLots(i);
       const total = lots.reduce((s, l) => s + l.quantity, 0);
       if(shipQty < 1 || total !== shipQty){ ready = false; break; }
       if(lots.some(l => !l.lotBatchNumber || !l.expiryDate || l.quantity < 1)){ ready = false; break; }
+      if(lots.some(l => l.expiryDate < minExpiry)){ ready = false; break; }
     }
+  }
+  if(ready){
+    const dd = document.getElementById('dispatchDate').value;
+    const b = bounds();
+    if((b.dispatchMax && dd > b.dispatchMax) || (b.dispatchMin && dd < b.dispatchMin)){ ready = false; }
   }
 
   btn.disabled = !ready;
@@ -518,9 +550,29 @@ function updateSubmitState(){
     btn.textContent = 'Select lines above to record a shipment';
   }else if(!ready){
     btn.textContent = 'Complete every field above to submit';
+    const dd = document.getElementById('dispatchDate').value;
+    const b = bounds();
+    const c = cfg();
+    if(dd && b.dispatchMax && dd > b.dispatchMax){
+      showValidation('The dispatch date cannot be in the future. Record the shipment on or after the day the goods leave your facility.');
+    }else if(dd && b.dispatchMin && dd < b.dispatchMin){
+      showValidation('The dispatch date cannot be more than ' + (c.Dispatch_Backdate_Window_Days || '') + ' working days in the past. Contact procurement@essentialcures.com if you need to record an older shipment.');
+    }else{
+      const minExpiry = b.expiryMin || '';
+      let badExpiry = false;
+      for(const i of selectedLineIdxs()){
+        if(getLots(i).some(l => l.expiryDate && minExpiry && l.expiryDate < minExpiry)){ badExpiry = true; break; }
+      }
+      if(badExpiry){
+        showValidation('Every lot must carry at least ' + (c.Min_Shelf_Life_Days_At_Dispatch || '') + ' days of remaining shelf life at dispatch. Please check the expiry dates entered, or contact procurement@essentialcures.com before shipping short-dated stock.');
+      }else{
+        clearValidation();
+      }
+    }
   }else{
     const units = idxs.reduce((s, i) => s + (parseInt(document.getElementById('qty_' + i).value, 10) || 0), 0);
     btn.textContent = `Submit Shipment and Generate Delivery Note (${idxs.length} line${idxs.length > 1 ? 's' : ''}, ${units} unit${units !== 1 ? 's' : ''})`;
+    clearValidation();
   }
 }
 
@@ -660,6 +712,7 @@ function showShipmentDone(data){
     <div class="guide-note">Print the delivery note and include it with the parcel. No supplier invoice or packing list is required.</div>
     <a class="download-btn" href="${pdfUrl}" target="_blank">Download Delivery Note</a>
     <button class="secondary-btn" onclick="location.reload()">Record Another Shipment</button>
+    <p style="text-align:center;margin-top:14px;font-size:13px;"><a href="${SUPPLIER_GUIDE_URL}" target="_blank" rel="noopener" style="color:var(--deep-blue);font-weight:600;text-decoration:none;">Open the Supplier Ordering Guide</a></p>
     <p style="text-align:center;margin-top:16px;font-size:13px;"><a href="https://essentialcures.com" style="color:var(--deep-blue);font-weight:600;text-decoration:none;">Return to essentialcures.com</a></p>
   `;
 }
