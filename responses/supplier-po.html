@@ -3,1299 +3,721 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Purchase Order Fulfilment | Essential Cures</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Supplier Purchase Order | Essential Cures</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --ec-blue: #1a5276;
-  --ec-lime: #82c341;
-  --ec-dark: #1c1c1c;
-  --ec-white: #ffffff;
-  --ec-light-bg: #f7f8fa;
-  --ec-border: #dde1e6;
-  --ec-text: #333333;
-  --ec-text-light: #5a6a7a;
-  --ec-green: #2e7d32;
-  --ec-red: #c62828;
-  --ec-amber: #e65100;
-  --ec-blue-light: #e8f0f8;
-  --ec-lime-light: #f0f8e8;
-  --step-inactive: #c4cdd5;
-  --step-active: var(--ec-blue);
-  --step-done: var(--ec-lime);
+:root{
+  --deep-blue:#005090;--med-blue:#0070B0;--dark-navy:#003060;
+  --leaf-green:#4A8B2C;--lime:#8FC23C;--slate:#2C3E50;
+  --cool-gray:#6B7C8C;--light-bg:#F7F9FB;--white:#FFFFFF;--red:#C0392B;
+  --amber:#D4A017;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Inter',system-ui,sans-serif; background:var(--ec-light-bg); color:var(--ec-text); line-height:1.5; }
-
-/* === SHARED WIDTH CLASS === */
-.boxed-760 { width:760px; max-width:100%; margin-left:auto; margin-right:auto; }
-
-/* === DOC HEADER (table-based controlled pattern) === */
-.doc-header { background:var(--ec-white); position:sticky; top:0; z-index:100; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
-.doc-header-table { width:100%; border-collapse:collapse; }
-.doc-header-table td { padding:14px 0; vertical-align:middle; }
-.doc-header-table .logo-cell { width:140px; text-align:center; }
-.doc-header-table .logo-cell img { height:44px; display:block; margin:0 auto; }
-.doc-header-table .divider-cell { width:1px; padding:0; }
-.doc-header-table .divider-cell div { width:1px; height:40px; background:var(--ec-blue); }
-.doc-header-table .org-cell { padding-left:16px; }
-.doc-header-table .org-name { font-size:15px; font-weight:700; color:var(--ec-dark); letter-spacing:0.3px; }
-.doc-header-table .tagline { font-size:11px; color:var(--ec-lime); font-style:italic; margin-top:1px; }
-.doc-header-table .title-cell { text-align:right; padding-right:4px; }
-.doc-header-table .doc-title { font-size:13px; font-weight:600; color:var(--ec-blue); white-space:nowrap; }
-
-/* === STRIPE BAR (inside boxed width, 4px blue over 4px lime) === */
-.stripe-bar { display:flex; flex-direction:column; }
-.stripe-blue { height:4px; background:var(--ec-blue); }
-.stripe-lime { height:4px; background:var(--ec-lime); }
-
-/* === PROGRESS BAR === */
-.progress-section { padding:20px 0; }
-.progress-bar { display:flex; align-items:center; justify-content:center; gap:0; padding:0 24px; background:var(--ec-white); border:1px solid var(--ec-border); border-radius:8px; padding:16px 24px; }
-.step-item { display:flex; align-items:center; gap:0; }
-.step-circle { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--ec-white); background:var(--step-inactive); transition:background 0.3s; flex-shrink:0; }
-.step-circle.active { background:var(--step-active); }
-.step-circle.done { background:var(--step-done); }
-.step-label { font-size:11px; font-weight:600; color:var(--ec-text-light); margin-left:8px; white-space:nowrap; transition:color 0.3s; }
-.step-label.active { color:var(--ec-blue); }
-.step-label.done { color:var(--ec-green); }
-.step-connector { width:48px; height:2px; background:var(--step-inactive); margin:0 8px; flex-shrink:0; transition:background 0.3s; }
-.step-connector.done { background:var(--step-done); }
-@media(max-width:600px) {
-  .step-label { display:none; }
-  .step-connector { width:24px; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
+.boxed-760{width:760px;max-width:100%;box-sizing:border-box;margin-left:auto;margin-right:auto;}
+.doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+.doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+.doc-header-table td{vertical-align:middle;border:none;font-family:Calibri,Arial,sans-serif;}
+.doc-header-left{width:150px;text-align:center;padding:14px 14px;}
+.doc-header-left img{max-width:100%;height:auto;max-height:85px;display:block;margin:0 auto;}
+.doc-header-sep{width:1px;background:#D4DAE0;padding:0;}
+.doc-header-middle{text-align:left;padding:10px 16px;}
+.doc-header-middle .org-name{font-size:16px;font-weight:700;color:var(--deep-blue);letter-spacing:1px;margin-bottom:2px;}
+.doc-header-middle .tagline{font-size:12px;color:var(--leaf-green);font-style:italic;font-weight:600;margin-bottom:4px;}
+.doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
+.doc-header-stripe1{height:4px;background:var(--deep-blue);}
+.doc-header-stripe2{height:4px;background:var(--lime);}
+.main{margin:0 auto;width:100%;padding:48px 40px 0 40px;}
+.form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:40px;}
+.status-msg{text-align:center;padding:40px 20px;font-size:14px;color:var(--cool-gray);}
+.status-msg.error{color:var(--red);}
+h2{font-size:15px;color:var(--dark-navy);margin:0 0 8px;}
+p.deal-name{font-size:13px;color:var(--cool-gray);margin:0 0 16px;}
+.section-label{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:24px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
+.guide-note{font-size:12px;color:var(--cool-gray);background:var(--light-bg);border:1px solid #E8ECF0;border-radius:6px;padding:10px 12px;margin-bottom:16px;line-height:1.6;}
+.guide-strip{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#EAF2FB;border-left:4px solid var(--deep-blue);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:16px;}
+.guide-strip-text{font-size:13px;color:var(--dark-navy);}
+.guide-strip-text strong{display:block;margin-bottom:1px;}
+.guide-strip-link{flex-shrink:0;background:var(--white);border:1.5px solid var(--deep-blue);border-radius:6px;color:var(--deep-blue);font-size:12px;font-weight:700;font-family:"Inter",sans-serif;padding:8px 16px;text-decoration:none;white-space:nowrap;}
+.guide-strip-link:hover{background:var(--deep-blue);color:var(--white);}
+.ack-note{background:#FFF8E1;border-left:4px solid var(--amber);padding:12px 14px;font-size:13px;margin-bottom:16px;border-radius:0 6px 6px 0;}
+.ack-note.done{background:#E8F5E9;border-left-color:var(--leaf-green);color:#276414;}
+.ack-note .ack-title{font-weight:700;display:block;margin-bottom:2px;}
+.ack-btn{background:var(--amber);color:var(--white);border:none;border-radius:6px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:"Inter",sans-serif;margin-top:8px;}
+.ack-btn:disabled{background:#C9B37A;cursor:not-allowed;}
+.po-meta{display:flex;flex-wrap:wrap;gap:0;border:1px solid #D4DAE0;border-radius:8px;overflow:hidden;margin-bottom:20px;}
+.po-meta-item{flex:1;min-width:170px;padding:12px 16px;border-right:1px solid #D4DAE0;background:var(--light-bg);}
+.po-meta-item:last-child{border-right:none;}
+.po-meta-label{font-size:11px;font-weight:700;color:var(--cool-gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+.po-meta-value{font-size:14px;font-weight:700;color:var(--dark-navy);}
+.line-item{border:1px solid #D4DAE0;border-radius:8px;padding:16px 18px;margin-bottom:12px;background:var(--light-bg);}
+.line-item.done{opacity:0.6;}
+.line-item .line-title{font-size:14px;font-weight:700;color:var(--dark-navy);margin-bottom:2px;}
+.line-item .line-meta{font-size:12px;color:var(--cool-gray);margin-bottom:14px;}
+.ship-toggle{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.ship-toggle input[type="checkbox"]{width:17px;height:17px;cursor:pointer;accent-color:var(--deep-blue);}
+.ship-toggle label{font-size:13px;font-weight:600;color:var(--dark-navy);cursor:pointer;}
+.shipped-badge{display:inline-block;font-size:11px;font-weight:700;color:#276414;background:#EBF5E8;border:1px solid #A8D5A2;border-radius:20px;padding:2px 10px;}
+.day-fields{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+.day-field{flex:1;min-width:130px;}
+.day-field label{display:block;font-size:11px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+.day-field .hint{display:block;font-size:11px;color:var(--cool-gray);margin-bottom:6px;line-height:1.4;}
+.day-field input,.day-field select{width:100%;box-sizing:border-box;border:1.5px solid #D4DAE0;border-radius:6px;padding:10px 12px;font-family:"Inter",sans-serif;font-size:13px;background:var(--white);color:var(--slate);}
+.day-field input:focus,.day-field select:focus{outline:none;border-color:var(--deep-blue);}
+.lot-block{border-top:1px dashed #D4DAE0;margin-top:12px;padding-top:12px;}
+.lot-block-title{font-size:11px;font-weight:700;color:var(--deep-blue);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+.lot-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:8px;}
+.lot-row .lot-col{flex:1;min-width:0;}
+.lot-row .lot-col.narrow{flex:0 0 90px;}
+.lot-row .lot-col label{display:block;font-size:10px;font-weight:700;color:var(--cool-gray);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}
+.lot-row input{width:100%;box-sizing:border-box;border:1.5px solid #D4DAE0;border-radius:6px;padding:9px 10px;font-family:"Inter",sans-serif;font-size:12px;background:var(--white);color:var(--slate);}
+.lot-row input:focus{outline:none;border-color:var(--deep-blue);}
+.lot-remove{flex:0 0 32px;height:36px;border:1.5px solid #D4DAE0;border-radius:6px;background:var(--white);color:var(--red);cursor:pointer;font-size:15px;line-height:1;font-family:"Inter",sans-serif;}
+.lot-remove:hover{background:#FDECEC;border-color:var(--red);}
+.lot-add{background:none;border:1.5px dashed #D4DAE0;border-radius:6px;color:var(--deep-blue);font-size:12px;font-weight:600;font-family:"Inter",sans-serif;padding:7px 12px;cursor:pointer;width:100%;margin-top:4px;}
+.lot-add:hover{border-color:var(--deep-blue);background:#F0F6FB;}
+.lot-total{font-size:12px;font-weight:600;margin-top:8px;}
+.lot-total.ok{color:#276414;}
+.lot-total.bad{color:var(--red);}
+label.field-label-standalone{display:block;font-size:12px;color:var(--cool-gray);margin-bottom:6px;}
+textarea,input[type="text"]{width:100%;box-sizing:border-box;border:1.5px solid #D4DAE0;border-radius:6px;padding:11px 14px;font-family:"Inter",sans-serif;font-size:14px;resize:vertical;}
+textarea{min-height:60px;margin-bottom:16px;}
+textarea:focus,input[type="text"]:focus{outline:none;border-color:var(--deep-blue);}
+.method-group{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.method-btn{flex:1;min-width:150px;border:2px solid #D4DAE0;border-radius:6px;padding:10px 12px;font-size:12px;font-weight:600;color:var(--cool-gray);background:var(--white);cursor:pointer;text-align:center;transition:all 0.15s;font-family:"Inter",sans-serif;}
+.method-btn:hover{border-color:var(--deep-blue);color:var(--deep-blue);}
+.method-btn.selected{border-color:var(--deep-blue);background:#EAF2FB;color:var(--deep-blue);}
+.submit-btn{width:100%;background:var(--leaf-green);color:var(--white);border:none;border-radius:6px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:16px;font-family:"Inter",sans-serif;}
+.submit-btn:disabled{background:#A9C79A;cursor:not-allowed;}
+.secondary-btn{width:100%;background:transparent;color:var(--cool-gray);border:1.5px solid #D4DAE0;border-radius:6px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px;font-family:"Inter",sans-serif;}
+.download-btn{display:block;width:100%;background:var(--deep-blue);color:var(--white);border:none;border-radius:6px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:16px;font-family:"Inter",sans-serif;text-align:center;text-decoration:none;}
+.prev-ship-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border:1px solid #D4DAE0;border-radius:8px;padding:12px 16px;margin-bottom:10px;background:var(--light-bg);font-size:13px;}
+.prev-dn{font-weight:700;color:var(--deep-blue);}
+.prev-status{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;background:#EAF2FB;color:var(--deep-blue);}
+.prev-status.delivered{background:#EBF5E8;color:#276414;}
+.prev-link{font-size:12px;font-weight:600;color:var(--deep-blue);text-decoration:none;border:1px solid #D4DAE0;border-radius:6px;padding:5px 12px;background:var(--white);}
+.prev-link:hover{background:#EAF2FB;}
+.all-done{background:#E8F5E9;border-left:4px solid var(--leaf-green);padding:14px 16px;font-size:13px;color:#276414;border-radius:0 6px 6px 0;margin-bottom:16px;}
+.all-done strong{display:block;margin-bottom:2px;}
+.validation-msg{background:#FDECEC;border-left:4px solid var(--red);padding:11px 14px;font-size:13px;color:var(--red);border-radius:0 6px 6px 0;margin-top:14px;display:none;}
+.validation-msg.visible{display:block;}
+.wait-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(0,48,96,0.55);align-items:center;justify-content:center;padding:20px;}
+.wait-overlay.open{display:flex;}
+.wait-card{background:var(--white);border-radius:12px;box-shadow:0 8px 40px rgba(0,48,96,0.25);max-width:420px;width:100%;overflow:hidden;}
+.wait-card-stripe1{height:4px;background:var(--deep-blue);}
+.wait-card-stripe2{height:4px;background:var(--lime);}
+.wait-card-body{padding:32px 28px;text-align:center;}
+.wait-spinner{width:38px;height:38px;border:3px solid #E8ECF0;border-top-color:var(--deep-blue);border-radius:50%;animation:ecspin 0.8s linear infinite;margin:0 auto 18px;}
+@keyframes ecspin{to{transform:rotate(360deg);}}
+.wait-title{font-size:15px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
+.wait-text{font-size:13px;color:var(--cool-gray);line-height:1.7;margin-bottom:14px;}
+.wait-warn{background:#FFF8E1;border-left:4px solid var(--amber);padding:10px 12px;font-size:12px;color:#7D5A00;text-align:left;border-radius:0 6px 6px 0;font-weight:600;}
+.wait-step{font-size:12px;color:var(--deep-blue);font-weight:600;margin-top:12px;min-height:16px;}
+.it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
+.it-tab{background:var(--dark-navy);color:#fff;padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;border:none;font-family:"Inter",sans-serif;}
+.it-panel{display:none;background:#fff;border:1px solid #E8ECF0;border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
+.it-panel.open{display:block;}
+.it-panel h4{font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
+.it-panel p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-bottom:10px;}
+.it-panel a{color:var(--deep-blue);font-weight:600;font-size:12px;}
+.it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;}
+footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:24px;}
+.footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue) 60%,var(--cool-gray) 100%);margin-bottom:12px;}
+.footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
+.footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
+@media(max-width:820px){
+  .boxed-760{width:100%;}
+  .main{padding:20px 12px;}
+  .form-card{padding:24px 16px;border-radius:8px;}
+  .doc-header-left{display:none;}
+  .doc-header-sep{display:none;}
+  .doc-header-middle{width:100%;text-align:center;}
+  footer{padding:20px 12px;margin-top:24px;margin-bottom:24px;}
+  .method-btn{min-width:120px;}
+  .day-field{min-width:100%;}
+  .po-meta-item{min-width:50%;}
+  .lot-row{flex-wrap:wrap;}
+  .lot-row .lot-col{min-width:100%;}
+  .lot-row .lot-col.narrow{flex:1 1 100%;}
+  .lot-remove{flex:1 1 100%;}
 }
-
-/* === MAIN CONTENT === */
-.main { padding:28px 0 0 0; }
-.form-card { background:var(--ec-white); border:1px solid var(--ec-border); border-radius:8px; padding:28px 32px; margin-bottom:20px; }
-.form-card h2 { font-size:16px; font-weight:700; color:var(--ec-blue); margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--ec-blue-light); }
-.form-card h3 { font-size:14px; font-weight:600; color:var(--ec-dark); margin:18px 0 10px 0; }
-
-/* === PO DETAILS TABLE === */
-.po-meta-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; margin-bottom:18px; }
-.po-meta-item { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #f0f2f5; }
-.po-meta-item .label { font-size:12px; color:var(--ec-text-light); font-weight:500; }
-.po-meta-item .value { font-size:13px; font-weight:600; color:var(--ec-dark); text-align:right; }
-@media(max-width:600px) { .po-meta-grid { grid-template-columns:1fr; } }
-
-/* === LINE ITEMS TABLE === */
-.line-table { width:100%; border-collapse:collapse; margin:12px 0; font-size:12px; }
-.line-table thead th { background:var(--ec-blue); color:var(--ec-white); padding:8px 10px; text-align:left; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.3px; }
-.line-table thead th:last-child, .line-table thead th.num { text-align:right; }
-.line-table tbody td { padding:8px 10px; border-bottom:1px solid #eef1f5; vertical-align:top; }
-.line-table tbody td.num { text-align:right; font-variant-numeric:tabular-nums; }
-.line-table tbody tr:last-child td { border-bottom:none; }
-.line-table tfoot td { padding:10px 10px; font-weight:700; border-top:2px solid var(--ec-blue); }
-.line-table tfoot td.num { text-align:right; font-variant-numeric:tabular-nums; }
-.brand-tag { display:inline-block; background:var(--ec-blue-light); color:var(--ec-blue); font-size:10px; font-weight:600; padding:2px 6px; border-radius:3px; margin-top:2px; }
-
-/* === FORM ELEMENTS === */
-.field-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:14px; }
-.field-row.two-col { grid-template-columns:1fr 1fr; }
-@media(max-width:600px) { .field-row, .field-row.two-col { grid-template-columns:1fr; } }
-.field-group { display:flex; flex-direction:column; gap:4px; }
-.field-group label { font-size:11px; font-weight:600; color:var(--ec-text-light); text-transform:uppercase; letter-spacing:0.3px; }
-.field-group input, .field-group select { padding:8px 10px; border:1px solid var(--ec-border); border-radius:5px; font-size:13px; font-family:inherit; background:var(--ec-white); }
-.field-group input:focus, .field-group select:focus { outline:none; border-color:var(--ec-blue); box-shadow:0 0 0 2px rgba(26,82,118,0.12); }
-.field-group input:disabled, .field-group select:disabled { background:#f4f5f7; color:#999; }
-.field-group .hint { font-size:10px; color:var(--ec-text-light); margin-top:2px; }
-.field-group .error-hint { font-size:10px; color:var(--ec-red); margin-top:2px; display:none; }
-
-/* === ACKNOWLEDGE BLOCK === */
-.ack-block { background:var(--ec-blue-light); border:1px solid rgba(26,82,118,0.15); border-radius:6px; padding:16px 18px; margin:18px 0; }
-.ack-block label { display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-size:13px; color:var(--ec-dark); line-height:1.5; }
-.ack-block input[type=checkbox] { margin-top:3px; width:16px; height:16px; accent-color:var(--ec-blue); flex-shrink:0; }
-.ack-done { background:var(--ec-lime-light); border-color:rgba(130,195,65,0.3); }
-.ack-done .ack-stamp { font-size:12px; color:var(--ec-green); font-weight:600; margin-top:8px; }
-
-/* === PROFORMA BLOCK === */
-.proforma-section { border:1px solid var(--ec-border); border-radius:6px; padding:18px 20px; margin:18px 0; background:var(--ec-white); }
-.proforma-section.required { border-color:var(--ec-amber); border-left:4px solid var(--ec-amber); }
-.proforma-header { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
-.proforma-header .icon { font-size:18px; }
-.proforma-header h3 { margin:0; font-size:14px; color:var(--ec-dark); }
-.expected-amount-box { background:#fff8e1; border:1px solid #ffe082; border-radius:5px; padding:10px 14px; margin-bottom:14px; font-size:13px; }
-.expected-amount-box strong { color:var(--ec-dark); }
-.variance-error { background:#fce4ec; border:1px solid #ef9a9a; border-radius:5px; padding:10px 14px; margin-top:10px; font-size:12px; color:var(--ec-red); display:none; }
-.upload-zone { border:2px dashed var(--ec-border); border-radius:6px; padding:24px; text-align:center; cursor:pointer; transition:border-color 0.2s; margin-top:10px; }
-.upload-zone:hover { border-color:var(--ec-blue); }
-.upload-zone.has-file { border-color:var(--ec-lime); background:var(--ec-lime-light); }
-.upload-zone input[type=file] { display:none; }
-.upload-zone .upload-label { font-size:13px; color:var(--ec-text-light); }
-.upload-zone .upload-label strong { color:var(--ec-blue); }
-.upload-zone .file-name { font-size:13px; font-weight:600; color:var(--ec-green); }
-.upload-zone .file-remove { font-size:11px; color:var(--ec-red); cursor:pointer; margin-top:4px; text-decoration:underline; }
-
-/* === PAYMENT DETAILS (shown after advance paid) === */
-.payment-details { background:var(--ec-lime-light); border:1px solid rgba(130,195,65,0.3); border-radius:6px; padding:16px 18px; margin:18px 0; }
-.payment-details h3 { color:var(--ec-green); margin:0 0 10px 0; font-size:14px; }
-.payment-row { display:flex; justify-content:space-between; padding:4px 0; font-size:13px; }
-.payment-row .label { color:var(--ec-text-light); }
-.payment-row .value { font-weight:600; }
-
-/* === LOT ENTRY === */
-.lot-group { border:1px solid var(--ec-border); border-radius:6px; padding:14px 16px; margin:10px 0; background:var(--ec-light-bg); }
-.lot-group .lot-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-.lot-group .lot-header span { font-size:12px; font-weight:600; color:var(--ec-blue); }
-.lot-group .remove-lot { font-size:11px; color:var(--ec-red); cursor:pointer; text-decoration:underline; }
-.add-lot-btn { display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:600; color:var(--ec-blue); cursor:pointer; padding:6px 0; background:none; border:none; font-family:inherit; }
-.add-lot-btn:hover { text-decoration:underline; }
-
-/* === LINE SELECTION CHECKBOXES === */
-.line-select-table { width:100%; border-collapse:collapse; font-size:12px; margin:10px 0; }
-.line-select-table th { background:var(--ec-blue); color:var(--ec-white); padding:8px 10px; text-align:left; font-size:11px; font-weight:600; }
-.line-select-table td { padding:8px 10px; border-bottom:1px solid #eef1f5; vertical-align:middle; }
-.line-select-table input[type=checkbox] { width:15px; height:15px; accent-color:var(--ec-blue); }
-.line-select-table input[type=number] { width:80px; padding:5px 8px; border:1px solid var(--ec-border); border-radius:4px; font-size:12px; font-family:inherit; text-align:right; }
-.qty-warning { color:var(--ec-amber); font-size:10px; font-weight:600; }
-.qty-match { color:var(--ec-green); font-size:10px; font-weight:600; }
-
-/* === SHIPPING METHOD === */
-.method-cards { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0; }
-.method-card { border:2px solid var(--ec-border); border-radius:6px; padding:16px; cursor:pointer; text-align:center; transition:border-color 0.2s; }
-.method-card:hover { border-color:var(--ec-blue); }
-.method-card.selected { border-color:var(--ec-blue); background:var(--ec-blue-light); }
-.method-card .method-icon { font-size:24px; margin-bottom:6px; }
-.method-card .method-name { font-size:13px; font-weight:600; color:var(--ec-dark); }
-.method-card .method-desc { font-size:11px; color:var(--ec-text-light); margin-top:2px; }
-
-/* === DELIVERY NOTE DOWNLOAD === */
-.dn-download { text-align:center; padding:32px 0; }
-.dn-download .dn-icon { font-size:48px; margin-bottom:12px; }
-.dn-download .dn-number { font-size:18px; font-weight:700; color:var(--ec-dark); margin-bottom:4px; }
-.dn-download .dn-date { font-size:13px; color:var(--ec-text-light); margin-bottom:18px; }
-.dn-download .download-btn { display:inline-flex; align-items:center; gap:8px; padding:12px 28px; background:var(--ec-blue); color:var(--ec-white); border:none; border-radius:6px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; transition:background 0.2s; }
-.dn-download .download-btn:hover { background:#154360; }
-
-/* === NAV BUTTONS === */
-.nav-row { display:flex; justify-content:space-between; align-items:center; margin-top:20px; padding-top:16px; border-top:1px solid var(--ec-border); }
-.btn { padding:10px 24px; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
-.btn-primary { background:var(--ec-blue); color:var(--ec-white); }
-.btn-primary:hover { background:#154360; }
-.btn-primary:disabled { background:var(--step-inactive); cursor:not-allowed; }
-.btn-secondary { background:var(--ec-white); color:var(--ec-blue); border:1px solid var(--ec-border); }
-.btn-secondary:hover { background:var(--ec-blue-light); }
-.btn-success { background:var(--ec-green); color:var(--ec-white); }
-.btn-success:hover { background:#1b5e20; }
-.btn-success:disabled { background:var(--step-inactive); cursor:not-allowed; }
-
-/* === GUIDE LINK === */
-.guide-link { background:var(--ec-blue-light); border-radius:6px; padding:12px 16px; margin-top:18px; display:flex; align-items:center; gap:10px; font-size:12px; color:var(--ec-blue); }
-.guide-link a { color:var(--ec-blue); font-weight:600; text-decoration:underline; }
-
-/* === WAIT OVERLAY === */
-.wait-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; justify-content:center; align-items:center; }
-.wait-overlay.show { display:flex; }
-.wait-box { background:var(--ec-white); border-radius:10px; padding:36px 44px; text-align:center; max-width:380px; }
-.wait-box .spinner { width:36px; height:36px; border:3px solid var(--ec-border); border-top-color:var(--ec-blue); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 16px; }
-@keyframes spin { to { transform:rotate(360deg); } }
-.wait-box .wait-text { font-size:14px; font-weight:600; color:var(--ec-dark); margin-bottom:6px; }
-.wait-box .wait-sub { font-size:12px; color:var(--ec-text-light); }
-.wait-box .wait-warn { font-size:11px; color:var(--ec-amber); font-weight:600; margin-top:10px; }
-
-/* === STATUS MESSAGES === */
-.status-msg { padding:10px 14px; border-radius:5px; font-size:12px; margin:10px 0; display:none; }
-.status-msg.error { background:#fce4ec; color:var(--ec-red); border:1px solid #ef9a9a; display:block; }
-.status-msg.success { background:var(--ec-lime-light); color:var(--ec-green); border:1px solid rgba(130,195,65,0.3); display:block; }
-.status-msg.info { background:#e3f2fd; color:#1565c0; border:1px solid #90caf9; display:block; }
-
-/* === TAGLINE BAR === */
-.tagline-bar { margin-top:28px; }
-.tagline-bar-inner { display:flex; }
-.tagline-left { flex:1; background:var(--ec-blue); color:var(--ec-white); padding:12px 20px; font-size:11px; font-weight:500; border-radius:0 0 0 6px; }
-.tagline-right { flex:1; background:var(--ec-lime); color:var(--ec-dark); padding:12px 20px; font-size:11px; font-weight:600; text-align:right; border-radius:0 0 6px 0; }
-
-/* === FOOTER (margin-top synced with .main padding-top) === */
-.footer { margin-top:28px; padding:20px 0 32px; text-align:center; }
-.footer-gradient { height:3px; background:linear-gradient(90deg, var(--ec-blue), var(--ec-lime)); margin-bottom:16px; }
-.footer-text { font-size:11px; color:var(--ec-text-light); }
-
-/* === TECH SUPPORT TAB === */
-.support-tab { position:fixed; right:0; top:50%; transform:translateY(-50%) rotate(-90deg); transform-origin:right center; background:var(--ec-blue); color:var(--ec-white); padding:6px 14px; font-size:10px; font-weight:600; letter-spacing:0.5px; border-radius:4px 4px 0 0; cursor:pointer; z-index:50; }
-.support-tab:hover { background:#154360; }
-
-/* === MOBILE === */
-@media(max-width:640px) {
-  .boxed-760 { width:100%; }
-  .form-card { padding:18px 16px; border-radius:0; border-left:none; border-right:none; }
-  .doc-header-table .logo-cell { width:80px; }
-  .doc-header-table .logo-cell img { height:32px; }
-  .doc-header-table .title-cell { display:none; }
-  .doc-header-table .org-cell { padding-left:10px; }
-  .doc-header-table .org-name { font-size:13px; }
-  .po-meta-grid { grid-template-columns:1fr; }
-  .method-cards { grid-template-columns:1fr; }
-  .field-row, .field-row.two-col { grid-template-columns:1fr; }
-  .footer { margin-top:24px; }
-  .support-tab { display:none; }
-}
-
-/* === STEP VISIBILITY === */
-.step-panel { display:none; }
-.step-panel.active { display:block; }
-
-/* === LOADING SKELETON === */
-.skeleton { animation:pulse 1.5s ease-in-out infinite; background:linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%); background-size:200% 100%; border-radius:4px; }
-@keyframes pulse { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-.skeleton-line { height:14px; margin:8px 0; }
-.skeleton-block { height:120px; margin:12px 0; }
-
-/* tax note */
-.tax-note { font-size:10px; color:var(--ec-text-light); font-style:italic; margin-top:4px; text-align:right; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="doc-header">
-  <table class="doc-header-table boxed-760">
-    <tr>
-      <td class="logo-cell"><img src="https://essentialcures.com/images/logo.png" alt="Essential Cures"></td>
-      <td class="divider-cell"><div></div></td>
-      <td class="org-cell">
-        <div class="org-name">Essential Cures Inc.</div>
-        <div class="tagline">Your trusted healthcare supply partner</div>
-      </td>
-      <td class="title-cell">
-        <div class="doc-title">Purchase Order Fulfilment</div>
-      </td>
-    </tr>
-  </table>
+<div class="doc-header boxed-760">
+  <table class="doc-header-table"><tr>
+    <td class="doc-header-left"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></td>
+    <td class="doc-header-sep"></td>
+    <td class="doc-header-middle">
+      <div class="org-name">ESSENTIAL CURES INC.</div>
+      <div class="tagline">Compliant Solutions. Confident Care.</div>
+      <div class="doc-title">Supplier Purchase Order</div>
+    </td>
+  </tr></table>
+  <div class="doc-header-stripe1"></div>
+  <div class="doc-header-stripe2"></div>
 </div>
 
-<!-- STRIPE (boxed, 4px blue over 4px lime) -->
-<div class="boxed-760">
-  <div class="stripe-bar">
-    <div class="stripe-blue"></div>
-    <div class="stripe-lime"></div>
+<main class="main"><div class="form-card boxed-760">
+  <div id="content">
+    <div class="status-msg">Loading your purchase order.</div>
   </div>
-</div>
+  <div style="margin-top:24px;"><table style="width:100%;border-collapse:collapse;"><tr>
+    <td style="width:50%;background-color:#4A8B2C;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span></td>
+    <td style="width:50%;background-color:#0070B0;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Quality Built In. Not Bolted On.</span></td>
+  </tr></table></div>
+</div></main>
 
-<!-- PROGRESS BAR -->
-<div class="progress-section boxed-760">
-  <div class="progress-bar" id="progressBar">
-    <div class="step-item">
-      <div class="step-circle active" id="circle1">1</div>
-      <span class="step-label active" id="label1">Order Confirmation</span>
-    </div>
-    <div class="step-connector" id="conn1"></div>
-    <div class="step-item">
-      <div class="step-circle" id="circle2">2</div>
-      <span class="step-label" id="label2">Dispatch</span>
-    </div>
-    <div class="step-connector" id="conn2"></div>
-    <div class="step-item">
-      <div class="step-circle" id="circle3">3</div>
-      <span class="step-label" id="label3">Shipping</span>
-    </div>
-    <div class="step-connector" id="conn3"></div>
-    <div class="step-item">
-      <div class="step-circle" id="circle4">4</div>
-      <span class="step-label" id="label4">Delivery Note</span>
+<footer class="boxed-760"><div class="footer-line"></div><p class="footer-urls">essentialcures.com | essentialcures.ca</p><p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p></footer>
+
+<div class="wait-overlay" id="waitOverlay" role="status" aria-live="polite">
+  <div class="wait-card">
+    <div class="wait-card-stripe1"></div>
+    <div class="wait-card-stripe2"></div>
+    <div class="wait-card-body">
+      <div class="wait-spinner"></div>
+      <div class="wait-title" id="waitTitle">Submitting your shipment</div>
+      <p class="wait-text">We are recording your shipment against this purchase order and preparing your delivery note. This usually takes a few seconds.</p>
+      <div class="wait-warn">Please do not close, refresh, or navigate away from this page until it is finished.</div>
+      <div class="wait-step" id="waitStep"></div>
     </div>
   </div>
 </div>
 
-<!-- MAIN -->
-<div class="main boxed-760">
-
-  <!-- LOADING STATE -->
-  <div id="loadingState" class="form-card">
-    <div class="skeleton skeleton-line" style="width:40%"></div>
-    <div class="skeleton skeleton-line" style="width:70%"></div>
-    <div class="skeleton skeleton-block"></div>
-    <div class="skeleton skeleton-line" style="width:55%"></div>
-  </div>
-
-  <!-- ERROR STATE -->
-  <div id="errorState" style="display:none">
-    <div class="form-card" style="text-align:center; padding:48px 32px;">
-      <div style="font-size:36px; margin-bottom:12px;">&#9888;</div>
-      <div style="font-size:16px; font-weight:700; color:var(--ec-dark); margin-bottom:8px;" id="errorTitle">Unable to Load</div>
-      <div style="font-size:13px; color:var(--ec-text-light);" id="errorMessage">Please contact Essential Cures for assistance.</div>
-    </div>
-  </div>
-
-  <!-- CONTENT (hidden until loaded) -->
-  <div id="contentArea" style="display:none">
-
-    <!-- ==================== STEP 1: ORDER CONFIRMATION ==================== -->
-    <div class="step-panel active" id="step1">
-      <div class="form-card">
-        <h2>Order Confirmation</h2>
-
-        <!-- PO Meta -->
-        <div class="po-meta-grid" id="poMetaGrid"></div>
-
-        <!-- Line Items with prices and brand -->
-        <h3>Order Lines</h3>
-        <div style="overflow-x:auto;">
-          <table class="line-table" id="lineItemsTable">
-            <thead>
-              <tr>
-                <th style="width:5%">#</th>
-                <th style="width:35%">Product</th>
-                <th style="width:15%">Brand</th>
-                <th class="num" style="width:10%">Qty</th>
-                <th class="num" style="width:15%">Unit Price (CAD)</th>
-                <th class="num" style="width:20%">Line Total (CAD)</th>
-              </tr>
-            </thead>
-            <tbody id="lineItemsBody"></tbody>
-            <tfoot id="lineItemsFoot"></tfoot>
-          </table>
-        </div>
-        <div class="tax-note">All prices exclusive of GST/HST, charged as applicable</div>
-      </div>
-
-      <!-- Acknowledge -->
-      <div class="form-card" id="ackCard">
-        <h2>Acknowledgement</h2>
-        <div id="ackPending">
-          <div class="ack-block">
-            <label>
-              <input type="checkbox" id="ackCheckbox">
-              I acknowledge receipt of this Purchase Order and confirm that the products listed above will be supplied in accordance with the terms stated.
-            </label>
-          </div>
-        </div>
-        <div id="ackConfirmed" style="display:none">
-          <div class="ack-block ack-done">
-            <div style="font-size:13px; color:var(--ec-green);">&#10003; This Purchase Order has been acknowledged.</div>
-            <div class="ack-stamp" id="ackStamp"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Proforma Section (conditional) -->
-      <div class="form-card" id="proformaCard" style="display:none">
-        <h2>Proforma Invoice</h2>
-        <div class="proforma-section required" id="proformaBlock">
-          <div class="proforma-header">
-            <span class="icon">&#128196;</span>
-            <h3>Advance Payment Proforma Required</h3>
-          </div>
-          <p style="font-size:12px; color:var(--ec-text-light); margin-bottom:14px;">
-            This order requires an advance payment. Please upload your proforma invoice to proceed. The reference fields below are optional.
-          </p>
-          <div class="expected-amount-box" id="expectedAmountBox">
-            Expected advance amount: <strong id="expectedAmountValue"></strong>
-            <span id="expectedAmountCalc" style="font-size:11px; color:var(--ec-text-light);"></span>
-          </div>
-
-          <!-- Optional fields -->
-          <div class="field-row">
-            <div class="field-group">
-              <label>Proforma Number</label>
-              <input type="text" id="proformaNumber" placeholder="e.g. PI-2026-001">
-            </div>
-            <div class="field-group">
-              <label>Proforma Date</label>
-              <input type="date" id="proformaDate">
-            </div>
-            <div class="field-group">
-              <label>Proforma Amount (CAD)</label>
-              <input type="number" id="proformaAmount" step="0.01" min="0" placeholder="0.00">
-              <div class="hint">If entered, amount will be validated against expected</div>
-              <div class="error-hint" id="proformaAmountError"></div>
-            </div>
-          </div>
-
-          <!-- Variance error -->
-          <div class="variance-error" id="varianceError"></div>
-
-          <!-- PDF Upload (mandatory) -->
-          <div class="upload-zone" id="proformaUploadZone" onclick="document.getElementById('proformaFile').click()">
-            <input type="file" id="proformaFile" accept=".pdf,.PDF">
-            <div class="upload-label" id="proformaUploadLabel">
-              Click to upload proforma invoice <strong>(PDF required)</strong>
-            </div>
-          </div>
-        </div>
-
-        <!-- Proforma already submitted -->
-        <div id="proformaSubmitted" style="display:none">
-          <div class="ack-block ack-done">
-            <div style="font-size:13px; color:var(--ec-green);">&#10003; Proforma invoice received.</div>
-            <div class="ack-stamp" id="proformaStamp"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Payment Details (shown when advance is paid) -->
-      <div id="paymentCard" style="display:none">
-        <div class="form-card">
-          <h2>Payment Confirmation</h2>
-          <div class="payment-details" id="paymentDetails"></div>
-        </div>
-      </div>
-
-      <!-- Step 1 Nav -->
-      <div class="form-card">
-        <div class="nav-row">
-          <div></div>
-          <button class="btn btn-primary" id="step1Next" disabled>Next: Dispatch &#8594;</button>
-        </div>
-        <div id="step1Status"></div>
-      </div>
-
-      <div class="guide-link">
-        &#128214;&nbsp; Need help? <a href="https://essentialcures.com/guides/supplier-po-guide" target="_blank">View the Purchase Order Fulfilment Guide</a>
-      </div>
-    </div>
-
-    <!-- ==================== STEP 2: DISPATCH ==================== -->
-    <div class="step-panel" id="step2">
-      <div class="form-card">
-        <h2>Dispatch</h2>
-        <p style="font-size:12px; color:var(--ec-text-light); margin-bottom:14px;">Select the lines you are dispatching and enter the quantities. You may dispatch a partial order.</p>
-        <div style="overflow-x:auto;">
-          <table class="line-select-table" id="dispatchTable">
-            <thead>
-              <tr>
-                <th style="width:5%"></th>
-                <th style="width:40%">Product</th>
-                <th style="width:15%">Brand</th>
-                <th style="width:15%">Ordered</th>
-                <th style="width:25%">Dispatching</th>
-              </tr>
-            </thead>
-            <tbody id="dispatchBody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Lot Capture -->
-      <div class="form-card" id="lotCaptureCard">
-        <h2>Lot Details</h2>
-        <p style="font-size:12px; color:var(--ec-text-light); margin-bottom:14px;">
-          For each dispatched line, capture lot/batch details. Multiple lots per line are supported.
-        </p>
-        <div id="lotContainer"></div>
-      </div>
-
-      <!-- Step 2 Nav -->
-      <div class="form-card">
-        <div class="nav-row">
-          <button class="btn btn-secondary" onclick="goToStep(1)">&#8592; Back</button>
-          <button class="btn btn-primary" id="step2Next" disabled>Next: Shipping &#8594;</button>
-        </div>
-        <div id="step2Status"></div>
-      </div>
-
-      <div class="guide-link">
-        &#128214;&nbsp; Need help? <a href="https://essentialcures.com/guides/supplier-po-guide" target="_blank">View the Purchase Order Fulfilment Guide</a>
-      </div>
-    </div>
-
-    <!-- ==================== STEP 3: SHIPPING ==================== -->
-    <div class="step-panel" id="step3">
-      <div class="form-card">
-        <h2>Shipping</h2>
-
-        <h3>Dispatch Date</h3>
-        <div class="field-row two-col">
-          <div class="field-group">
-            <label>Date of Dispatch</label>
-            <input type="date" id="dispatchDate">
-            <div class="hint" id="dispatchDateHint"></div>
-            <div class="error-hint" id="dispatchDateError"></div>
-          </div>
-          <div></div>
-        </div>
-
-        <h3>Shipping Method</h3>
-        <div class="method-cards">
-          <div class="method-card" id="methodCourier" onclick="selectMethod('courier')">
-            <div class="method-icon">&#128666;</div>
-            <div class="method-name">Courier / Freight</div>
-            <div class="method-desc">Third-party carrier with tracking</div>
-          </div>
-          <div class="method-card" id="methodOwn" onclick="selectMethod('own_vehicle')">
-            <div class="method-icon">&#128663;</div>
-            <div class="method-name">Own Vehicle</div>
-            <div class="method-desc">Delivered by your own transport</div>
-          </div>
-        </div>
-
-        <!-- Courier fields -->
-        <div id="courierFields" style="display:none">
-          <div class="field-row two-col">
-            <div class="field-group">
-              <label>Carrier Name</label>
-              <input type="text" id="carrierName" placeholder="e.g. FedEx, Purolator">
-            </div>
-            <div class="field-group">
-              <label>Tracking Number</label>
-              <input type="text" id="trackingNumber" placeholder="Tracking reference">
-            </div>
-          </div>
-        </div>
-
-        <!-- Own vehicle fields -->
-        <div id="ownFields" style="display:none">
-          <div class="field-row two-col">
-            <div class="field-group">
-              <label>Driver Name</label>
-              <input type="text" id="driverName" placeholder="Full name of driver">
-            </div>
-            <div class="field-group">
-              <label>Vehicle / Reference</label>
-              <input type="text" id="vehicleRef" placeholder="Vehicle plate or reference">
-            </div>
-          </div>
-        </div>
-
-        <h3>Expected Delivery</h3>
-        <div class="field-row two-col">
-          <div class="field-group">
-            <label>Estimated Delivery Date</label>
-            <input type="date" id="estDeliveryDate">
-            <div class="hint" id="estDeliveryHint"></div>
-          </div>
-          <div></div>
-        </div>
-      </div>
-
-      <!-- Step 3 Nav -->
-      <div class="form-card">
-        <div class="nav-row">
-          <button class="btn btn-secondary" onclick="goToStep(2)">&#8592; Back</button>
-          <button class="btn btn-success" id="step3Submit">Submit Dispatch &#10003;</button>
-        </div>
-        <div id="step3Status"></div>
-      </div>
-
-      <div class="guide-link">
-        &#128214;&nbsp; Need help? <a href="https://essentialcures.com/guides/supplier-po-guide" target="_blank">View the Purchase Order Fulfilment Guide</a>
-      </div>
-    </div>
-
-    <!-- ==================== STEP 4: DELIVERY NOTE ==================== -->
-    <div class="step-panel" id="step4">
-      <div class="form-card">
-        <h2>Delivery Note</h2>
-        <div class="dn-download">
-          <div class="dn-icon">&#128196;</div>
-          <div class="dn-number" id="dnNumber"></div>
-          <div class="dn-date" id="dnDate"></div>
-          <button class="download-btn" id="dnDownloadBtn" onclick="downloadDeliveryNote()">
-            &#11015; Download Delivery Note (PDF)
-          </button>
-        </div>
-        <div class="ack-block ack-done" style="margin-top:18px;">
-          <div style="font-size:13px; color:var(--ec-green);">
-            &#10003; Dispatch recorded. Essential Cures has been notified. Please include a printed copy of this delivery note with your shipment.
-          </div>
-        </div>
-      </div>
-
-      <!-- Step 4 Nav -->
-      <div class="form-card">
-        <div class="nav-row">
-          <button class="btn btn-secondary" onclick="goToStep(3)">&#8592; Back to Shipping</button>
-          <div></div>
-        </div>
-      </div>
-
-      <div class="guide-link">
-        &#128214;&nbsp; Need help? <a href="https://essentialcures.com/guides/supplier-po-guide" target="_blank">View the Purchase Order Fulfilment Guide</a>
-      </div>
-    </div>
-
-  </div><!-- /contentArea -->
-
-  <!-- TAGLINE BAR -->
-  <div class="tagline-bar">
-    <div class="tagline-bar-inner">
-      <div class="tagline-left">Reliable healthcare supply across Canada</div>
-      <div class="tagline-right">essentialcures.com</div>
-    </div>
-  </div>
-</div><!-- /main -->
-
-<!-- FOOTER -->
-<div class="footer boxed-760">
-  <div class="footer-gradient"></div>
-  <div class="footer-text">&copy; 2026 Essential Cures Inc. All rights reserved. This document is confidential.</div>
-</div>
-
-<!-- TECH SUPPORT TAB -->
-<div class="support-tab" onclick="window.open('mailto:support@essentialcures.com','_blank')">Technical Support</div>
-
-<!-- WAIT OVERLAY -->
-<div class="wait-overlay" id="waitOverlay">
-  <div class="wait-box">
-    <div class="spinner"></div>
-    <div class="wait-text" id="waitText">Processing...</div>
-    <div class="wait-sub" id="waitSub">Please wait while your data is saved.</div>
-    <div class="wait-warn">Please do not close or refresh this page.</div>
+<div class="it-float" id="itFloat">
+  <button class="it-tab" onclick="toggleIT()">Technical Support</button>
+  <div class="it-panel" id="itPanel">
+    <button class="it-close" onclick="toggleIT()" aria-label="Close">&times;</button>
+    <h4>Technical Issues?</h4>
+    <p>Having trouble with this page? Email our IT Support team with a description of the problem and we will respond promptly.</p>
+    <a href="mailto:itsupport@essentialcures.com">Email IT Support</a>
   </div>
 </div>
 
 <script>
-// === CONFIG ===
-const API_BASE = 'https://ec-supplier-po-worker.faisal-khan-e13.workers.dev';
+function toggleIT(){document.getElementById("itPanel").classList.toggle("open");}
+
+const WORKER_BASE = 'https://ec-supplier-po-worker.faisal-khan-e13.workers.dev';
+const METHOD_COURIER = 'Courier';
+const METHOD_OWN = 'Own Vehicle';
+
+const params = new URLSearchParams(window.location.search);
+const token = params.get('token');
+const contentEl = document.getElementById('content');
 let poData = null;
-let currentStep = 1;
 let selectedMethod = null;
-let proformaFileObj = null;
 
-// === INIT ===
-document.addEventListener('DOMContentLoaded', () => {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
-  const token = params.get('token');
-  if (!id || !token) return showError('Missing Parameters', 'This link appears to be incomplete. Please use the link provided in your email.');
-  loadPO(id, token);
-});
-
-async function loadPO(id, token) {
-  try {
-    const r = await fetch(`${API_BASE}/api/po/gate?id=${id}&token=${token}`);
-    if (!r.ok) {
-      const err = await r.json().catch(() => ({}));
-      throw new Error(err.error || `Request failed (${r.status})`);
-    }
-    poData = await r.json();
-    renderPage();
-  } catch(e) {
-    showError('Unable to Load Purchase Order', e.message);
-  }
+function esc(v){
+  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-
-function showError(title, msg) {
-  document.getElementById('loadingState').style.display = 'none';
-  document.getElementById('errorState').style.display = 'block';
-  document.getElementById('errorTitle').textContent = title;
-  document.getElementById('errorMessage').textContent = msg;
+function showError(msg){
+  contentEl.innerHTML = `<div class="status-msg error">${esc(msg)}</div>`;
 }
-
-// === RENDER ===
-function renderPage() {
-  document.getElementById('loadingState').style.display = 'none';
-  document.getElementById('contentArea').style.display = 'block';
-
-  renderPoMeta();
-  renderLineItems();
-  renderAcknowledge();
-  renderProforma();
-  renderPayment();
-  renderDispatchTable();
-  setupDateConstraints();
-  setupEventListeners();
-
-  // Resume at saved step
-  const savedStep = poData.pageStepCompleted || 0;
-  if (savedStep >= 4 && poData.shipmentId) {
-    goToStep(4);
-  } else if (savedStep >= 3) {
-    goToStep(3);
-  } else if (savedStep >= 2) {
-    goToStep(2);
-  } else {
-    goToStep(1);
-  }
-  validateStep1();
+function fmtDate(d){
+  if(!d) return 'Not specified';
+  try{ return new Date(d).toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'}); }
+  catch(e){ return d; }
 }
-
-function fmt(n) {
-  if (n == null) return '0.00';
-  return Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
-
-// === PO META ===
-function renderPoMeta() {
-  const d = poData;
-  const items = [
-    { label: 'PO Number', value: d.poNumber || '' },
-    { label: 'Supplier', value: d.vendorName || '' },
-    { label: 'Reference', value: d.dealReference || '' },
-    { label: 'Required By', value: formatDate(d.requiredBy) },
-    { label: 'Order Date', value: formatDate(d.poDate) },
-    { label: 'Status', value: d.advanceStatus || 'Standard Terms' },
-  ];
-  const grid = document.getElementById('poMetaGrid');
-  grid.innerHTML = items.map(i => `
-    <div class="po-meta-item">
-      <span class="label">${i.label}</span>
-      <span class="value">${i.value}</span>
-    </div>
-  `).join('');
-}
-
-function formatDate(d) {
-  if (!d) return '';
-  const dt = new Date(d);
-  if (isNaN(dt)) return d;
-  return dt.toLocaleDateString('en-CA', { year:'numeric', month:'short', day:'numeric' });
-}
-
-// === LINE ITEMS ===
-function renderLineItems() {
-  const lines = poData.lineItems || [];
-  const tbody = document.getElementById('lineItemsBody');
-  const tfoot = document.getElementById('lineItemsFoot');
-
-  tbody.innerHTML = lines.map((l, i) => `
-    <tr>
-      <td>${i + 1}</td>
-      <td>
-        ${esc(l.productName)}
-        ${l.description ? `<div style="font-size:11px;color:var(--ec-text-light);margin-top:2px;">${esc(l.description)}</div>` : ''}
-      </td>
-      <td>${l.brand ? `<span class="brand-tag">${esc(l.brand)}</span>` : '<span style="color:#999;font-size:11px;">N/A</span>'}</td>
-      <td class="num">${l.quantity}</td>
-      <td class="num">${fmt(l.unitPrice)}</td>
-      <td class="num">${fmt(l.lineTotal)}</td>
-    </tr>
-  `).join('');
-
-  tfoot.innerHTML = `
-    <tr>
-      <td colspan="5" style="text-align:right;">Goods Subtotal</td>
-      <td class="num">${fmt(poData.subTotal)}</td>
-    </tr>
-  `;
-}
-
-// === ACKNOWLEDGE ===
-function renderAcknowledge() {
-  if (poData.acknowledged) {
-    document.getElementById('ackPending').style.display = 'none';
-    document.getElementById('ackConfirmed').style.display = 'block';
-    document.getElementById('ackStamp').textContent = `Acknowledged on ${formatDate(poData.acknowledgedDate)}`;
-  }
-}
-
-// === PROFORMA ===
-function renderProforma() {
-  if (!poData.proformaRequired) return;
-  document.getElementById('proformaCard').style.display = 'block';
-
-  const expectedAmt = poData.advanceExpectedAmount;
-  if (expectedAmt) {
-    document.getElementById('expectedAmountValue').textContent = `${fmt(expectedAmt)} CAD`;
-    const pct = poData.advancePct;
-    if (pct) {
-      document.getElementById('expectedAmountCalc').textContent = ` (${pct}% of goods subtotal ${fmt(poData.subTotal)})`;
-    }
-  }
-
-  // If proforma already received
-  if (poData.proformaReceived) {
-    document.getElementById('proformaBlock').style.display = 'none';
-    document.getElementById('proformaSubmitted').style.display = 'block';
-    document.getElementById('proformaStamp').textContent =
-      `Proforma ${poData.proformaNumber || ''} received on ${formatDate(poData.proformaReceivedDate)}`;
-  }
-}
-
-// === PAYMENT ===
-function renderPayment() {
-  if (!poData.advancePaid) return;
-  document.getElementById('paymentCard').style.display = 'block';
-  const pd = document.getElementById('paymentDetails');
-  pd.innerHTML = `
-    <h3>Advance Payment Confirmed</h3>
-    <div class="payment-row"><span class="label">Amount Paid</span><span class="value">${fmt(poData.advancePaidAmount)} CAD</span></div>
-    <div class="payment-row"><span class="label">Payment Date</span><span class="value">${formatDate(poData.advancePaidDate)}</span></div>
-    <div class="payment-row"><span class="label">Transaction Reference</span><span class="value">${poData.advanceTransactionRef || 'N/A'}</span></div>
-    <div class="payment-row"><span class="label">Payment Method</span><span class="value">${poData.paymentMethod || 'N/A'}</span></div>
-  `;
-}
-
-// === DISPATCH TABLE ===
-function renderDispatchTable() {
-  const lines = poData.lineItems || [];
-  const tbody = document.getElementById('dispatchBody');
-  tbody.innerHTML = lines.map((l, i) => `
-    <tr>
-      <td><input type="checkbox" class="dispatch-check" data-idx="${i}" onchange="onDispatchCheck()"></td>
-      <td>${esc(l.productName)}</td>
-      <td>${l.brand ? `<span class="brand-tag">${esc(l.brand)}</span>` : 'N/A'}</td>
-      <td>${l.quantity}</td>
-      <td>
-        <input type="number" class="dispatch-qty" data-idx="${i}" min="1" max="${l.quantity}" value="${l.quantity}" disabled onchange="onDispatchQtyChange(this)">
-        <div class="qty-match" id="qtyStatus${i}"></div>
-      </td>
-    </tr>
-  `).join('');
-}
-
-// === DATE CONSTRAINTS ===
-function setupDateConstraints() {
-  const today = new Date();
-  const todayStr = today.toISOString().split('T')[0];
-
-  // Dispatch date: today minus 3 working days to today
-  const minDate = getWorkingDaysBack(today, 3);
-  const dispDate = document.getElementById('dispatchDate');
-  dispDate.max = todayStr;
-  dispDate.min = minDate;
-  dispDate.value = todayStr;
-  document.getElementById('dispatchDateHint').textContent =
-    `Between ${formatDate(minDate)} and today. Weekends excluded from backdate window.`;
-
-  // Est delivery: today to +30 days
-  const maxDel = new Date(today);
-  maxDel.setDate(maxDel.getDate() + 30);
-  const estDel = document.getElementById('estDeliveryDate');
-  estDel.min = todayStr;
-  estDel.max = maxDel.toISOString().split('T')[0];
-  document.getElementById('estDeliveryHint').textContent = `Within 30 days of today.`;
-}
-
-function getWorkingDaysBack(from, days) {
-  let d = new Date(from);
-  let count = 0;
-  while (count < days) {
-    d.setDate(d.getDate() - 1);
-    const dow = d.getDay();
-    if (dow !== 0 && dow !== 6) count++;
-  }
+function today(){ return new Date().toISOString().split('T')[0]; }
+function shiftDays(n){
+  const d = new Date();
+  d.setDate(d.getDate() + n);
   return d.toISOString().split('T')[0];
 }
-
-// === EVENT LISTENERS ===
-function setupEventListeners() {
-  // Acknowledge checkbox
-  document.getElementById('ackCheckbox')?.addEventListener('change', () => validateStep1());
-
-  // Proforma amount variance check
-  document.getElementById('proformaAmount')?.addEventListener('input', checkVariance);
-
-  // Proforma file
-  document.getElementById('proformaFile')?.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (!file.name.toLowerCase().endsWith('.pdf')) {
-      alert('Only PDF files are accepted.');
-      e.target.value = '';
-      return;
-    }
-    proformaFileObj = file;
-    const zone = document.getElementById('proformaUploadZone');
-    zone.classList.add('has-file');
-    document.getElementById('proformaUploadLabel').innerHTML = `
-      <div class="file-name">&#10003; ${esc(file.name)} (${(file.size/1024).toFixed(0)} KB)</div>
-      <div class="file-remove" onclick="removeProformaFile(event)">Remove</div>
-    `;
-    validateStep1();
-  });
-
-  // Step 1 Next
-  document.getElementById('step1Next').addEventListener('click', submitStep1);
-
-  // Step 2 Next
-  document.getElementById('step2Next').addEventListener('click', () => goToStep(3));
-
-  // Step 3 Submit
-  document.getElementById('step3Submit').addEventListener('click', submitDispatch);
-
-  // Beforeunload guard (removed after final submit)
-  window.addEventListener('beforeunload', beforeUnloadGuard);
+// All date rules come from CM-36 via the gate. Nothing is hardcoded here.
+function bounds(){
+  return (poData && poData.dateBounds) ? poData.dateBounds : {};
 }
-
-function beforeUnloadGuard(e) {
-  if (currentStep >= 2 && currentStep <= 3) {
-    e.preventDefault();
-    e.returnValue = '';
-  }
+function cfg(){
+  return (poData && poData.configs) ? poData.configs : {};
 }
+const SUPPLIER_GUIDE_URL = 'https://essentialcures.com/guides/supplier-ordering-guide';
 
-// === PROFORMA VARIANCE ===
-function checkVariance() {
-  const input = document.getElementById('proformaAmount');
-  const errDiv = document.getElementById('varianceError');
-  const errHint = document.getElementById('proformaAmountError');
-  errDiv.style.display = 'none';
-  errHint.style.display = 'none';
-
-  const val = parseFloat(input.value);
-  if (isNaN(val) || val <= 0) { validateStep1(); return; }
-
-  const expected = poData.advanceExpectedAmount;
-  if (!expected) { validateStep1(); return; }
-
-  const roundedVal = Math.round(val);
-  const roundedExp = Math.round(expected);
-
-  if (roundedVal > roundedExp) {
-    errDiv.style.display = 'block';
-    errDiv.innerHTML = `<strong>Amount exceeds the agreed advance.</strong> The advance percentage on file is ${poData.advancePct}%, resulting in an expected amount of ${fmt(expected)} CAD. If this percentage requires adjustment, please contact Essential Cures procurement.`;
-    errHint.textContent = 'Exceeds expected amount';
-    errHint.style.display = 'block';
-  }
-  validateStep1();
-}
-
-function removeProformaFile(e) {
-  e.stopPropagation();
-  proformaFileObj = null;
-  document.getElementById('proformaFile').value = '';
-  const zone = document.getElementById('proformaUploadZone');
-  zone.classList.remove('has-file');
-  document.getElementById('proformaUploadLabel').innerHTML = 'Click to upload proforma invoice <strong>(PDF required)</strong>';
-  validateStep1();
-}
-
-// === STEP 1 VALIDATION ===
-function validateStep1() {
-  let canProceed = true;
-
-  // Must be acknowledged (or already was)
-  if (!poData.acknowledged) {
-    const acked = document.getElementById('ackCheckbox')?.checked;
-    if (!acked) canProceed = false;
-  }
-
-  // If proforma required and not yet submitted
-  if (poData.proformaRequired && !poData.proformaReceived) {
-    // PDF is mandatory
-    if (!proformaFileObj) canProceed = false;
-
-    // If amount entered, variance must pass
-    const amtVal = parseFloat(document.getElementById('proformaAmount')?.value);
-    if (!isNaN(amtVal) && amtVal > 0 && poData.advanceExpectedAmount) {
-      if (Math.round(amtVal) > Math.round(poData.advanceExpectedAmount)) {
-        canProceed = false;
-      }
-    }
-  }
-
-  document.getElementById('step1Next').disabled = !canProceed;
-}
-
-// === STEP 1 SUBMIT ===
-async function submitStep1() {
-  showWait('Saving order confirmation...', 'Recording acknowledgement and uploading documents.');
-
-  try {
-    // Build form data
-    const fd = new FormData();
-    fd.append('poId', poData.poId);
-    fd.append('token', poData.token);
-    fd.append('step', '1');
-
-    if (!poData.acknowledged) {
-      fd.append('acknowledge', 'true');
-    }
-
-    if (poData.proformaRequired && !poData.proformaReceived) {
-      if (proformaFileObj) fd.append('proformaFile', proformaFileObj);
-      const pNum = document.getElementById('proformaNumber')?.value?.trim();
-      const pDate = document.getElementById('proformaDate')?.value;
-      const pAmt = document.getElementById('proformaAmount')?.value;
-      if (pNum) fd.append('proformaNumber', pNum);
-      if (pDate) fd.append('proformaDate', pDate);
-      if (pAmt) fd.append('proformaAmount', pAmt);
-    }
-
-    const r = await fetch(`${API_BASE}/api/po/step1`, { method: 'POST', body: fd });
-    const result = await r.json();
-
-    if (!r.ok) throw new Error(result.error || 'Step 1 submission failed');
-
-    // Update local state
-    poData.acknowledged = true;
-    poData.acknowledgedDate = new Date().toISOString();
-    poData.pageStepCompleted = Math.max(poData.pageStepCompleted || 0, 1);
-    if (result.proformaReceived) {
-      poData.proformaReceived = true;
-      poData.proformaReceivedDate = new Date().toISOString();
-    }
-
-    hideWait();
-    renderAcknowledge();
-    renderProforma();
-    goToStep(2);
-  } catch(e) {
-    hideWait();
-    showStepStatus('step1Status', 'error', e.message);
-  }
-}
-
-// === DISPATCH CHECKS ===
-function onDispatchCheck() {
-  const checks = document.querySelectorAll('.dispatch-check');
-  const qtys = document.querySelectorAll('.dispatch-qty');
-  let anyChecked = false;
-  checks.forEach((cb, i) => {
-    qtys[i].disabled = !cb.checked;
-    if (cb.checked) anyChecked = true;
-  });
-  document.getElementById('step2Next').disabled = !anyChecked;
-  buildLotCapture();
-}
-
-function onDispatchQtyChange(el) {
-  const idx = el.dataset.idx;
-  const max = parseInt(el.max);
-  const val = parseInt(el.value);
-  const status = document.getElementById(`qtyStatus${idx}`);
-  if (val > max) {
-    el.value = max;
-    status.className = 'qty-warning';
-    status.textContent = `Max: ${max}`;
-  } else if (val === max) {
-    status.className = 'qty-match';
-    status.textContent = 'Full quantity';
-  } else if (val > 0) {
-    status.className = 'qty-warning';
-    status.textContent = `Partial (${max - val} remaining)`;
-  }
-  buildLotCapture();
-}
-
-// === LOT CAPTURE ===
-function buildLotCapture() {
-  const container = document.getElementById('lotContainer');
-  const checks = document.querySelectorAll('.dispatch-check:checked');
-  if (checks.length === 0) {
-    container.innerHTML = '<p style="font-size:12px;color:var(--ec-text-light);">Select lines above to capture lot details.</p>';
+async function loadPO(){
+  if(!token){
+    showError('This link is missing a required parameter. Please use the link from your purchase order email.');
     return;
   }
-  let html = '';
-  checks.forEach(cb => {
-    const idx = cb.dataset.idx;
-    const line = poData.lineItems[idx];
-    const qty = parseInt(document.querySelectorAll('.dispatch-qty')[idx].value) || line.quantity;
-    html += `
-      <div style="margin-bottom:16px;">
-        <div style="font-size:13px;font-weight:600;color:var(--ec-dark);margin-bottom:8px;">
-          ${esc(line.productName)} ${line.brand ? `<span class="brand-tag">${esc(line.brand)}</span>` : ''} - Qty: ${qty}
-        </div>
-        <div id="lots-${idx}">
-          ${lotRow(idx, 0, qty)}
-        </div>
-        <button class="add-lot-btn" onclick="addLot(${idx}, ${qty})">+ Add another lot</button>
-      </div>
-    `;
-  });
-  container.innerHTML = html;
+  try{
+    const resp = await fetch(`${WORKER_BASE}/api/po/gate?token=${encodeURIComponent(token)}`);
+    const data = await resp.json();
+    if(!data.success){
+      showError(data.error || 'This purchase order link is invalid or has expired.');
+      return;
+    }
+    poData = data;
+    renderPage();
+  }catch(err){
+    showError('Something went wrong loading your purchase order. Please try again or contact us directly.');
+  }
 }
 
-function lotRow(lineIdx, lotIdx, maxQty) {
-  const today = new Date().toISOString().split('T')[0];
-  const minExpiry = new Date();
-  minExpiry.setDate(minExpiry.getDate() + 180);
-  const minExpiryStr = minExpiry.toISOString().split('T')[0];
+function renderPage(){
+  const ackBlock = poData.acknowledged
+    ? `<div class="ack-note done"><span class="ack-title">Purchase Order Acknowledged</span>Acknowledged on ${fmtDate(poData.acknowledgedDate)}. You may now record shipments below.</div>`
+    : `<div class="ack-note"><span class="ack-title">Please acknowledge this purchase order</span>Confirm you have received and reviewed this order before recording any shipments.<br><button class="ack-btn" id="ackBtn" onclick="acknowledgeOrder()">Acknowledge Purchase Order</button></div>`;
+
+  const prevBlock = (poData.existingShipments && poData.existingShipments.length)
+    ? `<div class="section-label">Shipments Recorded</div>` + poData.existingShipments.map(s => `
+        <div class="prev-ship-row">
+          <span class="prev-dn">${esc(s.dnNumber)}</span>
+          <span>${fmtDate(s.dispatchDate)}</span>
+          <span class="prev-status${s.status === 'Delivered' ? ' delivered' : ''}">${esc(s.status)}</span>
+          <a class="prev-link" href="${WORKER_BASE}/api/po/pdf?token=${encodeURIComponent(token)}&dn=${esc(s.id)}" target="_blank">Delivery Note</a>
+        </div>`).join('')
+    : '';
+
+  const allDoneBlock = poData.allFullyShipped
+    ? `<div class="all-done"><strong>All lines fully shipped</strong>Every line on this purchase order has been dispatched. Thank you for your prompt fulfilment.</div>`
+    : '';
+
+  const linesHtml = poData.allFullyShipped ? '' : buildLinesSection();
+  if(poData.lineFetchNote){ console.warn('EC line fetch:', poData.lineFetchNote); }
+
+  contentEl.innerHTML = `
+    <h2>Supplier Purchase Order</h2>
+    <p class="deal-name">${esc(poData.poNumber || '')} &middot; ${esc(poData.supplierName || '')}</p>
+    <div class="po-meta">
+      <div class="po-meta-item"><div class="po-meta-label">PO Reference</div><div class="po-meta-value">${esc(poData.poNumber)}</div></div>
+      <div class="po-meta-item"><div class="po-meta-label">Deliver To</div><div class="po-meta-value">${esc(poData.customerName || 'Not specified')}</div></div>
+      <div class="po-meta-item"><div class="po-meta-label">Delivery Required By</div><div class="po-meta-value">${fmtDate(poData.dueDate)}</div></div>
+    </div>
+    <div class="guide-strip">
+      <div class="guide-strip-text">
+        <strong>Supplier Ordering Guide</strong>
+        How Essential Cures orders, confirms, dispatches and pays. Opens in a new tab.
+      </div>
+      <a class="guide-strip-link" href="${SUPPLIER_GUIDE_URL}" target="_blank" rel="noopener">Open Guide</a>
+    </div>
+    ${ackBlock}
+    ${prevBlock}
+    ${allDoneBlock}
+    ${linesHtml}
+  `;
+
+  if(!poData.allFullyShipped){
+    const dd = document.getElementById('dispatchDate');
+    if(dd) dd.value = today();
+    updateSubmitState();
+  }
+}
+
+function buildLinesSection(){
+  if(!poData.lineItems || poData.lineItems.length === 0){
+    return `
+      <div class="section-label">Order Lines</div>
+      <div class="ack-note"><span class="ack-title">No order lines found on this purchase order</span>
+      We could not load the product lines for this order. Please contact procurement@essentialcures.com and quote reference ${esc(poData.poNumber || '')}.
+      <div style="margin-top:10px;font-size:11px;color:#6B7C8C;font-family:monospace;word-break:break-all;">${esc(poData.lineFetchNote || 'no diagnostic returned')}</div></div>`;
+  }
+  const lines = (poData.lineItems || []).map((line, idx) => {
+    if(line.fullyShipped){
+      return `
+        <div class="line-item done" data-idx="${idx}">
+          <div class="line-title">${esc(line.productName)}</div>
+          <div class="line-meta">Ordered ${esc(line.quantityOrdered)} &middot; Shipped ${esc(line.quantityShipped)} &middot; <span class="shipped-badge">Fully Shipped</span></div>
+        </div>`;
+    }
+    const disabled = poData.acknowledged ? '' : 'disabled';
+    return `
+      <div class="line-item" data-idx="${idx}" data-lineid="${esc(line.id)}">
+        <div class="line-title">${esc(line.productName)}</div>
+        <div class="line-meta">Ordered ${esc(line.quantityOrdered)} &middot; Previously shipped ${esc(line.quantityShipped)} &middot; Outstanding ${esc(line.quantityOutstanding)}</div>
+        <div class="ship-toggle">
+          <input type="checkbox" id="cb_${idx}" ${disabled} onchange="toggleLine(${idx})">
+          <label for="cb_${idx}">Include this line in the shipment</label>
+        </div>
+        <div id="lineBody_${idx}" style="display:none;">
+          <div class="day-fields">
+            <div class="day-field">
+              <label for="qty_${idx}">Quantity Shipping Now</label>
+              <span class="hint">Up to ${esc(line.quantityOutstanding)} outstanding</span>
+              <input type="number" min="1" step="1" max="${esc(line.quantityOutstanding)}" id="qty_${idx}" value="${esc(line.quantityOutstanding)}" onchange="onQtyChange(${idx})">
+            </div>
+          </div>
+          <div class="lot-block">
+            <div class="lot-block-title">Lot or Batch Details</div>
+            <div id="lotRows_${idx}"></div>
+            <button type="button" class="lot-add" onclick="addLotRow(${idx})">Add another lot or batch</button>
+            <div class="lot-total" id="lotTotal_${idx}"></div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
 
   return `
-    <div class="lot-group" id="lot-${lineIdx}-${lotIdx}">
-      <div class="lot-header">
-        <span>Lot ${lotIdx + 1}</span>
-        ${lotIdx > 0 ? `<span class="remove-lot" onclick="removeLot(${lineIdx},${lotIdx})">Remove</span>` : ''}
+    <div class="section-label">Order Lines</div>
+    <div class="guide-note">Select each line you are dispatching today, enter the quantity, and record the lot or batch number with its expiry date. Lot quantities must add up to the quantity shipped. Partial shipments are supported, return to this page for each dispatch.</div>
+    ${lines}
+    <div class="section-label">Shipment Details</div>
+    <label class="field-label-standalone">How is this shipment being delivered?</label>
+    <div class="method-group">
+      <button type="button" class="method-btn" data-method="${METHOD_COURIER}" onclick="setMethod('${METHOD_COURIER}')">Courier</button>
+      <button type="button" class="method-btn" data-method="${METHOD_OWN}" onclick="setMethod('${METHOD_OWN}')">Own Vehicle or Direct Delivery</button>
+    </div>
+    <div class="day-fields">
+      <div class="day-field">
+        <label for="dispatchDate">Dispatch Date</label>
+        <span class="hint">The date goods leave your facility</span>
+        <input type="date" id="dispatchDate" min="${bounds().dispatchMin || ''}" max="${bounds().dispatchMax || today()}" onchange="updateSubmitState()">
       </div>
-      <div class="field-row">
-        <div class="field-group">
-          <label>Lot/Batch Number</label>
-          <input type="text" class="lot-batch" data-line="${lineIdx}" data-lot="${lotIdx}" placeholder="e.g. LOT-2026-A1">
-        </div>
-        <div class="field-group">
-          <label>Quantity in this Lot</label>
-          <input type="number" class="lot-qty" data-line="${lineIdx}" data-lot="${lotIdx}" min="1" max="${maxQty}" value="${maxQty}">
-        </div>
-        <div class="field-group">
-          <label>Expiry Date</label>
-          <input type="date" class="lot-expiry" data-line="${lineIdx}" data-lot="${lotIdx}" min="${minExpiryStr}">
-          <div class="hint">Min 180 days remaining shelf life</div>
-        </div>
+      <div class="day-field" id="fldCarrier" style="display:none;">
+        <label for="carrier">Carrier</label>
+        <span class="hint">Courier handling this shipment</span>
+        <select id="carrier" onchange="updateSubmitState()">
+          <option value="">Select carrier</option>
+          <option>FedEx</option><option>Purolator</option><option>Canada Post</option>
+          <option>UPS</option><option>DHL</option><option>Canpar</option><option>Other</option>
+        </select>
+      </div>
+      <div class="day-field" id="fldTracking" style="display:none;">
+        <label for="trackingNumber">Tracking Number</label>
+        <span class="hint">Used to track delivery progress</span>
+        <input type="text" id="trackingNumber" style="margin-bottom:0;" oninput="updateSubmitState()">
+      </div>
+      <div class="day-field" id="fldDriver" style="display:none;">
+        <label for="driverName">Driver Name</label>
+        <span class="hint">Person delivering the goods</span>
+        <input type="text" id="driverName" style="margin-bottom:0;" oninput="updateSubmitState()">
+      </div>
+      <div class="day-field" id="fldPlate" style="display:none;">
+        <label for="vehiclePlate">Vehicle Plate</label>
+        <span class="hint">Optional</span>
+        <input type="text" id="vehiclePlate" style="margin-bottom:0;">
+      </div>
+      <div class="day-field" id="fldExpected" style="display:none;">
+        <label for="expectedDelivery">Expected Delivery Date</label>
+        <span class="hint">When goods will reach the customer</span>
+        <input type="date" id="expectedDelivery" min="${bounds().expectedMin || today()}" max="${bounds().expectedMax || ''}" onchange="updateSubmitState()">
       </div>
     </div>
+    <div style="margin-top:20px;">
+      <label class="field-label-standalone" for="supplierNotes">Notes for Essential Cures (optional)</label>
+      <textarea id="supplierNotes" placeholder="Special handling instructions, substitutions, or any comments"></textarea>
+    </div>
+    <div class="validation-msg" id="validationMsg"></div>
+    <button class="submit-btn" id="submitBtn" disabled onclick="submitShipment()">Select lines above to record a shipment</button>
   `;
 }
 
-function addLot(lineIdx, maxQty) {
-  const container = document.getElementById(`lots-${lineIdx}`);
-  const existing = container.querySelectorAll('.lot-group').length;
-  container.insertAdjacentHTML('beforeend', lotRow(lineIdx, existing, maxQty));
-}
-
-function removeLot(lineIdx, lotIdx) {
-  document.getElementById(`lot-${lineIdx}-${lotIdx}`)?.remove();
-}
-
-// === SHIPPING METHOD ===
-function selectMethod(method) {
-  selectedMethod = method;
-  document.getElementById('methodCourier').classList.toggle('selected', method === 'courier');
-  document.getElementById('methodOwn').classList.toggle('selected', method === 'own_vehicle');
-  document.getElementById('courierFields').style.display = method === 'courier' ? 'block' : 'none';
-  document.getElementById('ownFields').style.display = method === 'own_vehicle' ? 'block' : 'none';
-}
-
-// === SUBMIT DISPATCH (Step 3) ===
-async function submitDispatch() {
-  // Validate
-  const dispDate = document.getElementById('dispatchDate').value;
-  if (!dispDate) return showStepStatus('step3Status', 'error', 'Dispatch date is required.');
-  if (!selectedMethod) return showStepStatus('step3Status', 'error', 'Please select a shipping method.');
-
-  if (selectedMethod === 'courier') {
-    if (!document.getElementById('carrierName').value.trim())
-      return showStepStatus('step3Status', 'error', 'Carrier name is required for courier shipments.');
-  } else {
-    if (!document.getElementById('driverName').value.trim())
-      return showStepStatus('step3Status', 'error', 'Driver name is required for own vehicle delivery.');
+function toggleLine(idx){
+  const cb = document.getElementById('cb_' + idx);
+  const body = document.getElementById('lineBody_' + idx);
+  body.style.display = cb.checked ? '' : 'none';
+  if(cb.checked && document.getElementById('lotRows_' + idx).children.length === 0){
+    addLotRow(idx, true);
   }
+  updateLotTotal(idx);
+  updateSubmitState();
+}
 
-  // Collect dispatch lines
-  const lines = [];
-  const checks = document.querySelectorAll('.dispatch-check:checked');
-  for (const cb of checks) {
-    const idx = cb.dataset.idx;
-    const line = poData.lineItems[idx];
-    const qty = parseInt(document.querySelectorAll('.dispatch-qty')[idx].value);
-
-    // Collect lots for this line
-    const lots = [];
-    const lotBatches = document.querySelectorAll(`.lot-batch[data-line="${idx}"]`);
-    const lotQtys = document.querySelectorAll(`.lot-qty[data-line="${idx}"]`);
-    const lotExpiries = document.querySelectorAll(`.lot-expiry[data-line="${idx}"]`);
-
-    for (let j = 0; j < lotBatches.length; j++) {
-      const batch = lotBatches[j].value.trim();
-      const lqty = parseInt(lotQtys[j].value);
-      const exp = lotExpiries[j].value;
-      if (!batch) return showStepStatus('step3Status', 'error', `Lot/batch number is required for ${line.productName}.`);
-      if (!exp) return showStepStatus('step3Status', 'error', `Expiry date is required for lot "${batch}".`);
-      lots.push({ batchNumber: batch, quantity: lqty, expiryDate: exp });
-    }
-
-    // Validate lot qty reconciliation
-    const totalLotQty = lots.reduce((s, l) => s + l.quantity, 0);
-    if (totalLotQty !== qty) {
-      return showStepStatus('step3Status', 'error',
-        `Lot quantities for ${line.productName} total ${totalLotQty} but dispatch quantity is ${qty}. These must match.`);
-    }
-
-    lines.push({
-      lineId: line.id,
-      productName: line.productName,
-      brand: line.brand || '',
-      quantity: qty,
-      unitPrice: line.unitPrice,
-      lineTotal: line.lineTotal,
-      lots: lots
-    });
+function onQtyChange(idx){
+  const line = poData.lineItems[idx];
+  const el = document.getElementById('qty_' + idx);
+  let v = parseInt(el.value, 10) || 0;
+  if(v < 1) v = 1;
+  if(v > line.quantityOutstanding) v = line.quantityOutstanding;
+  el.value = v;
+  const rows = document.getElementById('lotRows_' + idx);
+  if(rows.children.length === 1){
+    const only = rows.querySelector('input.lot-qty');
+    if(only) only.value = v;
   }
+  updateLotTotal(idx);
+  updateSubmitState();
+}
 
-  if (lines.length === 0) return showStepStatus('step3Status', 'error', 'No lines selected for dispatch.');
+function addLotRow(idx, seedQty){
+  const rows = document.getElementById('lotRows_' + idx);
+  const n = rows.children.length;
+  const qtyVal = seedQty ? (document.getElementById('qty_' + idx).value || '') : '';
+  const div = document.createElement('div');
+  div.className = 'lot-row';
+  div.innerHTML = `
+    <div class="lot-col">
+      <label for="lotNum_${idx}_${n}">Lot or Batch Number</label>
+      <input type="text" id="lotNum_${idx}_${n}" placeholder="e.g. LOT-2026-0041" oninput="updateSubmitState()">
+    </div>
+    <div class="lot-col">
+      <label for="lotExp_${idx}_${n}">Expiry Date</label>
+      <input type="date" id="lotExp_${idx}_${n}" min="${bounds().expiryMin || ''}" onchange="updateSubmitState()">
+    </div>
+    <div class="lot-col narrow">
+      <label for="lotQty_${idx}_${n}">Quantity</label>
+      <input type="number" min="1" step="1" class="lot-qty" id="lotQty_${idx}_${n}" value="${esc(qtyVal)}" oninput="updateLotTotal(${idx});updateSubmitState();">
+    </div>
+    <button type="button" class="lot-remove" onclick="removeLotRow(${idx}, this)" aria-label="Remove lot">&times;</button>`;
+  rows.appendChild(div);
+  updateLotTotal(idx);
+}
 
-  showWait('Submitting dispatch...', 'Recording shipment, lots and generating delivery note.');
-  window.onbeforeunload = () => true;
+function removeLotRow(idx, btn){
+  const rows = document.getElementById('lotRows_' + idx);
+  if(rows.children.length <= 1) return;
+  btn.closest('.lot-row').remove();
+  updateLotTotal(idx);
+  updateSubmitState();
+}
 
-  try {
-    const payload = {
-      poId: poData.poId,
-      token: poData.token,
-      dispatchDate: dispDate,
-      shippingMethod: selectedMethod,
-      carrierName: selectedMethod === 'courier' ? document.getElementById('carrierName').value.trim() : '',
-      trackingNumber: selectedMethod === 'courier' ? document.getElementById('trackingNumber').value.trim() : '',
-      driverName: selectedMethod === 'own_vehicle' ? document.getElementById('driverName').value.trim() : '',
-      vehicleRef: selectedMethod === 'own_vehicle' ? document.getElementById('vehicleRef').value.trim() : '',
-      estDeliveryDate: document.getElementById('estDeliveryDate').value,
-      lines: lines
+function getLots(idx){
+  const rows = document.getElementById('lotRows_' + idx);
+  if(!rows) return [];
+  return Array.from(rows.querySelectorAll('.lot-row')).map(row => {
+    const inputs = row.querySelectorAll('input');
+    return {
+      lotBatchNumber: (inputs[0].value || '').trim(),
+      expiryDate: inputs[1].value || '',
+      quantity: parseInt(inputs[2].value, 10) || 0,
     };
+  });
+}
 
-    const r = await fetch(`${API_BASE}/api/po/submit`, {
+function updateLotTotal(idx){
+  const el = document.getElementById('lotTotal_' + idx);
+  if(!el) return;
+  const shipQty = parseInt(document.getElementById('qty_' + idx).value, 10) || 0;
+  const total = getLots(idx).reduce((s, l) => s + l.quantity, 0);
+  if(total === shipQty && shipQty > 0){
+    el.className = 'lot-total ok';
+    el.textContent = `Lot quantities match the quantity shipped: ${total}`;
+  }else{
+    el.className = 'lot-total bad';
+    el.textContent = `Lot quantities total ${total} and must equal ${shipQty}`;
+  }
+}
+
+function selectedLineIdxs(){
+  return (poData.lineItems || []).map((l, i) => i).filter(i => {
+    const cb = document.getElementById('cb_' + i);
+    return cb && cb.checked;
+  });
+}
+
+function setMethod(method){
+  selectedMethod = method;
+  document.querySelectorAll('.method-btn').forEach(b => {
+    b.classList.toggle('selected', b.getAttribute('data-method') === method);
+  });
+  const courier = method === METHOD_COURIER;
+  document.getElementById('fldCarrier').style.display = courier ? '' : 'none';
+  document.getElementById('fldTracking').style.display = courier ? '' : 'none';
+  document.getElementById('fldDriver').style.display = courier ? 'none' : '';
+  document.getElementById('fldPlate').style.display = courier ? 'none' : '';
+  document.getElementById('fldExpected').style.display = courier ? 'none' : '';
+  updateSubmitState();
+}
+
+function updateSubmitState(){
+  const btn = document.getElementById('submitBtn');
+  if(!btn) return;
+  const idxs = selectedLineIdxs();
+  let ready = idxs.length > 0 && !!selectedMethod;
+
+  if(ready){
+    const dd = document.getElementById('dispatchDate');
+    if(!dd || !dd.value) ready = false;
+  }
+  if(ready && selectedMethod === METHOD_COURIER){
+    if(!document.getElementById('carrier').value) ready = false;
+    if(!document.getElementById('trackingNumber').value.trim()) ready = false;
+  }
+  if(ready && selectedMethod === METHOD_OWN){
+    if(!document.getElementById('driverName').value.trim()) ready = false;
+    if(!document.getElementById('expectedDelivery').value) ready = false;
+  }
+  if(ready){
+    const minExpiry = bounds().expiryMin || '';
+    for(const i of idxs){
+      const shipQty = parseInt(document.getElementById('qty_' + i).value, 10) || 0;
+      const lots = getLots(i);
+      const total = lots.reduce((s, l) => s + l.quantity, 0);
+      if(shipQty < 1 || total !== shipQty){ ready = false; break; }
+      if(lots.some(l => !l.lotBatchNumber || !l.expiryDate || l.quantity < 1)){ ready = false; break; }
+      if(lots.some(l => l.expiryDate < minExpiry)){ ready = false; break; }
+    }
+  }
+  if(ready){
+    const dd = document.getElementById('dispatchDate').value;
+    const b = bounds();
+    if((b.dispatchMax && dd > b.dispatchMax) || (b.dispatchMin && dd < b.dispatchMin)){ ready = false; }
+  }
+
+  btn.disabled = !ready;
+  if(idxs.length === 0){
+    btn.textContent = 'Select lines above to record a shipment';
+  }else if(!ready){
+    btn.textContent = 'Complete every field above to submit';
+    const dd = document.getElementById('dispatchDate').value;
+    const b = bounds();
+    const c = cfg();
+    if(dd && b.dispatchMax && dd > b.dispatchMax){
+      showValidation('The dispatch date cannot be in the future. Record the shipment on or after the day the goods leave your facility.');
+    }else if(dd && b.dispatchMin && dd < b.dispatchMin){
+      showValidation('The dispatch date cannot be more than ' + (c.Dispatch_Backdate_Window_Days || '') + ' working days in the past. Contact procurement@essentialcures.com if you need to record an older shipment.');
+    }else{
+      const minExpiry = b.expiryMin || '';
+      let badExpiry = false;
+      for(const i of selectedLineIdxs()){
+        if(getLots(i).some(l => l.expiryDate && minExpiry && l.expiryDate < minExpiry)){ badExpiry = true; break; }
+      }
+      if(badExpiry){
+        showValidation('Every lot must carry at least ' + (c.Min_Shelf_Life_Days_At_Dispatch || '') + ' days of remaining shelf life at dispatch. Please check the expiry dates entered, or contact procurement@essentialcures.com before shipping short-dated stock.');
+      }else{
+        clearValidation();
+      }
+    }
+  }else{
+    const units = idxs.reduce((s, i) => s + (parseInt(document.getElementById('qty_' + i).value, 10) || 0), 0);
+    btn.textContent = `Submit Shipment and Generate Delivery Note (${idxs.length} line${idxs.length > 1 ? 's' : ''}, ${units} unit${units !== 1 ? 's' : ''})`;
+    clearValidation();
+  }
+}
+
+function showValidation(msg){
+  const el = document.getElementById('validationMsg');
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+function clearValidation(){
+  const el = document.getElementById('validationMsg');
+  if(el) el.classList.remove('visible');
+}
+
+let waitStepTimer = null;
+function openWait(title){
+  const o = document.getElementById('waitOverlay');
+  if(!o) return;
+  if(title) document.getElementById('waitTitle').textContent = title;
+  document.getElementById('waitStep').textContent = '';
+  o.classList.add('open');
+  const steps = [
+    'Validating your lot and batch details.',
+    'Recording the shipment against this order.',
+    'Generating delivery note.',
+    'Almost there, finishing up.'
+  ];
+  let i = 0;
+  const stepEl = document.getElementById('waitStep');
+  stepEl.textContent = steps[0];
+  waitStepTimer = setInterval(function(){
+    i = i + 1;
+    if(i < steps.length){ stepEl.textContent = steps[i]; }
+  }, 2500);
+  window.addEventListener('beforeunload', warnOnLeave);
+}
+function closeWait(){
+  const o = document.getElementById('waitOverlay');
+  if(!o) return;
+  o.classList.remove('open');
+  if(waitStepTimer){ clearInterval(waitStepTimer); waitStepTimer = null; }
+  window.removeEventListener('beforeunload', warnOnLeave);
+}
+function warnOnLeave(e){
+  e.preventDefault();
+  e.returnValue = '';
+  return '';
+}
+
+async function acknowledgeOrder(){
+  const btn = document.getElementById('ackBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving, please wait.';
+  openWait('Recording your acknowledgement');
+  try{
+    const resp = await fetch(`${WORKER_BASE}/api/po/submit`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({ token, action: 'acknowledge' }),
     });
-
-    const result = await r.json();
-    if (!r.ok) throw new Error(result.error || 'Dispatch submission failed');
-
-    // Update state
-    poData.shipmentId = result.shipmentId;
-    poData.shipmentNumber = result.shipmentNumber;
-    poData.pageStepCompleted = 4;
-
-    window.onbeforeunload = null;
-    window.removeEventListener('beforeunload', beforeUnloadGuard);
-    hideWait();
-
-    // Render step 4
-    document.getElementById('dnNumber').textContent = result.shipmentNumber || 'Delivery Note';
-    document.getElementById('dnDate').textContent = `Dispatched ${formatDate(dispDate)}`;
-    goToStep(4);
-  } catch(e) {
-    window.onbeforeunload = null;
-    hideWait();
-    showStepStatus('step3Status', 'error', e.message);
+    const data = await resp.json();
+    if(!data.success) throw new Error(data.error || 'Your acknowledgement could not be saved.');
+    poData.acknowledged = true;
+    poData.acknowledgedDate = new Date().toISOString();
+    closeWait();
+    renderPage();
+  }catch(err){
+    closeWait();
+    btn.disabled = false;
+    btn.textContent = 'Acknowledge Purchase Order';
+    alert(err.message || 'Something went wrong. Please try again.');
   }
 }
 
-// === DELIVERY NOTE DOWNLOAD ===
-function downloadDeliveryNote() {
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
-  const token = params.get('token');
-  window.open(`${API_BASE}/api/po/pdf?id=${id}&token=${token}`, '_blank');
-}
+async function submitShipment(){
+  clearValidation();
+  const btn = document.getElementById('submitBtn');
+  const idxs = selectedLineIdxs();
 
-// === STEP NAVIGATION ===
-function goToStep(step) {
-  currentStep = step;
+  const selectedLines = idxs.map(i => {
+    const line = poData.lineItems[i];
+    return {
+      dliId: line.id,
+      productName: line.productName,
+      productCode: line.productCode,
+      uom: line.uom,
+      quantityOrdered: line.quantityOrdered,
+      quantityShipped: line.quantityShipped,
+      quantityOutstanding: line.quantityOutstanding,
+      quantityThisShipment: parseInt(document.getElementById('qty_' + i).value, 10) || 0,
+      lots: getLots(i),
+    };
+  });
 
-  // Hide all panels
-  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById(`step${step}`).classList.add('active');
+  const payload = {
+    deliveryMethod: selectedMethod,
+    dispatchDate: document.getElementById('dispatchDate').value,
+    carrier: (document.getElementById('carrier') || {}).value || '',
+    trackingNumber: ((document.getElementById('trackingNumber') || {}).value || '').trim(),
+    driverName: ((document.getElementById('driverName') || {}).value || '').trim(),
+    vehiclePlate: ((document.getElementById('vehiclePlate') || {}).value || '').trim(),
+    expectedDeliveryDate: (document.getElementById('expectedDelivery') || {}).value || '',
+    supplierNotes: document.getElementById('supplierNotes').value.trim(),
+    selectedLines,
+  };
 
-  // Update progress bar
-  for (let i = 1; i <= 4; i++) {
-    const circle = document.getElementById(`circle${i}`);
-    const label = document.getElementById(`label${i}`);
-    circle.className = 'step-circle';
-    label.className = 'step-label';
+  btn.disabled = true;
+  btn.textContent = 'Submitting your shipment, please wait.';
+  openWait('Submitting your shipment');
 
-    if (i < step) {
-      circle.classList.add('done');
-      circle.innerHTML = '&#10003;';
-      label.classList.add('done');
-    } else if (i === step) {
-      circle.classList.add('active');
-      circle.textContent = i;
-      label.classList.add('active');
-    } else {
-      circle.textContent = i;
-    }
+  try{
+    const resp = await fetch(`${WORKER_BASE}/api/po/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, action: 'submit_shipment', payload }),
+    });
+    const data = await resp.json();
+    if(!data.success) throw new Error(data.error || 'Your shipment could not be submitted.');
+    closeWait();
+    showShipmentDone(data);
+  }catch(err){
+    closeWait();
+    showValidation(err.message || 'Something went wrong. Please try again.');
+    updateSubmitState();
   }
-
-  // Connectors
-  for (let i = 1; i <= 3; i++) {
-    const conn = document.getElementById(`conn${i}`);
-    conn.className = 'step-connector';
-    if (i < step) conn.classList.add('done');
-  }
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// === UTILS ===
-function showWait(text, sub) {
-  document.getElementById('waitText').textContent = text;
-  document.getElementById('waitSub').textContent = sub;
-  document.getElementById('waitOverlay').classList.add('show');
+function showShipmentDone(data){
+  const pdfUrl = `${WORKER_BASE}/api/po/pdf?token=${encodeURIComponent(token)}&dn=${data.shipmentId}`;
+  contentEl.innerHTML = `
+    <h2>Shipment Recorded</h2>
+    <p class="deal-name">${esc(poData.poNumber || '')} &middot; ${esc(poData.supplierName || '')}</p>
+    <div class="all-done">
+      <strong>Delivery note ${esc(data.dnNumber)} has been created</strong>
+      ${esc(data.linesShipped)} line${data.linesShipped > 1 ? 's' : ''} and ${esc(data.unitsShipped)} unit${data.unitsShipped !== 1 ? 's' : ''} recorded against this purchase order.
+    </div>
+    <div class="guide-note">Print the delivery note and include it with the parcel. No supplier invoice or packing list is required.</div>
+    <a class="download-btn" href="${pdfUrl}" target="_blank">Download Delivery Note</a>
+    <button class="secondary-btn" onclick="location.reload()">Record Another Shipment</button>
+    <p style="text-align:center;margin-top:14px;font-size:13px;"><a href="${SUPPLIER_GUIDE_URL}" target="_blank" rel="noopener" style="color:var(--deep-blue);font-weight:600;text-decoration:none;">Open the Supplier Ordering Guide</a></p>
+    <p style="text-align:center;margin-top:16px;font-size:13px;"><a href="https://essentialcures.com" style="color:var(--deep-blue);font-weight:600;text-decoration:none;">Return to essentialcures.com</a></p>
+  `;
 }
-function hideWait() {
-  document.getElementById('waitOverlay').classList.remove('show');
-}
-function showStepStatus(elId, type, msg) {
-  const el = document.getElementById(elId);
-  el.innerHTML = `<div class="status-msg ${type}">${msg}</div>`;
-}
-function esc(s) {
-  if (!s) return '';
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
+
+loadPO();
 </script>
 </body>
 </html>
