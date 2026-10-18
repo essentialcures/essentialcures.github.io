@@ -39,7 +39,10 @@ p.deal-name{font-size:13px;color:var(--cool-gray);margin:0 0 16px;}
 .guide-note{font-size:12px;color:var(--cool-gray);background:var(--light-bg);border:1px solid #E8ECF0;border-radius:6px;padding:10px 12px;margin-bottom:16px;line-height:1.6;}
 .section-label{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:24px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
 .line-item{border:1px solid #D4DAE0;border-radius:8px;padding:16px 18px;margin-bottom:12px;background:var(--light-bg);}
-.line-item .line-title{font-size:14px;font-weight:700;color:var(--dark-navy);margin-bottom:2px;}
+.line-item .line-title{font-size:14px;font-weight:700;color:var(--dark-navy);margin-bottom:6px;}
+.line-item .line-brand{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;}
+.line-item .line-brand-label{font-size:10px;font-weight:700;color:var(--cool-gray);text-transform:uppercase;letter-spacing:0.6px;}
+.line-item .line-brand-value{font-size:13px;font-weight:700;color:var(--deep-blue);}
 .line-item .line-meta{font-size:12px;color:var(--cool-gray);margin-bottom:14px;}
 .fulfilment-group{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
 .fulfilment-btn{flex:1;min-width:130px;border:2px solid #D4DAE0;border-radius:6px;padding:10px 12px;font-size:12px;font-weight:600;color:var(--cool-gray);background:var(--white);cursor:pointer;text-align:center;transition:all 0.15s;font-family:"Inter",sans-serif;}
@@ -148,6 +151,11 @@ function numOrBlank(v) {
   const n = parseInt(v, 10);
   return isNaN(n) ? '' : String(n);
 }
+// Quantities always carry a thousands separator
+function fmtQty(v) {
+  const n = Number(v);
+  return isFinite(n) ? n.toLocaleString('en-CA') : esc(v);
+}
 function showError(msg) {
   contentEl.innerHTML = `<div class="status-msg error">${esc(msg)}</div>`;
 }
@@ -188,11 +196,15 @@ function renderForm(data) {
     const onFile = numOrBlank(line.onFileLeadTimeDays);
     const onFileTxt = onFile !== '' ? ` &middot; Lead time on file: ${onFile} business days` : '';
     const showDays = mode === MODE_INSTOCK || mode === MODE_BACKORDER;
+    const brandHtml = line.brand
+      ? `<div class="line-brand"><span class="line-brand-label">Brand</span><span class="line-brand-value">${esc(line.brand)}</span></div>`
+      : '';
 
     return `
       <div class="line-item" data-rowid="${esc(line.rowId)}" data-dliid="${esc(line.dliId)}" data-mode="${esc(mode)}" data-idx="${idx}">
         <div class="line-title">${esc(line.productName)}</div>
-        <div class="line-meta">Qty ${esc(line.qty)} &middot; UOM: ${esc(line.uom || 'Not specified')} &middot; Delivery: ${esc(line.deliveryCity || 'Not specified')}${onFileTxt}</div>
+        ${brandHtml}
+        <div class="line-meta">Qty ${fmtQty(line.qty)} &middot; UOM: ${esc(line.uom || 'Not specified')} &middot; Delivery: ${esc(line.deliveryCity || 'Not specified')}${onFileTxt}</div>
         <div class="fulfilment-group">
           <button type="button" class="fulfilment-btn${mode === MODE_INSTOCK ? ' selected-instock' : ''}" data-mode="${MODE_INSTOCK}" onclick="selectFulfilment(this, ${idx})">In Stock</button>
           <button type="button" class="fulfilment-btn${mode === MODE_BACKORDER ? ' selected-backorder' : ''}" data-mode="${MODE_BACKORDER}" onclick="selectFulfilment(this, ${idx})">Backorder</button>
@@ -205,7 +217,7 @@ function renderForm(data) {
             <input type="number" min="1" step="1" class="day-input" id="avail_${idx}" value="${avail}" placeholder="e.g. 10">
           </div>
           <div class="day-field">
-            <label for="fulfil_${idx}">Fulfilment (days)</label>
+            <label for="fulfil_${idx}">Order Fulfilment (days)</label>
             <span class="hint">Business days to pick, pack and dispatch</span>
             <input type="number" min="0" step="1" class="day-input" id="fulfil_${idx}" value="${fulfil}" placeholder="e.g. 2">
           </div>
@@ -226,7 +238,7 @@ function renderForm(data) {
     ${alreadyBlock}
     <div class="not-binding-note">This is a pre-order confirmation and not a formal purchase order. It carries no binding obligation on either party.</div>
     <div class="section-label">Order Lines: Please Confirm Each</div>
-    <div class="guide-note">For each line, select its availability, then enter the business days you need. The total lead time is counted from the date you receive our purchase order.</div>
+    <div class="guide-note">For each line, select its availability, then enter the business days you need. Please confirm availability of the exact brand shown, as substitutions are not accepted without prior agreement. The total lead time is counted from the date you receive our purchase order.</div>
     ${linesHtml}
     <div class="section-label">Additional Information</div>
     <label class="field-label-standalone" for="comments">Comments (optional)</label>
@@ -378,11 +390,9 @@ document.addEventListener('click', e => {
 
 function showThankYou() {
   contentEl.innerHTML = `
-    <div class="status-msg">Thank you. Your confirmation has been recorded.<br><br>You may now close this window.</div>
-    <button class="close-btn" id="closeBtn">Close This Window</button>
+    <div class="status-msg">Thank you. Your confirmation has been recorded.</div>
     <p style="text-align:center;margin-top:16px;font-size:13px;"><a href="https://essentialcures.com" style="color:var(--deep-blue);font-weight:600;text-decoration:none;">Return to essentialcures.com</a></p>
   `;
-  document.getElementById('closeBtn').addEventListener('click', () => { window.close(); });
 }
 
 loadConfirmation();
