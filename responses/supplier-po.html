@@ -30,22 +30,28 @@ body { font-family:'Inter',system-ui,sans-serif; background:var(--ec-light-bg); 
 /* === SHARED WIDTH CLASS === */
 .boxed-760 { width:760px; max-width:100%; margin-left:auto; margin-right:auto; }
 
-/* === DOC HEADER === */
-.doc-header { background:var(--ec-white); padding:16px 0; position:sticky; top:0; z-index:100; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
-.doc-header-inner { display:flex; align-items:center; gap:16px; padding:0 24px; }
-.doc-header .logo { height:44px; }
-.doc-header .divider { width:1px; height:40px; background:var(--ec-blue); opacity:0.3; }
-.doc-header .org-info { flex:1; }
-.doc-header .org-name { font-size:15px; font-weight:700; color:var(--ec-dark); letter-spacing:0.3px; }
-.doc-header .tagline { font-size:11px; color:var(--ec-lime); font-style:italic; margin-top:1px; }
-.doc-header .doc-title { font-size:13px; font-weight:600; color:var(--ec-blue); text-align:right; white-space:nowrap; }
+/* === DOC HEADER (table-based controlled pattern) === */
+.doc-header { background:var(--ec-white); position:sticky; top:0; z-index:100; box-shadow:0 1px 3px rgba(0,0,0,0.08); }
+.doc-header-table { width:100%; border-collapse:collapse; }
+.doc-header-table td { padding:14px 0; vertical-align:middle; }
+.doc-header-table .logo-cell { width:140px; text-align:center; }
+.doc-header-table .logo-cell img { height:44px; display:block; margin:0 auto; }
+.doc-header-table .divider-cell { width:1px; padding:0; }
+.doc-header-table .divider-cell div { width:1px; height:40px; background:var(--ec-blue); }
+.doc-header-table .org-cell { padding-left:16px; }
+.doc-header-table .org-name { font-size:15px; font-weight:700; color:var(--ec-dark); letter-spacing:0.3px; }
+.doc-header-table .tagline { font-size:11px; color:var(--ec-lime); font-style:italic; margin-top:1px; }
+.doc-header-table .title-cell { text-align:right; padding-right:4px; }
+.doc-header-table .doc-title { font-size:13px; font-weight:600; color:var(--ec-blue); white-space:nowrap; }
 
-/* === STRIPE BAR === */
-.stripe-bar { height:8px; background:linear-gradient(to bottom, var(--ec-blue) 50%, var(--ec-lime) 50%); }
+/* === STRIPE BAR (inside boxed width, 4px blue over 4px lime) === */
+.stripe-bar { display:flex; flex-direction:column; }
+.stripe-blue { height:4px; background:var(--ec-blue); }
+.stripe-lime { height:4px; background:var(--ec-lime); }
 
 /* === PROGRESS BAR === */
-.progress-section { background:var(--ec-white); border-bottom:1px solid var(--ec-border); padding:20px 0; }
-.progress-bar { display:flex; align-items:center; justify-content:center; gap:0; padding:0 24px; }
+.progress-section { padding:20px 0; }
+.progress-bar { display:flex; align-items:center; justify-content:center; gap:0; padding:0 24px; background:var(--ec-white); border:1px solid var(--ec-border); border-radius:8px; padding:16px 24px; }
 .step-item { display:flex; align-items:center; gap:0; }
 .step-circle { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--ec-white); background:var(--step-inactive); transition:background 0.3s; flex-shrink:0; }
 .step-circle.active { background:var(--step-active); }
@@ -200,9 +206,9 @@ body { font-family:'Inter',system-ui,sans-serif; background:var(--ec-light-bg); 
 .tagline-left { flex:1; background:var(--ec-blue); color:var(--ec-white); padding:12px 20px; font-size:11px; font-weight:500; border-radius:0 0 0 6px; }
 .tagline-right { flex:1; background:var(--ec-lime); color:var(--ec-dark); padding:12px 20px; font-size:11px; font-weight:600; text-align:right; border-radius:0 0 6px 0; }
 
-/* === FOOTER === */
+/* === FOOTER (margin-top synced with .main padding-top) === */
 .footer { margin-top:28px; padding:20px 0 32px; text-align:center; }
-.footer-gradient { height:3px; background:linear-gradient(90deg, var(--ec-blue), var(--ec-lime)); margin-bottom:16px; border-radius:2px; }
+.footer-gradient { height:3px; background:linear-gradient(90deg, var(--ec-blue), var(--ec-lime)); margin-bottom:16px; }
 .footer-text { font-size:11px; color:var(--ec-text-light); }
 
 /* === TECH SUPPORT TAB === */
@@ -213,12 +219,15 @@ body { font-family:'Inter',system-ui,sans-serif; background:var(--ec-light-bg); 
 @media(max-width:640px) {
   .boxed-760 { width:100%; }
   .form-card { padding:18px 16px; border-radius:0; border-left:none; border-right:none; }
-  .doc-header-inner { padding:0 16px; }
-  .doc-header .doc-title { display:none; }
+  .doc-header-table .logo-cell { width:80px; }
+  .doc-header-table .logo-cell img { height:32px; }
+  .doc-header-table .title-cell { display:none; }
+  .doc-header-table .org-cell { padding-left:10px; }
+  .doc-header-table .org-name { font-size:13px; }
   .po-meta-grid { grid-template-columns:1fr; }
   .method-cards { grid-template-columns:1fr; }
   .field-row, .field-row.two-col { grid-template-columns:1fr; }
-  .footer { margin-top:20px; }
+  .footer { margin-top:24px; }
   .support-tab { display:none; }
 }
 
@@ -240,23 +249,32 @@ body { font-family:'Inter',system-ui,sans-serif; background:var(--ec-light-bg); 
 
 <!-- HEADER -->
 <div class="doc-header">
-  <div class="doc-header-inner boxed-760">
-    <img class="logo" src="https://essentialcures.com/images/logo.png" alt="Essential Cures">
-    <div class="divider"></div>
-    <div class="org-info">
-      <div class="org-name">Essential Cures Inc.</div>
-      <div class="tagline">Your trusted healthcare supply partner</div>
-    </div>
-    <div class="doc-title">Purchase Order Fulfilment</div>
+  <table class="doc-header-table boxed-760">
+    <tr>
+      <td class="logo-cell"><img src="https://essentialcures.com/images/logo.png" alt="Essential Cures"></td>
+      <td class="divider-cell"><div></div></td>
+      <td class="org-cell">
+        <div class="org-name">Essential Cures Inc.</div>
+        <div class="tagline">Your trusted healthcare supply partner</div>
+      </td>
+      <td class="title-cell">
+        <div class="doc-title">Purchase Order Fulfilment</div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!-- STRIPE (boxed, 4px blue over 4px lime) -->
+<div class="boxed-760">
+  <div class="stripe-bar">
+    <div class="stripe-blue"></div>
+    <div class="stripe-lime"></div>
   </div>
 </div>
 
-<!-- STRIPE -->
-<div class="stripe-bar"></div>
-
 <!-- PROGRESS BAR -->
-<div class="progress-section">
-  <div class="progress-bar boxed-760" id="progressBar">
+<div class="progress-section boxed-760">
+  <div class="progress-bar" id="progressBar">
     <div class="step-item">
       <div class="step-circle active" id="circle1">1</div>
       <span class="step-label active" id="label1">Order Confirmation</span>
