@@ -3,15 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Respond to Your Proposal — Essential Cures</title>
+<title>Respond to Your Proposal | Essential Cures</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --deep-blue:#005090;--med-blue:#0070B0;--dark-navy:#003060;
-  --leaf-green:#4A8B2C;--lime:#8FC23C;--slate:#2C3E50;
+  --leaf-green:#4A8B2C;--forest:#276414;--lime:#8FC23C;--slate:#2C3E50;
   --cool-gray:#6B7C8C;--light-bg:#F7F9FB;--white:#FFFFFF;--red:#C0392B;
+  --rule:#E8ECF0;--rule-strong:#D4DAE0;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
@@ -29,33 +30,66 @@ body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;backgroun
 .doc-header-stripe1{height:4px;background:var(--deep-blue);}
 .doc-header-stripe2{height:4px;background:var(--lime);}
 .main{margin:0 auto;width:100%;padding:48px 40px 0 40px;}
-.form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:40px;}
+.form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid var(--rule);padding:40px;}
 .status-msg{text-align:center;padding:40px 20px;font-size:14px;color:var(--cool-gray);}
 .status-msg.error{color:var(--red);}
 h2{font-size:15px;color:var(--dark-navy);margin:0 0 8px;}
 p.deal-name{font-size:13px;color:var(--cool-gray);margin:0 0 20px;}
-.options{display:flex;gap:10px;margin-bottom:20px;}
-.option-choice{flex:1;border:2px solid #D4DAE0;border-radius:6px;padding:14px;cursor:pointer;text-align:center;transition:border-color 0.15s;}
-.option-choice.selected{border-color:var(--leaf-green);background:#EBF5E8;}
-.option-choice .label{font-size:12px;font-weight:bold;color:var(--cool-gray);letter-spacing:0.5px;}
-.option-choice .amount{font-size:18px;font-weight:bold;color:var(--deep-blue);margin-top:4px;}
+.section-label{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:4px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
+.section-label.spaced{margin-top:24px;}
+
+/* Option choice cards */
+.options{display:flex;gap:10px;margin-bottom:12px;}
+.option-choice{flex:1;border:2px solid var(--rule-strong);border-radius:8px;padding:14px 12px;cursor:pointer;text-align:center;transition:border-color 0.15s,background 0.15s;background:var(--white);}
+.option-choice:hover{border-color:var(--deep-blue);}
+.option-choice.a.selected{border-color:var(--deep-blue);background:#EBF3FA;}
+.option-choice.b.selected{border-color:var(--leaf-green);background:#EBF5E8;}
+.option-choice .label{font-size:11px;font-weight:700;color:var(--cool-gray);letter-spacing:0.6px;text-transform:uppercase;}
+.option-choice .tier{font-size:11px;color:var(--cool-gray);margin-top:1px;}
+.option-choice .amount{font-size:19px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums;}
+.option-choice.a .amount{color:var(--deep-blue);}
+.option-choice.b .amount{color:var(--forest);}
+.option-choice .ccy{font-size:11px;font-weight:600;color:var(--cool-gray);margin-right:4px;}
+
+/* Comparison of what each option contains */
+.compare-wrap{border:1px solid var(--rule-strong);border-radius:8px;overflow:hidden;margin-bottom:20px;}
+.compare{width:100%;border-collapse:collapse;font-size:12px;}
+.compare th{padding:9px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;text-align:left;color:var(--white);}
+.compare th.prod{background:var(--dark-navy);}
+.compare th.col-a{background:var(--deep-blue);}
+.compare th.col-b{background:var(--forest);}
+.compare td{padding:10px 10px;border-bottom:1px solid var(--rule);vertical-align:top;transition:background 0.15s;}
+.compare tr:last-child td{border-bottom:none;}
+.compare .p-name{font-weight:700;color:var(--dark-navy);font-size:12px;}
+.compare .p-qty{font-size:11px;color:var(--cool-gray);font-variant-numeric:tabular-nums;}
+.compare .brand{font-weight:700;font-size:12px;}
+.compare .col-a .brand{color:var(--deep-blue);}
+.compare .col-b .brand{color:var(--forest);}
+.compare .brand.none{color:var(--cool-gray);font-weight:400;font-style:italic;}
+.compare .line-amt{font-size:11px;color:var(--cool-gray);font-variant-numeric:tabular-nums;margin-top:1px;}
+.compare td.col-a.lit{background:#EBF3FA;}
+.compare td.col-b.lit{background:#EBF5E8;}
+.compare-note{font-size:11px;color:var(--cool-gray);padding:9px 10px;background:var(--light-bg);border-top:1px solid var(--rule);font-style:italic;}
+
+/* Single option */
+.single-total{background:#EBF3FA;border-left:5px solid var(--deep-blue);border-radius:6px;padding:16px 20px;margin-bottom:16px;}
+.single-total .label{font-size:11px;font-weight:700;color:var(--cool-gray);letter-spacing:0.6px;text-transform:uppercase;margin-bottom:2px;}
+.single-total .amount{font-size:24px;font-weight:700;color:var(--deep-blue);font-variant-numeric:tabular-nums;}
+.single-total .ccy{font-size:13px;font-weight:600;color:var(--cool-gray);margin-right:6px;}
+
 .extra-choices{display:flex;gap:10px;margin-bottom:20px;}
-.extra-choices button{flex:1;background:var(--light-bg);border:1px solid #D4DAE0;border-radius:6px;padding:10px;font-size:13px;color:var(--slate);cursor:pointer;font-family:"Inter",sans-serif;}
-.extra-choices button.selected{border-color:var(--deep-blue);background:#EBF3FA;font-weight:bold;}
+.extra-choices button{flex:1;background:var(--light-bg);border:1px solid var(--rule-strong);border-radius:6px;padding:10px;font-size:13px;color:var(--slate);cursor:pointer;font-family:"Inter",sans-serif;}
+.extra-choices button:hover{border-color:var(--deep-blue);}
+.extra-choices button.selected{border-color:var(--deep-blue);background:#EBF3FA;font-weight:700;}
 label.remarks-label{display:block;font-size:12px;color:var(--cool-gray);margin-bottom:6px;}
-textarea{width:100%;box-sizing:border-box;border:1.5px solid #D4DAE0;border-radius:6px;padding:11px 14px;font-family:"Inter",sans-serif;font-size:14px;resize:vertical;min-height:70px;margin-bottom:20px;}
+textarea{width:100%;box-sizing:border-box;border:1.5px solid var(--rule-strong);border-radius:6px;padding:11px 14px;font-family:"Inter",sans-serif;font-size:14px;resize:vertical;min-height:70px;margin-bottom:20px;}
 textarea:focus{outline:none;border-color:var(--deep-blue);}
 .submit-btn{width:100%;background:var(--leaf-green);color:var(--white);border:none;border-radius:6px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;font-family:"Inter",sans-serif;}
 .submit-btn:disabled{background:#A9C79A;cursor:not-allowed;}
-.close-btn{width:100%;background:transparent;color:var(--cool-gray);border:1.5px solid #D4DAE0;border-radius:6px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px;font-family:"Inter",sans-serif;}
 .already-note{background:#FFF8E1;border-left:4px solid #D4A017;padding:12px 14px;font-size:13px;margin-bottom:16px;border-radius:0 6px 6px 0;}
-/* single-option total box */
-.single-total{background:#EBF3FA;border-left:5px solid var(--deep-blue);border-radius:6px;padding:16px 20px;margin-bottom:20px;}
-.single-total .label{font-size:12px;font-weight:bold;color:var(--cool-gray);letter-spacing:0.5px;margin-bottom:4px;}
-.single-total .amount{font-size:24px;font-weight:bold;color:var(--deep-blue);}
 .it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
 .it-tab{background:var(--dark-navy);color:#fff;padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;border:none;font-family:"Inter",sans-serif;}
-.it-panel{display:none;background:#fff;border:1px solid #E8ECF0;border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
+.it-panel{display:none;background:#fff;border:1px solid var(--rule);border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
 .it-panel.open{display:block;}
 .it-panel h4{font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
 .it-panel p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-bottom:10px;}
@@ -73,6 +107,9 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
   .doc-header-sep{display:none;}
   .doc-header-middle{width:100%;text-align:center;}
   footer{padding:20px 12px;margin-top:24px;margin-bottom:24px;}
+  .options{flex-direction:column;}
+  .compare{font-size:11px;}
+  .compare td,.compare th{padding:8px 7px;}
 }
 </style>
 </head>
@@ -94,7 +131,7 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 
 <main class="main"><div class="form-card boxed-540">
   <div id="content">
-    <div class="status-msg">Loading your proposal…</div>
+    <div class="status-msg">Loading your proposal.</div>
   </div>
   <div style="margin-top:24px;"><table style="width:100%;border-collapse:collapse;"><tr>
     <td style="width:50%;background-color:#4A8B2C;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span></td>
@@ -107,9 +144,9 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 <div class="it-float" id="itFloat">
   <button class="it-tab" onclick="toggleIT()">Technical Support</button>
   <div class="it-panel" id="itPanel">
-    <button class="it-close" onclick="toggleIT()">✕</button>
+    <button class="it-close" onclick="toggleIT()" aria-label="Close">&times;</button>
     <h4>Technical Issues?</h4>
-    <p>Having trouble with the form? Email our EC-IT Support team with a description of the problem and we will get back to you promptly.</p>
+    <p>Having trouble with the form? Email our IT Support team with a description of the problem and we will get back to you promptly.</p>
     <a href="mailto:itsupport@essentialcures.com">Email IT Support</a>
   </div>
 </div>
@@ -118,6 +155,7 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 function toggleIT(){document.getElementById("itPanel").classList.toggle("open");}
 
 const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
+const CCY = 'CAD';
 
 const params = new URLSearchParams(window.location.search);
 const token = params.get('token');
@@ -125,11 +163,25 @@ const proposalId = params.get('id');
 const contentEl = document.getElementById('content');
 let selectedDecision = null;
 
-function showError(msg) {
-  contentEl.innerHTML = `<div class="status-msg error">${msg}</div>`;
+function esc(v){
+  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function num(v){
+  const n = parseFloat(String(v == null ? '' : v).replace(/[^0-9.\-]/g, ''));
+  return isFinite(n) ? n : 0;
+}
+// Locked display standard: money two decimals with separators, quantities with separators
+function fmtMoney(v){
+  return num(v).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function fmtQty(v){
+  return Math.round(num(v)).toLocaleString('en-CA');
+}
+function showError(msg){
+  contentEl.innerHTML = `<div class="status-msg error">${esc(msg)}</div>`;
 }
 
-async function loadProposal() {
+async function loadProposal(){
   if (!token || !proposalId) {
     showError('This link is missing a required parameter. Please use the link from your proposal email.');
     return;
@@ -151,54 +203,121 @@ async function loadProposal() {
   }
 }
 
-function renderForm(data) {
-  // Single-option intelligence: Option B is zero, blank, or equal to Option A
-  const optBRaw = parseFloat((data.optionBTotal || '0').toString().replace(/[^0-9.]/g, '')) || 0;
-  const optARaw = parseFloat((data.optionATotal || '0').toString().replace(/[^0-9.]/g, '')) || 0;
-  const isSingleOption = (optBRaw <= 0) || (optARaw > 0 && optBRaw === optARaw) || (data.isSingleOption === true);
+function brandCell(line){
+  if (!line) return `<div class="brand none">Not included</div>`;
+  const b = line.brand ? `<div class="brand">${esc(line.brand)}</div>` : `<div class="brand none">Not specified</div>`;
+  return b + `<div class="line-amt">${CCY} ${fmtMoney(line.lineTotal)}</div>`;
+}
+
+// Products appear in both options; pair them by Deal Line Item so the
+// customer reads across a row and sees the brand difference directly.
+function buildComparison(aLines, bLines){
+  const order = [];
+  const byKey = {};
+  const keyOf = l => l.dliId || l.productName;
+  (aLines || []).forEach(l => {
+    const k = keyOf(l);
+    if (!byKey[k]) { byKey[k] = { name: l.productName, qty: l.qty, uom: l.uom }; order.push(k); }
+    byKey[k].a = l;
+  });
+  (bLines || []).forEach(l => {
+    const k = keyOf(l);
+    if (!byKey[k]) { byKey[k] = { name: l.productName, qty: l.qty, uom: l.uom }; order.push(k); }
+    byKey[k].b = l;
+  });
+  const rows = order.map(k => {
+    const r = byKey[k];
+    const qtyTxt = `${fmtQty(r.qty)}${r.uom ? ' ' + esc(r.uom) : ''}`;
+    return `<tr>
+      <td><div class="p-name">${esc(r.name)}</div><div class="p-qty">${qtyTxt}</div></td>
+      <td class="col-a">${brandCell(r.a)}</td>
+      <td class="col-b">${brandCell(r.b)}</td>
+    </tr>`;
+  }).join('');
+  return `
+    <div class="section-label spaced">What Each Option Includes</div>
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead><tr><th class="prod" style="width:38%">Product</th><th class="col-a" style="width:31%">Option A</th><th class="col-b" style="width:31%">Option B</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="compare-note">Both options carry the same Essential Cures terms and quality standards. Brands shown are those confirmed for your order.</div>
+    </div>`;
+}
+
+function buildSingleList(lines){
+  const rows = (lines || []).map(l => `<tr>
+      <td><div class="p-name">${esc(l.productName)}</div><div class="p-qty">${fmtQty(l.qty)}${l.uom ? ' ' + esc(l.uom) : ''}</div></td>
+      <td class="col-a">${brandCell(l)}</td>
+    </tr>`).join('');
+  return `
+    <div class="section-label spaced">What Your Proposal Includes</div>
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead><tr><th class="prod" style="width:55%">Product</th><th class="col-a" style="width:45%">Brand</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+function highlightColumn(decision){
+  document.querySelectorAll('.compare td.col-a, .compare td.col-b').forEach(td => td.classList.remove('lit'));
+  if (decision === 'Option A') document.querySelectorAll('.compare td.col-a').forEach(td => td.classList.add('lit'));
+  if (decision === 'Option B - Specialist') document.querySelectorAll('.compare td.col-b').forEach(td => td.classList.add('lit'));
+  if (decision === 'Both Options') document.querySelectorAll('.compare td.col-a, .compare td.col-b').forEach(td => td.classList.add('lit'));
+}
+
+function renderForm(data){
+  const optA = num(data.optionATotal);
+  const optB = num(data.optionBTotal);
+  const isSingleOption = (optB <= 0) || (optA > 0 && optB === optA) || (data.isSingleOption === true);
 
   const alreadyBlock = data.alreadyResponded
-    ? `<div class="already-note">You already responded to this proposal on ${data.existingDecisionDate} with: <strong>${data.existingDecision}</strong>. Submitting again below will update your response.</div>`
+    ? `<div class="already-note">You already responded to this proposal on ${esc(data.existingDecisionDate)} with: <strong>${esc(data.existingDecision)}</strong>. Submitting again below will update your response.</div>`
     : '';
 
   let optionsHtml;
   if (isSingleOption) {
-    // Single option: one total box, no Option B, no "both quoted" button
     optionsHtml = `
       <div class="single-total">
-        <div class="label">YOUR PROPOSAL TOTAL</div>
-        <div class="amount">$${data.optionATotal} CAD</div>
+        <div class="label">Your Proposal Total</div>
+        <div class="amount"><span class="ccy">${CCY}</span>${fmtMoney(data.optionATotal)}</div>
       </div>
+      ${buildSingleList(data.optionALines)}
+      <div class="section-label spaced">Your Response</div>
       <div class="extra-choices">
         <button type="button" data-value="Option A">Confirm My Order</button>
-        <button type="button" data-value="Declined">Not proceeding</button>
+        <button type="button" data-value="Declined">Not Proceeding</button>
       </div>`;
   } else {
-    // Dual option: two choice cards + both quoted + declined
     optionsHtml = `
+      <div class="section-label">Choose Your Option</div>
       <div class="options">
-        <div class="option-choice" data-value="Option A">
-          <div class="label">OPTION A</div>
-          <div class="amount">$${data.optionATotal} CAD</div>
+        <div class="option-choice a" data-value="Option A">
+          <div class="label">Option A</div>
+          <div class="tier">Cost-Optimized</div>
+          <div class="amount"><span class="ccy">${CCY}</span>${fmtMoney(data.optionATotal)}</div>
         </div>
-        <div class="option-choice" data-value="Option B - Specialist">
-          <div class="label">OPTION B - SPECIALIST</div>
-          <div class="amount">$${data.optionBTotal} CAD</div>
+        <div class="option-choice b" data-value="Option B - Specialist">
+          <div class="label">Option B</div>
+          <div class="tier">Clinical Grade</div>
+          <div class="amount"><span class="ccy">${CCY}</span>${fmtMoney(data.optionBTotal)}</div>
         </div>
       </div>
       <div class="extra-choices">
-        <button type="button" data-value="Both Options">I'd like both quoted</button>
-        <button type="button" data-value="Declined">Not proceeding</button>
-      </div>`;
+        <button type="button" data-value="Both Options">Quote Both Options</button>
+        <button type="button" data-value="Declined">Not Proceeding</button>
+      </div>
+      ${buildComparison(data.optionALines, data.optionBLines)}`;
   }
 
   contentEl.innerHTML = `
     <h2>Your Proposal</h2>
-    <p class="deal-name">${data.dealName || ''}</p>
+    <p class="deal-name">${esc(data.dealName || '')}</p>
     ${alreadyBlock}
     ${optionsHtml}
     <label class="remarks-label" for="remarks">Comments or questions (optional)</label>
-    <textarea id="remarks" placeholder="Let us know if you have any questions or requests..."></textarea>
+    <textarea id="remarks" placeholder="Let us know if you have any questions or requests."></textarea>
     <button class="submit-btn" id="submitBtn" disabled>Select an option above to continue</button>
   `;
 
@@ -208,6 +327,7 @@ function renderForm(data) {
       choiceEls.forEach(e => e.classList.remove('selected'));
       el.classList.add('selected');
       selectedDecision = el.getAttribute('data-value');
+      highlightColumn(selectedDecision);
       const btn = document.getElementById('submitBtn');
       btn.disabled = false;
       btn.textContent = 'Submit My Response';
@@ -217,11 +337,11 @@ function renderForm(data) {
   document.getElementById('submitBtn').addEventListener('click', submitResponse);
 }
 
-async function submitResponse() {
+async function submitResponse(){
   if (!selectedDecision) return;
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  btn.textContent = 'Submitting…';
+  btn.textContent = 'Submitting, please wait.';
   const remarks = document.getElementById('remarks').value;
 
   try {
@@ -242,13 +362,11 @@ async function submitResponse() {
   }
 }
 
-function showThankYou() {
+function showThankYou(){
   contentEl.innerHTML = `
-    <div class="status-msg">Thank you. Your response has been recorded.<br><br>You may now close this window.</div>
-    <button class="close-btn" id="closeBtn">Close This Window</button>
+    <div class="status-msg">Thank you. Your response has been recorded.</div>
     <p style="text-align:center;margin-top:16px;font-size:13px;"><a href="https://essentialcures.com" style="color:var(--deep-blue);font-weight:600;text-decoration:none;">Return to essentialcures.com</a></p>
   `;
-  document.getElementById('closeBtn').addEventListener('click', () => { window.close(); });
 }
 
 loadProposal();
