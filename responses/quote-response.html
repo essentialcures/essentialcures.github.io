@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Respond to Your Quote — Essential Cures</title>
+<title>Respond to Your Quote | Essential Cures</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ── Exact styles from ec_quote_template_final ── */
+/* -- Exact styles from ec_quote_template_final -- */
 body, html { margin: 0; padding: 0; font-family: Calibri, Arial, sans-serif; font-size: 13px; color: rgb(44, 62, 80); background: rgb(235, 238, 242); min-width: 100%; } .page-shell { width: 720px; margin: 24px auto; background: rgb(255,255,255); box-shadow: 0 2px 20px rgba(0,0,0,0.10); display: block; overflow: hidden; }
 table { border-collapse: collapse; box-sizing: border-box; } *, *::before, *::after { box-sizing: border-box; }
 .main { width: 100%; table-layout: fixed; background: rgb(255, 255, 255); }
@@ -45,7 +45,7 @@ table { border-collapse: collapse; box-sizing: border-box; } *, *::before, *::af
 .footer-web { font-size: 11px; color: rgb(107, 124, 140); margin: 0; }
 .footer-copy { font-size: 8px; color: rgb(158, 158, 158); font-style: italic; margin: 2px 0 0 0; }
 
-/* ── Delivery block ── */
+/* -- Delivery block -- */
 .delivery-block { border-left: 4px solid rgb(0, 112, 176); background: rgb(235, 245, 251); padding: 12px 14px; }
 .delivery-heading { font-size: 10px; font-weight: bold; color: rgb(0, 48, 96); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 6px 0; }
 .delivery-range { font-size: 15px; font-weight: bold; color: rgb(0, 80, 144); margin: 0 0 4px 0; }
@@ -54,7 +54,7 @@ table { border-collapse: collapse; box-sizing: border-box; } *, *::before, *::af
 .delivery-table th { background: rgb(0, 80, 144); color: rgb(255,255,255); padding: 6px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px; text-align: left; font-weight: bold; }
 .delivery-table td { padding: 6px 10px; border-bottom: 1px solid rgb(203, 227, 240); color: rgb(44, 62, 80); }
 
-/* ── Payment block ── */
+/* -- Payment block -- */
 .payment-block { border-left: 4px solid rgb(74, 139, 44); background: rgb(234, 244, 227); padding: 12px 14px; }
 .payment-heading { font-size: 10px; font-weight: bold; color: rgb(27, 74, 27); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 8px 0; }
 .payment-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid rgb(197, 222, 184); }
@@ -62,7 +62,7 @@ table { border-collapse: collapse; box-sizing: border-box; } *, *::before, *::af
 .payment-lbl { color: rgb(58, 122, 30); }
 .payment-val { font-weight: 600; color: rgb(27, 74, 27); }
 
-/* ── Decision block ── */
+/* -- Decision block -- */
 .decision-wrap { padding: 16px; background: rgb(240, 244, 248); border-left: 4px solid rgb(0, 80, 144); }
 .decision-title { font-size: 11px; font-weight: bold; color: rgb(0, 80, 144); text-transform: uppercase; margin: 0 0 14px 0; letter-spacing: 0.5px; }
 .decision-row { display: flex; gap: 12px; margin-bottom: 14px; }
@@ -73,7 +73,7 @@ table { border-collapse: collapse; box-sizing: border-box; } *, *::before, *::af
 .submit-btn:disabled { background: rgb(169, 199, 154); cursor: not-allowed; }
 .close-btn { width: 100%; background: transparent; color: rgb(107, 124, 140); border: 1.5px solid rgb(212, 218, 224); border-radius: 5px; padding: 12px; font-size: 13px; cursor: pointer; margin-top: 10px; font-family: Calibri, Arial, sans-serif; }
 
-/* ── Decision errors and payment step ── */
+/* -- Decision errors and payment step -- */
 .form-error { color: rgb(192, 57, 43); font-size: 12px; margin: 0 0 10px 0; }
 .confirm-note { background: rgb(234, 244, 227); border-left: 4px solid rgb(74, 139, 44); padding: 12px 14px; font-size: 13px; color: rgb(27, 74, 27); margin-bottom: 16px; }
 .pay-form { background: rgb(240, 244, 248); border-left: 4px solid rgb(0, 80, 144); padding: 16px; }
@@ -83,12 +83,12 @@ table { border-collapse: collapse; box-sizing: border-box; } *, *::before, *::af
 .pay-input { width: 100%; border: 1.5px solid rgb(212, 218, 224); border-radius: 4px; padding: 10px 12px; font-family: Calibri, Arial, sans-serif; font-size: 13px; margin-bottom: 14px; background: rgb(255, 255, 255); }
 .pay-input:focus { outline: none; border-color: rgb(0, 80, 144); }
 
-/* ── Status/loading ── */
+/* -- Status/loading -- */
 .status-msg { text-align: center; padding: 48px 20px; font-size: 14px; color: rgb(107, 124, 140); }
 .status-msg.error { color: rgb(192, 57, 43); }
 .already-note { background: rgb(255, 248, 225); border-left: 4px solid rgb(212, 160, 23); padding: 10px 14px; font-size: 12px; margin-bottom: 14px; }
 
-/* ── IT support ── */
+/* -- IT support -- */
 .it-float { position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 500; }
 .it-tab { background: rgb(0, 48, 96); color: #fff; padding: 10px 7px; border-radius: 0 6px 6px 0; cursor: pointer; writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); font-size: 11px; font-weight: bold; border: none; font-family: Calibri, Arial, sans-serif; }
 .it-panel { display: none; background: #fff; border: 1px solid rgb(232, 236, 240); border-left: none; border-radius: 0 8px 8px 0; padding: 16px; width: 220px; box-shadow: 4px 0 16px rgba(0,0,0,0.10); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); }
@@ -259,10 +259,10 @@ async function loadQuote() {
 function buildDeliveryBlock(ds) {
   if (!ds) return '';
   const note = ds.partialShipment
-    ? 'Products ship from different suppliers — partial shipments expected. Full order completes within the maximum lead time.'
+    ? 'Products ship from different suppliers, so partial shipments are expected. Full order completes within the maximum lead time.'
     : 'All products ship together from a single fulfilment.';
   const rows = (ds.productLines || []).map(pl =>
-    `<tr><td>${pl.product}</td><td>${pl.leadDays && pl.leadDays !== '0' ? pl.leadDays + ' days' : 'Pending confirmation'}</td><td>${pl.fulfilmentMode || '—'}</td></tr>`
+    `<tr><td>${pl.product}</td><td>${pl.leadDays && pl.leadDays !== '0' ? pl.leadDays + ' days' : 'Pending confirmation'}</td><td>${pl.fulfilmentMode || 'Not specified'}</td></tr>`
   ).join('');
   return `
   <tr><td style="padding: 16px 0 0 0">
@@ -294,7 +294,7 @@ function buildPaymentBlock(ds, grandTotal) {
       <td style="width:8px">&nbsp;</td>
       <td style="padding:12px 14px">
         <div class="payment-block">
-          <p class="payment-heading">Payment Plan — Progressive Payment Structure</p>
+          <p class="payment-heading">Payment Plan | Progressive Payment Structure</p>
           <div class="payment-row"><span class="payment-lbl">Advance Payment (on order confirmation)</span><span class="payment-val">${fmt(advance)}</span></div>
           <div class="payment-row"><span class="payment-lbl">Balance on delivery</span><span class="payment-val">${fmt(balance)}</span></div>
           <div class="payment-row grand"><span class="payment-lbl">Order Total</span><span class="payment-val">${fmt(total)}</span></div>
@@ -311,7 +311,7 @@ function renderPage(data) {
   const hasSavings = data.savingsAmount && parseFloat(data.savingsAmount) > 0;
 
   const alreadyBlock = data.alreadyResponded
-    ? `<div class="already-note">You already responded to this quote on <strong>${data.existingDecisionDate}</strong> with: <strong>${data.existingDecision}</strong>.</div>`
+    ? `<div class="already-note">You already responded to this quote on <strong>${fmtDate(data.existingDecisionDate)}</strong> with: <strong>${data.existingDecision}</strong>.</div>`
     : '';
 
   const subTotal = hasDiscount
@@ -377,7 +377,7 @@ function renderPage(data) {
   <tr><td style="padding:16px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
       <td style="padding:10px 14px;background:rgb(74,139,44);border-radius:3px 3px 0 0">
-        <p style="margin:0;font-size:12px;font-weight:bold;color:rgb(255,255,255);letter-spacing:1px;text-transform:uppercase">OPTION B — CLINICAL GRADE</p>
+        <p style="margin:0;font-size:12px;font-weight:bold;color:rgb(255,255,255);letter-spacing:1px;text-transform:uppercase">OPTION B | CLINICAL GRADE</p>
       </td>
     </tr></tbody></table>
   </td></tr>
@@ -416,10 +416,10 @@ function renderPage(data) {
   <tr><td style="padding:16px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
       <td style="padding:12px 16px;background:rgb(240,244,248);border-left:4px solid rgb(0,80,144)">
-        <p style="margin:0 0 8px 0;font-size:11px;font-weight:bold;color:rgb(0,80,144);text-transform:uppercase;letter-spacing:0.5px">Pricing Summary — Both Options</p>
+        <p style="margin:0 0 8px 0;font-size:11px;font-weight:bold;color:rgb(0,80,144);text-transform:uppercase;letter-spacing:0.5px">Pricing Summary | Both Options</p>
         <table width="100%" cellpadding="0" cellspacing="0"><tbody>
-          <tr><td style="font-size:12px;color:rgb(44,62,80);padding:4px 0"><strong>Option A — Cost Optimized</strong></td><td style="font-size:13px;font-weight:bold;color:rgb(0,80,144);text-align:right">${fmt(data.grandTotal)}</td></tr>
-          <tr><td style="font-size:12px;color:rgb(44,62,80);padding:4px 0"><strong>Option B — Clinical Grade</strong></td><td style="font-size:13px;font-weight:bold;color:rgb(74,139,44);text-align:right">${fmt(sb.grandTotal)}</td></tr>
+          <tr><td style="font-size:12px;color:rgb(44,62,80);padding:4px 0"><strong>Option A | Cost Optimized</strong></td><td style="font-size:13px;font-weight:bold;color:rgb(0,80,144);text-align:right">${fmt(data.grandTotal)}</td></tr>
+          <tr><td style="font-size:12px;color:rgb(44,62,80);padding:4px 0"><strong>Option B | Clinical Grade</strong></td><td style="font-size:13px;font-weight:bold;color:rgb(74,139,44);text-align:right">${fmt(sb.grandTotal)}</td></tr>
         </tbody></table>
       </td>
     </tr></tbody></table>
@@ -460,7 +460,7 @@ function renderPage(data) {
         <tbody>
         <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">No:</td><td style="width:56px;font-size:7px;font-weight:bold;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${data.quoteNumber}</td></tr>
         <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">Rev:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right;padding-bottom:3px">01</td></tr>
-        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140)">Valid:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right">${data.validTill}</td></tr>
+        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140)">Valid:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right">${fmtDate(data.validTill)}</td></tr>
         </tbody>
       </table>
     </td>
@@ -496,13 +496,13 @@ function renderPage(data) {
       <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
       <td style="width:8px">&nbsp;</td>
       <td style="padding:12px 16px;background:rgb(234,242,251);vertical-align:middle">
-        <p class="meta-label">Quote Date</p><p class="meta-value meta-blue">${data.quoteDate || ''}</p>
+        <p class="meta-label">Quote Date</p><p class="meta-value meta-blue">${fmtDate(data.quoteDate)}</p>
       </td>
       <td style="width:16px">&nbsp;</td>
       <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
       <td style="width:8px">&nbsp;</td>
       <td style="padding:12px 16px;background:rgb(234,244,227);vertical-align:middle">
-        <p class="meta-label">Valid Through</p><p class="meta-value meta-green">${data.validTill || ''}</p>
+        <p class="meta-label">Valid Through</p><p class="meta-value meta-green">${fmtDate(data.validTill)}</p>
       </td>
     </tr></tbody></table>
   </td></tr>
@@ -547,7 +547,7 @@ function renderPage(data) {
   ${isDualOption ? `<tr><td style="padding:16px 0 0 0">
     <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
       <td style="padding:10px 14px;background:rgb(0,80,144);border-radius:3px 3px 0 0">
-        <p style="margin:0;font-size:12px;font-weight:bold;color:rgb(255,255,255);letter-spacing:1px;text-transform:uppercase">OPTION A — COST OPTIMIZED</p>
+        <p style="margin:0;font-size:12px;font-weight:bold;color:rgb(255,255,255);letter-spacing:1px;text-transform:uppercase">OPTION A | COST OPTIMIZED</p>
       </td>
     </tr></tbody></table>
   </td></tr>` : ''}
@@ -595,16 +595,13 @@ function renderPage(data) {
         <div class="decision-row">
           <button class="decision-btn accept" data-value="Option A" style="border-color:rgb(0,80,144)">Select Option A</button>
           <button class="decision-btn accept" data-value="Option B - Specialist" style="border-color:rgb(74,139,44)">Select Option B</button>
-        </div>
-        <div class="decision-row">
-          <button class="decision-btn decline" data-value="Declined">Decline All Options</button>
         </div>` : `
         <div class="decision-row">
           <button class="decision-btn accept" data-value="Option A">Accept This Quote</button>
-          <button class="decision-btn decline" data-value="Declined">Decline This Quote</button>
         </div>`}
         <div class="form-error" id="decisionError"></div>
-        <button class="submit-btn" id="submitBtn" disabled>Select a decision above to continue</button>
+        <button class="submit-btn" id="submitBtn" disabled>${isDualOption ? 'Select an option above to continue' : 'Select Accept This Quote above to continue'}</button>
+        <p style="margin:12px 0 0 0;font-size:12px;color:rgb(107,124,140);line-height:1.6">Would you like to discuss pricing, quantities or any revision before you decide? Please contact <a href="mailto:sales@essentialcures.com" style="color:rgb(0,80,144);font-weight:bold;text-decoration:none">sales@essentialcures.com</a>, quoting ${esc(data.quoteNumber)}.</p>
       </td>
     </tr></tbody></table>
   </td></tr>
@@ -616,7 +613,7 @@ function renderPage(data) {
       <td style="width:8px">&nbsp;</td>
       <td style="padding:12px 16px;background:rgb(234,244,227)">
         <p style="font-size:11px;font-weight:bold;color:rgb(58,122,30);margin:0 0 6px 0;text-transform:uppercase">Contact and Support</p>
-        <p style="font-size:12px;color:rgb(27,74,27);line-height:1.6;margin:0;font-style:italic">Thank you for considering Essential Cures as your trusted partner. Should you have any questions or require revisions to this quotation, please contact your Essential Cures representative or email <a href="mailto:customercare@essentialcures.com" style="color:rgb(0,80,144);font-style:italic;font-weight:bold">customercare@essentialcures.com</a>. We look forward to supporting your organization.</p>
+        <p style="font-size:12px;color:rgb(27,74,27);line-height:1.6;margin:0;font-style:italic">Thank you for considering Essential Cures as your trusted partner. Should you have any questions or require revisions to this quotation, please contact your Essential Cures representative or email <a href="mailto:sales@essentialcures.com" style="color:rgb(0,80,144);font-style:italic;font-weight:bold">sales@essentialcures.com</a>. We look forward to supporting your organization.</p>
       </td>
     </tr></tbody></table>
   </td></tr>
@@ -724,8 +721,7 @@ function pageShell(inner) {
 
 function showThankYou(message) {
   document.getElementById('root').innerHTML = pageShell(`
-    <div class="status-msg">${message}<br><br>You may now close this window.</div>
-    <button class="close-btn" onclick="window.close()">Close This Window</button>
+    <div class="status-msg">${message}</div>
     <p style="text-align:center;margin-top:14px;font-size:12px"><a href="https://essentialcures.com" style="color:rgb(0,80,144);font-weight:bold;text-decoration:none">Return to essentialcures.com</a></p>`);
 }
 
@@ -812,8 +808,8 @@ function brandHeader() {
       <table width="80" cellpadding="0" cellspacing="0" style="table-layout:fixed;margin:0 0 0 auto">
         <tbody>
         <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">No:</td><td style="width:56px;font-size:7px;font-weight:bold;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${esc(hub.quoteNumber)}</td></tr>
-        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">Date:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${esc(d.quoteDate || '')}</td></tr>
-        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140)">Valid:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right">${esc(d.validTill || '')}</td></tr>
+        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">Date:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${esc(fmtDate(d.quoteDate))}</td></tr>
+        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140)">Valid:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right">${esc(fmtDate(d.validTill))}</td></tr>
         </tbody>
       </table>
     </td>
