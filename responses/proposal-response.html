@@ -90,6 +90,15 @@ textarea:focus{outline:none;border-color:var(--deep-blue);}
 .submit-btn{width:100%;background:var(--leaf-green);color:var(--white);border:none;border-radius:6px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;font-family:"Inter",sans-serif;}
 .submit-btn:disabled{background:#A9C79A;cursor:not-allowed;}
 .already-note{background:#FFF8E1;border-left:4px solid #D4A017;padding:12px 14px;font-size:13px;margin-bottom:16px;border-radius:0 6px 6px 0;}
+.recorded{background:#E8F5E9;border-left:4px solid var(--leaf-green);padding:14px 16px;margin-bottom:20px;border-radius:0 6px 6px 0;}
+.recorded-title{font-size:13px;font-weight:700;color:var(--forest);margin-bottom:4px;}
+.recorded-text{font-size:13px;color:var(--slate);line-height:1.6;}
+.recorded-text a{color:var(--deep-blue);font-weight:600;text-decoration:none;}
+.option-choice.locked{cursor:default;}
+.option-choice.locked:hover{border-color:var(--rule-strong);}
+.option-choice.a.locked.selected:hover{border-color:var(--deep-blue);}
+.option-choice.b.locked.selected:hover{border-color:var(--leaf-green);}
+.option-choice.locked:not(.selected){opacity:0.55;}
 .it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
 .it-tab{background:var(--dark-navy);color:#fff;padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;border:none;font-family:"Inter",sans-serif;}
 .it-panel{display:none;background:#fff;border:1px solid var(--rule);border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
@@ -182,10 +191,22 @@ function fmtQty(v){
 }
 function fmtDate(d){
   if (!d) return '';
-  const p = String(d).split('-');
+  const raw = String(d).slice(0, 10);
+  const p = raw.split('-');
   if (p.length !== 3) return esc(d);
   const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(p[1], 10) - 1];
   return m ? `${parseInt(p[2], 10)} ${m} ${p[0]}` : esc(d);
+}
+// Stored decision values shown in plain language
+function decisionLabel(v){
+  const map = {
+    'Option A': 'Option A (Cost-Optimized)',
+    'Option B - Specialist': 'Option B (Clinical Grade)',
+    'Both': 'Both Options Quoted',
+    'Both Options': 'Both Options Quoted',
+    'Declined': 'Not Proceeding',
+  };
+  return map[v] || v || '';
 }
 function showError(msg){
   contentEl.innerHTML = `<div class="status-msg error">${esc(msg)}</div>`;
@@ -277,14 +298,78 @@ function highlightColumn(decision){
   if (decision === 'Both Options') document.querySelectorAll('.compare td.col-a, .compare td.col-b').forEach(td => td.classList.add('lit'));
 }
 
+function metaBlock(data){
+  return `
+    <div class="prop-meta">
+      ${data.proposalDate ? `<span class="prop-meta-label">Proposal Date:</span><span class="prop-meta-value">${fmtDate(data.proposalDate)}</span>` : ''}
+      <span class="prop-meta-label">Customer:</span><span class="prop-meta-value">${esc(data.customerName || 'Not specified')}</span>
+      <span class="prop-meta-label">Your Reference:</span><span class="prop-meta-value">${esc(data.dealName || '')}</span>
+    </div>`;
+}
+
+function contactLine(data){
+  const sales = `<a href="mailto:sales@essentialcures.com">sales@essentialcures.com</a>`;
+  if (data.ownerName && data.ownerEmail) {
+    return `your Essential Cures contact, ${esc(data.ownerName)}, at <a href="mailto:${esc(data.ownerEmail)}">${esc(data.ownerEmail)}</a>, or ${sales}`;
+  }
+  return sales;
+}
+
+// One response only. Once recorded, the page shows what was chosen and how to
+// request a change. The submit function refuses a second response independently.
+function renderRecorded(data, isSingleOption){
+  const decision = data.existingDecision || '';
+  const isA = decision === 'Option A';
+  const isB = decision === 'Option B - Specialist';
+  const isBoth = decision === 'Both' || decision === 'Both Options';
+
+  const recorded = `
+    <div class="recorded">
+      <div class="recorded-title">Your response has been recorded</div>
+      <div class="recorded-text">On ${fmtDate(data.existingDecisionDate)} you selected <strong>${esc(decisionLabel(decision))}</strong>. Our team is now preparing the next step of your order. To request any change, please contact ${contactLine(data)}, quoting your reference.</div>
+    </div>`;
+
+  let body;
+  if (isSingleOption) {
+    body = `
+      <div class="single-total">
+        <div class="label">Your Proposal Total</div>
+        <div class="amount"><span class="ccy">${CCY}</span>${fmtMoney(data.optionATotal)}</div>
+      </div>
+      ${buildSingleList(data.optionALines)}`;
+  } else {
+    body = `
+      <div class="section-label">Your Selection</div>
+      <div class="options">
+        <div class="option-choice a locked${(isA || isBoth) ? ' selected' : ''}">
+          <div class="label">Option A</div>
+          <div class="tier">Cost-Optimized</div>
+          <div class="amount"><span class="ccy">${CCY}</span>${fmtMoney(data.optionATotal)}</div>
+        </div>
+        <div class="option-choice b locked${(isB || isBoth) ? ' selected' : ''}">
+          <div class="label">Option B</div>
+          <div class="tier">Clinical Grade</div>
+          <div class="amount"><span class="ccy">${CCY}</span>${fmtMoney(data.optionBTotal)}</div>
+        </div>
+      </div>
+      ${buildComparison(data.optionALines, data.optionBLines)}`;
+  }
+
+  contentEl.innerHTML = metaBlock(data) + recorded + body;
+  if (isA) highlightColumn('Option A');
+  if (isB) highlightColumn('Option B - Specialist');
+  if (isBoth) highlightColumn('Both Options');
+}
+
 function renderForm(data){
   const optA = num(data.optionATotal);
   const optB = num(data.optionBTotal);
   const isSingleOption = (optB <= 0) || (optA > 0 && optB === optA) || (data.isSingleOption === true);
 
-  const alreadyBlock = data.alreadyResponded
-    ? `<div class="already-note">You already responded to this proposal on ${esc(data.existingDecisionDate)} with: <strong>${esc(data.existingDecision)}</strong>. Submitting again below will update your response.</div>`
-    : '';
+  if (data.alreadyResponded) {
+    renderRecorded(data, isSingleOption);
+    return;
+  }
 
   let optionsHtml;
   if (isSingleOption) {
@@ -322,12 +407,7 @@ function renderForm(data){
   }
 
   contentEl.innerHTML = `
-    <div class="prop-meta">
-      ${data.proposalDate ? `<span class="prop-meta-label">Proposal Date:</span><span class="prop-meta-value">${fmtDate(data.proposalDate)}</span>` : ''}
-      <span class="prop-meta-label">Customer:</span><span class="prop-meta-value">${esc(data.customerName || 'Not specified')}</span>
-      <span class="prop-meta-label">Your Reference:</span><span class="prop-meta-value">${esc(data.dealName || '')}</span>
-    </div>
-    ${alreadyBlock}
+    ${metaBlock(data)}
     ${optionsHtml}
     <label class="remarks-label" for="remarks">Comments or questions (optional)</label>
     <textarea id="remarks" placeholder="Let us know if you have any questions or requests."></textarea>
@@ -365,7 +445,7 @@ async function submitResponse(){
     });
     const data = await resp.json();
     if (data.status !== 'success') {
-      throw new Error(data.reason || 'Failed to submit your response.');
+      throw new Error(data.reason || data.message || 'Failed to submit your response.');
     }
     showThankYou();
   } catch (err) {
