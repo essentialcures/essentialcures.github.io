@@ -15,7 +15,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
-.boxed-540{width:540px;max-width:100%;box-sizing:border-box;margin-left:auto;margin-right:auto;}
+.boxed-760{width:760px;max-width:100%;box-sizing:border-box;margin-left:auto;margin-right:auto;}
 .doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
 .doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
 .doc-header-table td{vertical-align:middle;border:none;font-family:Calibri,Arial,sans-serif;}
@@ -77,8 +77,8 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 .footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue) 60%,var(--cool-gray) 100%);margin-bottom:12px;}
 .footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
 .footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
-@media(max-width:700px){
-  .boxed-540{width:100%;}
+@media(max-width:820px){
+  .boxed-760{width:100%;}
   .main{padding:20px 12px;}
   .form-card{padding:24px 16px;border-radius:8px;}
   .doc-header-left{display:none;}
@@ -93,7 +93,7 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 </head>
 <body>
 
-<div class="doc-header boxed-540">
+<div class="doc-header boxed-760">
   <table class="doc-header-table"><tr>
     <td class="doc-header-left"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></td>
     <td class="doc-header-sep"></td>
@@ -107,7 +107,7 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
   <div class="doc-header-stripe2"></div>
 </div>
 
-<main class="main"><div class="form-card boxed-540">
+<main class="main"><div class="form-card boxed-760">
   <div id="content">
     <div class="status-msg">Loading your confirmation request.</div>
   </div>
@@ -117,7 +117,7 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
   </tr></table></div>
 </div></main>
 
-<footer class="boxed-540"><div class="footer-line"></div><p class="footer-urls">essentialcures.com | essentialcures.ca</p><p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p></footer>
+<footer class="boxed-760"><div class="footer-line"></div><p class="footer-urls">essentialcures.com | essentialcures.ca</p><p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p></footer>
 
 <div class="it-float" id="itFloat">
   <button class="it-tab" onclick="toggleIT()">Technical Support</button>
@@ -217,7 +217,7 @@ function renderForm(data) {
             <input type="number" min="1" step="1" class="day-input" id="avail_${idx}" value="${avail}" placeholder="e.g. 10">
           </div>
           <div class="day-field">
-            <label for="fulfil_${idx}">Fulfilment (days)</label>
+            <label for="fulfil_${idx}">Order Fulfilment (days)</label>
             <span class="hint">Business days to pick, pack and dispatch</span>
             <input type="number" min="0" step="1" class="day-input" id="fulfil_${idx}" value="${fulfil}" placeholder="e.g. 2">
           </div>
