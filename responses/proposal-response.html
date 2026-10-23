@@ -382,7 +382,6 @@ function renderForm(data){
       <div class="section-label spaced">Your Response</div>
       <div class="extra-choices">
         <button type="button" data-value="Option A">Confirm My Order</button>
-        <button type="button" data-value="Declined">Not Proceeding</button>
       </div>`;
   } else {
     optionsHtml = `
@@ -401,7 +400,6 @@ function renderForm(data){
       </div>
       <div class="extra-choices">
         <button type="button" data-value="Both Options">Quote Both Options</button>
-        <button type="button" data-value="Declined">Not Proceeding</button>
       </div>
       ${buildComparison(data.optionALines, data.optionBLines)}`;
   }
