@@ -323,7 +323,7 @@ const DOC = {
   revision: '',
   effective: '',
   title: 'Communication Preferences',
-  contact: 'customercare@essentialcures.com',
+  contact: 'privacy@essentialcures.com',
   guide: 'https://essentialcures.com',
   steps: ['Review settings', 'Update choices', 'Saved'],
 };
@@ -420,7 +420,7 @@ function setSummary(caslOn, cats){
 }
 
 async function load(){
-  if(!token || !contactId){ renderError('This link is missing a required parameter. Please use the link from one of our emails, or contact customercare@essentialcures.com.'); return; }
+  if(!token || !contactId){ renderError('This link is missing a required parameter. Please use the link from one of our emails, or contact privacy@essentialcures.com.'); return; }
   try{
     const resp = await fetch(`${WORKER_BASE}/api/preferences/gate`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -432,7 +432,7 @@ async function load(){
     setSummary(d.caslGiven === 'Yes', d.categories);
     renderForm(d);
   }catch(err){
-    renderError('Your preferences could not be loaded. Please try again, or contact customercare@essentialcures.com.');
+    renderError('Your preferences could not be loaded. Please try again, or contact privacy@essentialcures.com.');
   }
 }
 
