@@ -277,10 +277,14 @@ function esc(v){
 function showError(msg){
   contentEl.innerHTML = `<div class="status-msg error">${esc(msg)}</div>`;
 }
+// EC date standard (23 Oct 2026). Date strings are parsed as calendar dates,
+// never through new Date(), which shifts a date-only value back a day west of UTC.
 function fmtDate(d){
   if(!d) return 'Not specified';
-  try{ return new Date(d).toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'}); }
-  catch(e){ return d; }
+  const p = String(d).slice(0, 10).split('-');
+  if(p.length !== 3) return esc(d);
+  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(p[1], 10) - 1];
+  return m ? `${parseInt(p[2], 10)} ${m} ${p[0]}` : esc(d);
 }
 function money(n){
   const v = Math.round((Number(n) || 0) * 100) / 100;
@@ -313,6 +317,7 @@ async function loadPO(){
     const resp = await fetch(`${WORKER_BASE}/api/po/gate?token=${encodeURIComponent(token)}`);
     const data = await resp.json();
     if(!data.success){
+      if(data.notice){ renderNotice(data.notice); return; }
       showError(data.error || 'This purchase order link is invalid or has expired.');
       return;
     }
@@ -358,9 +363,31 @@ function renderComplete(){
   `;
 }
 
+/* ===== Order notice: withdrawn, cancelled, on hold or closed ===== */
+function renderNotice(n){
+  const withShipments = !!poData;
+  const tone = (n.kind === 'closed_won') ? '' : ' style="background:#FFF8E1;border-left-color:#D4A017;"';
+  const titleTone = (n.kind === 'closed_won') ? '' : ' style="color:#7D5A00;"';
+  contentEl.innerHTML = `
+    <h2>Purchase Order Fulfilment</h2>
+    ${withShipments ? `<p class="deal-name">${esc(poData.poNumber || '')} &middot; ${esc(poData.supplierName || '')}</p>` : ''}
+    <div class="complete-panel"${tone}>
+      <div class="cp-title"${titleTone}>${esc(n.title)}</div>
+      <p>${esc(n.message).replace(PROCUREMENT_EMAIL, `<a href="mailto:${PROCUREMENT_EMAIL}">${PROCUREMENT_EMAIL}</a>`)}</p>
+    </div>
+    ${withShipments ? shipmentsList() : ''}
+    ${guideStrip()}
+  `;
+}
+
 /* ===== Page shell ===== */
 function renderPage(stayOnStep){
   if(poData.lineFetchNote){ console.warn('EC line fetch:', poData.lineFetchNote); }
+
+  if(poData.orderNotice){
+    renderNotice(poData.orderNotice);
+    return;
+  }
 
   // A fully shipped order is closed to further entry. The supplier sees the
   // completion notice and their delivery notes only.
