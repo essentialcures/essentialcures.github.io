@@ -2,766 +2,691 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Respond to Your Quote | Essential Cures</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Order Confirmation | Essential Cures</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  Response Page Master Template (document number to be assigned in the ISO re-sync)
+  Every customer and supplier response page is built on this shell.
+  Page-specific values live in DOC below. Nothing else in the shell changes per page.
+-->
 <style>
-/* -- Exact styles from ec_quote_template_final -- */
-body, html { margin: 0; padding: 0; font-family: Calibri, Arial, sans-serif; font-size: 13px; color: rgb(44, 62, 80); background: rgb(235, 238, 242); min-width: 100%; } .page-shell { width: 720px; margin: 24px auto; background: rgb(255,255,255); box-shadow: 0 2px 20px rgba(0,0,0,0.10); display: block; overflow: hidden; }
-table { border-collapse: collapse; box-sizing: border-box; } *, *::before, *::after { box-sizing: border-box; }
-.main { width: 100%; table-layout: fixed; background: rgb(255, 255, 255); }
-.meta-label { margin: 0 0 4px 0; font-size: 10px; color: rgb(107, 124, 140); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-.meta-value { margin: 0; font-size: 13px; font-weight: bold; }
-.meta-blue { color: rgb(0, 80, 144); }
-.meta-green { color: rgb(58, 122, 30); }
-.address-box { width: 48%; vertical-align: top; padding: 12px 14px; background: rgb(247, 249, 251); border-left: 4px solid rgb(0, 80, 144); }
-.address-title { font-size: 11px; font-weight: bold; color: rgb(0, 80, 144); text-transform: uppercase; letter-spacing: 1px; margin: 0 0 6px 0; }
-.address-text { font-size: 12px; color: rgb(44, 62, 80); line-height: 1.6; margin: 0; }
-.address-gap { width: 4%; }
-.items-table { width: 100%; }
-.items-header td { background-color: rgb(0, 80, 144); color: rgb(255, 255, 255); padding: 8px 10px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
-.items-row td { background-color: rgb(255, 255, 255); padding: 8px 10px; font-size: 12px; border-bottom: 1px solid rgb(232, 236, 239); }
-.items-row-alt td { background-color: rgb(247, 249, 251); padding: 8px 10px; font-size: 12px; border-bottom: 1px solid rgb(232, 236, 239); }
-.col-no { width: 5%; text-align: center; }
-.col-product { width: 32%; }
-.col-qty { width: 10%; text-align: center; }
-.col-price { width: 20%; text-align: right; }
-.col-disc { width: 8%; text-align: center; }
-.col-brand { width: 15%; font-style: italic; color: rgb(107, 124, 140); }
-.col-total { width: 15%; text-align: right; }
-.totals-table { width: 300px; margin: 0 0 0 auto; }
-.totals-row td { padding: 6px 10px; font-size: 12px; border-bottom: 1px solid rgb(232, 236, 239); }
-.totals-label { color: rgb(107, 124, 140); text-align: left; }
-.totals-value { color: rgb(44, 62, 80); text-align: right; font-weight: bold; }
-.totals-grand td { padding: 10px 12px; background-color: rgb(0, 80, 144); color: rgb(255, 255, 255); font-size: 14px; font-weight: bold; }
-.totals-grand-label { text-align: left; }
-.totals-grand-value { text-align: right; }
-.tagline-green { width: 50%; background-color: rgb(74, 139, 44); padding: 10px 16px; text-align: center; }
-.tagline-blue { width: 50%; background-color: rgb(0, 80, 144); padding: 10px 16px; text-align: center; }
-.tagline-text { margin: 0; font-size: 11px; font-style: italic; font-weight: bold; color: rgb(255, 255, 255); }
-.footer-web { font-size: 11px; color: rgb(107, 124, 140); margin: 0; }
-.footer-copy { font-size: 8px; color: rgb(158, 158, 158); font-style: italic; margin: 2px 0 0 0; }
+:root{
+  --blue:#005090;--navy:#003060;--green:#4A8B2C;--lime:#8FC23C;--sky:#0070B0;
+  --ink:#1F2D3A;--slate:#2C3E50;--muted:#5F6F7E;--faint:#8A97A3;
+  --line:#DDE3E9;--line-soft:#ECF0F3;--surface:#F4F6F8;--white:#FFFFFF;
+  --amber:#B7860B;--amber-bg:#FFF8E6;--red:#B03A2E;--red-bg:#FCEFED;--ok-bg:#EEF6EA;
+  --shell:1100px;--rail:340px;--r:4px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{font-family:"Inter",system-ui,sans-serif;font-size:15px;line-height:1.6;color:var(--slate);background:var(--surface);min-height:100vh;display:flex;flex-direction:column;font-feature-settings:"tnum" 1,"cv11" 1;}
+a{color:var(--blue);}
+:focus-visible{outline:2px solid var(--sky);outline-offset:2px;}
+.page{max-width:var(--shell);margin:0 auto;padding:0 24px;width:100%;}
+.shell{padding:0 28px;}
 
-/* -- Delivery block -- */
-.delivery-block { border-left: 4px solid rgb(0, 112, 176); background: rgb(235, 245, 251); padding: 12px 14px; }
-.delivery-heading { font-size: 10px; font-weight: bold; color: rgb(0, 48, 96); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 6px 0; }
-.delivery-range { font-size: 15px; font-weight: bold; color: rgb(0, 80, 144); margin: 0 0 4px 0; }
-.delivery-note { font-size: 11px; color: rgb(107, 124, 140); font-style: italic; margin: 0 0 10px 0; }
-.delivery-table { width: 100%; font-size: 12px; }
-.delivery-table th { background: rgb(0, 80, 144); color: rgb(255,255,255); padding: 6px 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px; text-align: left; font-weight: bold; }
-.delivery-table td { padding: 6px 10px; border-bottom: 1px solid rgb(203, 227, 240); color: rgb(44, 62, 80); }
+/* Header: logo | identity | controlled document block */
+.site-head{background:var(--white);position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,48,96,.08);}
+.head-grid{display:grid;grid-template-columns:auto 1fr auto;align-items:stretch;min-height:96px;}
+.head-logo{display:flex;align-items:center;padding-right:24px;border-right:1px solid var(--line);}
+.head-logo img{height:64px;width:auto;display:block;}
+.head-id{display:flex;flex-direction:column;justify-content:center;padding:12px 24px;}
+.head-id .org{font-size:16px;font-weight:700;letter-spacing:.06em;color:var(--blue);}
+.head-id .tag{font-size:12px;font-style:italic;font-weight:600;color:var(--green);margin-top:1px;}
+.head-id .title{font-size:14px;font-weight:600;color:var(--navy);margin-top:5px;}
+.head-ctrl{display:grid;grid-template-columns:auto auto;align-content:center;column-gap:16px;row-gap:2px;padding-left:24px;border-left:1px solid var(--line);font-size:11.5px;}
+.head-ctrl dt{color:var(--faint);}
+.head-ctrl dd{color:var(--ink);font-weight:600;text-align:right;}
+.stripes{height:8px;background:linear-gradient(var(--blue) 0 4px,var(--lime) 4px 8px);}
 
-/* -- Payment block -- */
-.payment-block { border-left: 4px solid rgb(74, 139, 44); background: rgb(234, 244, 227); padding: 12px 14px; }
-.payment-heading { font-size: 10px; font-weight: bold; color: rgb(27, 74, 27); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 8px 0; }
-.payment-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid rgb(197, 222, 184); }
-.payment-row.grand { border-bottom: none; font-weight: bold; font-size: 13px; color: rgb(27, 74, 27); padding-top: 8px; margin-top: 2px; }
-.payment-lbl { color: rgb(58, 122, 30); }
-.payment-val { font-weight: 600; color: rgb(27, 74, 27); }
+/* Title band */
+.title-band{background:var(--white);border:1px solid var(--line);border-radius:var(--r);margin-top:16px;}
+.title-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:28px 0 22px;}
+.title-row h1{font-size:26px;font-weight:600;letter-spacing:-.01em;color:var(--ink);line-height:1.2;}
+.title-row .ref{font-size:14px;color:var(--muted);margin-top:6px;}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;padding:6px 12px;border-radius:var(--r);white-space:nowrap;}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;}
+.status.open{color:var(--blue);background:#E8F1F9;}
+.status.done{color:var(--green);background:var(--ok-bg);}
+.status.hold{color:var(--amber);background:var(--amber-bg);}
+.status.closed{color:var(--muted);background:var(--line-soft);}
 
-/* -- Decision block -- */
-.decision-wrap { padding: 16px; background: rgb(240, 244, 248); border-left: 4px solid rgb(0, 80, 144); }
-.decision-title { font-size: 11px; font-weight: bold; color: rgb(0, 80, 144); text-transform: uppercase; margin: 0 0 14px 0; letter-spacing: 0.5px; }
-.decision-row { display: flex; gap: 12px; margin-bottom: 14px; }
-.decision-btn { flex: 1; padding: 14px; border: 2px solid rgb(212, 218, 224); border-radius: 5px; text-align: center; cursor: pointer; font-weight: bold; font-size: 14px; font-family: Calibri, Arial, sans-serif; background: rgb(255,255,255); color: rgb(44, 62, 80); transition: all 0.15s; }
-.decision-btn.accept.selected { border-color: rgb(74, 139, 44); background: rgb(234, 244, 227); color: rgb(58, 122, 30); }
-.decision-btn.decline.selected { border-color: rgb(192, 57, 43); background: rgb(253, 237, 236); color: rgb(192, 57, 43); }
-.submit-btn { width: 100%; background: rgb(74, 139, 44); color: rgb(255,255,255); border: none; border-radius: 5px; padding: 14px; font-size: 15px; font-weight: bold; cursor: pointer; font-family: Calibri, Arial, sans-serif; }
-.submit-btn:disabled { background: rgb(169, 199, 154); cursor: not-allowed; }
-.close-btn { width: 100%; background: transparent; color: rgb(107, 124, 140); border: 1.5px solid rgb(212, 218, 224); border-radius: 5px; padding: 12px; font-size: 13px; cursor: pointer; margin-top: 10px; font-family: Calibri, Arial, sans-serif; }
+/* Progress */
+.progress{display:grid;grid-template-columns:repeat(var(--steps),1fr);}
+.progress li{list-style:none;position:relative;padding:14px 16px 16px 0;font-size:13px;color:var(--faint);}
+.progress li::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--line);}
+.progress li .n{font-weight:600;margin-right:6px;}
+.progress li.done{color:var(--green);}
+.progress li.done::before{background:var(--green);}
+.progress li.now{color:var(--ink);font-weight:600;}
+.progress li.now::before{background:var(--blue);}
 
-/* -- Decision errors and payment step -- */
-.form-error { color: rgb(192, 57, 43); font-size: 12px; margin: 0 0 10px 0; }
-.confirm-note { background: rgb(234, 244, 227); border-left: 4px solid rgb(74, 139, 44); padding: 12px 14px; font-size: 13px; color: rgb(27, 74, 27); margin-bottom: 16px; }
-.pay-form { background: rgb(240, 244, 248); border-left: 4px solid rgb(0, 80, 144); padding: 16px; }
-.pay-title { font-size: 11px; font-weight: bold; color: rgb(0, 80, 144); text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0; }
-.pay-intro { font-size: 12px; color: rgb(44, 62, 80); line-height: 1.6; margin: 0 0 14px 0; }
-.pay-label { display: block; font-size: 12px; font-weight: bold; color: rgb(44, 62, 80); margin: 0 0 5px 0; }
-.pay-input { width: 100%; border: 1.5px solid rgb(212, 218, 224); border-radius: 4px; padding: 10px 12px; font-family: Calibri, Arial, sans-serif; font-size: 13px; margin-bottom: 14px; background: rgb(255, 255, 255); }
-.pay-input:focus { outline: none; border-color: rgb(0, 80, 144); }
+/* Workspace */
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:24px;padding-top:24px;padding-bottom:40px;align-items:start;}
+.main{background:var(--white);border:1px solid var(--line);border-radius:var(--r);}
+.section{padding:28px 32px;border-top:1px solid var(--line-soft);}
+.section:first-child{border-top:0;}
+.section h2{font-size:17px;font-weight:600;color:var(--ink);}
+.section .lede{font-size:14px;color:var(--muted);margin-top:4px;max-width:68ch;}
 
-/* -- Status/loading -- */
-.status-msg { text-align: center; padding: 48px 20px; font-size: 14px; color: rgb(107, 124, 140); }
-.status-msg.error { color: rgb(192, 57, 43); }
-.already-note { background: rgb(255, 248, 225); border-left: 4px solid rgb(212, 160, 23); padding: 10px 14px; font-size: 12px; margin-bottom: 14px; }
+/* Notices */
+.notice{display:grid;grid-template-columns:4px 1fr;border-radius:var(--r);overflow:hidden;margin-top:18px;}
+.notice::before{content:"";}
+.notice .body{padding:14px 18px;font-size:14px;}
+.notice .body strong{display:block;color:var(--ink);margin-bottom:2px;}
+.notice.info{background:#EEF4FA;}.notice.info::before{background:var(--blue);}
+.notice.ok{background:var(--ok-bg);}.notice.ok::before{background:var(--green);}
+.notice.warn{background:var(--amber-bg);}.notice.warn::before{background:var(--amber);}
+.notice.stop{background:var(--red-bg);}.notice.stop::before{background:var(--red);}
 
-/* -- IT support -- */
-.it-float { position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 500; }
-.it-tab { background: rgb(0, 48, 96); color: #fff; padding: 10px 7px; border-radius: 0 6px 6px 0; cursor: pointer; writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); font-size: 11px; font-weight: bold; border: none; font-family: Calibri, Arial, sans-serif; }
-.it-panel { display: none; background: #fff; border: 1px solid rgb(232, 236, 240); border-left: none; border-radius: 0 8px 8px 0; padding: 16px; width: 220px; box-shadow: 4px 0 16px rgba(0,0,0,0.10); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); }
-.it-panel.open { display: block; }
-.it-panel h4 { font-size: 13px; font-weight: bold; color: rgb(0, 48, 96); margin-bottom: 8px; }
-.it-panel p { font-size: 12px; color: rgb(107, 124, 140); line-height: 1.6; margin-bottom: 10px; }
-.it-panel a { color: rgb(0, 80, 144); font-weight: bold; font-size: 12px; }
-.it-close { float: right; background: none; border: none; cursor: pointer; color: rgb(107, 124, 140); font-size: 16px; }
+/* Line items */
+.lines{margin-top:20px;border:1px solid var(--line);border-radius:var(--r);}
+.line{padding:20px 22px;border-top:1px solid var(--line);}
+.line:first-child{border-top:0;}
+.line-head{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:baseline;}
+.line-head .prod{font-size:16px;font-weight:600;color:var(--ink);}
+.line-head .qty{font-size:14px;color:var(--muted);text-align:right;}
+.line-head .qty b{color:var(--ink);font-weight:600;}
+.line-meta{display:flex;flex-wrap:wrap;gap:6px 24px;font-size:13px;color:var(--muted);margin-top:4px;}
+.line-meta span b{color:var(--slate);font-weight:600;}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;}
+.seg button{font:inherit;font-size:14px;font-weight:500;padding:11px 8px;background:var(--white);color:var(--slate);border:0;border-left:1px solid var(--line);cursor:pointer;}
+.seg button:first-child{border-left:0;}
+.seg button[aria-pressed="true"]{background:var(--navy);color:var(--white);}
+.seg button:disabled{cursor:default;}
+.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px;}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--ink);}
+.field .hint{display:block;font-size:12px;color:var(--faint);margin:1px 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.field input,.field textarea,.field select{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--white);border:1px solid #C9D2DA;border-radius:var(--r);padding:10px 12px;}
+.field input:focus,.field textarea:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(0,80,144,.12);}
+.field input[readonly]{background:var(--surface);color:var(--muted);}
+.total{margin-top:12px;font-size:13px;color:var(--muted);}
+.total b{color:var(--ink);}
 
-@media (max-width: 760px) {
-  .main { width: 100% !important; }
-  table[width="720"] { width: 100% !important; }
-  .decision-row { flex-direction: column; }
+/* Actions */
+.actions{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 32px;border-top:1px solid var(--line);background:#FAFBFC;border-radius:0 0 var(--r) var(--r);}
+.actions .note{font-size:13px;color:var(--muted);}
+.btn{font:inherit;font-size:15px;font-weight:600;padding:12px 24px;border-radius:var(--r);border:1px solid transparent;cursor:pointer;}
+.btn.primary{background:var(--green);color:var(--white);}
+.btn.primary:disabled{background:#B9CCB0;cursor:not-allowed;}
+.btn.ghost{background:var(--white);color:var(--slate);border-color:#C9D2DA;}
+
+/* Rail */
+.rail{display:flex;flex-direction:column;gap:20px;position:sticky;top:120px;}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;}
+.panel h3{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px;}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13px;}
+.facts dt{color:var(--faint);}
+.facts dd{color:var(--ink);font-weight:500;text-align:right;overflow-wrap:anywhere;}
+.panel p{font-size:13px;color:var(--muted);}
+.panel .contact{display:block;margin-top:10px;font-size:14px;font-weight:600;text-decoration:none;}
+.guide-card{border-left:3px solid var(--blue);}
+.guide-btn{display:block;margin-top:14px;padding:10px 14px;text-align:center;font-size:14px;font-weight:600;text-decoration:none;color:var(--blue);border:1px solid var(--blue);border-radius:var(--r);}
+.guide-btn:hover{background:var(--blue);color:var(--white);}
+
+/* Footer */
+body>.page>footer{margin-top:auto;}
+.page{display:flex;flex-direction:column;flex:1;}
+footer{margin-bottom:24px;}
+.tagbar{display:grid;grid-template-columns:1fr 1fr;}
+.tagbar div{padding:10px 0;text-align:center;font-size:12px;font-style:italic;font-weight:700;color:var(--white);}
+.tagbar div:first-child{background:var(--green);}
+.tagbar div:last-child{background:var(--sky);}
+.site-foot{background:var(--white);padding-top:14px;}
+.foot-row{padding-top:14px;padding-bottom:22px;}
+.foot-line{height:3px;background:linear-gradient(90deg,var(--blue) 60%,var(--faint));}
+.foot-row .urls{font-size:13px;color:var(--muted);}
+.foot-row .copy{font-size:11px;font-style:italic;color:#9EA8B1;margin-top:2px;}
+/* Document control strip, between header and page */
+.ctrl-strip{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 28px;margin-top:16px;padding:10px 20px;background:#F9FBFC;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:var(--r);font-size:12.5px;color:var(--muted);}
+.ctrl-strip .id{font-weight:600;color:var(--ink);white-space:nowrap;}
+.ctrl-strip .id span{color:var(--faint);font-weight:500;margin:0 8px;}
+.ctrl-strip .stmt{text-align:right;}
+
+/* Technical support tab and panel. A ticketing form will replace the email link later. */
+.it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:60;}
+.it-tab{writing-mode:vertical-rl;transform:rotate(180deg);background:var(--navy);color:var(--white);font:600 12px "Inter",sans-serif;padding:14px 8px;border:0;border-radius:4px 0 0 4px;cursor:pointer;}
+.it-panel{display:none;position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);width:280px;background:var(--white);border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 28px rgba(0,48,96,.14);padding:20px 22px;}
+.it-panel.open{display:block;}
+.it-panel h4{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:8px;padding-right:24px;}
+.it-panel p{font-size:13px;color:var(--muted);line-height:1.6;}
+.it-panel a{display:inline-block;margin-top:14px;font-size:14px;font-weight:600;color:var(--blue);}
+.it-close{position:absolute;top:14px;right:14px;width:24px;height:24px;border:0;background:none;color:var(--faint);font-size:18px;line-height:1;cursor:pointer;}
+.it-close:hover{color:var(--ink);}
+
+.skeleton{color:var(--faint);font-size:14px;padding:48px 32px;}
+
+@media (max-width:980px){
+  .workspace{grid-template-columns:1fr;}
+  .rail{display:contents;}
+  .panel.summary{order:-2;}
+  .panel.guide-card{order:-1;}
+  .fields{grid-template-columns:1fr;}
+}
+@media (max-width:720px){
+  .shell{padding:0 16px;}
+  .head-grid{grid-template-columns:1fr;min-height:0;}
+  .head-logo,.head-ctrl{display:none;}
+  .head-id{padding:14px 0;text-align:center;}
+  .title-row{flex-direction:column;align-items:flex-start;}
+  .progress .label{display:none;}
+  .section,.actions{padding-left:18px;padding-right:18px;}
+  .actions{flex-direction:column;align-items:stretch;}
+  .page{padding:0;}
+  .ctrl-strip{grid-template-columns:1fr;margin:12px 12px 0;}
+  .ctrl-strip .stmt{text-align:left;}
+  .title-band{margin:12px 12px 0;}
+  .workspace{padding-left:12px;padding-right:12px;}
+  footer{margin-bottom:0;}
+  .it-float{display:none;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+/* Quote Response specifics */
+.qtable-wrap{overflow-x:auto;margin-top:12px;border:1px solid var(--line);}
+.qtable{width:100%;min-width:560px;border-collapse:collapse;font-size:13px;}
+.qtable th{padding:10px 12px;text-align:left;font-size:12px;font-weight:600;color:var(--white);background:var(--blue);}
+.qtable th.r,.qtable td.r{text-align:right;}
+.qtable th.c,.qtable td.c{text-align:center;}
+.qtable td{padding:11px 12px;border-top:1px solid var(--line-soft);vertical-align:top;color:var(--slate);}
+.qtable .pn{font-weight:600;color:var(--ink);}
+.qtable .pk{font-size:12px;color:var(--muted);margin-top:2px;}
+.qtable .br{font-style:italic;color:var(--muted);}
+.optband{margin-top:22px;padding:10px 14px;color:var(--white);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;}
+.optband.a{background:var(--blue);} .optband.b{background:var(--green);}
+.totals{margin:12px 0 0 auto;width:320px;max-width:100%;font-size:13px;}
+.totals div{display:flex;justify-content:space-between;padding:7px 10px;border-bottom:1px solid var(--line-soft);}
+.totals div span:first-child{color:var(--muted);}
+.totals div.grand{background:var(--blue);color:var(--white);font-weight:600;border:0;}
+.totals div.grand.b{background:var(--green);}
+.totals div.grand span:first-child{color:var(--white);}
+.blk{margin-top:12px;padding:12px 14px;border-left:3px solid var(--blue);background:#F4F7FA;font-size:13px;}
+.blk.ok{border-left-color:var(--green);background:var(--ok-bg);}
+.blk.dlv{border-left-color:#0070B0;background:#EEF6FB;}
+.blk h4{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--navy);margin-bottom:6px;}
+.blk p{line-height:1.6;}
+.blk .big{font-size:16px;font-weight:600;color:var(--blue);}
+.blk .mini{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px;}
+.blk .mini th{text-align:left;padding:6px 8px;background:var(--blue);color:var(--white);font-weight:600;}
+.blk .mini td{padding:6px 8px;border-bottom:1px solid #D5E6F1;}
+.pay-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #CFE3C2;}
+.pay-row:last-child{border-bottom:0;font-weight:600;padding-top:8px;}
+.addr{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+.addr div{padding:12px 14px;background:#F4F7FA;border-left:3px solid var(--blue);font-size:13px;line-height:1.6;}
+.addr h4{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);margin-bottom:4px;}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+.choice button{font:inherit;padding:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--white);cursor:pointer;text-align:left;}
+.choice button .k{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);}
+.choice button .v{font-size:20px;font-weight:600;color:var(--ink);margin-top:6px;}
+.choice button.a[aria-pressed="true"]{border:2px solid var(--blue);background:#EEF4FA;padding:15px;}
+.choice button.b[aria-pressed="true"]{border:2px solid var(--green);background:var(--ok-bg);padding:15px;}
+.choice.single{grid-template-columns:1fr;}
+.terms{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.6;}
+#decisionError{display:none;}
+@media (max-width:720px){.addr,.choice{grid-template-columns:1fr;}}
+/* Order hub (approved design, Oct 2026), inside the template main panel */
+.hb{color:#1F2B37;font-variant-numeric:tabular-nums;}
+.hb-sec{padding:24px 28px 8px;}
+.hb-h1{margin:0 0 6px;font-size:22px;font-weight:600;color:#00294D;line-height:1.25;}
+.hb-h1:focus{outline:none;}
+.hb-lead{margin:0 0 20px;font-size:14px;line-height:1.6;color:#3D4B58;}
+.hb-sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:0;padding:16px 18px;background:#F4F6F8;border-radius:4px;}
+.hb-sum dt{font-size:12px;color:#556472;margin:0 0 4px;}
+.hb-sum dd{margin:0;font-size:14px;font-weight:500;}
+.hb-h2{margin:0 0 18px;font-size:16px;font-weight:600;color:#00294D;}
+.hb-road{list-style:none;margin:0;padding:0;display:flex;}
+.hb-step{flex:1 1 0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;position:relative;}
+.hb-line{position:absolute;top:15px;left:50%;width:100%;height:2px;background:#C9D2DB;}
+.hb-line.done{background:#005090;}
+.hb-node{position:relative;z-index:1;width:32px;height:32px;box-sizing:border-box;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;flex:none;}
+.hb-node.done{background:#005090;color:#FFFFFF;}
+.hb-node.current{background:#FFFFFF;border:2px solid #005090;color:#005090;}
+.hb-node.review{background:#E6EFF7;border:2px solid #005090;color:#005090;}
+.hb-node.pending,.hb-node.na{background:#FFFFFF;border:2px solid #C9D2DB;color:#7A8794;}
+.hb-stxt{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.hb-sname{font-size:13px;font-weight:600;}
+.hb-sstat{font-size:12px;}
+.hb-sstat.complete{color:#2F6B1A;} .hb-sstat.await{color:#005090;font-weight:500;} .hb-sstat.review{color:#8A4B00;font-weight:500;} .hb-sstat.muted{color:#556472;}
+.hb-sdate{font-size:12px;color:#556472;}
+.hb-alert{margin:16px 28px 0;padding:12px 14px;border:1px solid #E7C17A;background:#FFF8E8;border-radius:4px;font-size:13px;line-height:1.55;color:#5C3D00;}
+.hb-panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px;padding:24px 28px 8px;}
+.hb-panel{border:1px solid #D8DEE4;border-radius:6px;display:flex;flex-direction:column;}
+.hb-ph{padding:20px 22px 14px;border-bottom:1px solid #E6EAEE;}
+.hb-pt{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;}
+.hb-pt h2{margin:0;font-size:16px;font-weight:600;color:#00294D;}
+.hb-pt span{font-size:13px;color:#556472;}
+.hb-pb{padding:16px 22px 22px;display:flex;flex-direction:column;gap:14px;}
+.hb-seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid #B9C4CF;border-radius:4px;overflow:hidden;}
+.hb-seg button{min-height:44px;border:none;background:#FFFFFF;color:#00294D;font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;padding:0 12px;}
+.hb-seg button[aria-pressed="true"]{background:#005090;color:#FFFFFF;}
+.hb-rec{margin:0;font-size:13px;color:#2F6B1A;}
+.hb-note{margin:0;font-size:13px;line-height:1.55;color:#3D4B58;}
+.hb-grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.hb-field{display:flex;flex-direction:column;gap:6px;}
+.hb-lbl{font-size:13px;font-weight:500;}
+.hb-in{height:44px;width:100%;box-sizing:border-box;padding:0 12px;border:1px solid #9AA8B5;border-radius:4px;font-family:inherit;font-size:15px;color:#1F2B37;background:#FFFFFF;}
+.hb-drop{border:1px dashed #9AA8B5;border-radius:4px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px;background:#F9FAFB;text-align:center;}
+.hb-drop.over{border-color:#005090;background:#EEF5FB;}
+.hb-pick{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:1px solid #005090;border-radius:4px;color:#005090;font-size:14px;font-weight:500;cursor:pointer;background:#FFFFFF;}
+.hb-file{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;}
+.hb-hint{font-size:12px;color:#556472;}
+.hb-fname{font-size:13px;font-weight:500;color:#00294D;} .hb-fname:empty{display:none;}
+.hb-btn{height:46px;border:none;border-radius:4px;background:#005090;color:#FFFFFF;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;}
+.hb-btn:disabled{background:#8FA9C2;cursor:not-allowed;}
+.hb-err{margin:0;font-size:13px;color:#B42318;} .hb-err:empty{display:none;}
+.hb-kv{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;padding:12px 14px;background:#F4F6F8;border-radius:4px;font-size:14px;}
+.hb-kv dt{color:#556472;} .hb-kv dd{margin:0;font-weight:500;overflow-wrap:anywhere;}
+.hb-kv dd.review{color:#8A4B00;} .hb-kv dd.complete{color:#2F6B1A;}
+.hb-amt{margin:10px 0 0;display:grid;grid-template-columns:1fr auto;gap:6px 16px;font-size:14px;}
+.hb-amt dt{color:#3D4B58;} .hb-amt dd{margin:0;} .hb-amt dd.due{font-weight:600;color:#00294D;}
+.hb-tbox{overflow-x:auto;border:1px solid #D8DEE4;border-radius:6px;}
+.hb-table{width:100%;min-width:520px;border-collapse:collapse;font-size:14px;}
+.hb-table th{text-align:left;padding:11px 16px;font-size:12px;font-weight:600;color:#3D4B58;background:#F4F6F8;border-bottom:1px solid #D8DEE4;}
+.hb-table td{padding:13px 16px;border-bottom:1px solid #E6EAEE;color:#3D4B58;overflow-wrap:anywhere;}
+.hb-table tr:last-child td{border-bottom:none;}
+.hb-table td.hb-tl{font-weight:500;color:#1F2B37;} .hb-table td.review{color:#8A4B00;font-weight:500;} .hb-table td.complete{color:#2F6B1A;font-weight:500;} .hb-table td.muted{color:#556472;}
+.hb [hidden]{display:none !important;}
+.hb input:focus-visible,.hb select:focus-visible,.hb button:focus-visible,.hb a:focus-visible,.hb .hb-drop:focus-within .hb-pick{outline:2px solid #005090;outline-offset:2px;}
+@media (max-width:640px){
+  .hb-sec,.hb-panels{padding-left:16px;padding-right:16px;}
+  .hb-alert{margin-left:16px;margin-right:16px;}
+  .hb-sum{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .hb-grid2{grid-template-columns:1fr;}
+  .hb-road{flex-direction:column;gap:18px;}
+  .hb-step{flex-direction:row;align-items:flex-start;text-align:left;gap:14px;}
+  .hb-line{display:none;}
+  .hb-stxt{align-items:flex-start;}
 }
 
-/* -- Order hub (approved design, Oct 2026) -- */
-.hb { font-family: 'IBM Plex Sans', 'Segoe UI', Calibri, sans-serif; color: #1F2B37; font-variant-numeric: tabular-nums; }
-.hb-sec { padding: 24px 28px 8px; }
-.hb-h1 { margin: 0 0 6px; font-size: 24px; font-weight: 600; color: #00294D; line-height: 1.25; }
-.hb-h1:focus { outline: none; }
-.hb-lead { margin: 0 0 20px; font-size: 15px; line-height: 1.6; color: #3D4B58; }
-.hb-sum { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 16px 18px; background: #F4F6F8; border-radius: 4px; }
-.hb-sum dt { font-size: 12px; color: #556472; margin: 0 0 4px; }
-.hb-sum dd { margin: 0; font-size: 14px; font-weight: 500; }
-.hb-h2 { margin: 0 0 18px; font-size: 17px; font-weight: 600; color: #00294D; }
-.hb-road { list-style: none; margin: 0; padding: 0; display: flex; }
-.hb-step { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; position: relative; }
-.hb-line { position: absolute; top: 15px; left: 50%; width: 100%; height: 2px; background: #C9D2DB; }
-.hb-line.done { background: #005090; }
-.hb-node { position: relative; z-index: 1; width: 32px; height: 32px; box-sizing: border-box; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex: none; }
-.hb-node.done { background: #005090; color: #FFFFFF; }
-.hb-node.current { background: #FFFFFF; border: 2px solid #005090; color: #005090; }
-.hb-node.review { background: #E6EFF7; border: 2px solid #005090; color: #005090; }
-.hb-node.pending, .hb-node.na { background: #FFFFFF; border: 2px solid #C9D2DB; color: #7A8794; }
-.hb-stxt { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-.hb-sname { font-size: 13px; font-weight: 600; }
-.hb-sstat { font-size: 12px; }
-.hb-sstat.complete { color: #2F6B1A; }
-.hb-sstat.await { color: #005090; font-weight: 500; }
-.hb-sstat.review { color: #8A4B00; font-weight: 500; }
-.hb-sstat.muted { color: #556472; }
-.hb-sdate { font-size: 12px; color: #556472; }
-.hb-alert { margin: 16px 28px 0; padding: 12px 14px; border: 1px solid #E7C17A; background: #FFF8E8; border-radius: 4px; font-size: 13px; line-height: 1.55; color: #5C3D00; }
-.hb-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 20px; padding: 24px 28px 8px; }
-.hb-panel { border: 1px solid #D8DEE4; border-radius: 6px; display: flex; flex-direction: column; }
-.hb-ph { padding: 20px 22px 14px; border-bottom: 1px solid #E6EAEE; }
-.hb-pt { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.hb-pt h2 { margin: 0; font-size: 17px; font-weight: 600; color: #00294D; }
-.hb-pt span { font-size: 13px; color: #556472; }
-.hb-pb { padding: 16px 22px 22px; display: flex; flex-direction: column; gap: 14px; }
-.hb-seg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid #B9C4CF; border-radius: 4px; overflow: hidden; }
-.hb-seg button { min-height: 44px; border: none; background: #FFFFFF; color: #00294D; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; padding: 0 12px; }
-.hb-seg button[aria-pressed="true"] { background: #005090; color: #FFFFFF; }
-.hb-rec { margin: 0; font-size: 13px; color: #2F6B1A; }
-.hb-note { margin: 0; font-size: 13px; line-height: 1.55; color: #3D4B58; }
-.hb-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.hb-field { display: flex; flex-direction: column; gap: 6px; }
-.hb-lbl { font-size: 13px; font-weight: 500; }
-.hb-in { height: 44px; width: 100%; box-sizing: border-box; padding: 0 12px; border: 1px solid #9AA8B5; border-radius: 4px; font-family: inherit; font-size: 15px; color: #1F2B37; background: #FFFFFF; }
-.hb-drop { border: 1px dashed #9AA8B5; border-radius: 4px; padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; background: #F9FAFB; text-align: center; }
-.hb-drop.over { border-color: #005090; background: #EEF5FB; }
-.hb-pick { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border: 1px solid #005090; border-radius: 4px; color: #005090; font-size: 14px; font-weight: 500; cursor: pointer; background: #FFFFFF; }
-.hb-file { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
-.hb-hint { font-size: 12px; color: #556472; }
-.hb-fname { font-size: 13px; font-weight: 500; color: #00294D; }
-.hb-fname:empty { display: none; }
-.hb-btn { height: 46px; border: none; border-radius: 4px; background: #005090; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
-.hb-btn:disabled { background: #8FA9C2; cursor: not-allowed; }
-.hb-err { margin: 0; font-size: 13px; color: #B42318; }
-.hb-err:empty { display: none; }
-.hb-kv { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; padding: 12px 14px; background: #F4F6F8; border-radius: 4px; font-size: 14px; }
-.hb-kv dt { color: #556472; }
-.hb-kv dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
-.hb-kv dd.review { color: #8A4B00; }
-.hb-kv dd.complete { color: #2F6B1A; }
-.hb-amt { margin: 10px 0 0; display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; font-size: 14px; }
-.hb-amt dt { color: #3D4B58; }
-.hb-amt dd { margin: 0; }
-.hb-amt dd.due { font-weight: 600; color: #00294D; }
-.hb-tbox { overflow-x: auto; border: 1px solid #D8DEE4; border-radius: 6px; }
-.hb-table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 14px; }
-.hb-table th { text-align: left; padding: 11px 16px; font-size: 12px; font-weight: 600; color: #3D4B58; background: #F4F6F8; border-bottom: 1px solid #D8DEE4; }
-.hb-table td { padding: 13px 16px; border-bottom: 1px solid #E6EAEE; color: #3D4B58; overflow-wrap: anywhere; }
-.hb-table tr:last-child td { border-bottom: none; }
-.hb-table td.hb-tl { font-weight: 500; color: #1F2B37; }
-.hb-table td.review { color: #8A4B00; font-weight: 500; }
-.hb-table td.complete { color: #2F6B1A; font-weight: 500; }
-.hb-table td.muted { color: #556472; }
-.hb [hidden] { display: none !important; }
-.hb input:focus-visible, .hb select:focus-visible, .hb button:focus-visible, .hb a:focus-visible, .hb .hb-drop:focus-within .hb-pick { outline: 2px solid #005090; outline-offset: 2px; }
-@media (max-width: 640px) {
-  .hb-sec, .hb-panels { padding-left: 16px; padding-right: 16px; }
-  .hb-alert { margin-left: 16px; margin-right: 16px; }
-  .hb-sum { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .hb-grid2 { grid-template-columns: 1fr; }
-  .hb-road { flex-direction: column; gap: 18px; }
-  .hb-step { flex-direction: row; align-items: flex-start; text-align: left; gap: 14px; }
-  .hb-line { display: none; }
-  .hb-stxt { align-items: flex-start; }
-}
 </style>
 </head>
 <body>
+<div class="page">
 
-<div class="page-shell"><div id="root">
-  <div class="status-msg">Loading your quote&hellip;</div>
+<header class="site-head">
+  <div class="shell head-grid">
+    <div class="head-logo"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></div>
+    <div class="head-id">
+      <div class="org">ESSENTIAL CURES INC.</div>
+      <div class="tag">Compliant Solutions. Confident Care.</div>
+      <div class="title" id="docTitle"></div>
+    </div>
+    <dl class="head-ctrl" aria-label="Document control">
+      <dt>Document</dt><dd id="ctrlNo"></dd>
+      <dt>Revision</dt><dd id="ctrlRev"></dd>
+      <dt>Effective</dt><dd id="ctrlEff"></dd>
+    </dl>
+  </div>
+  <div class="stripes"></div>
+</header>
+
+<div class="ctrl-strip" role="note" aria-label="Document control">
+  <div class="id" id="ctrlId"></div>
+  <div class="stmt">This online version is the current approved issue. Printed or downloaded copies are uncontrolled.</div>
 </div>
 
-<div class="it-float" id="itFloat">
-  <button class="it-tab" onclick="toggleIT()">Technical Support</button>
-  <div class="it-panel" id="itPanel">
-    <button class="it-close" onclick="toggleIT()">&#x2715;</button>
+<section class="title-band">
+  <div class="shell">
+    <div class="title-row">
+      <div>
+        <h1 id="pageTitle"></h1>
+        <div class="ref" id="pageRef"></div>
+      </div>
+      <span class="status open" id="pageStatus">Awaiting your response</span>
+    </div>
+    <ol class="progress" id="progress"></ol>
+  </div>
+</section>
+
+<div class="workspace">
+  <main class="main" id="main" aria-live="polite">
+    <div class="skeleton">Loading your order details.</div>
+  </main>
+
+  <aside class="rail">
+    <section class="panel guide-card">
+      <h3>Ordering guide</h3>
+      <p>How Essential Cures orders, confirms, dispatches and pays, set out step by step.</p>
+      <a class="guide-btn" id="guideLink" href="#" target="_blank" rel="noopener">Open the guide</a>
+    </section>
+    <section class="panel summary">
+      <h3>Order summary</h3>
+      <dl class="facts" id="facts"></dl>
+    </section>
+    <section class="panel">
+      <h3>Questions about this order</h3>
+      <p>Contact Essential Cures Inc. and quote the reference shown above.</p>
+      <a class="contact" id="contactLink" href="#"></a>
+    </section>
+  </aside>
+</div>
+
+<footer>
+  <div class="tagbar"><div>Compliant Solutions. Confident Care.</div><div>Quality Built In. Not Bolted On.</div></div>
+  <div class="site-foot">
+    <div class="foot-line"></div>
+    <div class="shell foot-row">
+      <div class="urls">essentialcures.com | essentialcures.ca</div>
+      <div class="copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</div>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<div class="it-float">
+  <button class="it-tab" type="button" aria-expanded="false" aria-controls="itPanel" onclick="toggleIT()">Technical Support</button>
+  <div class="it-panel" id="itPanel" role="dialog" aria-label="Technical support">
+    <button class="it-close" type="button" aria-label="Close" onclick="toggleIT()">&times;</button>
     <h4>Technical Issues?</h4>
-    <p>Having trouble? Email our IT support team and we will respond promptly.</p>
+    <p>Having trouble with the form? Please email our EC-IT team with a description of the problem. We apologize for the inconvenience in advance.</p>
     <a href="mailto:itsupport@essentialcures.com">Email IT Support</a>
   </div>
 </div>
 
 <script>
-function toggleIT(){ document.getElementById('itPanel').classList.toggle('open'); }
-
+/* ---------------------------------------------------------------------------
+   Page definition
+--------------------------------------------------------------------------- */
+const DOC = {
+  // Document control is assigned in the ISO re-sync after full deal testing.
+  number: '',
+  revision: '',
+  effective: '',
+  title: 'Respond to Your Quotation',
+  contact: 'sales@essentialcures.com',
+  guide: 'https://essentialcures.com/guides/customer-ordering-guide',
+  steps: ['Review quotation', 'Select option', 'Purchase order', 'Advance payment', 'Fulfilment'],
+};
 const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
 const RESPONSE_BASE = 'https://ec-customer-response-worker.faisal-khan-e13.workers.dev';
-const params = new URLSearchParams(window.location.search);
+const CARE = 'customercare@essentialcures.com';
+
+/* ---------------------------------------------------------------------------
+   Shared helpers (master template)
+--------------------------------------------------------------------------- */
+const $ = (id) => document.getElementById(id);
+function toggleIT(){
+  const panel = $('itPanel');
+  const open = panel.classList.toggle('open');
+  document.querySelector('.it-tab').setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && $('itPanel').classList.contains('open')) toggleIT(); });
+function esc(v){ return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtDate(d){
+  const p = String(d || '').slice(0, 10).split('-');
+  if(p.length !== 3 || !MONTHS[parseInt(p[1],10)-1]) return '';
+  return `${parseInt(p[2],10)} ${MONTHS[parseInt(p[1],10)-1]} ${p[0]}`;
+}
+function num(v){ const n = parseFloat(String(v == null ? '' : v).replace(/[^0-9.\-]/g, '')); return isFinite(n) ? n : 0; }
+function fmt(v){ return num(v).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+function fmtQty(v){ return Math.round(num(v)).toLocaleString('en-CA'); }
+function todayIso(){ return new Date().toISOString().slice(0, 10); }
+
+function applyDocControl(){
+  document.title = `${DOC.title} | Essential Cures`;
+  $('docTitle').textContent = DOC.title;
+  $('pageTitle').textContent = DOC.title;
+  const pending = '<span style="color:var(--faint);font-weight:500;">Pending</span>';
+  $('ctrlNo').innerHTML = DOC.number ? esc(DOC.number) : pending;
+  $('ctrlRev').innerHTML = DOC.revision ? esc(DOC.revision) : pending;
+  $('ctrlEff').innerHTML = DOC.effective ? fmtDate(DOC.effective) : pending;
+  $('ctrlId').textContent = 'Controlled document';
+  $('contactLink').textContent = DOC.contact;
+  $('contactLink').href = `mailto:${DOC.contact}`;
+  $('guideLink').href = DOC.guide;
+}
+function setProgress(current){
+  const ol = $('progress');
+  ol.style.setProperty('--steps', DOC.steps.length);
+  ol.innerHTML = DOC.steps.map((s, i) => {
+    const n = i + 1;
+    const cls = n < current ? 'done' : (n === current ? 'now' : '');
+    return `<li class="${cls}"${n === current ? ' aria-current="step"' : ''}><span class="n">${n}</span><span class="label">${esc(s)}</span></li>`;
+  }).join('');
+}
+function setStatus(kind, text){ const el = $('pageStatus'); el.className = `status ${kind}`; el.textContent = text; }
+function setFacts(rows){ $('facts').innerHTML = rows.filter(r => r[1]).map(r => `<dt>${esc(r[0])}</dt><dd>${r[1]}</dd>`).join(''); }
+function linkContact(text){ return esc(text).replace(DOC.contact, `<a href="mailto:${DOC.contact}">${DOC.contact}</a>`); }
+function renderNotice(kind, title, message){
+  const tone = kind === 'closed_won' ? 'ok' : (kind === 'closed_lost' ? 'stop' : 'warn');
+  setStatus(kind === 'on_hold' ? 'hold' : 'closed', title);
+  setProgress(0);
+  $('main').innerHTML = `<div class="section"><h2>${esc(title)}</h2><div class="notice ${tone}"><div class="body">${linkContact(message)}</div></div></div>`;
+}
+function renderError(message){
+  setStatus('closed', 'Link not available');
+  setProgress(0);
+  $('main').innerHTML = `<div class="section"><h2>This link could not be opened</h2><div class="notice stop"><div class="body">${linkContact(message)}</div></div></div>`;
+}
+
+/* ---------------------------------------------------------------------------
+   Pack wording: "120 Box" with "Box of 100, 12,000 units in total"
+--------------------------------------------------------------------------- */
+function qtyLabel(li){ return `${fmtQty(li.quantity)} ${esc(li.packUom || 'Each')}`; }
+function packNote(li){
+  const upp = parseInt(li.unitsPerPack, 10);
+  if(!upp || upp <= 1) return '';
+  return `${esc(li.packUom || 'Pack')} of ${upp.toLocaleString('en-CA')}, ${(Math.round(num(li.quantity)) * upp).toLocaleString('en-CA')} units in total`;
+}
+
+/* ---------------------------------------------------------------------------
+   Load
+--------------------------------------------------------------------------- */
+const params = new URLSearchParams(location.search);
 const token = params.get('token');
 const quoteId = params.get('id');
-let selectedDecision = null;
 let quoteData = null;
+let selectedDecision = null;
 
-function fmt(n) {
-  const num = parseFloat(n);
-  if (isNaN(num)) return '0.00';
-  return num.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-function fmtQty(n) {
-  const num = parseInt(n, 10);
-  if (isNaN(num)) return n;
-  return num.toLocaleString('en-CA');
-}
-
-function showError(msg) {
-  document.getElementById('root').innerHTML = `<div class="status-msg error">${msg}</div>`;
-}
-
-async function loadQuote() {
-  if (!token || !quoteId) { showError('This link is missing a required parameter. Please use the link from your quote email.'); return; }
-  try {
+async function loadQuote(){
+  if(!token || !quoteId){ renderError('This link is missing a required parameter. Please use the link from your quotation email, or contact sales@essentialcures.com.'); return; }
+  try{
     const resp = await fetch(`${WORKER_BASE}/api/quote/gate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ quoteId, token }),
     });
-    const data = await resp.json();
-    if (data.status !== 'allow') { showError(data.message || data.reason || 'This quote link is invalid or has expired.'); return; }
-    if (data.decisionRecorded) {
-      quoteData = data;
-      if (data.customerDecision === 'Declined') { showDeclined(); return; }
-      initHub(data, data.customerDecision);
+    const d = await resp.json();
+    if(d.status === 'notice'){ renderNotice(d.noticeKind, d.noticeTitle, d.message); return; }
+    if(d.status !== 'allow'){ renderError(d.message || d.reason || 'This quotation link is invalid or has expired.'); return; }
+    quoteData = d;
+    $('pageRef').textContent = [d.quoteNumber, d.accountName].filter(Boolean).join(' | ');
+    setFacts([
+      ['Quotation', esc(d.quoteNumber)],
+      ['Your reference', esc(d.enquiryRef)],
+      ['Quote date', fmtDate(d.quoteDate)],
+      ['Valid through', fmtDate(d.validTill)],
+      ['Contact', esc(d.contactName)],
+    ]);
+    if(d.decisionRecorded){
+      if(d.customerDecision === 'Declined'){ showDeclined(); return; }
+      initHub(d, d.customerDecision);
       return;
     }
-    renderPage(data);
-  } catch(e) {
-    showError('Something went wrong loading your quote. Please try again or contact us directly.');
+    renderQuote(d);
+  }catch(e){
+    renderError('Your quotation could not be loaded. Please try again, or contact sales@essentialcures.com.');
   }
 }
 
-function buildDeliveryBlock(ds) {
-  if (!ds) return '';
-  const note = ds.partialShipment
-    ? 'Products ship from different suppliers, so partial shipments are expected. Full order completes within the maximum lead time.'
-    : 'All products ship together from a single fulfilment.';
-  const rows = (ds.productLines || []).map(pl =>
-    `<tr><td>${pl.product}</td><td>${pl.leadDays && pl.leadDays !== '0' ? pl.leadDays + ' days' : 'Pending confirmation'}</td><td>${pl.fulfilmentMode || 'Not specified'}</td></tr>`
-  ).join('');
-  return `
-  <tr><td style="padding: 16px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="width:4px;background:rgb(0,112,176);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:12px 14px">
-        <div class="delivery-block">
-          <p class="delivery-heading">Estimated Delivery</p>
-          <p class="delivery-range">${ds.leadTimeRange}</p>
-          <p class="delivery-note">${note}</p>
-          ${rows ? `<table class="delivery-table"><thead><tr><th>Product</th><th>Lead Time</th><th>Fulfilment</th></tr></thead><tbody>${rows}</tbody></table>` : ''}
-        </div>
-      </td>
-    </tr></tbody></table>
-  </td></tr>`;
-}
-
-function buildPaymentBlock(ds, grandTotal) {
-  if (!ds) return '';
-  const advance = parseFloat(ds.totalAdvanceAmount || '0');
-  if (advance <= 0) return '';
-  const total = parseFloat(grandTotal || '0');
-  const balance = Math.max(0, total - advance);
-  return `
-  <tr><td style="padding: 10px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:12px 14px">
-        <div class="payment-block">
-          <p class="payment-heading">Payment Plan | Progressive Payment Structure</p>
-          <div class="payment-row"><span class="payment-lbl">Advance Payment (on order confirmation)</span><span class="payment-val">${fmt(advance)}</span></div>
-          <div class="payment-row"><span class="payment-lbl">Balance on delivery</span><span class="payment-val">${fmt(balance)}</span></div>
-          <div class="payment-row grand"><span class="payment-lbl">Order Total</span><span class="payment-val">${fmt(total)}</span></div>
-        </div>
-      </td>
-    </tr></tbody></table>
-  </td></tr>`;
-}
-
-function renderPage(data) {
-  quoteData = data;
-  const isDualOption = data.siblingQuote != null;
-  const hasDiscount = data.discountAmount && parseFloat(data.discountAmount) > 0;
-  const hasSavings = data.savingsAmount && parseFloat(data.savingsAmount) > 0;
-
-  const alreadyBlock = data.alreadyResponded
-    ? `<div class="already-note">You already responded to this quote on <strong>${fmtDate(data.existingDecisionDate)}</strong> with: <strong>${data.existingDecision}</strong>.</div>`
-    : '';
-
-  const subTotal = hasDiscount
-    ? fmt(parseFloat(data.grandTotal) + parseFloat(data.discountAmount))
-    : fmt(data.grandTotal);
-
-  const lineRows = (data.lineItems || []).map((li, i) => {
-    if (li.isDivider) return `<tr><td colspan="5" style="background:rgb(247,249,251);font-weight:bold;border-top:2px solid rgb(143,194,60);padding:8px 10px;">${li.description}</td></tr>`;
-    const cls = i % 2 === 0 ? 'items-row' : 'items-row-alt';
-    return `<tr class="${cls}">
-      <td class="col-no">${i + 1}</td>
-      <td class="col-product"><strong>${li.description}</strong></td>
-      <td class="col-brand">${li.preferredBrands || ''}</td>
-      <td class="col-qty">${fmtQty(li.quantity)}</td>
-      <td class="col-price">${fmt(li.unitPrice)}</td>
-      <td class="col-total">${fmt(li.lineTotal)}</td>
+/* ---------------------------------------------------------------------------
+   Quotation view
+--------------------------------------------------------------------------- */
+function lineTable(lines){
+  const rows = (lines || []).map((li, i) => {
+    const note = packNote(li);
+    return `<tr>
+      <td class="c">${i + 1}</td>
+      <td><div class="pn">${esc(li.description)}</div>${note ? `<div class="pk">${note}</div>` : ''}</td>
+      <td class="br">${esc(li.preferredBrands || '')}</td>
+      <td class="c">${qtyLabel(li)}</td>
+      <td class="r">${fmt(li.unitPrice)}</td>
+      <td class="r">${fmt(li.lineTotal)}</td>
     </tr>`;
   }).join('');
-
-  const optionNotice = isDualOption ? `
-  <tr><td style="padding:10px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:10px 14px;background:rgb(234,244,227);font-size:12px;color:rgb(27,74,27)">
-        <strong>Two options are available for your consideration.</strong> Option A is cost-optimized with consolidated sourcing. Option B uses specialist suppliers matched per product category. Please review both options below and select your preferred choice.
-      </td>
-    </tr></tbody></table>
-  </td></tr>` : '';
-
-  const savingsRow = hasSavings ? `
-  <tr><td style="padding:10px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:8px 14px;background:rgb(234,244,227);font-size:12px;color:rgb(27,74,27)">
-        <strong style="color:rgb(58,122,30)">Estimated Savings:</strong>
-        &nbsp;${fmt(data.savingsAmount)}&nbsp;(${data.savingsPct || ''}% vs list price)
-      </td>
-    </tr></tbody></table>
-  </td></tr>` : '';
-
-  let optionBSection = '';
-  if (isDualOption && data.siblingQuote) {
-    const sb = data.siblingQuote;
-    const sbHasDiscount = sb.discountAmount && parseFloat(sb.discountAmount) > 0;
-    const sbHasSavings = sb.savingsAmount && parseFloat(sb.savingsAmount) > 0;
-    const sbSubTotal = sbHasDiscount
-      ? fmt(parseFloat(sb.grandTotal) + parseFloat(sb.discountAmount))
-      : fmt(sb.grandTotal);
-    const sbLineRows = (sb.lineItems || []).map((li, i) => {
-      const cls = i % 2 === 0 ? 'items-row' : 'items-row-alt';
-      return `<tr class="${cls}">
-        <td class="col-no">${i + 1}</td>
-        <td class="col-product"><strong>${li.description}</strong></td>
-        <td class="col-brand">${li.preferredBrands || ''}</td>
-        <td class="col-qty">${fmtQty(li.quantity)}</td>
-        <td class="col-price">${fmt(li.unitPrice)}</td>
-        <td class="col-total">${fmt(li.lineTotal)}</td>
-      </tr>`;
-    }).join('');
-    optionBSection = `
-  <tr><td style="padding:16px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="padding:10px 14px;background:rgb(74,139,44);border-radius:3px 3px 0 0">
-        <p style="margin:0;font-size:12px;font-weight:bold;color:rgb(255,255,255);letter-spacing:1px;text-transform:uppercase">OPTION B | CLINICAL GRADE</p>
-      </td>
-    </tr></tbody></table>
-  </td></tr>
-  <tr><td style="padding:4px 0 0 0">
-    <table class="items-table" cellpadding="0" cellspacing="0">
-      <thead><tr class="items-header">
-        <td class="col-no">#</td>
-        <td class="col-product">Product / Service Description</td>
-        <td class="col-brand">Brand</td>
-        <td class="col-qty">Qty</td>
-        <td class="col-price">Unit Price (CAD)</td>
-        <td class="col-total">Total (CAD)</td>
-      </tr></thead>
-      <tbody>${sbLineRows}</tbody>
-    </table>
-  </td></tr>
-  <tr><td style="padding:10px 0 0 0">
-    <table class="totals-table" cellpadding="0" cellspacing="0"><tbody>
-      <tr class="totals-row"><td class="totals-label">Sub Total</td><td class="totals-value">${sbSubTotal}</td></tr>
-      ${sbHasDiscount ? `<tr class="totals-row"><td class="totals-label">Discount</td><td class="totals-value">${fmt(sb.discountAmount)}</td></tr>` : ''}
-      <tr><td style="padding:10px 12px;background:rgb(74,139,44);color:rgb(255,255,255);font-size:14px;font-weight:bold">TOTAL (CAD)</td><td style="padding:10px 12px;background:rgb(74,139,44);color:rgb(255,255,255);font-size:14px;font-weight:bold;text-align:right">${fmt(sb.grandTotal)}</td></tr>
-    </tbody></table>
-  </td></tr>
-  ${sbHasSavings ? `<tr><td style="padding:10px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:8px 14px;background:rgb(234,244,227);font-size:12px;color:rgb(27,74,27)">
-        <strong style="color:rgb(58,122,30)">Estimated Savings:</strong>
-        &nbsp;${fmt(sb.savingsAmount)}&nbsp;(${sb.savingsPct || ''}% vs list price)
-      </td>
-    </tr></tbody></table>
-  </td></tr>` : ''}
-  ${buildDeliveryBlock(sb.deliverySummary)}
-  ${buildPaymentBlock(sb.deliverySummary, sb.grandTotal)}
-  <tr><td style="padding:16px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="padding:12px 16px;background:rgb(240,244,248);border-left:4px solid rgb(0,80,144)">
-        <p style="margin:0 0 8px 0;font-size:11px;font-weight:bold;color:rgb(0,80,144);text-transform:uppercase;letter-spacing:0.5px">Pricing Summary | Both Options</p>
-        <table width="100%" cellpadding="0" cellspacing="0"><tbody>
-          <tr><td style="font-size:12px;color:rgb(44,62,80);padding:4px 0"><strong>Option A | Cost Optimized</strong></td><td style="font-size:13px;font-weight:bold;color:rgb(0,80,144);text-align:right">${fmt(data.grandTotal)}</td></tr>
-          <tr><td style="font-size:12px;color:rgb(44,62,80);padding:4px 0"><strong>Option B | Clinical Grade</strong></td><td style="font-size:13px;font-weight:bold;color:rgb(74,139,44);text-align:right">${fmt(sb.grandTotal)}</td></tr>
-        </tbody></table>
-      </td>
-    </tr></tbody></table>
-  </td></tr>`;
-  }
-
-  const deliveryBlock = isDualOption ? '' : buildDeliveryBlock(data.deliverySummary);
-  const paymentBlock = isDualOption ? '' : buildPaymentBlock(data.deliverySummary, data.grandTotal);
-
-  const termsBlock = data.termsText ? `
-  <tr><td style="padding:16px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:12px 16px;background:rgb(247,249,251)">
-        <p style="font-size:11px;font-weight:bold;color:rgb(0,80,144);text-transform:uppercase;margin:0 0 6px 0">Terms and Conditions</p>
-        <p style="font-size:10px;color:rgb(44,62,80);line-height:1.6;margin:0;font-style:italic">${data.termsText}</p>
-      </td>
-    </tr></tbody></table>
-  </td></tr>` : '';
-
-  document.getElementById('root').innerHTML = `
-
-<!-- HEADER -->
-<table width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed;background:#fff;">
-  <tbody>
-  <tr>
-    <td style="width:90px;padding:8px 10px;text-align:center;vertical-align:middle;border-right:1px solid rgb(197,216,234)">
-      <img src="https://essentialcures.com/assets/images/essential-cures-logo.png" width="65" style="display:block;margin:0 auto">
-    </td>
-    <td style="width:510px;padding:8px 16px;text-align:center;vertical-align:middle;border-right:1px solid rgb(197,216,234)">
-      <p style="margin:0;font-size:17px;font-weight:bold;color:rgb(0,80,144);letter-spacing:1px">ESSENTIAL CURES INC.</p>
-      <p style="margin:4px 0;font-size:11px;font-style:italic;color:rgb(74,139,44)">Compliant Solutions. Confident Care.</p>
-      <p style="margin:6px 0 0 0;font-size:12px;font-weight:bold;color:rgb(0,80,144);letter-spacing:1px">QUOTATION &nbsp;|&nbsp; ${data.accountName || 'Essential Cures'}</p>
-    </td>
-    <td style="width:100px;padding:8px 8px 8px 4px;vertical-align:middle">
-      <table width="80" cellpadding="0" cellspacing="0" style="table-layout:fixed;margin:0 0 0 auto">
-        <tbody>
-        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">No:</td><td style="width:56px;font-size:7px;font-weight:bold;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${data.quoteNumber}</td></tr>
-        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">Rev:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right;padding-bottom:3px">01</td></tr>
-        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140)">Valid:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right">${fmtDate(data.validTill)}</td></tr>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <tr><td colspan="3" style="height:2px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td></tr>
-  <tr><td colspan="3" style="height:1px;background:rgb(255,255,255);font-size:0;line-height:0">&nbsp;</td></tr>
-  <tr><td colspan="3" style="height:2px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td></tr>
-  </tbody>
-</table>
-
-<!-- BODY -->
-<table class="main" cellpadding="0" cellspacing="0">
-  <tbody>
-
-  ${data.alreadyResponded ? `<tr><td style="padding:12px 0 0 0">${alreadyBlock}</td></tr>` : ''}
-
-  <!-- META ROW -->
-  <tr><td style="padding:16px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed"><tbody><tr>
-      <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:12px 16px;background:rgb(234,242,251);vertical-align:middle">
-        <p class="meta-label">Quote Number</p>
-        <p class="meta-value meta-blue">${data.quoteNumber}</p>
-      </td>
-      <td style="width:16px">&nbsp;</td>
-      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:12px 16px;background:rgb(234,244,227);vertical-align:middle">
-        <p class="meta-label">Customer Reference</p><p class="meta-value meta-green" style="font-size:11px">${data.enquiryRef || data.quoteNumber || ''}</p>
-      </td>
-      <td style="width:16px">&nbsp;</td>
-      <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:12px 16px;background:rgb(234,242,251);vertical-align:middle">
-        <p class="meta-label">Quote Date</p><p class="meta-value meta-blue">${fmtDate(data.quoteDate)}</p>
-      </td>
-      <td style="width:16px">&nbsp;</td>
-      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:12px 16px;background:rgb(234,244,227);vertical-align:middle">
-        <p class="meta-label">Valid Through</p><p class="meta-value meta-green">${fmtDate(data.validTill)}</p>
-      </td>
-    </tr></tbody></table>
-  </td></tr>
-
-  ${optionNotice}
-
-  <!-- ADDRESS ROW -->
-  <tr><td style="padding:16px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td class="address-box">
-        <p class="address-title">Bill To</p>
-        <p class="address-text">
-          <strong>${data.accountName || ''}</strong><br>
-          ${data.billingStreet || ''}<br>
-          ${data.billingCity || ''}, ${data.billingState || ''}<br>
-          ${data.billingCountry || ''} &nbsp;${data.billingZip || ''}
-        </p>
-      </td>
-      <td class="address-gap"></td>
-      <td class="address-box">
-        <p class="address-title">Ship To</p>
-        <p class="address-text">
-          ${data.shippingStreet || ''}<br>
-          ${data.shippingCity || ''}, ${data.shippingState || ''}<br>
-          ${data.shippingCountry || ''} &nbsp;${data.shippingZip || ''}
-        </p>
-      </td>
-    </tr></tbody></table>
-  </td></tr>
-
-  <!-- CONTACT BAR -->
-  <tr><td style="padding:10px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:8px 14px;background:rgb(240,244,248);font-size:12px;color:rgb(107,124,140)">
-        ${data.contactName ? 'Contact: <strong style="color:rgb(44,62,80)">' + data.contactName + '</strong>&nbsp;&nbsp;|&nbsp;&nbsp;' : ''}Lead Source: <strong style="color:rgb(44,62,80)">${data.leadSource || ''}</strong>
-      </td>
-    </tr></tbody></table>
-  </td></tr>
-
-  ${isDualOption ? `<tr><td style="padding:16px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="padding:10px 14px;background:rgb(0,80,144);border-radius:3px 3px 0 0">
-        <p style="margin:0;font-size:12px;font-weight:bold;color:rgb(255,255,255);letter-spacing:1px;text-transform:uppercase">OPTION A | COST OPTIMIZED</p>
-      </td>
-    </tr></tbody></table>
-  </td></tr>` : ''}
-  <tr><td style="padding:${isDualOption ? '4' : '16'}px 0 0 0">
-    <table class="items-table" cellpadding="0" cellspacing="0">
-      <thead>
-      <tr class="items-header">
-        <td class="col-no">#</td>
-        <td class="col-product">Product / Service Description</td>
-        <td class="col-brand">Brand</td>
-        <td class="col-qty">Qty</td>
-        <td class="col-price">Unit Price (CAD)</td>
-        <td class="col-total">Total (CAD)</td>
-      </tr>
-      </thead>
-      <tbody>${lineRows}</tbody>
-    </table>
-  </td></tr>
-
-  <tr><td style="padding:16px 0 0 0">
-    <table class="totals-table" cellpadding="0" cellspacing="0">
-      <tbody>
-      <tr class="totals-row"><td class="totals-label">Sub Total</td><td class="totals-value">${subTotal}</td></tr>
-      ${hasDiscount ? `<tr class="totals-row"><td class="totals-label">Discount</td><td class="totals-value">${fmt(data.discountAmount)}</td></tr>` : ''}
-      <tr class="totals-grand"><td class="totals-grand-label">${isDualOption ? 'TOTAL (CAD)' : 'GRAND TOTAL (CAD)'}</td><td class="totals-grand-value">${fmt(data.grandTotal)}</td></tr>
-      </tbody>
-    </table>
-  </td></tr>
-
-  ${isDualOption ? '' : savingsRow}
-  ${isDualOption ? buildDeliveryBlock(data.deliverySummary) + buildPaymentBlock(data.deliverySummary, data.grandTotal) : ''}
-  ${optionBSection}
-  ${deliveryBlock}
-  ${paymentBlock}
-  ${termsBlock}
-
-  <!-- DECISION BLOCK -->
-  <tr><td style="padding:16px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="width:4px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:16px;background:rgb(240,244,248)">
-        <p style="font-size:11px;font-weight:bold;color:rgb(0,80,144);text-transform:uppercase;margin:0 0 14px 0;letter-spacing:0.5px">Your Response</p>
-        ${isDualOption ? `
-        <div class="decision-row">
-          <button class="decision-btn accept" data-value="Option A" style="border-color:rgb(0,80,144)">Select Option A</button>
-          <button class="decision-btn accept" data-value="Option B - Specialist" style="border-color:rgb(74,139,44)">Select Option B</button>
-        </div>` : `
-        <div class="decision-row">
-          <button class="decision-btn accept" data-value="Option A">Accept This Quote</button>
-        </div>`}
-        <div class="form-error" id="decisionError"></div>
-        <button class="submit-btn" id="submitBtn" disabled>${isDualOption ? 'Select an option above to continue' : 'Select Accept This Quote above to continue'}</button>
-        <p style="margin:12px 0 0 0;font-size:12px;color:rgb(107,124,140);line-height:1.6">Would you like to discuss pricing, quantities or any revision before you decide? Please contact <a href="mailto:sales@essentialcures.com" style="color:rgb(0,80,144);font-weight:bold;text-decoration:none">sales@essentialcures.com</a>, quoting ${esc(data.quoteNumber)}.</p>
-      </td>
-    </tr></tbody></table>
-  </td></tr>
-
-  <!-- CONTACT AND SUPPORT -->
-  <tr><td style="padding:16px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:12px 16px;background:rgb(234,244,227)">
-        <p style="font-size:11px;font-weight:bold;color:rgb(58,122,30);margin:0 0 6px 0;text-transform:uppercase">Contact and Support</p>
-        <p style="font-size:12px;color:rgb(27,74,27);line-height:1.6;margin:0;font-style:italic">Thank you for considering Essential Cures as your trusted partner. Should you have any questions or require revisions to this quotation, please contact your Essential Cures representative or email <a href="mailto:sales@essentialcures.com" style="color:rgb(0,80,144);font-style:italic;font-weight:bold">sales@essentialcures.com</a>. We look forward to supporting your organization.</p>
-      </td>
-    </tr></tbody></table>
-  </td></tr>
-
-  <!-- CONFIDENTIALITY STATEMENT -->
-  <tr><td style="padding:12px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="padding:12px 16px;border-top:1px solid rgb(220,225,230);border-bottom:1px solid rgb(220,225,230)">
-        <p style="margin:0;font-size:10px;color:rgb(107,124,140);line-height:1.6">This document and its contents are confidential to Essential Cures Inc. and are shared exclusively with the intended recipient for the purpose of evaluating a commercial opportunity. The recipient agrees to maintain the confidentiality of all information herein and not to reproduce, distribute, or disclose it to any third party without the prior written consent of Essential Cures Inc.</p>
-      </td>
-    </tr></tbody></table>
-  </td></tr>
-
-  <!-- TAGLINE BAR -->
-  <tr><td style="padding:16px 0 16px 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td class="tagline-green"><p class="tagline-text">Compliant Solutions. Confident Care.</p></td>
-      <td class="tagline-blue"><p class="tagline-text">Quality Built In. Not Bolted On.</p></td>
-    </tr></tbody></table>
-  </td></tr>
-
-  </tbody>
-</table>
-
-<!-- FOOTER -->
-<table width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed;background:#fff">
-  <tbody>
-    <tr><td colspan="2" style="background:rgb(100,149,180);height:2px;font-size:0;line-height:0">&nbsp;</td></tr>
-    <tr>
-      <td style="vertical-align:bottom;padding:4px 16px 8px 16px">
-        <p class="footer-web">essentialcures.com &nbsp;|&nbsp; essentialcures.ca</p>
-        <p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-`;
-
-  document.querySelectorAll('.decision-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.decision-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
-      selectedDecision = btn.dataset.value;
-      document.getElementById('decisionError').textContent = '';
-      const sub = document.getElementById('submitBtn');
-      sub.disabled = false;
-      sub.textContent = 'Submit My Response';
-    });
-  });
-  document.getElementById('submitBtn').addEventListener('click', submitResponse);
+  return `<div class="qtable-wrap"><table class="qtable">
+    <thead><tr><th class="c">#</th><th>Product</th><th>Brand</th><th class="c">Qty</th><th class="r">Price per unit (CAD)</th><th class="r">Total (CAD)</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+function totals(o, cls, label){
+  const disc = num(o.discountAmount);
+  return `<div class="totals">
+    <div><span>Sub total</span><span>${fmt(num(o.grandTotal) + disc)}</span></div>
+    ${disc > 0 ? `<div><span>Discount</span><span>${fmt(disc)}</span></div>` : ''}
+    <div class="grand ${cls}"><span>${label}</span><span>${fmt(o.grandTotal)}</span></div>
+  </div>`;
+}
+function savings(o){
+  return num(o.savingsAmount) > 0 ? `<div class="blk ok"><p><strong>Estimated savings:</strong> CAD ${fmt(o.savingsAmount)} (${esc(o.savingsPct || '')}% against list price)</p></div>` : '';
+}
+function delivery(ds){
+  if(!ds || !ds.leadTimeRange) return '';
+  const note = ds.partialShipment ? 'Products ship from different suppliers, so partial shipments are expected. The full order completes within the maximum lead time.' : 'All products ship together from a single fulfilment.';
+  const rows = (ds.productLines || []).map(pl => `<tr><td>${esc(pl.product)}</td><td>${pl.leadDays && pl.leadDays !== '0' ? esc(pl.leadDays) + ' business days' : 'Pending confirmation'}</td><td>${esc(pl.fulfilmentMode || 'Not specified')}</td></tr>`).join('');
+  return `<div class="blk dlv"><h4>Estimated delivery</h4><p class="big">${esc(ds.leadTimeRange)}</p><p style="color:var(--muted);font-size:12px">${note}</p>${rows ? `<table class="mini"><thead><tr><th>Product</th><th>Lead time</th><th>Fulfilment</th></tr></thead><tbody>${rows}</tbody></table>` : ''}</div>`;
+}
+function instructions(text){
+  const t = String(text || '').trim();
+  if(!t) return '';
+  return `<div class="blk"><h4>Delivery instructions</h4>${t.split(/\r?\n/).filter(Boolean).map(l => `<p>${esc(l)}</p>`).join('')}</div>`;
+}
+function payment(ds, total){
+  const adv = ds ? num(ds.totalAdvanceAmount) : 0;
+  if(!(adv > 0)) return '';
+  return `<div class="blk ok"><h4>Payment plan</h4>
+    <div class="pay-row"><span>Advance payment, on order confirmation</span><span>CAD ${fmt(adv)}</span></div>
+    <div class="pay-row"><span>Balance on delivery</span><span>CAD ${fmt(Math.max(0, num(total) - adv))}</span></div>
+    <div class="pay-row"><span>Order total</span><span>CAD ${fmt(total)}</span></div></div>`;
+}
+function optionBlock(o, band, cls, label){
+  return `${band ? `<div class="optband ${cls}">${band}</div>` : ''}
+    ${lineTable(o.lineItems)}
+    ${totals(o, cls, label)}
+    ${savings(o)}
+    ${delivery(o.deliverySummary)}
+    ${instructions(o.deliveryInstructions)}
+    ${payment(o.deliverySummary, o.grandTotal)}`;
 }
 
-/* ---------------- Shared helpers ---------------- */
-function getOptionFigures(decision) {
-  const d = quoteData || {};
-  if (decision === 'Option B - Specialist' && d.siblingQuote) {
-    const ds = d.siblingQuote.deliverySummary || {};
-    return { advance: parseFloat(ds.totalAdvanceAmount || '0'), total: parseFloat(d.siblingQuote.grandTotal || '0') };
-  }
-  const ds = d.deliverySummary || {};
-  return { advance: parseFloat(ds.totalAdvanceAmount || '0'), total: parseFloat(d.grandTotal || '0') };
+function renderQuote(d){
+  const dual = d.siblingQuote != null;
+  const sb = d.siblingQuote || {};
+  setStatus('open', 'Awaiting your response');
+  setProgress(1);
+  const choice = dual
+    ? `<div class="choice">
+        <button type="button" class="a" data-v="Option A" aria-pressed="false" onclick="choose('Option A')"><div class="k">Option A | Cost Optimized</div><div class="v">CAD ${fmt(d.grandTotal)}</div></button>
+        <button type="button" class="b" data-v="Option B - Specialist" aria-pressed="false" onclick="choose('Option B - Specialist')"><div class="k">Option B | Clinical Grade</div><div class="v">CAD ${fmt(sb.grandTotal)}</div></button>
+      </div>`
+    : `<div class="choice single"><button type="button" class="a" data-v="Option A" aria-pressed="false" onclick="choose('Option A')"><div class="k">Accept this quotation</div><div class="v">CAD ${fmt(d.grandTotal)}</div></button></div>`;
+  $('main').innerHTML = `
+    <div class="section">
+      <h2>Your quotation</h2>
+      <p class="lede">${dual ? 'Two options are available. Option A is cost optimized with consolidated sourcing. Option B uses specialist suppliers matched per product category.' : 'Please review your quotation below.'} Quantities are in the selling unit shown, with the pack size beneath each product.</p>
+      <div class="addr">
+        <div><h4>Bill to</h4><strong>${esc(d.accountName)}</strong><br>${esc(d.billingStreet)}<br>${esc(d.billingCity)}${d.billingState ? ', ' + esc(d.billingState) : ''}<br>${esc(d.billingCountry)} ${esc(d.billingZip)}</div>
+        <div><h4>Ship to</h4>${esc(d.shippingStreet)}<br>${esc(d.shippingCity)}${d.shippingState ? ', ' + esc(d.shippingState) : ''}<br>${esc(d.shippingCountry)} ${esc(d.shippingZip)}</div>
+      </div>
+      ${optionBlock(d, dual ? 'Option A | Cost Optimized' : '', 'a', dual ? 'Total (CAD)' : 'Grand total (CAD)')}
+      ${dual ? optionBlock(sb, 'Option B | Clinical Grade', 'b', 'Total (CAD)') : ''}
+      ${d.termsText ? `<div class="terms"><strong>Terms and conditions.</strong> ${esc(d.termsText)}</div>` : ''}
+    </div>
+    <div class="section">
+      <h2>Your response</h2>
+      <p class="lede">${dual ? 'Select the option you would like to order.' : 'Accept this quotation to proceed to your order.'} One response is accepted per quotation. To discuss pricing, quantities or any revision first, please contact <a href="mailto:${DOC.contact}">${DOC.contact}</a>, quoting ${esc(d.quoteNumber)}.</p>
+      ${choice}
+      <div class="notice stop" id="decisionError"><div class="body" id="decisionErrorText"></div></div>
+    </div>
+    <div class="actions">
+      <span class="note">Your response is final once submitted.</span>
+      <button class="btn primary" id="submitBtn" type="button" disabled onclick="submitResponse()">${dual ? 'Select an option to continue' : 'Accept this quotation to continue'}</button>
+    </div>`;
 }
 
-function esc(v) {
-  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function choose(v){
+  selectedDecision = v;
+  document.querySelectorAll('.choice button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v ? 'true' : 'false'));
+  const btn = $('submitBtn');
+  btn.disabled = false;
+  btn.textContent = 'Submit my response';
+  setProgress(2);
 }
 
-function fmtDate(iso) {
-  if (!iso || iso.length < 10) return '';
-  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const y = iso.slice(0, 4), mo = parseInt(iso.slice(5, 7), 10), dd = parseInt(iso.slice(8, 10), 10);
-  if (!mo || !dd) return '';
-  return dd + ' ' + m[mo - 1] + ' ' + y;
-}
-
-function todayIso() { return new Date().toISOString().slice(0, 10); }
-
-async function sendRequest(path, body, isForm, timeoutMs) {
+/* ---------------------------------------------------------------------------
+   Decision submit (customer response worker)
+--------------------------------------------------------------------------- */
+async function sendRequest(path, body, isForm, timeoutMs){
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs || 45000);
   let resp;
-  try {
+  try{
     const opts = { method: 'POST', body: isForm ? body : JSON.stringify(body), signal: ctrl.signal };
-    if (!isForm) opts.headers = { 'Content-Type': 'application/json' };
+    if(!isForm) opts.headers = { 'Content-Type': 'application/json' };
     resp = await fetch(`${RESPONSE_BASE}${path}`, opts);
-  } catch (e) {
+  }catch(e){
     clearTimeout(timer);
-    if (e.name === 'AbortError') throw new Error('The request took too long to complete. Please try again, or contact customercare@essentialcures.com.');
+    if(e.name === 'AbortError') throw new Error(`The request took too long to complete. Please try again, or contact ${CARE}.`);
     throw new Error('Unable to reach Essential Cures. Please check your connection and try again.');
   }
   clearTimeout(timer);
   let data;
-  try { data = await resp.json(); } catch {
-    throw new Error('The server returned an unexpected response (HTTP ' + resp.status + ').');
-  }
-  if (data.status !== 'ok') throw new Error(data.message || data.reason || 'The request could not be completed.');
+  try{ data = await resp.json(); }catch{ throw new Error('The server returned an unexpected response (HTTP ' + resp.status + ').'); }
+  if(data.status !== 'ok') throw new Error(data.message || data.reason || 'The request could not be completed.');
   return data;
 }
+function postJson(path, payload){ return sendRequest(path, payload, false, 45000); }
 
-function postJson(path, payload) { return sendRequest(path, payload, false, 45000); }
-
-function pageShell(inner) {
-  return `<table class="main" cellpadding="0" cellspacing="0"><tbody><tr><td style="padding:24px">${inner}</td></tr></tbody></table>`;
-}
-
-function showThankYou(message) {
-  document.getElementById('root').innerHTML = pageShell(`
-    <div class="status-msg">${message}</div>
-    <p style="text-align:center;margin-top:14px;font-size:12px"><a href="https://essentialcures.com" style="color:rgb(0,80,144);font-weight:bold;text-decoration:none">Return to essentialcures.com</a></p>`);
-}
-
-function showDeclined() {
-  const qn = (quoteData && quoteData.quoteNumber) || 'this quotation';
-  showThankYou(`Your response declining quotation ${esc(qn)} has been recorded. Should you wish to revisit this quotation, please contact <a href="mailto:customercare@essentialcures.com" style="color:rgb(0,80,144);font-weight:bold">customercare@essentialcures.com</a>.`);
-}
-
-/* ---------------- Decision submit ---------------- */
-async function submitResponse() {
-  if (!selectedDecision) return;
-  const btn = document.getElementById('submitBtn');
-  const errBox = document.getElementById('decisionError');
+async function submitResponse(){
+  if(!selectedDecision) return;
+  const btn = $('submitBtn');
   btn.disabled = true;
-  btn.textContent = 'Submitting\u2026';
-  errBox.textContent = '';
-  try {
+  btn.textContent = 'Submitting, please wait';
+  $('decisionError').style.display = 'none';
+  try{
     await postJson('/api/quote/decision', { quoteId, token, decision: selectedDecision });
-    if (selectedDecision === 'Declined') { showDeclined(); return; }
     quoteData.decisionRecorded = true;
     initHub(quoteData, selectedDecision);
-  } catch (e) {
+  }catch(e){
     btn.disabled = false;
-    btn.textContent = 'Submit My Response';
-    errBox.textContent = e.message;
+    btn.textContent = 'Submit my response';
+    $('decisionErrorText').textContent = e.message;
+    $('decisionError').style.display = 'grid';
   }
 }
 
-/* ---------------- Order hub ---------------- */
+function showDeclined(){
+  setStatus('closed', 'Response recorded');
+  setProgress(0);
+  $('main').innerHTML = `<div class="section"><h2>Your response has been recorded</h2><div class="notice warn"><div class="body">Your response declining quotation ${esc(quoteData.quoteNumber)} has been recorded. Should you wish to revisit this quotation, please contact <a href="mailto:${DOC.contact}">${DOC.contact}</a>.</div></div></div>`;
+}
+
+/* ---------------------------------------------------------------------------
+   Order hub (approved design, Oct 2026)
+--------------------------------------------------------------------------- */
 let hub = null;
 let hubFile = null;
 const DOC_TYPES = { 'application/pdf': true, 'image/jpeg': true, 'image/png': true };
 const DOC_MAX = 10 * 1024 * 1024;
 
-function initHub(data, decision) {
+function getOptionFigures(decision){
+  const d = quoteData || {};
+  if(decision === 'Option B - Specialist' && d.siblingQuote){
+    const ds = d.siblingQuote.deliverySummary || {};
+    return { advance: num(ds.totalAdvanceAmount), total: num(d.siblingQuote.grandTotal) };
+  }
+  const ds = d.deliverySummary || {};
+  return { advance: num(ds.totalAdvanceAmount), total: num(d.grandTotal) };
+}
+
+function initHub(data, decision){
   const fig = getOptionFigures(decision);
   const isDual = !!data.siblingQuote;
   const isB = decision === 'Option B - Specialist';
   hub = {
-    decision: decision,
+    decision,
     quoteNumber: isDual && isB ? (data.siblingQuote.quoteNumber || data.quoteNumber) : data.quoteNumber,
     optionLabel: isDual ? (isB ? 'Option B, Clinical Grade' : 'Option A, Cost Optimized') : 'Quotation accepted',
     optionShort: isDual ? (isB ? 'Option B' : 'Option A') : 'this quotation',
@@ -779,103 +704,27 @@ function initHub(data, decision) {
   renderHub();
 }
 
-function hubStep(n, name, node, statusText, statusCls, date, lineCls, last) {
+function hubStep(n, name, node, statusText, statusCls, date, lineCls, last){
   return `<li class="hb-step"${node === 'current' ? ' aria-current="step"' : ''}>
     ${last ? '' : `<span class="hb-line ${lineCls}" aria-hidden="true"></span>`}
     <span class="hb-node ${node}">${n}</span>
-    <span class="hb-stxt">
-      <span class="hb-sname">${name}</span>
-      <span class="hb-sstat ${statusCls}">${statusText}</span>
-      ${date ? `<span class="hb-sdate">${date}</span>` : ''}
-    </span>
+    <span class="hb-stxt"><span class="hb-sname">${name}</span><span class="hb-sstat ${statusCls}">${statusText}</span>${date ? `<span class="hb-sdate">${date}</span>` : ''}</span>
   </li>`;
 }
 
-function brandHeader() {
-  const d = quoteData;
-  return `<table width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed;background:#fff;">
-  <tbody>
-  <tr>
-    <td style="width:90px;padding:8px 10px;text-align:center;vertical-align:middle;border-right:1px solid rgb(197,216,234)">
-      <img src="https://essentialcures.com/assets/images/essential-cures-logo.png" width="65" alt="Essential Cures" style="display:block;margin:0 auto">
-    </td>
-    <td style="width:510px;padding:8px 16px;text-align:center;vertical-align:middle;border-right:1px solid rgb(197,216,234)">
-      <p style="margin:0;font-size:17px;font-weight:bold;color:rgb(0,80,144);letter-spacing:1px">ESSENTIAL CURES INC.</p>
-      <p style="margin:4px 0;font-size:11px;font-style:italic;color:rgb(74,139,44)">Compliant Solutions. Confident Care.</p>
-      <p style="margin:6px 0 0 0;font-size:12px;font-weight:bold;color:rgb(0,80,144);letter-spacing:1px">ORDER STATUS &nbsp;|&nbsp; ${esc(d.accountName || 'Essential Cures')}</p>
-    </td>
-    <td style="width:100px;padding:8px 8px 8px 4px;vertical-align:middle">
-      <table width="80" cellpadding="0" cellspacing="0" style="table-layout:fixed;margin:0 0 0 auto">
-        <tbody>
-        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">No:</td><td style="width:56px;font-size:7px;font-weight:bold;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${esc(hub.quoteNumber)}</td></tr>
-        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140);padding-bottom:3px">Date:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right;padding-bottom:3px">${esc(fmtDate(d.quoteDate))}</td></tr>
-        <tr><td style="width:24px;font-size:7px;color:rgb(107,124,140)">Valid:</td><td style="width:56px;font-size:7px;color:rgb(44,62,80);text-align:right">${esc(fmtDate(d.validTill))}</td></tr>
-        </tbody>
-      </table>
-    </td>
-  </tr>
-  <tr><td colspan="3" style="height:2px;background:rgb(0,80,144);font-size:0;line-height:0">&nbsp;</td></tr>
-  <tr><td colspan="3" style="height:1px;background:rgb(255,255,255);font-size:0;line-height:0">&nbsp;</td></tr>
-  <tr><td colspan="3" style="height:2px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td></tr>
-  </tbody>
-</table>`;
-}
-
-function brandFooter() {
-  return `<table class="main" cellpadding="0" cellspacing="0"><tbody>
-  <tr><td style="padding:16px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="width:4px;background:rgb(74,139,44);font-size:0;line-height:0">&nbsp;</td>
-      <td style="width:8px">&nbsp;</td>
-      <td style="padding:12px 16px;background:rgb(234,244,227)">
-        <p style="font-size:11px;font-weight:bold;color:rgb(58,122,30);margin:0 0 6px 0;text-transform:uppercase">Contact and Support</p>
-        <p style="font-size:12px;color:rgb(27,74,27);line-height:1.6;margin:0;font-style:italic">Thank you for choosing Essential Cures as your trusted partner. Should you have any questions about your order, please contact your Essential Cures representative or email <a href="mailto:customercare@essentialcures.com" style="color:rgb(0,80,144);font-style:italic;font-weight:bold">customercare@essentialcures.com</a>. We look forward to supporting your organization.</p>
-      </td>
-    </tr></tbody></table>
-  </td></tr>
-  <tr><td style="padding:12px 0 0 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td style="padding:12px 16px;border-top:1px solid rgb(220,225,230);border-bottom:1px solid rgb(220,225,230)">
-        <p style="margin:0;font-size:10px;color:rgb(107,124,140);line-height:1.6">This document and its contents are confidential to Essential Cures Inc. and are shared exclusively with the intended recipient for the purpose of evaluating a commercial opportunity. The recipient agrees to maintain the confidentiality of all information herein and not to reproduce, distribute, or disclose it to any third party without the prior written consent of Essential Cures Inc.</p>
-      </td>
-    </tr></tbody></table>
-  </td></tr>
-  <tr><td style="padding:16px 0 16px 0">
-    <table width="100%" cellpadding="0" cellspacing="0"><tbody><tr>
-      <td class="tagline-green"><p class="tagline-text">Compliant Solutions. Confident Care.</p></td>
-      <td class="tagline-blue"><p class="tagline-text">Quality Built In. Not Bolted On.</p></td>
-    </tr></tbody></table>
-  </td></tr>
-  </tbody></table>
-  <table width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed;background:#fff"><tbody>
-    <tr><td colspan="2" style="background:rgb(100,149,180);height:2px;font-size:0;line-height:0">&nbsp;</td></tr>
-    <tr><td style="vertical-align:bottom;padding:4px 16px 8px 16px">
-      <p class="footer-web">essentialcures.com &nbsp;|&nbsp; essentialcures.ca</p>
-      <p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p>
-    </td></tr>
-  </tbody></table>`;
-}
-
-function emailBox(subject, intro, footnote) {
+function emailBox(subject, intro, footnote){
   return `<div class="hb-note" style="display:flex;flex-direction:column;gap:12px">
     <p class="hb-note">${intro}</p>
-    <dl class="hb-kv">
-      <dt>Email</dt><dd><a href="mailto:customercare@essentialcures.com?subject=${encodeURIComponent(subject)}">customercare@essentialcures.com</a></dd>
-      <dt>Subject</dt><dd>${esc(subject)}</dd>
-    </dl>
+    <dl class="hb-kv"><dt>Email</dt><dd><a href="mailto:${CARE}?subject=${encodeURIComponent(subject)}">${CARE}</a></dd><dt>Subject</dt><dd>${esc(subject)}</dd></dl>
     <p class="hb-hint">${footnote}</p>
   </div>`;
 }
 
-function poPanelBody() {
+function poPanelBody(){
   const h = hub;
-  if (h.poState === 'received' || h.poState === 'verified') {
+  if(h.poState === 'received' || h.poState === 'verified'){
     const verified = h.poState === 'verified';
-    return `<dl class="hb-kv">
-      <dt>Purchase Order Number</dt><dd>${esc(h.poNumber || 'Not provided')}</dd>
-      <dt>Purchase Order Date</dt><dd>${esc(fmtDate(h.poDate) || 'Not provided')}</dd>
-      <dt>Status</dt><dd class="${verified ? 'complete' : 'review'}">${verified ? 'Verified' : 'Under review'}</dd>
-    </dl>
+    return `<dl class="hb-kv"><dt>Purchase Order Number</dt><dd>${esc(h.poNumber || 'Not provided')}</dd><dt>Purchase Order Date</dt><dd>${esc(fmtDate(h.poDate) || 'Not provided')}</dd><dt>Status</dt><dd class="${verified ? 'complete' : 'review'}">${verified ? 'Verified' : 'Under review'}</dd></dl>
     <p class="hb-hint">If any detail above is incorrect, please contact us quoting ${esc(h.quoteNumber)}.</p>`;
   }
   return `<div class="hb-seg" role="group" aria-label="Purchase order submission method">
@@ -900,19 +749,14 @@ function poPanelBody() {
       </div>
       <p class="hb-err" id="po-err" role="alert"></p>
     </div>
-    <div id="po-email" hidden>
-      ${emailBox('Purchase Order, ' + h.quoteNumber, 'Please email your purchase order to the address below, quoting your quotation number in the subject line.', 'Emailed documents are recorded manually and may take longer to appear on this page.')}
-    </div>`;
+    <div id="po-email" hidden>${emailBox('Purchase Order, ' + h.quoteNumber, 'Please email your purchase order to the address below, quoting your quotation number in the subject line.', 'Emailed documents are recorded manually and may take longer to appear on this page.')}</div>`;
 }
 
-function payPanelBody() {
+function payPanelBody(){
   const h = hub;
-  if (h.payState === 'pending' || h.payState === 'verified') {
+  if(h.payState === 'pending' || h.payState === 'verified'){
     const verified = h.payState === 'verified';
-    return `<dl class="hb-kv">
-      <dt>Payment Reference</dt><dd>${esc(h.payRef || 'Recorded')}</dd>
-      <dt>Status</dt><dd class="${verified ? 'complete' : 'review'}">${verified ? 'Verified' : 'Under review'}</dd>
-    </dl>
+    return `<dl class="hb-kv"><dt>Payment Reference</dt><dd>${esc(h.payRef || 'Recorded')}</dd><dt>Status</dt><dd class="${verified ? 'complete' : 'review'}">${verified ? 'Verified' : 'Under review'}</dd></dl>
     <p class="hb-hint">If any detail is incorrect, please contact us quoting ${esc(h.quoteNumber)}.</p>`;
   }
   return `<div class="hb-seg" role="group" aria-label="Payment submission method">
@@ -927,55 +771,52 @@ function payPanelBody() {
       </div>
       <div class="hb-grid2">
         <div class="hb-field"><label class="hb-lbl" for="pay-method">Payment Method</label>
-          <select class="hb-in" id="pay-method">
-            <option value="Wire Transfer">Wire transfer</option>
-            <option value="Cheque">Cheque</option>
-            <option value="Credit Card">Credit card</option>
-            <option value="Cash">Cash</option>
-            <option value="Other">Other</option>
-          </select>
+          <select class="hb-in" id="pay-method"><option value="Wire Transfer">Wire transfer</option><option value="Cheque">Cheque</option><option value="Credit Card">Credit card</option><option value="Cash">Cash</option><option value="Other">Other</option></select>
         </div>
         <div class="hb-field"><label class="hb-lbl" for="pay-ref">Transaction Reference</label><input class="hb-in" id="pay-ref" type="text" maxlength="100" aria-describedby="pay-ref-h" autocomplete="off"></div>
       </div>
       <span class="hb-hint" id="pay-ref-h">The reference shown on your bank confirmation or cheque.</span>
       <p class="hb-err" id="pay-err" role="alert"></p>
     </div>
-    <div id="pay-email" hidden>
-      ${emailBox('Advance Payment, ' + h.quoteNumber, 'Once payment has been sent, please email your remittance advice to the address below, quoting your quotation number.', 'Emailed remittances are matched manually and may take longer to appear on this page.')}
-    </div>`;
+    <div id="pay-email" hidden>${emailBox('Advance Payment, ' + h.quoteNumber, 'Once payment has been sent, please email your remittance advice to the address below, quoting your quotation number.', 'Emailed remittances are matched manually and may take longer to appear on this page.')}</div>`;
 }
 
-function renderHub() {
+function renderHub(){
   const h = hub, d = quoteData;
   const poDone = h.poState === 'verified';
   const payNA = !h.advanceRequired;
   const payDone = h.payState === 'verified';
 
   let s3 = { node: 'current', text: 'Awaiting, optional', cls: 'await', date: '' };
-  if (h.poState === 'received') s3 = { node: 'review', text: 'Under review', cls: 'review', date: h.poReceived ? 'Received ' + fmtDate(h.poReceived) : '' };
-  if (poDone) s3 = { node: 'done', text: 'Complete', cls: 'complete', date: '' };
+  if(h.poState === 'received') s3 = { node: 'review', text: 'Under review', cls: 'review', date: h.poReceived ? 'Received ' + fmtDate(h.poReceived) : '' };
+  if(poDone) s3 = { node: 'done', text: 'Complete', cls: 'complete', date: '' };
 
   let s4 = { node: 'current', text: 'Awaiting', cls: 'await' };
-  if (payNA) s4 = { node: 'na', text: 'Not required', cls: 'muted' };
-  else if (h.payState === 'pending') s4 = { node: 'review', text: 'Under review', cls: 'review' };
-  else if (payDone) s4 = { node: 'done', text: 'Complete', cls: 'complete' };
+  if(payNA) s4 = { node: 'na', text: 'Not required', cls: 'muted' };
+  else if(h.payState === 'pending') s4 = { node: 'review', text: 'Under review', cls: 'review' };
+  else if(payDone) s4 = { node: 'done', text: 'Complete', cls: 'complete' };
 
   const payClear = payNA || payDone;
   const poClear = h.poState !== 'received';
   const s5 = payClear && poClear ? { node: 'current', text: 'In Progress', cls: 'await' } : { node: 'pending', text: 'Pending', cls: 'muted' };
-
   const lineAfter3 = poDone || h.poState === 'none' ? 'done' : '';
   const lineAfter4 = payClear ? 'done' : '';
 
+  // Page progress bar and status follow the hub
+  let barStep = 3;
+  if(!(h.advanceRequired && h.payState === 'none')) barStep = 5;
+  setProgress(barStep);
+  setStatus(barStep === 5 ? 'done' : 'open', barStep === 5 ? 'Order confirmed' : 'Order accepted');
+
   let title, lead;
-  if (h.advanceRequired && h.payState === 'none') {
+  if(h.advanceRequired && h.payState === 'none'){
     title = 'Your Order Has Been Accepted';
     const validNote = d.validTill ? ` This page remains available through the link in your quotation email until ${esc(fmtDate(d.validTill))}.` : '';
     lead = `Thank you for selecting ${esc(h.optionShort)}. To release your order to fulfilment, please complete the advance payment below. If your organization issues purchase orders, you may also provide yours. Each item can be submitted online or sent by email.${validNote}`;
-  } else if (h.payState === 'pending' || h.poState === 'received') {
+  }else if(h.payState === 'pending' || h.poState === 'received'){
     title = 'Your Submissions Are Under Review';
     lead = 'Thank you. Our team will confirm your submissions, normally within one business day, and you will receive an email once your order moves to fulfilment.';
-  } else {
+  }else{
     title = 'Your Order Is Confirmed';
     lead = 'Your order is being prepared for fulfilment. You will receive an email as it progresses.' + (h.poState === 'none' ? ' If your organization issues purchase orders, you may still provide yours below.' : '');
   }
@@ -983,40 +824,30 @@ function renderHub() {
   const openPo = h.poState === 'none';
   const openPay = h.advanceRequired && h.payState === 'none';
   const payPanel = `<div class="hb-panel">
-        <div class="hb-ph">
-          <div class="hb-pt"><h2>Advance Payment</h2><span>Required</span></div>
-          <dl class="hb-amt">
-            <dt>Advance due on confirmation</dt><dd class="due">CAD ${fmt(h.advance)}</dd>
-            <dt>Balance due on delivery</dt><dd>CAD ${fmt(Math.max(0, h.total - h.advance))}</dd>
-          </dl>
-        </div>
-        <div class="hb-pb">${payPanelBody()}</div>
-      </div>`;
+      <div class="hb-ph"><div class="hb-pt"><h2>Advance Payment</h2><span>Required</span></div>
+        <dl class="hb-amt"><dt>Advance due on confirmation</dt><dd class="due">CAD ${fmt(h.advance)}</dd><dt>Balance due on delivery</dt><dd>CAD ${fmt(Math.max(0, h.total - h.advance))}</dd></dl>
+      </div>
+      <div class="hb-pb">${payPanelBody()}</div>
+    </div>`;
 
   const rows = [];
-  if (!openPo) {
+  if(!openPo){
     const v = h.poState === 'verified';
     rows.push(`<tr><td class="hb-tl">Purchase Order</td><td>${esc(h.poNumber || 'Document provided')}</td><td>${h.poDate ? 'Dated ' + esc(fmtDate(h.poDate)) : 'Date not provided'}</td><td class="${v ? 'complete' : 'review'}">${v ? 'Verified' : 'Under review'}</td></tr>`);
   }
-  if (!h.advanceRequired) {
+  if(!h.advanceRequired){
     rows.push(`<tr><td class="hb-tl">Advance Payment</td><td>Not applicable</td><td>No advance is required for this order</td><td class="muted">Not required</td></tr>`);
-  } else if (!openPay) {
+  }else if(!openPay){
     const v = h.payState === 'verified';
     rows.push(`<tr><td class="hb-tl">Advance Payment</td><td>${esc(h.payRef || 'Recorded')}</td><td>CAD ${fmt(h.advance)} advance</td><td class="${v ? 'complete' : 'review'}">${v ? 'Verified' : 'Under review'}</td></tr>`);
   }
   const subsTable = rows.length ? `<section class="hb-sec" aria-labelledby="hb-subs-h">
       <h2 class="hb-h2" id="hb-subs-h" style="margin-bottom:12px">Submissions Received</h2>
-      <div class="hb-tbox">
-        <table class="hb-table">
-          <thead><tr><th scope="col">Item</th><th scope="col">Reference</th><th scope="col">Details</th><th scope="col">Status</th></tr></thead>
-          <tbody>${rows.join('')}</tbody>
-        </table>
-      </div>
+      <div class="hb-tbox"><table class="hb-table"><thead><tr><th scope="col">Item</th><th scope="col">Reference</th><th scope="col">Details</th><th scope="col">Status</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>
       <p class="hb-hint" style="margin:12px 0 0">If any detail above is incorrect, please contact us quoting ${esc(h.quoteNumber)}.</p>
     </section>` : '';
 
-  document.getElementById('root').innerHTML = `
-  ${brandHeader()}
+  $('main').innerHTML = `
   <div class="hb">
     <section class="hb-sec" aria-labelledby="hb-title">
       <h1 class="hb-h1" id="hb-title" tabindex="-1">${title}</h1>
@@ -1041,155 +872,104 @@ function renderHub() {
     </section>
     ${(openPo || openPay) ? `<section class="hb-panels" aria-label="Items awaiting your action">
       ${openPo ? `<div class="hb-panel">
-        <div class="hb-ph">
-          <div class="hb-pt"><h2>Purchase Order</h2><span>Optional</span></div>
-          <p class="hb-note" style="margin-top:8px">If your organization issues purchase orders, please provide yours here so your reference appears on our invoice.</p>
-        </div>
+        <div class="hb-ph"><div class="hb-pt"><h2>Purchase Order</h2><span>Optional</span></div><p class="hb-note" style="margin-top:8px">If your organization issues purchase orders, please provide yours here so your reference appears on our invoice.</p></div>
         <div class="hb-pb">${poPanelBody()}</div>
       </div>` : ''}
       ${openPay ? payPanel : ''}
     </section>` : ''}
     ${subsTable}
-    ${(h.poState === 'none' || (h.advanceRequired && h.payState === 'none')) ? `
-    <section class="hb-sec" aria-label="Submit order details" style="padding-top:8px;padding-bottom:16px">
+    ${(openPo || openPay) ? `
+    <section class="hb-sec" aria-label="Submit order details" style="padding-top:8px;padding-bottom:20px">
       <div style="display:flex;flex-direction:column;gap:10px">
         <p class="hb-err" id="all-err" role="alert"></p>
         <button type="button" class="hb-btn" id="all-submit">Submit Order Details</button>
         <p class="hb-hint" style="margin:0">Submits each section you have completed online. Sections set to Send by Email are not included.</p>
       </div>
     </section>` : ''}
-  </div>
-  ${brandFooter()}`;
-
+  </div>`;
   bindHub();
   window.scrollTo(0, 0);
 }
 
-function bindHub() {
+function bindHub(){
   document.querySelectorAll('.hb-seg button').forEach(btn => {
     btn.addEventListener('click', () => {
       const panel = btn.dataset.seg, mode = btn.dataset.mode;
       document.querySelectorAll(`.hb-seg button[data-seg="${panel}"]`).forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
-      const online = document.getElementById(panel + '-online');
-      const email = document.getElementById(panel + '-email');
-      if (online) online.hidden = mode !== 'online';
-      if (email) email.hidden = mode !== 'email';
-      if (online && mode === 'online') online.style.display = 'flex';
+      const online = $(panel + '-online'), email = $(panel + '-email');
+      if(online) online.hidden = mode !== 'online';
+      if(email) email.hidden = mode !== 'email';
+      if(online && mode === 'online') online.style.display = 'flex';
     });
   });
-
-  const fileInput = document.getElementById('po-file');
-  const drop = document.getElementById('po-drop');
-  if (fileInput && drop) {
+  const fileInput = $('po-file'), drop = $('po-drop');
+  if(fileInput && drop){
     fileInput.addEventListener('change', () => setPoFile(fileInput.files && fileInput.files[0]));
-    ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
-    ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
-    drop.addEventListener('drop', e => { const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (f) setPoFile(f); });
+    ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+    ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+    drop.addEventListener('drop', e => { const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if(f) setPoFile(f); });
   }
-  const allBtn = document.getElementById('all-submit');
-  if (allBtn) allBtn.addEventListener('click', submitAll);
+  const allBtn = $('all-submit');
+  if(allBtn) allBtn.addEventListener('click', submitAll);
 }
 
-function setPoFile(f) {
-  const err = document.getElementById('po-err');
-  const name = document.getElementById('po-fname');
+function setPoFile(f){
+  const err = $('po-err'), name = $('po-fname');
   err.textContent = '';
-  if (!f) { hubFile = null; name.textContent = ''; return; }
-  if (!DOC_TYPES[f.type]) { hubFile = null; name.textContent = ''; err.textContent = 'The document must be a PDF, JPG or PNG file.'; return; }
-  if (f.size > DOC_MAX) { hubFile = null; name.textContent = ''; err.textContent = 'The document exceeds the 10 MB limit. Please reduce its size or send it by email.'; return; }
+  if(!f){ hubFile = null; name.textContent = ''; return; }
+  if(!DOC_TYPES[f.type]){ hubFile = null; name.textContent = ''; err.textContent = 'The document must be a PDF, JPG or PNG file.'; return; }
+  if(f.size > DOC_MAX){ hubFile = null; name.textContent = ''; err.textContent = 'The document exceeds the 10 MB limit. Please reduce its size or send it by email.'; return; }
   hubFile = f;
   const kb = f.size / 1024;
   name.textContent = `Selected: ${f.name} (${kb >= 1024 ? (kb / 1024).toFixed(1) + ' MB' : Math.max(1, Math.round(kb)) + ' KB'})`;
 }
 
-async function submitAll() {
-  const btn = document.getElementById('all-submit');
-  const allErr = document.getElementById('all-err');
-  const poErr = document.getElementById('po-err');
-  const payErr = document.getElementById('pay-err');
-  [allErr, poErr, payErr].forEach(el => { if (el) el.textContent = ''; });
-
-  const poBox = document.getElementById('po-online');
-  const payBox = document.getElementById('pay-online');
-  const poOnline = !!poBox && !poBox.hidden;
-  const payOnline = !!payBox && !payBox.hidden;
-
-  const poNum = poOnline ? document.getElementById('po-num').value.trim() : '';
-  const poDate = poOnline ? document.getElementById('po-date').value : '';
+async function submitAll(){
+  const btn = $('all-submit'), allErr = $('all-err'), poErr = $('po-err'), payErr = $('pay-err');
+  [allErr, poErr, payErr].forEach(el => { if(el) el.textContent = ''; });
+  const poBox = $('po-online'), payBox = $('pay-online');
+  const poOnline = !!poBox && !poBox.hidden, payOnline = !!payBox && !payBox.hidden;
+  const poNum = poOnline ? $('po-num').value.trim() : '';
+  const poDate = poOnline ? $('po-date').value : '';
   const doPo = poOnline && (poNum !== '' || !!hubFile);
-
-  const payRef = payOnline ? document.getElementById('pay-ref').value.trim() : '';
+  const payRef = payOnline ? $('pay-ref').value.trim() : '';
   const doPay = payOnline && payRef !== '';
   let amount = 0, method = '', payDate = '';
-  if (payOnline) {
-    amount = parseFloat(document.getElementById('pay-amt').value);
-    method = document.getElementById('pay-method').value;
-    payDate = document.getElementById('pay-date').value;
+  if(payOnline){ amount = parseFloat($('pay-amt').value); method = $('pay-method').value; payDate = $('pay-date').value; }
+  if(!doPo && !doPay){ allErr.textContent = 'Please complete at least one section online, or choose Send by Email for each item.'; return; }
+  if(doPay){
+    if(isNaN(amount) || amount <= 0){ payErr.textContent = 'Please enter the amount paid.'; return; }
+    if(!payDate){ payErr.textContent = 'Please enter the payment date.'; return; }
   }
-
-  if (!doPo && !doPay) {
-    allErr.textContent = 'Please complete at least one section online, or choose Send by Email for each item.';
-    return;
-  }
-  if (doPay) {
-    if (isNaN(amount) || amount <= 0) { payErr.textContent = 'Please enter the amount paid.'; return; }
-    if (!payDate) { payErr.textContent = 'Please enter the payment date.'; return; }
-  }
-
   btn.disabled = true;
-  btn.textContent = 'Submitting\u2026';
+  btn.textContent = 'Submitting, please wait';
   const notices = [];
   let anySuccess = false;
-
-  if (doPo) {
-    try {
+  if(doPo){
+    try{
       const fd = new FormData();
-      fd.append('quoteId', quoteId);
-      fd.append('token', token);
-      fd.append('poNumber', poNum);
-      fd.append('poDate', poDate);
-      if (hubFile) fd.append('poDocument', hubFile, hubFile.name);
+      fd.append('quoteId', quoteId); fd.append('token', token); fd.append('poNumber', poNum); fd.append('poDate', poDate);
+      if(hubFile) fd.append('poDocument', hubFile, hubFile.name);
       const r = await sendRequest('/api/po/submit', fd, true, 60000);
-      hub.poState = 'received';
-      hub.poNumber = poNum;
-      hub.poDate = poDate;
-      hub.poReceived = todayIso();
-      if (r.attachmentMessage) notices.push(r.attachmentMessage);
+      hub.poState = 'received'; hub.poNumber = poNum; hub.poDate = poDate; hub.poReceived = todayIso();
+      if(r.attachmentMessage) notices.push(r.attachmentMessage);
       anySuccess = true;
-    } catch (e) {
-      notices.push('Your purchase order could not be submitted: ' + e.message);
-    }
+    }catch(e){ notices.push('Your purchase order could not be submitted: ' + e.message); }
   }
-
-  if (doPay) {
-    try {
-      const r = await postJson('/api/payment/submit', {
-        quoteId, token,
-        paymentMethod: method,
-        transactionReference: payRef,
-        amountSubmitted: amount.toFixed(2),
-        paymentDate: payDate,
-      });
-      hub.payState = 'pending';
-      hub.payRef = r.paymentId || '';
+  if(doPay){
+    try{
+      const r = await postJson('/api/payment/submit', { quoteId, token, paymentMethod: method, transactionReference: payRef, amountSubmitted: amount.toFixed(2), paymentDate: payDate });
+      hub.payState = 'pending'; hub.payRef = r.paymentId || '';
       anySuccess = true;
-    } catch (e) {
-      notices.push('Your payment details could not be recorded: ' + e.message);
-    }
+    }catch(e){ notices.push('Your payment details could not be recorded: ' + e.message); }
   }
-
-  if (anySuccess) {
-    hub.notice = notices.join(' ');
-    renderHub();
-  } else {
-    btn.disabled = false;
-    btn.textContent = 'Submit Order Details';
-    allErr.textContent = notices.join(' ');
-  }
+  if(anySuccess){ hub.notice = notices.join(' '); renderHub(); }
+  else{ btn.disabled = false; btn.textContent = 'Submit Order Details'; allErr.textContent = notices.join(' '); }
 }
 
+applyDocControl();
+setProgress(1);
 loadQuote();
 </script>
-</div><!-- end page-shell -->
 </body>
 </html>
