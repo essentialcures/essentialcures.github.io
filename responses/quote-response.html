@@ -313,6 +313,16 @@ footer{margin-bottom:24px;}
 .wait-text{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px;}
 .wait-warn{background:var(--amber-bg);border-left:3px solid var(--amber);padding:10px 12px;font-size:12px;color:#7D5A00;text-align:left;font-weight:600;}
 .wait-step{font-size:12px;color:var(--blue);font-weight:600;margin-top:12px;min-height:16px;}
+
+.accept-card{margin-top:16px;border:1px solid var(--line);border-left:3px solid var(--navy);background:#F7F9FB;padding:16px 18px;}
+.accept-card h3{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:10px;}
+.accept-card ol{margin:0 0 10px 18px;padding:0;font-size:13px;line-height:1.65;color:var(--slate);}
+.accept-card li{margin-bottom:8px;}
+.accept-card .fine{font-size:12px;color:var(--muted);line-height:1.6;}
+.confirm{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:13px;line-height:1.55;color:var(--slate);}
+.confirm input{margin-top:3px;width:16px;height:16px;flex:none;accent-color:var(--blue);}
+.ship-flag{display:inline-block;margin-top:6px;padding:3px 10px;font-size:12px;font-weight:600;background:var(--amber-bg);color:#7D5A00;}
+.ship-flag.one{background:var(--ok-bg);color:var(--green);}
 </style>
 </head>
 <body>
@@ -590,14 +600,15 @@ function savings(o){
 }
 function delivery(ds){
   if(!ds || !ds.leadTimeRange) return '';
-  const note = ds.partialShipment ? 'Products ship from different suppliers, so partial shipments are expected. The full order completes within the maximum lead time.' : 'All products ship together from a single fulfilment.';
+  const note = ds.partialShipment ? 'Your order is fulfilled by more than one supplier or with different lead times, so it will arrive in more than one delivery. Each delivery carries its own delivery note, and the full order completes within the maximum lead time shown.' : 'All products ship together in a single delivery.';
   const rows = (ds.productLines || []).map(pl => `<tr><td>${esc(pl.product)}</td><td>${pl.leadDays && pl.leadDays !== '0' ? esc(pl.leadDays) + ' business days' : 'Pending confirmation'}</td><td>${esc(pl.fulfilmentMode || 'Not specified')}</td></tr>`).join('');
-  return `<div class="blk dlv"><h4>Estimated delivery</h4><p class="big">${esc(ds.leadTimeRange)}</p><p style="color:var(--muted);font-size:12px">${note}</p>${rows ? `<table class="mini"><thead><tr><th>Product</th><th>Lead time</th><th>Fulfilment</th></tr></thead><tbody>${rows}</tbody></table>` : ''}</div>`;
+  const flag = ds.partialShipment ? '<span class="ship-flag">Partial shipments expected</span>' : '<span class="ship-flag one">Single shipment</span>';
+  return `<div class="blk dlv"><h4>Estimated delivery</h4><p class="big">${esc(ds.leadTimeRange)}</p>${flag}<p style="color:var(--muted);font-size:12px;margin-top:6px">${note}</p>${rows ? `<table class="mini"><thead><tr><th>Product</th><th>Lead time</th><th>Fulfilment</th></tr></thead><tbody>${rows}</tbody></table>` : ''}</div>`;
 }
 function instructions(text){
   const t = String(text || '').trim();
   if(!t) return '';
-  return `<div class="blk"><h4>Delivery instructions</h4>${t.split(/\r?\n/).filter(Boolean).map(l => `<p>${esc(l)}</p>`).join('')}</div>`;
+  return `<div class="blk"><h4>Special delivery arrangements</h4>${t.split(/\r?\n/).filter(Boolean).map(l => `<p>${esc(l)}</p>`).join('')}</div>`;
 }
 function payment(ds, total){
   const adv = ds ? num(ds.totalAdvanceAmount) : 0;
@@ -632,6 +643,14 @@ function renderQuote(d){
     <div class="section">
       <h2>Your quotation</h2>
       <p class="lede">${dual ? 'Two options are available. Option A is cost optimized with consolidated sourcing. Option B uses specialist suppliers matched per product category.' : 'Please review your quotation below.'} Quantities are in the selling unit shown, with the pack size beneath each product.</p>
+      <div class="accept-card" role="note" aria-label="How to accept this quotation">
+        <h3>Two ways to accept this quotation</h3>
+        <ol>
+          <li><strong>Online acceptance.</strong> Select your option below and submit your response. Your online acceptance constitutes your organization's formal acceptance of this quotation and its terms, and authorizes Essential Cures Inc. to proceed with your order. It carries the same effect as a purchase order issued against this quotation. Where your organization issues purchase orders, you may also provide yours after accepting, so that your reference appears on our invoice.</li>
+          <li><strong>Purchase order.</strong> Alternatively, print the quotation attached to your email and issue your purchase order referencing quotation ${esc(d.quoteNumber)}, sent to <a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a>.</li>
+        </ol>
+        <p class="fine">Under either method, this quotation and its terms and conditions govern your order. Terms printed on a purchase order apply only where Essential Cures Inc. has agreed to them in writing.</p>
+      </div>
       <div class="addr">
         <div><h4>Bill to</h4><strong>${esc(d.accountName)}</strong><br>${esc(d.billingStreet)}<br>${esc(d.billingCity)}${d.billingState ? ', ' + esc(d.billingState) : ''}<br>${esc(d.billingCountry)} ${esc(d.billingZip)}</div>
         <div><h4>Ship to</h4>${esc(d.shippingStreet)}<br>${esc(d.shippingCity)}${d.shippingState ? ', ' + esc(d.shippingState) : ''}<br>${esc(d.shippingCountry)} ${esc(d.shippingZip)}</div>
@@ -644,6 +663,7 @@ function renderQuote(d){
       <h2>Your response</h2>
       <p class="lede">${dual ? 'Select the option you would like to order.' : 'Accept this quotation to proceed to your order.'} One response is accepted per quotation. To discuss pricing, quantities or any revision first, please contact <a href="mailto:${DOC.contact}">${DOC.contact}</a>, quoting ${esc(d.quoteNumber)}.</p>
       ${choice}
+      <label class="confirm"><input type="checkbox" id="authConfirm" onchange="updateSubmit()"><span>I confirm that I am authorized to accept this quotation on behalf of ${esc(d.accountName || 'my organization')}, and that I accept it together with the terms and conditions stated.</span></label>
       <div class="notice stop" id="decisionError"><div class="body" id="decisionErrorText"></div></div>
     </div>
     <div class="actions">
@@ -655,10 +675,14 @@ function renderQuote(d){
 function choose(v){
   selectedDecision = v;
   document.querySelectorAll('.choice button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v ? 'true' : 'false'));
-  const btn = $('submitBtn');
-  btn.disabled = false;
-  btn.textContent = 'Submit my response';
   setProgress(2);
+  updateSubmit();
+}
+function updateSubmit(){
+  const btn = $('submitBtn');
+  const auth = $('authConfirm') && $('authConfirm').checked;
+  btn.disabled = !(selectedDecision && auth);
+  btn.textContent = !selectedDecision ? 'Select an option to continue' : (!auth ? 'Confirm your authority to continue' : 'Submit my acceptance');
 }
 
 /* ---------------------------------------------------------------------------
@@ -693,14 +717,13 @@ async function submitResponse(){
   $('decisionError').style.display = 'none';
   openWait('Submitting your response', 'We are recording your decision on this quotation. This usually takes a few seconds.', ['Recording your decision.', 'Preparing your order.', 'Opening your order page.']);
   try{
-    await postJson('/api/quote/decision', { quoteId, token, decision: selectedDecision });
+    await postJson('/api/quote/decision', { quoteId, token, decision: selectedDecision, authorityConfirmed: true, acceptedAt: new Date().toISOString() });
     closeWait();
     quoteData.decisionRecorded = true;
     initHub(quoteData, selectedDecision);
   }catch(e){
     closeWait();
-    btn.disabled = false;
-    btn.textContent = 'Submit my response';
+    updateSubmit();
     $('decisionErrorText').textContent = e.message;
     $('decisionError').style.display = 'grid';
   }
