@@ -374,15 +374,19 @@ footer{margin-bottom:24px;}
       <p>How Essential Cures orders, confirms, dispatches and pays, set out step by step.</p>
       <a class="guide-btn" id="guideLink" href="#" target="_blank" rel="noopener">Open the guide</a>
     </section>
+    <section class="panel">
+      <h3>Your organization</h3>
+      <dl class="facts" id="custFacts"></dl>
+    </section>
+    <section class="panel">
+      <h3 id="ecTitle">Your Essential Cures contact</h3>
+      <dl class="facts" id="ecFacts"></dl>
+    </section>
     <section class="panel summary">
       <h3>Order summary</h3>
       <dl class="facts" id="facts"></dl>
     </section>
-    <section class="panel">
-      <h3>Questions about this order</h3>
-      <p>Contact Essential Cures Inc. and quote the reference shown above.</p>
-      <a class="contact" id="contactLink" href="#"></a>
-    </section>
+    <a id="contactLink" href="#" hidden></a>
   </aside>
 </div>
 
@@ -530,6 +534,28 @@ function packNote(li){
 }
 
 /* ---------------------------------------------------------------------------
+   Contact cards
+--------------------------------------------------------------------------- */
+/* Customer and EC contact cards. The EC contact is the Deal owner while the deal is
+   with sales; once the quotation is accepted, contact moves to Customer Care. */
+const SALES = 'sales@essentialcures.com';
+function mailLink(e){ return e ? `<a href="mailto:${esc(e)}">${esc(e)}</a>` : ''; }
+function setContactCards(d, accepted){
+  $('custFacts').innerHTML = [['Organization', esc(d.accountName)], ['Contact', esc(d.contactName)], ['Email', mailLink(d.contactEmail)]]
+    .filter(r => r[1]).map(r => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
+  let rows;
+  if(accepted){
+    $('ecTitle').textContent = 'Your order contact';
+    rows = [['Team', 'Customer Care'], ['Email', mailLink(CARE)]];
+  }else{
+    $('ecTitle').textContent = 'Your Essential Cures contact';
+    rows = [['Name', esc(d.ownerName || 'Sales team')], ['Email', mailLink(d.ownerEmail || SALES)]];
+    if(d.ownerEmail && d.ownerEmail.toLowerCase() !== SALES) rows.push(['Sales team', mailLink(SALES)]);
+  }
+  $('ecFacts').innerHTML = rows.filter(r => r[1]).map(r => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
+}
+
+/* ---------------------------------------------------------------------------
    Load
 --------------------------------------------------------------------------- */
 const params = new URLSearchParams(location.search);
@@ -555,8 +581,8 @@ async function loadQuote(){
       ['Your reference', esc(d.enquiryRef)],
       ['Quote date', fmtDate(d.quoteDate)],
       ['Valid through', fmtDate(d.validTill)],
-      ['Contact', esc(d.contactName)],
     ]);
+    setContactCards(d, !!d.decisionRecorded);
     if(d.decisionRecorded){
       if(d.customerDecision === 'Declined'){ showDeclined(); return; }
       initHub(d, d.customerDecision);
@@ -647,7 +673,7 @@ function renderQuote(d){
         <h3>Two ways to accept this quotation</h3>
         <ol>
           <li><strong>Online acceptance.</strong> Select your option below and submit your response. Your online acceptance constitutes your organization's formal acceptance of this quotation and its terms, and authorizes Essential Cures Inc. to proceed with your order. It carries the same effect as a purchase order issued against this quotation. Where your organization issues purchase orders, you may also provide yours after accepting, so that your reference appears on our invoice.</li>
-          <li><strong>Purchase order.</strong> Alternatively, print the quotation attached to your email and issue your purchase order referencing quotation ${esc(d.quoteNumber)}, sent to <a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a>.</li>
+          <li><strong>Purchase order.</strong> Alternatively, print the quotation attached to your email and issue your purchase order referencing quotation ${esc(d.quoteNumber)}, sent to your Essential Cures contact${d.ownerEmail ? `, ${esc(d.ownerName || '')} at <a href="mailto:${esc(d.ownerEmail)}">${esc(d.ownerEmail)}</a>, or` : ' at'} <a href="mailto:${SALES}">${SALES}</a>.</li>
         </ol>
         <p class="fine">Under either method, this quotation and its terms and conditions govern your order. Terms printed on a purchase order apply only where Essential Cures Inc. has agreed to them in writing.</p>
       </div>
@@ -661,7 +687,7 @@ function renderQuote(d){
     </div>
     <div class="section">
       <h2>Your response</h2>
-      <p class="lede">${dual ? 'Select the option you would like to order.' : 'Accept this quotation to proceed to your order.'} One response is accepted per quotation. To discuss pricing, quantities or any revision first, please contact <a href="mailto:${DOC.contact}">${DOC.contact}</a>, quoting ${esc(d.quoteNumber)}.</p>
+      <p class="lede">${dual ? 'Select the option you would like to order.' : 'Accept this quotation to proceed to your order.'} One response is accepted per quotation. To discuss pricing, quantities or any revision first, please contact ${d.ownerName ? esc(d.ownerName) + ' at ' : ''}<a href="mailto:${esc(d.ownerEmail || SALES)}">${esc(d.ownerEmail || SALES)}</a>, quoting ${esc(d.quoteNumber)}.</p>
       ${choice}
       <label class="confirm"><input type="checkbox" id="authConfirm" onchange="updateSubmit()"><span>I confirm that I am authorized to accept this quotation on behalf of ${esc(d.accountName || 'my organization')}, and that I accept it together with the terms and conditions stated.</span></label>
       <div class="notice stop" id="decisionError"><div class="body" id="decisionErrorText"></div></div>
@@ -754,6 +780,7 @@ function getOptionFigures(decision){
 }
 
 function initHub(data, decision){
+  setContactCards(data, true);
   const fig = getOptionFigures(decision);
   const isDual = !!data.siblingQuote;
   const isB = decision === 'Option B - Specialist';
