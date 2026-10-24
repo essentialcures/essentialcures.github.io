@@ -29,7 +29,9 @@ a{color:var(--blue);}
 .shell{padding:0 28px;}
 
 /* Header: logo | identity | controlled document block */
-.site-head{background:var(--white);position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,48,96,.08);}
+.site-head{background:var(--white);box-shadow:0 2px 10px rgba(0,48,96,.08);}
+/* Header and controlled-document strip stay fixed together while the page scrolls */
+.top-fixed{position:sticky;top:0;z-index:50;background:var(--surface);padding-bottom:4px;}
 .head-grid{display:grid;grid-template-columns:auto 1fr auto;align-items:stretch;min-height:96px;}
 .head-logo{display:flex;align-items:center;padding-right:24px;border-right:1px solid var(--line);}
 .head-logo img{height:64px;width:auto;display:block;}
@@ -115,7 +117,7 @@ a{color:var(--blue);}
 .btn.ghost{background:var(--white);color:var(--slate);border-color:#C9D2DA;}
 
 /* Rail */
-.rail{display:flex;flex-direction:column;gap:20px;position:sticky;top:120px;}
+.rail{display:flex;flex-direction:column;gap:20px;position:sticky;top:190px;}
 .panel{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;}
 .panel h3{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px;}
 .facts{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13px;}
@@ -176,7 +178,7 @@ footer{margin-bottom:24px;}
   .section,.actions{padding-left:18px;padding-right:18px;}
   .actions{flex-direction:column;align-items:stretch;}
   .page{padding:0;}
-  .ctrl-strip{grid-template-columns:1fr;margin:12px 12px 0;}
+  .ctrl-strip{grid-template-columns:1fr;margin:8px 12px 0;padding:8px 14px;font-size:11.5px;gap:2px;}
   .ctrl-strip .stmt{text-align:left;}
   .title-band{margin:12px 12px 0;}
   .workspace{padding-left:12px;padding-right:12px;}
@@ -328,6 +330,7 @@ footer{margin-bottom:24px;}
 <body>
 <div class="page">
 
+<div class="top-fixed">
 <header class="site-head">
   <div class="shell head-grid">
     <div class="head-logo"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></div>
@@ -348,6 +351,7 @@ footer{margin-bottom:24px;}
 <div class="ctrl-strip" role="note" aria-label="Document control">
   <div class="id" id="ctrlId"></div>
   <div class="stmt">This online version is the current approved issue. Printed or downloaded copies are uncontrolled.</div>
+</div>
 </div>
 
 <section class="title-band">
