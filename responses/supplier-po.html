@@ -291,6 +291,14 @@ function money(n){
   return v.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 function today(){ return new Date().toISOString().split('T')[0]; }
+// Pack wording used on every supplier document
+function qtyInt(n){ return Math.round(Number(n) || 0).toLocaleString('en-CA'); }
+function unitOf(l){ return l.uom || 'Each'; }
+function packNote(l, qty){
+  const upp = Number(l.unitsPerPack) || 1;
+  if(upp <= 1) return '';
+  return `${esc(unitOf(l))} of ${upp.toLocaleString('en-CA')}, ${(Math.round(Number(qty) || 0) * upp).toLocaleString('en-CA')} units in total`;
+}
 function shiftDays(n){
   const d = new Date();
   d.setDate(d.getDate() + n);
@@ -521,9 +529,9 @@ function buildPriceTable(){
   const rows = lines.map((l, i) => `
     <tr>
       <td>${i + 1}</td>
-      <td>${esc(l.productName)}${l.productCode ? `<span class="code">${esc(l.productCode)}</span>` : ''}</td>
+      <td>${esc(l.productName)}${packNote(l, l.quantityOrdered) ? `<span class="code">${packNote(l, l.quantityOrdered)}</span>` : ''}</td>
       <td>${l.brand ? `<span class="brand-pill">${esc(l.brand)}</span>` : ''}</td>
-      <td class="num">${esc(l.quantityOrdered)}${l.uom ? ' ' + esc(l.uom) : ''}</td>
+      <td class="num">${qtyInt(l.quantityOrdered)} ${esc(unitOf(l))}</td>
       <td class="num">${hasPrices ? money(l.unitPrice) : ''}</td>
       <td class="num">${hasPrices ? money(l.lineTotal) : ''}</td>
     </tr>`).join('');
@@ -536,7 +544,7 @@ function buildPriceTable(){
       <table class="price-table">
         <thead><tr>
           <th>#</th><th>Product</th><th>Brand</th>
-          <th class="num">Qty</th><th class="num">Unit Price (CAD)</th><th class="num">Line Total (CAD)</th>
+          <th class="num">Qty</th><th class="num">Price per Unit (CAD)</th><th class="num">Line Total (CAD)</th>
         </tr></thead>
         <tbody>${rows}</tbody>
         ${hasPrices ? `<tfoot><tr><td colspan="5" class="num">Goods Subtotal</td><td class="num">${money(subTotal)}</td></tr></tfoot>` : ''}
@@ -720,14 +728,14 @@ function buildStep2(){
       return `
         <div class="line-item done" data-idx="${idx}">
           <div class="line-title">${esc(line.productName)}</div>
-          <div class="line-meta">Ordered ${esc(line.quantityOrdered)} &middot; Shipped ${esc(line.quantityShipped)} &middot; <span class="shipped-badge">Fully Shipped</span>${brand}</div>
+          <div class="line-meta">Ordered ${qtyInt(line.quantityOrdered)} ${esc(unitOf(line))} &middot; Shipped ${qtyInt(line.quantityShipped)} ${esc(unitOf(line))} &middot; <span class="shipped-badge">Fully Shipped</span>${brand}</div>
         </div>`;
     }
     const disabled = poData.acknowledged ? '' : 'disabled';
     return `
       <div class="line-item" data-idx="${idx}" data-lineid="${esc(line.id)}">
         <div class="line-title">${esc(line.productName)}</div>
-        <div class="line-meta">Ordered ${esc(line.quantityOrdered)} &middot; Previously shipped ${esc(line.quantityShipped)} &middot; Outstanding ${esc(line.quantityOutstanding)}${brand}</div>
+        <div class="line-meta">Ordered ${qtyInt(line.quantityOrdered)} ${esc(unitOf(line))} &middot; Previously shipped ${qtyInt(line.quantityShipped)} &middot; Outstanding ${qtyInt(line.quantityOutstanding)} ${esc(unitOf(line))}${brand}${packNote(line, line.quantityOrdered) ? `<br>${packNote(line, line.quantityOrdered)}` : ''}</div>
         <div class="ship-toggle">
           <input type="checkbox" id="cb_${idx}" ${disabled} onchange="toggleLine(${idx})">
           <label for="cb_${idx}">Include this line in the shipment</label>
@@ -735,8 +743,8 @@ function buildStep2(){
         <div id="lineBody_${idx}" style="display:none;">
           <div class="day-fields">
             <div class="day-field">
-              <label for="qty_${idx}">Quantity Shipping Now</label>
-              <span class="hint">Up to ${esc(line.quantityOutstanding)} outstanding</span>
+              <label for="qty_${idx}">Quantity Shipping Now (${esc(unitOf(line))})</label>
+              <span class="hint">Up to ${qtyInt(line.quantityOutstanding)} ${esc(unitOf(line))} outstanding</span>
               <input type="number" min="1" step="1" max="${esc(line.quantityOutstanding)}" id="qty_${idx}" value="${esc(line.quantityOutstanding)}" onchange="onQtyChange(${idx})">
             </div>
           </div>
@@ -752,7 +760,7 @@ function buildStep2(){
 
   return `
     <div class="section-label">Lines to Dispatch</div>
-    <div class="guide-note">Select each line you are dispatching today, enter the quantity, and record the lot or batch number with its expiry date. Lot quantities must add up to the quantity shipped. Partial shipments are supported, return to this page for each dispatch.</div>
+    <div class="guide-note">Select each line you are dispatching today, enter the quantity in the selling unit shown (for example, boxes), and record the lot or batch number with its expiry date. Lot quantities must add up to the quantity shipped. Partial shipments are supported, return to this page for each dispatch.</div>
     ${lines}
     <div class="validation-msg" id="validationMsg2"></div>
     <div class="step-nav">
@@ -875,7 +883,7 @@ function addLotRow(idx, seedQty){
       <input type="date" id="lotExp_${idx}_${n}" min="${bounds().expiryMin || ''}" onchange="updateSubmitState()">
     </div>
     <div class="lot-col narrow">
-      <label for="lotQty_${idx}_${n}">Quantity</label>
+      <label for="lotQty_${idx}_${n}">Quantity (${esc(unitOf(poData.lineItems[idx]))})</label>
       <input type="number" min="1" step="1" class="lot-qty" id="lotQty_${idx}_${n}" value="${esc(qtyVal)}" oninput="updateLotTotal(${idx});updateSubmitState();">
     </div>
     <button type="button" class="lot-remove" onclick="removeLotRow(${idx}, this)" aria-label="Remove lot">&times;</button>`;
