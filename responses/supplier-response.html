@@ -456,7 +456,7 @@ let gate = null;
 function setSummary(d){
   $('pageRef').textContent = [d.dealReference, d.supplierName].filter(Boolean).join(' | ');
   const city = (d.lines && d.lines[0] && d.lines[0].deliveryCity) || '';
-  $('custFacts').innerHTML = rowsHtml([['Supplier', esc(d.supplierName)]]);
+  $('custFacts').innerHTML = rowsHtml([['Supplier', esc(d.supplierName)], ['Contact', esc(d.supplierContactName)], ['Email', mailLink(d.supplierContactEmail)]]);
   $('ecFacts').innerHTML = rowsHtml([['Team', 'Procurement'], ['Email', mailLink('procurement@essentialcures.com')]]);
   setFacts([
     ['Reference', esc(d.dealReference)],
