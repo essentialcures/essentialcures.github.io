@@ -3,464 +3,573 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Respond to Your Proposal | Essential Cures</title>
+<title>Pre-Order Confirmation | Essential Cures</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  Response Page Master Template (document number to be assigned in the ISO re-sync)
+  Every customer and supplier response page is built on this shell.
+  Page-specific values live in DOC below. Nothing else in the shell changes per page.
+-->
 <style>
 :root{
-  --deep-blue:#005090;--med-blue:#0070B0;--dark-navy:#003060;
-  --leaf-green:#4A8B2C;--forest:#276414;--lime:#8FC23C;--slate:#2C3E50;
-  --cool-gray:#6B7C8C;--light-bg:#F7F9FB;--white:#FFFFFF;--red:#C0392B;
-  --rule:#E8ECF0;--rule-strong:#D4DAE0;
+  --blue:#005090;--navy:#003060;--green:#4A8B2C;--lime:#8FC23C;--sky:#0070B0;
+  --ink:#1F2D3A;--slate:#2C3E50;--muted:#5F6F7E;--faint:#8A97A3;
+  --line:#DDE3E9;--line-soft:#ECF0F3;--surface:#F4F6F8;--white:#FFFFFF;
+  --amber:#B7860B;--amber-bg:#FFF8E6;--red:#B03A2E;--red-bg:#FCEFED;--ok-bg:#EEF6EA;
+  --shell:1100px;--rail:340px;--r:4px;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;background:var(--light-bg);min-height:100vh;display:flex;flex-direction:column;}
-.boxed-760{width:760px;max-width:100%;box-sizing:border-box;margin-left:auto;margin-right:auto;}
-.doc-header{position:sticky;top:0;z-index:200;background:var(--white);box-shadow:0 2px 8px rgba(0,0,0,0.08);}
-.doc-header-table{width:100%;border-collapse:collapse;table-layout:fixed;}
-.doc-header-table td{vertical-align:middle;border:none;font-family:Calibri,Arial,sans-serif;}
-.doc-header-left{width:150px;text-align:center;padding:14px 14px;}
-.doc-header-left img{max-width:100%;height:auto;max-height:85px;display:block;margin:0 auto;}
-.doc-header-sep{width:1px;background:#D4DAE0;padding:0;}
-.doc-header-middle{text-align:left;padding:10px 16px;}
-.doc-header-middle .org-name{font-size:16px;font-weight:700;color:var(--deep-blue);letter-spacing:1px;margin-bottom:2px;}
-.doc-header-middle .tagline{font-size:12px;color:var(--leaf-green);font-style:italic;font-weight:600;margin-bottom:4px;}
-.doc-header-middle .doc-title{font-size:14px;font-weight:700;color:var(--dark-navy);}
-.doc-header-stripe1{height:4px;background:var(--deep-blue);}
-.doc-header-stripe2{height:4px;background:var(--lime);}
-.main{margin:0 auto;width:100%;padding:48px 40px 0 40px;}
-.form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid var(--rule);padding:40px;}
-.status-msg{text-align:center;padding:40px 20px;font-size:14px;color:var(--cool-gray);}
-.status-msg.error{color:var(--red);}
-h2{font-size:15px;color:var(--dark-navy);margin:0 0 8px;}
-p.deal-name{font-size:13px;color:var(--cool-gray);margin:0 0 20px;}
-.prop-meta{display:grid;grid-template-columns:max-content 1fr;column-gap:14px;row-gap:4px;background:var(--light-bg);border:1px solid var(--rule);border-radius:8px;padding:12px 16px;margin:0 0 24px;font-size:13px;color:var(--slate);line-height:1.6;}
-.prop-meta-label,.prop-meta-value{font-size:13px;color:var(--slate);}
-.prop-meta-value{overflow-wrap:anywhere;min-width:0;}
-.section-label{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:4px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
-.section-label.spaced{margin-top:24px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{font-family:"Inter",system-ui,sans-serif;font-size:15px;line-height:1.6;color:var(--slate);background:var(--surface);min-height:100vh;display:flex;flex-direction:column;font-feature-settings:"tnum" 1,"cv11" 1;}
+a{color:var(--blue);}
+:focus-visible{outline:2px solid var(--sky);outline-offset:2px;}
+.page{max-width:var(--shell);margin:0 auto;padding:0 24px;width:100%;}
+.shell{padding:0 28px;}
 
-/* Option choice cards */
-.options{display:flex;gap:10px;margin-bottom:12px;}
-.option-choice{flex:1;border:2px solid var(--rule-strong);border-radius:8px;padding:14px 12px;cursor:pointer;text-align:center;transition:border-color 0.15s,background 0.15s;background:var(--white);}
-.option-choice:hover{border-color:var(--deep-blue);}
-.option-choice.a.selected{border-color:var(--deep-blue);background:#EBF3FA;}
-.option-choice.b.selected{border-color:var(--leaf-green);background:#EBF5E8;}
-.option-choice .label{font-size:11px;font-weight:700;color:var(--cool-gray);letter-spacing:0.6px;text-transform:uppercase;}
-.option-choice .tier{font-size:11px;color:var(--cool-gray);margin-top:1px;}
-.option-choice .amount{font-size:19px;font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums;}
-.option-choice.a .amount{color:var(--deep-blue);}
-.option-choice.b .amount{color:var(--forest);}
-.option-choice .ccy{font-size:11px;font-weight:600;color:var(--cool-gray);margin-right:4px;}
+/* Header: logo | identity | controlled document block */
+.site-head{background:var(--white);position:sticky;top:0;z-index:50;box-shadow:0 2px 10px rgba(0,48,96,.08);}
+.head-grid{display:grid;grid-template-columns:auto 1fr auto;align-items:stretch;min-height:96px;}
+.head-logo{display:flex;align-items:center;padding-right:24px;border-right:1px solid var(--line);}
+.head-logo img{height:64px;width:auto;display:block;}
+.head-id{display:flex;flex-direction:column;justify-content:center;padding:12px 24px;}
+.head-id .org{font-size:16px;font-weight:700;letter-spacing:.06em;color:var(--blue);}
+.head-id .tag{font-size:12px;font-style:italic;font-weight:600;color:var(--green);margin-top:1px;}
+.head-id .title{font-size:14px;font-weight:600;color:var(--navy);margin-top:5px;}
+.head-ctrl{display:grid;grid-template-columns:auto auto;align-content:center;column-gap:16px;row-gap:2px;padding-left:24px;border-left:1px solid var(--line);font-size:11.5px;}
+.head-ctrl dt{color:var(--faint);}
+.head-ctrl dd{color:var(--ink);font-weight:600;text-align:right;}
+.stripes{height:8px;background:linear-gradient(var(--blue) 0 4px,var(--lime) 4px 8px);}
 
-/* Comparison of what each option contains */
-.compare-wrap{border:1px solid var(--rule-strong);border-radius:8px;overflow:hidden;margin-bottom:20px;}
-.compare{width:100%;border-collapse:collapse;font-size:12px;}
-.compare th{padding:9px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;text-align:left;color:var(--white);}
-.compare th.prod{background:var(--dark-navy);}
-.compare th.col-a{background:var(--deep-blue);}
-.compare th.col-b{background:var(--forest);}
-.compare td{padding:10px 10px;border-bottom:1px solid var(--rule);vertical-align:top;transition:background 0.15s;}
-.compare tr:last-child td{border-bottom:none;}
-.compare .p-name{font-weight:700;color:var(--dark-navy);font-size:12px;}
-.compare .p-qty{font-size:11px;color:var(--cool-gray);font-variant-numeric:tabular-nums;}
-.compare .brand{font-weight:700;font-size:12px;}
-.compare .col-a .brand{color:var(--deep-blue);}
-.compare .col-b .brand{color:var(--forest);}
-.compare .brand.none{color:var(--cool-gray);font-weight:400;font-style:italic;}
-.compare .line-amt{font-size:11px;color:var(--cool-gray);font-variant-numeric:tabular-nums;margin-top:1px;}
-.compare td.col-a.lit{background:#EBF3FA;}
-.compare td.col-b.lit{background:#EBF5E8;}
-.compare-note{font-size:11px;color:var(--cool-gray);padding:9px 10px;background:var(--light-bg);border-top:1px solid var(--rule);font-style:italic;}
+/* Title band */
+.title-band{background:var(--white);border:1px solid var(--line);border-radius:var(--r);margin-top:16px;}
+.title-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:28px 0 22px;}
+.title-row h1{font-size:26px;font-weight:600;letter-spacing:-.01em;color:var(--ink);line-height:1.2;}
+.title-row .ref{font-size:14px;color:var(--muted);margin-top:6px;}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;padding:6px 12px;border-radius:var(--r);white-space:nowrap;}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;}
+.status.open{color:var(--blue);background:#E8F1F9;}
+.status.done{color:var(--green);background:var(--ok-bg);}
+.status.hold{color:var(--amber);background:var(--amber-bg);}
+.status.closed{color:var(--muted);background:var(--line-soft);}
 
-/* Single option */
-.single-total{background:#EBF3FA;border-left:5px solid var(--deep-blue);border-radius:6px;padding:16px 20px;margin-bottom:16px;}
-.single-total .label{font-size:11px;font-weight:700;color:var(--cool-gray);letter-spacing:0.6px;text-transform:uppercase;margin-bottom:2px;}
-.single-total .amount{font-size:24px;font-weight:700;color:var(--deep-blue);font-variant-numeric:tabular-nums;}
-.single-total .ccy{font-size:13px;font-weight:600;color:var(--cool-gray);margin-right:6px;}
+/* Progress */
+.progress{display:grid;grid-template-columns:repeat(var(--steps),1fr);}
+.progress li{list-style:none;position:relative;padding:14px 16px 16px 0;font-size:13px;color:var(--faint);}
+.progress li::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--line);}
+.progress li .n{font-weight:600;margin-right:6px;}
+.progress li.done{color:var(--green);}
+.progress li.done::before{background:var(--green);}
+.progress li.now{color:var(--ink);font-weight:600;}
+.progress li.now::before{background:var(--blue);}
 
-.extra-choices{display:flex;gap:10px;margin-bottom:20px;}
-.extra-choices button{flex:1;background:var(--light-bg);border:1px solid var(--rule-strong);border-radius:6px;padding:10px;font-size:13px;color:var(--slate);cursor:pointer;font-family:"Inter",sans-serif;}
-.extra-choices button:hover{border-color:var(--deep-blue);}
-.extra-choices button.selected{border-color:var(--deep-blue);background:#EBF3FA;font-weight:700;}
-label.remarks-label{display:block;font-size:12px;color:var(--cool-gray);margin-bottom:6px;}
-textarea{width:100%;box-sizing:border-box;border:1.5px solid var(--rule-strong);border-radius:6px;padding:11px 14px;font-family:"Inter",sans-serif;font-size:14px;resize:vertical;min-height:70px;margin-bottom:20px;}
-textarea:focus{outline:none;border-color:var(--deep-blue);}
-.submit-btn{width:100%;background:var(--leaf-green);color:var(--white);border:none;border-radius:6px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;font-family:"Inter",sans-serif;}
-.submit-btn:disabled{background:#A9C79A;cursor:not-allowed;}
-.already-note{background:#FFF8E1;border-left:4px solid #D4A017;padding:12px 14px;font-size:13px;margin-bottom:16px;border-radius:0 6px 6px 0;}
-.recorded{background:#E8F5E9;border-left:4px solid var(--leaf-green);padding:14px 16px;margin-bottom:20px;border-radius:0 6px 6px 0;}
-.recorded-title{font-size:13px;font-weight:700;color:var(--forest);margin-bottom:4px;}
-.recorded-text{font-size:13px;color:var(--slate);line-height:1.6;}
-.recorded-text a{color:var(--deep-blue);font-weight:600;text-decoration:none;}
-.option-choice.locked{cursor:default;}
-.option-choice.locked:hover{border-color:var(--rule-strong);}
-.option-choice.a.locked.selected:hover{border-color:var(--deep-blue);}
-.option-choice.b.locked.selected:hover{border-color:var(--leaf-green);}
-.option-choice.locked:not(.selected){opacity:0.55;}
-.it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;}
-.it-tab{background:var(--dark-navy);color:#fff;padding:10px 7px;border-radius:0 6px 6px 0;cursor:pointer;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-size:11px;font-weight:600;border:none;font-family:"Inter",sans-serif;}
-.it-panel{display:none;background:#fff;border:1px solid var(--rule);border-left:none;border-radius:0 8px 8px 0;padding:16px;width:230px;box-shadow:4px 0 16px rgba(0,0,0,0.1);position:absolute;left:100%;top:50%;transform:translateY(-50%);}
+/* Workspace */
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:24px;padding-top:24px;padding-bottom:40px;align-items:start;}
+.main{background:var(--white);border:1px solid var(--line);border-radius:var(--r);}
+.section{padding:28px 32px;border-top:1px solid var(--line-soft);}
+.section:first-child{border-top:0;}
+.section h2{font-size:17px;font-weight:600;color:var(--ink);}
+.section .lede{font-size:14px;color:var(--muted);margin-top:4px;max-width:68ch;}
+
+/* Notices */
+.notice{display:grid;grid-template-columns:4px 1fr;border-radius:var(--r);overflow:hidden;margin-top:18px;}
+.notice::before{content:"";}
+.notice .body{padding:14px 18px;font-size:14px;}
+.notice .body strong{display:block;color:var(--ink);margin-bottom:2px;}
+.notice.info{background:#EEF4FA;}.notice.info::before{background:var(--blue);}
+.notice.ok{background:var(--ok-bg);}.notice.ok::before{background:var(--green);}
+.notice.warn{background:var(--amber-bg);}.notice.warn::before{background:var(--amber);}
+.notice.stop{background:var(--red-bg);}.notice.stop::before{background:var(--red);}
+
+/* Line items */
+.lines{margin-top:20px;border:1px solid var(--line);border-radius:var(--r);}
+.line{padding:20px 22px;border-top:1px solid var(--line);}
+.line:first-child{border-top:0;}
+.line-head{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:baseline;}
+.line-head .prod{font-size:16px;font-weight:600;color:var(--ink);}
+.line-head .qty{font-size:14px;color:var(--muted);text-align:right;}
+.line-head .qty b{color:var(--ink);font-weight:600;}
+.line-meta{display:flex;flex-wrap:wrap;gap:6px 24px;font-size:13px;color:var(--muted);margin-top:4px;}
+.line-meta span b{color:var(--slate);font-weight:600;}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;}
+.seg button{font:inherit;font-size:14px;font-weight:500;padding:11px 8px;background:var(--white);color:var(--slate);border:0;border-left:1px solid var(--line);cursor:pointer;}
+.seg button:first-child{border-left:0;}
+.seg button[aria-pressed="true"]{background:var(--navy);color:var(--white);}
+.seg button:disabled{cursor:default;}
+.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px;}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--ink);}
+.field .hint{display:block;font-size:12px;color:var(--faint);margin:1px 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.field input,.field textarea,.field select{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--white);border:1px solid #C9D2DA;border-radius:var(--r);padding:10px 12px;}
+.field input:focus,.field textarea:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(0,80,144,.12);}
+.field input[readonly]{background:var(--surface);color:var(--muted);}
+.total{margin-top:12px;font-size:13px;color:var(--muted);}
+.total b{color:var(--ink);}
+
+/* Actions */
+.actions{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 32px;border-top:1px solid var(--line);background:#FAFBFC;border-radius:0 0 var(--r) var(--r);}
+.actions .note{font-size:13px;color:var(--muted);}
+.btn{font:inherit;font-size:15px;font-weight:600;padding:12px 24px;border-radius:var(--r);border:1px solid transparent;cursor:pointer;}
+.btn.primary{background:var(--green);color:var(--white);}
+.btn.primary:disabled{background:#B9CCB0;cursor:not-allowed;}
+.btn.ghost{background:var(--white);color:var(--slate);border-color:#C9D2DA;}
+
+/* Rail */
+.rail{display:flex;flex-direction:column;gap:20px;position:sticky;top:120px;}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;}
+.panel h3{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px;}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:13px;}
+.facts dt{color:var(--faint);}
+.facts dd{color:var(--ink);font-weight:500;text-align:right;overflow-wrap:anywhere;}
+.panel p{font-size:13px;color:var(--muted);}
+.panel .contact{display:block;margin-top:10px;font-size:14px;font-weight:600;text-decoration:none;}
+.guide-card{border-left:3px solid var(--blue);}
+.guide-btn{display:block;margin-top:14px;padding:10px 14px;text-align:center;font-size:14px;font-weight:600;text-decoration:none;color:var(--blue);border:1px solid var(--blue);border-radius:var(--r);}
+.guide-btn:hover{background:var(--blue);color:var(--white);}
+
+/* Footer */
+body>.page>footer{margin-top:auto;}
+.page{display:flex;flex-direction:column;flex:1;}
+footer{margin-bottom:24px;}
+.tagbar{display:grid;grid-template-columns:1fr 1fr;}
+.tagbar div{padding:10px 0;text-align:center;font-size:12px;font-style:italic;font-weight:700;color:var(--white);}
+.tagbar div:first-child{background:var(--green);}
+.tagbar div:last-child{background:var(--sky);}
+.site-foot{background:var(--white);padding-top:14px;}
+.foot-row{padding-top:14px;padding-bottom:22px;}
+.foot-line{height:3px;background:linear-gradient(90deg,var(--blue) 60%,var(--faint));}
+.foot-row .urls{font-size:13px;color:var(--muted);}
+.foot-row .copy{font-size:11px;font-style:italic;color:#9EA8B1;margin-top:2px;}
+/* Document control strip, between header and page */
+.ctrl-strip{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 28px;margin-top:16px;padding:10px 20px;background:#F9FBFC;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:var(--r);font-size:12.5px;color:var(--muted);}
+.ctrl-strip .id{font-weight:600;color:var(--ink);white-space:nowrap;}
+.ctrl-strip .id span{color:var(--faint);font-weight:500;margin:0 8px;}
+.ctrl-strip .stmt{text-align:right;}
+
+/* Technical support tab and panel. A ticketing form will replace the email link later. */
+.it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:60;}
+.it-tab{writing-mode:vertical-rl;transform:rotate(180deg);background:var(--navy);color:var(--white);font:600 12px "Inter",sans-serif;padding:14px 8px;border:0;border-radius:4px 0 0 4px;cursor:pointer;}
+.it-panel{display:none;position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);width:280px;background:var(--white);border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 28px rgba(0,48,96,.14);padding:20px 22px;}
 .it-panel.open{display:block;}
-.it-panel h4{font-size:13px;font-weight:700;color:var(--dark-navy);margin-bottom:8px;}
-.it-panel p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-bottom:10px;}
-.it-panel a{color:var(--deep-blue);font-weight:600;font-size:12px;}
-.it-close{float:right;background:none;border:none;cursor:pointer;color:var(--cool-gray);font-size:16px;}
-footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:24px;}
-.footer-line{height:3px;background:linear-gradient(90deg,var(--deep-blue) 60%,var(--cool-gray) 100%);margin-bottom:12px;}
-.footer-urls{font-size:13px;color:var(--cool-gray);margin-bottom:2px;}
-.footer-copy{font-size:12px;color:#B0B8C0;font-style:italic;}
-@media(max-width:820px){
-  .boxed-760{width:100%;}
-  .main{padding:20px 12px;}
-  .form-card{padding:24px 16px;border-radius:8px;}
-  .doc-header-left{display:none;}
-  .doc-header-sep{display:none;}
-  .doc-header-middle{width:100%;text-align:center;}
-  footer{padding:20px 12px;margin-top:24px;margin-bottom:24px;}
-  .options{flex-direction:column;}
-  .compare{font-size:11px;}
-  .compare td,.compare th{padding:8px 7px;}
+.it-panel h4{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:8px;padding-right:24px;}
+.it-panel p{font-size:13px;color:var(--muted);line-height:1.6;}
+.it-panel a{display:inline-block;margin-top:14px;font-size:14px;font-weight:600;color:var(--blue);}
+.it-close{position:absolute;top:14px;right:14px;width:24px;height:24px;border:0;background:none;color:var(--faint);font-size:18px;line-height:1;cursor:pointer;}
+.it-close:hover{color:var(--ink);}
+
+.skeleton{color:var(--faint);font-size:14px;padding:48px 32px;}
+
+@media (max-width:980px){
+  .workspace{grid-template-columns:1fr;}
+  .rail{display:contents;}
+  .panel.summary{order:-2;}
+  .panel.guide-card{order:-1;}
+  .fields{grid-template-columns:1fr;}
 }
+@media (max-width:720px){
+  .shell{padding:0 16px;}
+  .head-grid{grid-template-columns:1fr;min-height:0;}
+  .head-logo,.head-ctrl{display:none;}
+  .head-id{padding:14px 0;text-align:center;}
+  .title-row{flex-direction:column;align-items:flex-start;}
+  .progress .label{display:none;}
+  .section,.actions{padding-left:18px;padding-right:18px;}
+  .actions{flex-direction:column;align-items:stretch;}
+  .page{padding:0;}
+  .ctrl-strip{grid-template-columns:1fr;margin:12px 12px 0;}
+  .ctrl-strip .stmt{text-align:left;}
+  .title-band{margin:12px 12px 0;}
+  .workspace{padding-left:12px;padding-right:12px;}
+  footer{margin-bottom:0;}
+  .it-float{display:none;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+
+/* Proposal Response specifics */
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;}
+.opt{font:inherit;text-align:left;background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;cursor:pointer;}
+.opt:hover{border-color:var(--blue);}
+.opt .k{font-size:12px;font-weight:600;color:var(--faint);letter-spacing:.04em;text-transform:uppercase;}
+.opt .t{font-size:13px;color:var(--muted);margin-top:1px;}
+.opt .v{font-size:24px;font-weight:600;color:var(--ink);margin-top:10px;}
+.opt .v small{font-size:12px;font-weight:600;color:var(--faint);margin-right:6px;}
+.opt.a[aria-pressed="true"]{border:2px solid var(--blue);background:#EEF4FA;padding:17px 19px;}
+.opt.b[aria-pressed="true"]{border:2px solid var(--green);background:var(--ok-bg);padding:17px 19px;}
+.opt.locked{cursor:default;}
+.opt.locked[aria-pressed="false"]{opacity:.55;}
+.both{font:inherit;width:100%;margin-top:12px;padding:12px;background:var(--white);border:1px solid var(--line);border-radius:var(--r);font-size:14px;font-weight:500;color:var(--slate);cursor:pointer;}
+.both[aria-pressed="true"]{border:2px solid var(--navy);background:#EEF2F7;font-weight:600;padding:11px;}
+.cmp{width:100%;border-collapse:collapse;margin-top:16px;border:1px solid var(--line);font-size:13px;}
+.cmp th{padding:10px 14px;text-align:left;font-size:12px;font-weight:600;color:var(--white);}
+.cmp th.p{background:var(--navy);}
+.cmp th.a{background:var(--blue);}
+.cmp th.b{background:var(--green);}
+.cmp td{padding:12px 14px;border-top:1px solid var(--line-soft);vertical-align:top;}
+.cmp .pn{font-weight:600;color:var(--ink);}
+.cmp .pq{font-size:12px;color:var(--muted);margin-top:2px;}
+.cmp .br{font-weight:600;color:var(--ink);}
+.cmp .lt{font-size:12px;color:var(--muted);margin-top:2px;}
+.cmp td.lit-a{background:#EEF4FA;}
+.cmp td.lit-b{background:var(--ok-bg);}
+.cmp-wrap{overflow-x:auto;}
+.cmp-note{font-size:12px;color:var(--muted);margin-top:10px;}
+#submitError{display:none;}
+@media (max-width:720px){.opts{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
+<div class="page">
 
-<div class="doc-header boxed-760">
-  <table class="doc-header-table"><tr>
-    <td class="doc-header-left"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></td>
-    <td class="doc-header-sep"></td>
-    <td class="doc-header-middle">
-      <div class="org-name">ESSENTIAL CURES INC.</div>
-      <div class="tagline">Compliant Solutions. Confident Care.</div>
-      <div class="doc-title">Respond to Your Proposal</div>
-    </td>
-  </tr></table>
-  <div class="doc-header-stripe1"></div>
-  <div class="doc-header-stripe2"></div>
+<header class="site-head">
+  <div class="shell head-grid">
+    <div class="head-logo"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></div>
+    <div class="head-id">
+      <div class="org">ESSENTIAL CURES INC.</div>
+      <div class="tag">Compliant Solutions. Confident Care.</div>
+      <div class="title" id="docTitle"></div>
+    </div>
+    <dl class="head-ctrl" aria-label="Document control">
+      <dt>Document</dt><dd id="ctrlNo"></dd>
+      <dt>Revision</dt><dd id="ctrlRev"></dd>
+      <dt>Effective</dt><dd id="ctrlEff"></dd>
+    </dl>
+  </div>
+  <div class="stripes"></div>
+</header>
+
+<div class="ctrl-strip" role="note" aria-label="Document control">
+  <div class="id" id="ctrlId"></div>
+  <div class="stmt">This online version is the current approved issue. Printed or downloaded copies are uncontrolled.</div>
 </div>
 
-<main class="main"><div class="form-card boxed-760">
-  <div id="content">
-    <div class="status-msg">Loading your proposal.</div>
+<section class="title-band">
+  <div class="shell">
+    <div class="title-row">
+      <div>
+        <h1 id="pageTitle"></h1>
+        <div class="ref" id="pageRef"></div>
+      </div>
+      <span class="status open" id="pageStatus">Awaiting your response</span>
+    </div>
+    <ol class="progress" id="progress"></ol>
   </div>
-  <div style="margin-top:24px;"><table style="width:100%;border-collapse:collapse;"><tr>
-    <td style="width:50%;background-color:#4A8B2C;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span></td>
-    <td style="width:50%;background-color:#0070B0;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Quality Built In. Not Bolted On.</span></td>
-  </tr></table></div>
-</div></main>
+</section>
 
-<footer class="boxed-760"><div class="footer-line"></div><p class="footer-urls">essentialcures.com | essentialcures.ca</p><p class="footer-copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</p></footer>
+<div class="workspace">
+  <main class="main" id="main" aria-live="polite">
+    <div class="skeleton">Loading your order details.</div>
+  </main>
 
-<div class="it-float" id="itFloat">
-  <button class="it-tab" onclick="toggleIT()">Technical Support</button>
-  <div class="it-panel" id="itPanel">
-    <button class="it-close" onclick="toggleIT()" aria-label="Close">&times;</button>
+  <aside class="rail">
+    <section class="panel guide-card">
+      <h3>Ordering guide</h3>
+      <p>How Essential Cures orders, confirms, dispatches and pays, set out step by step.</p>
+      <a class="guide-btn" id="guideLink" href="#" target="_blank" rel="noopener">Open the guide</a>
+    </section>
+    <section class="panel summary">
+      <h3>Order summary</h3>
+      <dl class="facts" id="facts"></dl>
+    </section>
+    <section class="panel">
+      <h3>Questions about this order</h3>
+      <p>Contact Essential Cures Inc. and quote the reference shown above.</p>
+      <a class="contact" id="contactLink" href="#"></a>
+    </section>
+  </aside>
+</div>
+
+<footer>
+  <div class="tagbar"><div>Compliant Solutions. Confident Care.</div><div>Quality Built In. Not Bolted On.</div></div>
+  <div class="site-foot">
+    <div class="foot-line"></div>
+    <div class="shell foot-row">
+      <div class="urls">essentialcures.com | essentialcures.ca</div>
+      <div class="copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</div>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<div class="it-float">
+  <button class="it-tab" type="button" aria-expanded="false" aria-controls="itPanel" onclick="toggleIT()">Technical Support</button>
+  <div class="it-panel" id="itPanel" role="dialog" aria-label="Technical support">
+    <button class="it-close" type="button" aria-label="Close" onclick="toggleIT()">&times;</button>
     <h4>Technical Issues?</h4>
-    <p>Having trouble with the form? Email our IT Support team with a description of the problem and we will get back to you promptly.</p>
+    <p>Having trouble with the form? Please email our EC-IT team with a description of the problem. We apologize for the inconvenience in advance.</p>
     <a href="mailto:itsupport@essentialcures.com">Email IT Support</a>
   </div>
 </div>
 
 <script>
-function toggleIT(){document.getElementById("itPanel").classList.toggle("open");}
-
+/* ---------------------------------------------------------------------------
+   Page definition
+--------------------------------------------------------------------------- */
+const DOC = {
+  // Document control is assigned in the ISO re-sync after full deal testing.
+  number: '',
+  revision: '',
+  effective: '',
+  title: 'Respond to Your Proposal',
+  contact: 'sales@essentialcures.com',
+  guide: 'https://essentialcures.com/guides/customer-ordering-guide',
+  steps: ['Review proposal', 'Choose option', 'Submit', 'Recorded'],
+};
 const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
 const CCY = 'CAD';
+const OPT_A = 'Option A', OPT_B = 'Option B - Specialist', OPT_BOTH = 'Both Options';
 
-const params = new URLSearchParams(window.location.search);
+/* ---------------------------------------------------------------------------
+   Shared helpers (master template)
+--------------------------------------------------------------------------- */
+const $ = (id) => document.getElementById(id);
+function toggleIT(){
+  const panel = $('itPanel');
+  const open = panel.classList.toggle('open');
+  document.querySelector('.it-tab').setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && $('itPanel').classList.contains('open')) toggleIT(); });
+const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtDate(d){
+  const p = String(d || '').slice(0, 10).split('-');
+  if(p.length !== 3 || !MONTHS[parseInt(p[1],10)-1]) return '';
+  return `${parseInt(p[2],10)} ${MONTHS[parseInt(p[1],10)-1]} ${p[0]}`;
+}
+const num = (v) => { const n = parseFloat(String(v == null ? '' : v).replace(/[^0-9.\-]/g, '')); return isFinite(n) ? n : 0; };
+const fmtMoney = (v) => num(v).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtQty = (v) => Math.round(num(v)).toLocaleString('en-CA');
+
+function applyDocControl(){
+  document.title = `${DOC.title} | Essential Cures`;
+  $('docTitle').textContent = DOC.title;
+  $('pageTitle').textContent = DOC.title;
+  const pending = '<span style="color:var(--faint);font-weight:500;">Pending</span>';
+  $('ctrlNo').innerHTML = DOC.number ? esc(DOC.number) : pending;
+  $('ctrlRev').innerHTML = DOC.revision ? esc(DOC.revision) : pending;
+  $('ctrlEff').innerHTML = DOC.effective ? fmtDate(DOC.effective) : pending;
+  $('ctrlId').textContent = 'Controlled document';
+  $('contactLink').textContent = DOC.contact;
+  $('contactLink').href = `mailto:${DOC.contact}`;
+  $('guideLink').href = DOC.guide;
+}
+function setProgress(current){
+  const ol = $('progress');
+  ol.style.setProperty('--steps', DOC.steps.length);
+  ol.innerHTML = DOC.steps.map((s, i) => {
+    const n = i + 1;
+    const cls = n < current ? 'done' : (n === current ? 'now' : '');
+    return `<li class="${cls}"${n === current ? ' aria-current="step"' : ''}><span class="n">${n}</span><span class="label">${esc(s)}</span></li>`;
+  }).join('');
+}
+function setStatus(kind, text){ const el = $('pageStatus'); el.className = `status ${kind}`; el.textContent = text; }
+function setFacts(rows){ $('facts').innerHTML = rows.filter(r => r[1]).map(r => `<dt>${esc(r[0])}</dt><dd>${r[1]}</dd>`).join(''); }
+function linkContact(text){ return esc(text).replace(DOC.contact, `<a href="mailto:${DOC.contact}">${DOC.contact}</a>`); }
+function renderNotice(kind, title, message){
+  const tone = kind === 'closed_won' ? 'ok' : (kind === 'closed_lost' ? 'stop' : 'warn');
+  setStatus(kind === 'on_hold' ? 'hold' : 'closed', title);
+  setProgress(0);
+  $('main').innerHTML = `<div class="section"><h2>${esc(title)}</h2><div class="notice ${tone}"><div class="body">${linkContact(message)}</div></div></div>`;
+}
+function renderError(message){
+  setStatus('closed', 'Link not available');
+  setProgress(0);
+  $('main').innerHTML = `<div class="section"><h2>This link could not be opened</h2><div class="notice stop"><div class="body">${linkContact(message)}</div></div></div>`;
+}
+
+/* ---------------------------------------------------------------------------
+   Pack wording: "120 Box" with "Box of 100, 12,000 units in total"
+--------------------------------------------------------------------------- */
+function qtyLabel(l){ return `${fmtQty(l.qty)} ${esc(l.packUom || l.uom || 'Each')}`; }
+function packNote(l){
+  const upp = parseInt(l.unitsPerPack, 10);
+  if(!upp || upp <= 1) return '';
+  return `${esc(l.packUom || 'Pack')} of ${upp.toLocaleString('en-CA')}, ${(Math.round(num(l.qty)) * upp).toLocaleString('en-CA')} units in total`;
+}
+
+/* ---------------------------------------------------------------------------
+   Load
+--------------------------------------------------------------------------- */
+const params = new URLSearchParams(location.search);
 const token = params.get('token');
 const proposalId = params.get('id');
-const contentEl = document.getElementById('content');
-let selectedDecision = null;
+let gate = null;
+let selected = null;
 
-function esc(v){
-  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-function num(v){
-  const n = parseFloat(String(v == null ? '' : v).replace(/[^0-9.\-]/g, ''));
-  return isFinite(n) ? n : 0;
-}
-// Locked display standard: money two decimals with separators, quantities with separators
-function fmtMoney(v){
-  return num(v).toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-function fmtQty(v){
-  return Math.round(num(v)).toLocaleString('en-CA');
-}
-function fmtDate(d){
-  if (!d) return '';
-  const raw = String(d).slice(0, 10);
-  const p = raw.split('-');
-  if (p.length !== 3) return esc(d);
-  const m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(p[1], 10) - 1];
-  return m ? `${parseInt(p[2], 10)} ${m} ${p[0]}` : esc(d);
-}
-// Stored decision values shown in plain language
-function decisionLabel(v){
-  const map = {
-    'Option A': 'Option A (Cost-Optimized)',
-    'Option B - Specialist': 'Option B (Clinical Grade)',
-    'Both': 'Both Options Quoted',
-    'Both Options': 'Both Options Quoted',
-    'Declined': 'Not Proceeding',
-  };
-  return map[v] || v || '';
-}
-function showError(msg){
-  contentEl.innerHTML = `<div class="status-msg error">${esc(msg)}</div>`;
+function setSummary(d){
+  const ref = d.enquiryRef || (d.dealName || '').split('|')[0].trim();
+  $('pageRef').textContent = [ref, d.customerName].filter(Boolean).join(' | ');
+  setFacts([
+    ['Reference', esc(ref)],
+    ['Customer', esc(d.customerName)],
+    ['Proposal date', fmtDate(d.proposalDate)],
+    ['Your contact', d.ownerName ? esc(d.ownerName) : ''],
+  ]);
 }
 
-async function loadProposal(){
-  if (!token || !proposalId) {
-    showError('This link is missing a required parameter. Please use the link from your proposal email.');
+async function load(){
+  if(!token || !proposalId){
+    renderError('This link is missing a required parameter. Please use the link from your proposal email, or contact sales@essentialcures.com.');
     return;
   }
-  try {
+  try{
     const resp = await fetch(`${WORKER_BASE}/api/proposal/gate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ proposalId, responseToken: token }),
     });
-    const data = await resp.json();
-    if (data.status !== 'success') {
-      showError(data.message || data.reason || 'This proposal link is invalid or has expired.');
-      return;
-    }
-    renderForm(data);
-  } catch (err) {
-    showError('Something went wrong loading your proposal. Please try again or contact us directly.');
+    const d = await resp.json();
+    gate = d;
+    if(d.status === 'notice'){ renderNotice(d.noticeKind, d.noticeTitle, d.message); return; }
+    if(d.status !== 'success'){ renderError(d.message || d.reason || 'This proposal link is invalid or has expired.'); return; }
+    setSummary(d);
+    if(d.alreadyResponded){ renderRecorded(d, d.existingDecision, d.existingDecisionDate); return; }
+    renderForm(d);
+  }catch(err){
+    renderError('Your proposal could not be loaded. Please try again, or contact sales@essentialcures.com.');
   }
 }
 
-function brandCell(line){
-  if (!line) return `<div class="brand none">Not included</div>`;
-  const b = line.brand ? `<div class="brand">${esc(line.brand)}</div>` : `<div class="brand none">Not specified</div>`;
-  return b + `<div class="line-amt">${CCY} ${fmtMoney(line.lineTotal)}</div>`;
+function isSingle(d){
+  const a = num(d.optionATotal), b = num(d.optionBTotal);
+  return b <= 0 || (a > 0 && a === b) || d.isSingleOption === true;
 }
 
-// Products appear in both options; pair them by Deal Line Item so the
-// customer reads across a row and sees the brand difference directly.
-function buildComparison(aLines, bLines){
-  const order = [];
-  const byKey = {};
-  const keyOf = l => l.dliId || l.productName;
-  (aLines || []).forEach(l => {
-    const k = keyOf(l);
-    if (!byKey[k]) { byKey[k] = { name: l.productName, qty: l.qty, uom: l.uom }; order.push(k); }
-    byKey[k].a = l;
-  });
-  (bLines || []).forEach(l => {
-    const k = keyOf(l);
-    if (!byKey[k]) { byKey[k] = { name: l.productName, qty: l.qty, uom: l.uom }; order.push(k); }
-    byKey[k].b = l;
-  });
+/* ---------------------------------------------------------------------------
+   Comparison of what each option contains
+--------------------------------------------------------------------------- */
+function cell(line, cls){
+  if(!line) return `<td class="${cls}"><span class="lt">Not included</span></td>`;
+  return `<td class="${cls}"><div class="br">${line.brand ? esc(line.brand) : '<span style="color:var(--faint);font-weight:400">Not specified</span>'}</div><div class="lt">${qtyLabel(line)}</div><div class="lt">${CCY} ${fmtMoney(line.lineTotal)}</div>${packNote(line) ? `<div class="lt">${packNote(line)}</div>` : ''}</td>`;
+}
+function comparison(d, single){
+  const order = [], byKey = {};
+  const key = l => l.dliId || l.productName;
+  (d.optionALines || []).forEach(l => { const k = key(l); if(!byKey[k]){ byKey[k] = { name: l.productName }; order.push(k); } byKey[k].a = l; });
+  (d.optionBLines || []).forEach(l => { const k = key(l); if(!byKey[k]){ byKey[k] = { name: l.productName }; order.push(k); } byKey[k].b = l; });
   const rows = order.map(k => {
     const r = byKey[k];
-    const qtyTxt = `${fmtQty(r.qty)}${r.uom ? ' ' + esc(r.uom) : ''}`;
-    return `<tr>
-      <td><div class="p-name">${esc(r.name)}</div><div class="p-qty">${qtyTxt}</div></td>
-      <td class="col-a">${brandCell(r.a)}</td>
-      <td class="col-b">${brandCell(r.b)}</td>
-    </tr>`;
+    return `<tr><td><div class="pn">${esc(r.name)}</div></td>${cell(r.a, 'ca')}${single ? '' : cell(r.b, 'cb')}</tr>`;
   }).join('');
   return `
-    <div class="section-label spaced">What Each Option Includes</div>
-    <div class="compare-wrap">
-      <table class="compare">
-        <thead><tr><th class="prod" style="width:38%">Product</th><th class="col-a" style="width:31%">Option A</th><th class="col-b" style="width:31%">Option B</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-      <div class="compare-note">Both options carry the same Essential Cures terms and quality standards. Brands shown are those confirmed for your order.</div>
-    </div>`;
+    <div class="cmp-wrap"><table class="cmp">
+      <thead><tr><th class="p">Product</th><th class="a">${single ? 'Your proposal' : 'Option A'}</th>${single ? '' : '<th class="b">Option B</th>'}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+    <p class="cmp-note">Quantities are in the selling unit shown, with the pack size beneath. Both options carry the same Essential Cures terms and quality standards.</p>`;
+}
+function highlight(decision){
+  document.querySelectorAll('.cmp td.ca, .cmp td.cb').forEach(td => td.classList.remove('lit-a','lit-b'));
+  if(decision === OPT_A || decision === OPT_BOTH || decision === 'Both') document.querySelectorAll('.cmp td.ca').forEach(td => td.classList.add('lit-a'));
+  if(decision === OPT_B || decision === OPT_BOTH || decision === 'Both') document.querySelectorAll('.cmp td.cb').forEach(td => td.classList.add('lit-b'));
 }
 
-function buildSingleList(lines){
-  const rows = (lines || []).map(l => `<tr>
-      <td><div class="p-name">${esc(l.productName)}</div><div class="p-qty">${fmtQty(l.qty)}${l.uom ? ' ' + esc(l.uom) : ''}</div></td>
-      <td class="col-a">${brandCell(l)}</td>
-    </tr>`).join('');
+/* ---------------------------------------------------------------------------
+   Open form
+--------------------------------------------------------------------------- */
+function optCards(d, locked, chosen){
+  const pressed = (v) => (chosen === v || ((chosen === 'Both' || chosen === OPT_BOTH) && v !== OPT_BOTH)) ? 'true' : 'false';
+  const lk = locked ? ' locked' : '';
+  const click = (v) => locked ? '' : ` onclick="choose('${v}')"`;
   return `
-    <div class="section-label spaced">What Your Proposal Includes</div>
-    <div class="compare-wrap">
-      <table class="compare">
-        <thead><tr><th class="prod" style="width:55%">Product</th><th class="col-a" style="width:45%">Brand</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
+    <div class="opts">
+      <button type="button" class="opt a${lk}" data-v="${OPT_A}" aria-pressed="${pressed(OPT_A)}"${click(OPT_A)}><div class="k">Option A</div><div class="t">Cost-Optimized</div><div class="v"><small>${CCY}</small>${fmtMoney(d.optionATotal)}</div></button>
+      <button type="button" class="opt b${lk}" data-v="${OPT_B}" aria-pressed="${pressed(OPT_B)}"${click(OPT_B)}><div class="k">Option B</div><div class="t">Clinical Grade</div><div class="v"><small>${CCY}</small>${fmtMoney(d.optionBTotal)}</div></button>
     </div>`;
 }
 
-function highlightColumn(decision){
-  document.querySelectorAll('.compare td.col-a, .compare td.col-b').forEach(td => td.classList.remove('lit'));
-  if (decision === 'Option A') document.querySelectorAll('.compare td.col-a').forEach(td => td.classList.add('lit'));
-  if (decision === 'Option B - Specialist') document.querySelectorAll('.compare td.col-b').forEach(td => td.classList.add('lit'));
-  if (decision === 'Both Options') document.querySelectorAll('.compare td.col-a, .compare td.col-b').forEach(td => td.classList.add('lit'));
-}
-
-function metaBlock(data){
-  return `
-    <div class="prop-meta">
-      ${data.proposalDate ? `<span class="prop-meta-label">Proposal Date:</span><span class="prop-meta-value">${fmtDate(data.proposalDate)}</span>` : ''}
-      <span class="prop-meta-label">Customer:</span><span class="prop-meta-value">${esc(data.customerName || 'Not specified')}</span>
-      <span class="prop-meta-label">Your Reference:</span><span class="prop-meta-value">${esc(data.dealName || '')}</span>
+function renderForm(d){
+  const single = isSingle(d);
+  setStatus('open', 'Awaiting your response');
+  setProgress(2);
+  const choice = single ? `
+      <div class="notice info"><div class="body"><strong>Proposal total: ${CCY} ${fmtMoney(d.optionATotal)}</strong>Review the lines below and confirm to proceed.</div></div>
+      <button type="button" class="both" data-v="${OPT_A}" aria-pressed="false" onclick="choose('${OPT_A}')">Confirm this proposal</button>`
+    : `${optCards(d, false, null)}
+      <button type="button" class="both" data-v="${OPT_BOTH}" aria-pressed="false" onclick="choose('${OPT_BOTH}')">Quote both options</button>`;
+  $('main').innerHTML = `
+    <div class="section">
+      <h2>${single ? 'Confirm your proposal' : 'Choose your option'}</h2>
+      <p class="lede">Select the option you would like us to quote. One response is accepted per proposal.</p>
+      ${choice}
+    </div>
+    <div class="section">
+      <h2>What ${single ? 'your proposal includes' : 'each option includes'}</h2>
+      ${comparison(d, single)}
+    </div>
+    <div class="section">
+      <div class="field"><label for="remarks">Comments or questions</label><span class="hint">Optional</span><textarea id="remarks" rows="3"></textarea></div>
+      <div class="notice stop" id="submitError"><div class="body" id="submitErrorText"></div></div>
+    </div>
+    <div class="actions">
+      <span class="note">Your response is final once submitted.</span>
+      <button class="btn primary" id="submitBtn" type="button" disabled onclick="submitResponse()">Select an option to continue</button>
     </div>`;
 }
 
-function contactLine(data){
-  const sales = `<a href="mailto:sales@essentialcures.com">sales@essentialcures.com</a>`;
-  if (data.ownerName && data.ownerEmail) {
-    return `your Essential Cures contact, ${esc(data.ownerName)}, at <a href="mailto:${esc(data.ownerEmail)}">${esc(data.ownerEmail)}</a>, or ${sales}`;
-  }
-  return sales;
-}
-
-// One response only. Once recorded, the page shows what was chosen and how to
-// request a change. The submit function refuses a second response independently.
-function renderRecorded(data, isSingleOption){
-  const decision = data.existingDecision || '';
-  const isA = decision === 'Option A';
-  const isB = decision === 'Option B - Specialist';
-  const isBoth = decision === 'Both' || decision === 'Both Options';
-
-  const recorded = `
-    <div class="recorded">
-      <div class="recorded-title">Your response has been recorded</div>
-      <div class="recorded-text">On ${fmtDate(data.existingDecisionDate)} you selected <strong>${esc(decisionLabel(decision))}</strong>. Our team is now preparing the next step of your order. To request any change, please contact ${contactLine(data)}, quoting your reference.</div>
-    </div>`;
-
-  let body;
-  if (isSingleOption) {
-    body = `
-      <div class="single-total">
-        <div class="label">Your Proposal Total</div>
-        <div class="amount"><span class="ccy">${CCY}</span>${fmtMoney(data.optionATotal)}</div>
-      </div>
-      ${buildSingleList(data.optionALines)}`;
-  } else {
-    body = `
-      <div class="section-label">Your Selection</div>
-      <div class="options">
-        <div class="option-choice a locked${(isA || isBoth) ? ' selected' : ''}">
-          <div class="label">Option A</div>
-          <div class="tier">Cost-Optimized</div>
-          <div class="amount"><span class="ccy">${CCY}</span>${fmtMoney(data.optionATotal)}</div>
-        </div>
-        <div class="option-choice b locked${(isB || isBoth) ? ' selected' : ''}">
-          <div class="label">Option B</div>
-          <div class="tier">Clinical Grade</div>
-          <div class="amount"><span class="ccy">${CCY}</span>${fmtMoney(data.optionBTotal)}</div>
-        </div>
-      </div>
-      ${buildComparison(data.optionALines, data.optionBLines)}`;
-  }
-
-  contentEl.innerHTML = metaBlock(data) + recorded + body;
-  if (isA) highlightColumn('Option A');
-  if (isB) highlightColumn('Option B - Specialist');
-  if (isBoth) highlightColumn('Both Options');
-}
-
-function renderForm(data){
-  const optA = num(data.optionATotal);
-  const optB = num(data.optionBTotal);
-  const isSingleOption = (optB <= 0) || (optA > 0 && optB === optA) || (data.isSingleOption === true);
-
-  if (data.alreadyResponded) {
-    renderRecorded(data, isSingleOption);
-    return;
-  }
-
-  let optionsHtml;
-  if (isSingleOption) {
-    optionsHtml = `
-      <div class="single-total">
-        <div class="label">Your Proposal Total</div>
-        <div class="amount"><span class="ccy">${CCY}</span>${fmtMoney(data.optionATotal)}</div>
-      </div>
-      ${buildSingleList(data.optionALines)}
-      <div class="section-label spaced">Your Response</div>
-      <div class="extra-choices">
-        <button type="button" data-value="Option A">Confirm My Order</button>
-      </div>`;
-  } else {
-    optionsHtml = `
-      <div class="section-label">Choose Your Option</div>
-      <div class="options">
-        <div class="option-choice a" data-value="Option A">
-          <div class="label">Option A</div>
-          <div class="tier">Cost-Optimized</div>
-          <div class="amount"><span class="ccy">${CCY}</span>${fmtMoney(data.optionATotal)}</div>
-        </div>
-        <div class="option-choice b" data-value="Option B - Specialist">
-          <div class="label">Option B</div>
-          <div class="tier">Clinical Grade</div>
-          <div class="amount"><span class="ccy">${CCY}</span>${fmtMoney(data.optionBTotal)}</div>
-        </div>
-      </div>
-      <div class="extra-choices">
-        <button type="button" data-value="Both Options">Quote Both Options</button>
-      </div>
-      ${buildComparison(data.optionALines, data.optionBLines)}`;
-  }
-
-  contentEl.innerHTML = `
-    ${metaBlock(data)}
-    ${optionsHtml}
-    <label class="remarks-label" for="remarks">Comments or questions (optional)</label>
-    <textarea id="remarks" placeholder="Let us know if you have any questions or requests."></textarea>
-    <button class="submit-btn" id="submitBtn" disabled>Select an option above to continue</button>
-  `;
-
-  const choiceEls = contentEl.querySelectorAll('.option-choice, .extra-choices button');
-  choiceEls.forEach(el => {
-    el.addEventListener('click', () => {
-      choiceEls.forEach(e => e.classList.remove('selected'));
-      el.classList.add('selected');
-      selectedDecision = el.getAttribute('data-value');
-      highlightColumn(selectedDecision);
-      const btn = document.getElementById('submitBtn');
-      btn.disabled = false;
-      btn.textContent = 'Submit My Response';
-    });
-  });
-
-  document.getElementById('submitBtn').addEventListener('click', submitResponse);
+function choose(v){
+  selected = v;
+  document.querySelectorAll('.opt, .both').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v ? 'true' : 'false'));
+  highlight(v);
+  const btn = $('submitBtn');
+  btn.disabled = false;
+  btn.textContent = 'Submit my response';
+  setProgress(3);
 }
 
 async function submitResponse(){
-  if (!selectedDecision) return;
-  const btn = document.getElementById('submitBtn');
+  if(!selected) return;
+  const btn = $('submitBtn');
   btn.disabled = true;
-  btn.textContent = 'Submitting, please wait.';
-  const remarks = document.getElementById('remarks').value;
-
-  try {
+  btn.textContent = 'Submitting, please wait';
+  $('submitError').style.display = 'none';
+  const remarks = $('remarks').value;
+  try{
     const resp = await fetch(`${WORKER_BASE}/api/proposal/submit`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ proposalId, responseToken: token, decision: selectedDecision, remarks }),
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ proposalId, responseToken: token, decision: selected, remarks }),
     });
-    const data = await resp.json();
-    if (data.status !== 'success') {
-      throw new Error(data.reason || data.message || 'Failed to submit your response.');
-    }
-    showThankYou();
-  } catch (err) {
+    const r = await resp.json();
+    if(r.status === 'recorded'){ renderRecorded(gate, r.existingDecision, r.existingDecisionDate); return; }
+    if(r.status !== 'success') throw new Error(r.reason || r.message || 'Your response could not be submitted.');
+    renderRecorded(gate, r.decision || selected, r.decisionDate);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }catch(err){
+    $('submitErrorText').innerHTML = linkContact(err.message || 'Something went wrong. Please try again.');
+    $('submitError').style.display = 'grid';
     btn.disabled = false;
-    btn.textContent = 'Submit My Response';
-    alert(err.message || 'Something went wrong. Please try again.');
+    btn.textContent = 'Submit my response';
   }
 }
 
-function showThankYou(){
-  contentEl.innerHTML = `
-    <div class="status-msg">Thank you. Your response has been recorded.</div>
-    <p style="text-align:center;margin-top:16px;font-size:13px;"><a href="https://essentialcures.com" style="color:var(--deep-blue);font-weight:600;text-decoration:none;">Return to essentialcures.com</a></p>
-  `;
+/* ---------------------------------------------------------------------------
+   Recorded response: read-only
+--------------------------------------------------------------------------- */
+function decisionLabel(v){
+  return ({ 'Option A': 'Option A | Cost-Optimized', 'Option B - Specialist': 'Option B | Clinical Grade', 'Both': 'Both options quoted', 'Both Options': 'Both options quoted' })[v] || v || '';
+}
+function renderRecorded(d, decision, date){
+  const single = isSingle(d);
+  setStatus('done', 'Response recorded');
+  setProgress(4);
+  $('main').innerHTML = `
+    <div class="section">
+      <h2>Your response has been recorded</h2>
+      <div class="notice ok"><div class="body">
+        <strong>${single ? 'Proposal confirmed' : esc(decisionLabel(decision))}</strong>
+        ${date ? `Recorded on ${fmtDate(date)}. ` : ''}Our team is now preparing your formal quotation. One response is accepted per proposal. To request any change, please contact Essential Cures Inc. at <a href="mailto:${DOC.contact}">${DOC.contact}</a>, quoting your reference.
+      </div></div>
+      ${single ? '' : optCards(d, true, decision)}
+    </div>
+    <div class="section">
+      <h2>What ${single ? 'your proposal includes' : 'each option includes'}</h2>
+      ${comparison(d, single)}
+    </div>`;
+  highlight(decision);
 }
 
-loadProposal();
+applyDocControl();
+setProgress(1);
+load();
 </script>
 </body>
 </html>
