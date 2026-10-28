@@ -658,6 +658,14 @@ function optionBlock(o, band, cls, label){
     ${payment(o.deliverySummary, o.grandTotal)}`;
 }
 
+// Short terms with a link to the full online Terms and Conditions of Sale.
+// Falls back to the full text held on the quotation when no summary is configured.
+function termsBlock(d){
+  const link = d.termsUrl ? ` <a href="${esc(d.termsUrl)}" target="_blank" rel="noopener">Read the full Terms and Conditions of Sale</a>.` : '';
+  if(d.termsSummary) return `<div class="blk"><h4>Terms and conditions</h4><p>${esc(d.termsSummary)}${link}</p></div>`;
+  if(d.termsText) return `<div class="terms"><strong>Terms and conditions.</strong> ${esc(d.termsText)}${link}</div>`;
+  return '';
+}
 function renderQuote(d){
   const dual = d.siblingQuote != null;
   const sb = d.siblingQuote || {};
@@ -687,13 +695,13 @@ function renderQuote(d){
       </div>
       ${optionBlock(d, dual ? 'Option A | Cost Optimized' : '', 'a', dual ? 'Total (CAD)' : 'Grand total (CAD)')}
       ${dual ? optionBlock(sb, 'Option B | Clinical Grade', 'b', 'Total (CAD)') : ''}
-      ${d.termsText ? `<div class="terms"><strong>Terms and conditions.</strong> ${esc(d.termsText)}</div>` : ''}
+      ${termsBlock(d)}
     </div>
     <div class="section">
       <h2>Your response</h2>
       <p class="lede">${dual ? 'Select the option you would like to order.' : 'Accept this quotation to proceed to your order.'} One response is accepted per quotation. To discuss pricing, quantities or any revision first, please contact ${d.ownerName ? esc(d.ownerName) + ' at ' : ''}<a href="mailto:${esc(d.ownerEmail || SALES)}">${esc(d.ownerEmail || SALES)}</a>, quoting ${esc(d.quoteNumber)}.</p>
       ${choice}
-      <label class="confirm"><input type="checkbox" id="authConfirm" onchange="updateSubmit()"><span>I confirm that I am authorized to accept this quotation on behalf of ${esc(d.accountName || 'my organization')}, and that I accept it together with the terms and conditions stated.</span></label>
+      <label class="confirm"><input type="checkbox" id="authConfirm" onchange="updateSubmit()"><span>I confirm that I am authorized to accept this quotation on behalf of ${esc(d.accountName || 'my organization')}, and that I accept it together with the ${d.termsUrl ? `<a href="${esc(d.termsUrl)}" target="_blank" rel="noopener">Terms and Conditions of Sale</a>` : 'terms and conditions stated'}.</span></label>
       <div class="notice stop" id="decisionError"><div class="body" id="decisionErrorText"></div></div>
     </div>
     <div class="actions">
