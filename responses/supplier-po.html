@@ -291,6 +291,14 @@ function money(n){
   const v = Math.round((Number(n) || 0) * 100) / 100;
   return v.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
+// "Other" carrier: a free-text name is required and saved to CM-53 Other_Carrier
+function toggleOtherCarrier(){
+  const sel = document.getElementById('carrier');
+  const fld = document.getElementById('fldOtherCarrier');
+  if(!sel || !fld) return;
+  const show = selectedMethod === METHOD_COURIER && sel.value === 'Other';
+  fld.style.display = show ? '' : 'none';
+}
 function today(){ return new Date().toISOString().split('T')[0]; }
 // Pack wording used on every supplier document
 function qtyInt(n){ return Math.round(Number(n) || 0).toLocaleString('en-CA'); }
@@ -791,11 +799,16 @@ function buildStep3(){
       <div class="day-field" id="fldCarrier" style="display:none;">
         <label for="carrier">Carrier</label>
         <span class="hint">Courier handling this shipment</span>
-        <select id="carrier" onchange="updateSubmitState()">
+        <select id="carrier" onchange="toggleOtherCarrier(); updateSubmitState()">
           <option value="">Select carrier</option>
           <option>FedEx</option><option>Purolator</option><option>Canada Post</option>
           <option>UPS</option><option>DHL</option><option>Canpar</option><option>Other</option>
         </select>
+      </div>
+      <div class="day-field" id="fldOtherCarrier" style="display:none;">
+        <label for="otherCarrier">Carrier Name</label>
+        <span class="hint">Name of the courier handling this shipment</span>
+        <input type="text" id="otherCarrier" maxlength="100" style="margin-bottom:0;" oninput="updateSubmitState()">
       </div>
       <div class="day-field" id="fldTracking" style="display:none;">
         <label for="trackingNumber">Tracking Number</label>
@@ -943,6 +956,7 @@ function setMethod(method){
   const courier = method === METHOD_COURIER;
   document.getElementById('fldCarrier').style.display = courier ? '' : 'none';
   document.getElementById('fldTracking').style.display = courier ? '' : 'none';
+  toggleOtherCarrier();
   document.getElementById('fldDriver').style.display = courier ? 'none' : '';
   document.getElementById('fldPlate').style.display = courier ? 'none' : '';
   document.getElementById('fldExpected').style.display = courier ? 'none' : '';
@@ -984,6 +998,7 @@ function shipmentCheck(){
   if(!dd) return { ok: false, msg: '' };
   if(selectedMethod === METHOD_COURIER){
     if(!document.getElementById('carrier').value) return { ok: false, msg: '' };
+    if(document.getElementById('carrier').value === 'Other' && !document.getElementById('otherCarrier').value.trim()) return { ok: false, msg: '' };
     if(!document.getElementById('trackingNumber').value.trim()) return { ok: false, msg: '' };
   }
   if(selectedMethod === METHOD_OWN){
@@ -1125,6 +1140,7 @@ async function submitShipment(){
     deliveryMethod: selectedMethod,
     dispatchDate: document.getElementById('dispatchDate').value,
     carrier: (document.getElementById('carrier') || {}).value || '',
+    otherCarrier: ((document.getElementById('otherCarrier') || {}).value || '').trim(),
     trackingNumber: ((document.getElementById('trackingNumber') || {}).value || '').trim(),
     driverName: ((document.getElementById('driverName') || {}).value || '').trim(),
     vehiclePlate: ((document.getElementById('vehiclePlate') || {}).value || '').trim(),
