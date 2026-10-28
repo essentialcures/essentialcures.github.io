@@ -254,6 +254,7 @@ const METHOD_OWN = 'Own Vehicle';
 const STEP_NAMES = ['Order Confirmation', 'Dispatch', 'Shipping', 'Delivery Note'];
 const MAX_PROFORMA_BYTES = 10 * 1024 * 1024;
 const PROCUREMENT_EMAIL = 'procurement@essentialcures.com';
+const FINANCE_EMAIL = 'finance@essentialcures.com';
 
 const params = new URLSearchParams(window.location.search);
 const token = params.get('token');
@@ -358,6 +359,7 @@ function completePanel(){
       <p>All lines on purchase order ${esc(poData.poNumber || '')} have been dispatched and recorded. Your response is complete, and no further action is required on this page.</p>
       <p>The delivery note for each shipment remains available below for your records.</p>
       <p>Should you have any questions regarding this order, please contact Essential Cures Inc. at <a href="mailto:${PROCUREMENT_EMAIL}">${PROCUREMENT_EMAIL}</a>, quoting the purchase order number.</p>
+      <p>Please submit your invoice to <a href="mailto:${FINANCE_EMAIL}">${FINANCE_EMAIL}</a> once the goods have been dispatched, quoting purchase order ${esc(poData.poNumber || '')}, so that payment can be processed promptly.</p>
     </div>`;
 }
 
@@ -1169,6 +1171,7 @@ function showShipmentDone(data){
       <div class="cp-title">Fulfilment Complete</div>
       <p>This shipment completes purchase order ${esc(poData.poNumber || '')}. Every line has now been dispatched, and no further shipments are required.</p>
       <p>Should you have any questions regarding this order, please contact Essential Cures Inc. at <a href="mailto:${PROCUREMENT_EMAIL}">${PROCUREMENT_EMAIL}</a>, quoting the purchase order number.</p>
+      <p>Please submit your invoice to <a href="mailto:${FINANCE_EMAIL}">${FINANCE_EMAIL}</a> once the goods have been dispatched, quoting purchase order ${esc(poData.poNumber || '')}, so that payment can be processed promptly.</p>
     </div>`
     : `<button class="secondary-btn" onclick="location.reload()">Record Another Shipment</button>`;
 
