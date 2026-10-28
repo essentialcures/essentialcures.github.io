@@ -527,7 +527,7 @@ function renderForm(d){
   setProgress(2);
   $('main').innerHTML = `
     <div class="section">
-      <h2>Confirm availability for each line</h2>
+      <h2>Confirm availability for each line item</h2>
       <p class="lede">Quantities are in the selling unit shown, with the pack size beneath each line. Confirm the exact brand and pack size shown. Substitutions are not accepted without prior agreement. Lead time is counted in business days from the date you receive our purchase order.</p>
       <div class="notice info"><div class="body">This is a pre-order confirmation, not a purchase order. It creates no binding obligation on either party. One response is accepted per request.</div></div>
       <div class="lines">${d.lines.map(lineBlock).join('')}</div>
