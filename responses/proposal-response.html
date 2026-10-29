@@ -7,11 +7,6 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<!--
-  Response Page Master Template (document number to be assigned in the ISO re-sync)
-  Every customer and supplier response page is built on this shell.
-  Page-specific values live in DOC below. Nothing else in the shell changes per page.
--->
 <style>
 :root{
   --blue:#005090;--navy:#003060;--green:#4A8B2C;--lime:#8FC23C;--sky:#0070B0;
@@ -27,10 +22,7 @@ a{color:var(--blue);}
 :focus-visible{outline:2px solid var(--sky);outline-offset:2px;}
 .page{max-width:var(--shell);margin:0 auto;padding:0 24px;width:100%;}
 .shell{padding:0 28px;}
-
-/* Header: logo | identity | controlled document block */
 .site-head{background:var(--white);box-shadow:0 2px 10px rgba(0,48,96,.08);}
-/* Header and controlled-document strip stay fixed together while the page scrolls */
 .top-fixed{position:sticky;top:0;z-index:50;background:var(--surface);padding-bottom:4px;}
 .head-grid{display:grid;grid-template-columns:auto 1fr auto;align-items:stretch;min-height:96px;}
 .head-logo{display:flex;align-items:center;padding-right:24px;border-right:1px solid var(--line);}
@@ -43,8 +35,6 @@ a{color:var(--blue);}
 .head-ctrl dt{color:var(--faint);}
 .head-ctrl dd{color:var(--ink);font-weight:600;text-align:right;}
 .stripes{height:8px;background:linear-gradient(var(--blue) 0 4px,var(--lime) 4px 8px);}
-
-/* Title band */
 .title-band{background:var(--white);border:1px solid var(--line);border-radius:var(--r);margin-top:16px;}
 .title-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:28px 0 22px;}
 .title-row h1{font-size:26px;font-weight:600;letter-spacing:-.01em;color:var(--ink);line-height:1.2;}
@@ -55,26 +45,23 @@ a{color:var(--blue);}
 .status.done{color:var(--green);background:var(--ok-bg);}
 .status.hold{color:var(--amber);background:var(--amber-bg);}
 .status.closed{color:var(--muted);background:var(--line-soft);}
-
-/* Progress */
 .progress{display:grid;grid-template-columns:repeat(var(--steps),1fr);}
 .progress li{list-style:none;position:relative;padding:14px 16px 16px 0;font-size:13px;color:var(--faint);}
 .progress li::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--line);}
-.progress li{display:flex;align-items:center;gap:8px;}.progress li .n{flex:none;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:1.5px solid var(--line);color:var(--faint);background:var(--white);}.progress li.done .n{background:var(--green);border-color:var(--green);color:var(--white);}.progress li.now .n{background:var(--blue);border-color:var(--blue);color:var(--white);}
+.progress li{display:flex;align-items:center;gap:8px;}
+.progress li .n{flex:none;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:1.5px solid var(--line);color:var(--faint);background:var(--white);}
+.progress li.done .n{background:var(--green);border-color:var(--green);color:var(--white);}
+.progress li.now .n{background:var(--blue);border-color:var(--blue);color:var(--white);}
 .progress li.done{color:var(--green);}
 .progress li.done::before{background:var(--green);}
 .progress li.now{color:var(--ink);font-weight:600;}
 .progress li.now::before{background:var(--blue);}
-
-/* Workspace */
 .workspace{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:24px;padding-top:24px;padding-bottom:40px;align-items:start;}
 .main{background:var(--white);border:1px solid var(--line);border-radius:var(--r);}
 .section{padding:28px 32px;border-top:1px solid var(--line-soft);}
 .section:first-child{border-top:0;}
 .section h2{font-size:17px;font-weight:600;color:var(--ink);}
 .section .lede{font-size:14px;color:var(--muted);margin-top:4px;max-width:68ch;}
-
-/* Notices */
 .notice{display:grid;grid-template-columns:4px 1fr;border-radius:var(--r);overflow:hidden;margin-top:18px;}
 .notice::before{content:"";}
 .notice .body{padding:14px 18px;font-size:14px;}
@@ -83,8 +70,6 @@ a{color:var(--blue);}
 .notice.ok{background:var(--ok-bg);}.notice.ok::before{background:var(--green);}
 .notice.warn{background:var(--amber-bg);}.notice.warn::before{background:var(--amber);}
 .notice.stop{background:var(--red-bg);}.notice.stop::before{background:var(--red);}
-
-/* Line items */
 .lines{margin-top:20px;border:1px solid var(--line);border-radius:var(--r);}
 .line{padding:20px 22px;border-top:1px solid var(--line);}
 .line:first-child{border-top:0;}
@@ -102,21 +87,17 @@ a{color:var(--blue);}
 .fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px;}
 .field label{display:block;font-size:13px;font-weight:600;color:var(--ink);}
 .field .hint{display:block;font-size:12px;color:var(--faint);margin:1px 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.field input,.field textarea,.field select{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--white);border:1px solid #C9D2DA;border-radius:var(--r);padding:10px 12px;}
+.field input,.field textarea,.field select{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--white);border:1px solid #C9D2DA;border-radius:var(--r);padding:10px 12px;overflow-wrap:break-word;word-break:break-word;}
 .field input:focus,.field textarea:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(0,80,144,.12);}
 .field input[readonly]{background:var(--surface);color:var(--muted);}
 .total{margin-top:12px;font-size:13px;color:var(--muted);}
 .total b{color:var(--ink);}
-
-/* Actions */
 .actions{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 32px;border-top:1px solid var(--line);background:#FAFBFC;border-radius:0 0 var(--r) var(--r);}
 .actions .note{font-size:13px;color:var(--muted);}
 .btn{font:inherit;font-size:15px;font-weight:600;padding:12px 24px;border-radius:var(--r);border:1px solid transparent;cursor:pointer;}
 .btn.primary{background:var(--green);color:var(--white);}
 .btn.primary:disabled{background:#B9CCB0;cursor:not-allowed;}
 .btn.ghost{background:var(--white);color:var(--slate);border-color:#C9D2DA;}
-
-/* Rail */
 .rail{display:flex;flex-direction:column;gap:20px;position:sticky;top:190px;}
 .panel{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;}
 .panel h3{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px;}
@@ -128,8 +109,6 @@ a{color:var(--blue);}
 .guide-card{border-left:3px solid var(--blue);}
 .guide-btn{display:block;margin-top:14px;padding:10px 14px;text-align:center;font-size:14px;font-weight:600;text-decoration:none;color:var(--blue);border:1px solid var(--blue);border-radius:var(--r);}
 .guide-btn:hover{background:var(--blue);color:var(--white);}
-
-/* Footer */
 body>.page>footer{margin-top:auto;}
 .page{display:flex;flex-direction:column;flex:1;}
 footer{margin-bottom:24px;}
@@ -142,13 +121,9 @@ footer{margin-bottom:24px;}
 .foot-line{height:3px;background:linear-gradient(90deg,var(--blue) 60%,var(--faint));}
 .foot-row .urls{font-size:13px;color:var(--muted);}
 .foot-row .copy{font-size:11px;font-style:italic;color:#9EA8B1;margin-top:2px;}
-/* Document control strip, between header and page */
 .ctrl-strip{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 28px;margin-top:16px;padding:10px 20px;background:#F9FBFC;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:var(--r);font-size:12.5px;color:var(--muted);}
 .ctrl-strip .id{font-weight:600;color:var(--ink);white-space:nowrap;}
-.ctrl-strip .id span{color:var(--faint);font-weight:500;margin:0 8px;}
 .ctrl-strip .stmt{text-align:right;}
-
-/* Technical support tab and panel. A ticketing form will replace the email link later. */
 .it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:60;}
 .it-tab{writing-mode:vertical-rl;transform:rotate(180deg);background:var(--navy);color:var(--white);font:600 12px "Inter",sans-serif;padding:14px 8px;border:0;border-radius:4px 0 0 4px;cursor:pointer;}
 .it-panel{display:none;position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);width:280px;background:var(--white);border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 28px rgba(0,48,96,.14);padding:20px 22px;}
@@ -158,9 +133,11 @@ footer{margin-bottom:24px;}
 .it-panel a{display:inline-block;margin-top:14px;font-size:14px;font-weight:600;color:var(--blue);}
 .it-close{position:absolute;top:14px;right:14px;width:24px;height:24px;border:0;background:none;color:var(--faint);font-size:18px;line-height:1;cursor:pointer;}
 .it-close:hover{color:var(--ink);}
-
 .skeleton{color:var(--faint);font-size:14px;padding:48px 32px;}
-
+/* Signature block — final state only */
+.sig-block{padding:28px 32px 8px;text-align:center;border-top:1px solid var(--line-soft);}
+.sig-block p{font-size:13px;color:var(--muted);line-height:1.7;}
+.sig-block .sig-name{font-size:13px;font-weight:600;color:var(--slate);margin-top:5px;}
 @media (max-width:980px){
   .workspace{grid-template-columns:1fr;}
   .rail{display:contents;}
@@ -184,10 +161,9 @@ footer{margin-bottom:24px;}
   .workspace{padding-left:12px;padding-right:12px;}
   footer{margin-bottom:0;}
   .it-float{display:none;}
+  .sig-block{padding-left:18px;padding-right:18px;}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
-
-/* Proposal Response specifics */
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;}
 .opt{font:inherit;text-align:left;background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;cursor:pointer;}
 .opt:hover{border-color:var(--blue);}
@@ -206,7 +182,7 @@ footer{margin-bottom:24px;}
 .cmp th.p{background:var(--navy);}
 .cmp th.a{background:var(--blue);}
 .cmp th.b{background:var(--green);}
-.cmp td{padding:12px 14px;border-top:1px solid var(--line-soft);vertical-align:top;}
+.cmp td{padding:12px 14px;border-top:1px solid var(--line-soft);vertical-align:top;overflow-wrap:break-word;word-break:break-word;}
 .cmp .pn{font-weight:600;color:var(--ink);}
 .cmp .pq{font-size:12px;color:var(--muted);margin-top:2px;}
 .cmp .br{font-weight:600;color:var(--ink);}
@@ -217,8 +193,6 @@ footer{margin-bottom:24px;}
 .cmp-note{font-size:12px;color:var(--muted);margin-top:10px;}
 #submitError{display:none;}
 @media (max-width:720px){.opts{grid-template-columns:1fr;}}
-
-/* Submission overlay (shared by every response page) */
 .wait-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(0,48,96,.55);align-items:center;justify-content:center;padding:20px;}
 .wait-overlay.open{display:flex;}
 .wait-card{background:var(--white);border-radius:10px;box-shadow:0 8px 40px rgba(0,48,96,.25);max-width:440px;width:100%;overflow:hidden;}
@@ -252,7 +226,6 @@ footer{margin-bottom:24px;}
   </div>
   <div class="stripes"></div>
 </header>
-
 <div class="ctrl-strip" role="note" aria-label="Document control">
   <div class="id" id="ctrlId"></div>
   <div class="stmt">This online version is the current approved issue. Printed or downloaded copies are uncontrolled.</div>
@@ -274,9 +247,8 @@ footer{margin-bottom:24px;}
 
 <div class="workspace">
   <main class="main" id="main" aria-live="polite">
-    <div class="skeleton">Loading your order details.</div>
+    <div class="skeleton">Loading your proposal details.</div>
   </main>
-
   <aside class="rail">
     <section class="panel guide-card">
       <h3>Ordering guide</h3>
@@ -336,14 +308,8 @@ footer{margin-bottom:24px;}
 </div>
 
 <script>
-/* ---------------------------------------------------------------------------
-   Page definition
---------------------------------------------------------------------------- */
 const DOC = {
-  // Document control is assigned in the ISO re-sync after full deal testing.
-  number: '',
-  revision: '',
-  effective: '',
+  number: '', revision: '', effective: '',
   title: 'Respond to Your Proposal',
   contact: 'sales@essentialcures.com',
   guide: 'https://essentialcures.com/guides/customer-ordering-guide',
@@ -353,15 +319,12 @@ const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
 const CCY = 'CAD';
 const OPT_A = 'Option A', OPT_B = 'Option B - Specialist', OPT_BOTH = 'Both Options';
 
-/* ---------------------------------------------------------------------------
-   Shared helpers (master template)
---------------------------------------------------------------------------- */
+const SIG_BLOCK = `<div class="sig-block"><p>Thank you for choosing Essential Cures. We are committed to delivering quality products and a seamless experience.</p><p class="sig-name">Sales Team | Essential Cures Inc.</p></div>`;
+
 const $ = (id) => document.getElementById(id);
-/* Organization and Essential Cures contact cards */
 function mailLink(e){ return e ? `<a href="mailto:${esc(e)}">${esc(e)}</a>` : ''; }
 function rowsHtml(rows){ return rows.filter(r => r[1]).map(r => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join(''); }
 
-/* Submission overlay (shared) */
 let waitStepTimer = null;
 function warnOnLeave(e){ e.preventDefault(); e.returnValue = ''; }
 function openWait(title, text, steps){
@@ -380,7 +343,6 @@ function closeWait(){
   if(waitStepTimer){ clearInterval(waitStepTimer); waitStepTimer = null; }
   window.removeEventListener('beforeunload', warnOnLeave);
 }
-
 function toggleIT(){
   const panel = $('itPanel');
   const open = panel.classList.toggle('open');
@@ -435,9 +397,6 @@ function renderError(message){
   $('main').innerHTML = `<div class="section"><h2>This link could not be opened</h2><div class="notice stop"><div class="body">${linkContact(message)}</div></div></div>`;
 }
 
-/* ---------------------------------------------------------------------------
-   Pack wording: "120 Box" with "Box of 100, 12,000 units in total"
---------------------------------------------------------------------------- */
 function qtyLabel(l){ return `${fmtQty(l.qty)} ${esc(l.packUom || l.uom || 'Each')}`; }
 function packNote(l){
   const upp = parseInt(l.unitsPerPack, 10);
@@ -445,9 +404,6 @@ function packNote(l){
   return `${esc(l.packUom || 'Pack')} of ${upp.toLocaleString('en-CA')}, ${(Math.round(num(l.qty)) * upp).toLocaleString('en-CA')} units in total`;
 }
 
-/* ---------------------------------------------------------------------------
-   Load
---------------------------------------------------------------------------- */
 const params = new URLSearchParams(location.search);
 const token = params.get('token');
 const proposalId = params.get('id');
@@ -494,9 +450,6 @@ function isSingle(d){
   return b <= 0 || (a > 0 && a === b) || d.isSingleOption === true;
 }
 
-/* ---------------------------------------------------------------------------
-   Comparison of what each option contains
---------------------------------------------------------------------------- */
 function cell(line, cls){
   if(!line) return `<td class="${cls}"><span class="lt">Not included</span></td>`;
   return `<td class="${cls}"><div class="br">${line.brand ? esc(line.brand) : '<span style="color:var(--faint);font-weight:400">Not specified</span>'}</div><div class="lt">${qtyLabel(line)}</div><div class="lt">${CCY} ${fmtMoney(line.lineTotal)}</div>${packNote(line) ? `<div class="lt">${packNote(line)}</div>` : ''}</td>`;
@@ -510,12 +463,11 @@ function comparison(d, single){
     const r = byKey[k];
     return `<tr><td><div class="pn">${esc(r.name)}</div></td>${cell(r.a, 'ca')}${single ? '' : cell(r.b, 'cb')}</tr>`;
   }).join('');
-  return `
-    <div class="cmp-wrap"><table class="cmp">
-      <thead><tr><th class="p">Product</th><th class="a">${single ? 'Your proposal' : 'Option A'}</th>${single ? '' : '<th class="b">Option B</th>'}</tr></thead>
-      <tbody>${rows}</tbody>
-    </table></div>
-    <p class="cmp-note">Quantities are in the selling unit shown, with the pack size beneath. Both options carry the same Essential Cures terms and quality standards.</p>`;
+  return `<div class="cmp-wrap"><table class="cmp">
+    <thead><tr><th class="p">Product</th><th class="a">${single ? 'Your proposal' : 'Option A'}</th>${single ? '' : '<th class="b">Option B</th>'}</tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>
+  <p class="cmp-note">Quantities are in the selling unit shown, with the pack size beneath. Both options carry the same Essential Cures terms and quality standards.</p>`;
 }
 function highlight(decision){
   document.querySelectorAll('.cmp td.ca, .cmp td.cb').forEach(td => td.classList.remove('lit-a','lit-b'));
@@ -523,29 +475,24 @@ function highlight(decision){
   if(decision === OPT_B || decision === OPT_BOTH || decision === 'Both') document.querySelectorAll('.cmp td.cb').forEach(td => td.classList.add('lit-b'));
 }
 
-/* ---------------------------------------------------------------------------
-   Open form
---------------------------------------------------------------------------- */
 function optCards(d, locked, chosen){
   const pressed = (v) => (chosen === v || ((chosen === 'Both' || chosen === OPT_BOTH) && v !== OPT_BOTH)) ? 'true' : 'false';
   const lk = locked ? ' locked' : '';
   const click = (v) => locked ? '' : ` onclick="choose('${v}')"`;
-  return `
-    <div class="opts">
-      <button type="button" class="opt a${lk}" data-v="${OPT_A}" aria-pressed="${pressed(OPT_A)}"${click(OPT_A)}><div class="k">Option A</div><div class="t">Cost-Optimized</div><div class="v"><small>${CCY}</small>${fmtMoney(d.optionATotal)}</div></button>
-      <button type="button" class="opt b${lk}" data-v="${OPT_B}" aria-pressed="${pressed(OPT_B)}"${click(OPT_B)}><div class="k">Option B</div><div class="t">Clinical Grade</div><div class="v"><small>${CCY}</small>${fmtMoney(d.optionBTotal)}</div></button>
-    </div>`;
+  return `<div class="opts">
+    <button type="button" class="opt a${lk}" data-v="${OPT_A}" aria-pressed="${pressed(OPT_A)}"${click(OPT_A)}><div class="k">Option A</div><div class="t">Cost-Optimized</div><div class="v"><small>${CCY}</small>${fmtMoney(d.optionATotal)}</div></button>
+    <button type="button" class="opt b${lk}" data-v="${OPT_B}" aria-pressed="${pressed(OPT_B)}"${click(OPT_B)}><div class="k">Option B</div><div class="t">Clinical Grade</div><div class="v"><small>${CCY}</small>${fmtMoney(d.optionBTotal)}</div></button>
+  </div>`;
 }
 
 function renderForm(d){
   const single = isSingle(d);
   setStatus('open', 'Awaiting your response');
   setProgress(2);
-  const choice = single ? `
-      <div class="notice info"><div class="body"><strong>Proposal total: ${CCY} ${fmtMoney(d.optionATotal)}</strong>Review the lines below and confirm to proceed.</div></div>
-      <button type="button" class="both" data-v="${OPT_A}" aria-pressed="false" onclick="choose('${OPT_A}')">Confirm this proposal</button>`
-    : `${optCards(d, false, null)}
-      <button type="button" class="both" data-v="${OPT_BOTH}" aria-pressed="false" onclick="choose('${OPT_BOTH}')">Quote both options</button>`;
+  const choice = single
+    ? `<div class="notice info"><div class="body"><strong>Proposal total: ${CCY} ${fmtMoney(d.optionATotal)}</strong>Review the lines below and confirm to proceed.</div></div>
+       <button type="button" class="both" data-v="${OPT_A}" aria-pressed="false" onclick="choose('${OPT_A}')">Confirm this proposal</button>`
+    : `${optCards(d, false, null)}<button type="button" class="both" data-v="${OPT_BOTH}" aria-pressed="false" onclick="choose('${OPT_BOTH}')">Quote both options</button>`;
   $('main').innerHTML = `
     <div class="section">
       <h2>${single ? 'Confirm your proposal' : 'Choose your option'}</h2>
@@ -604,16 +551,15 @@ async function submitResponse(){
   }
 }
 
-/* ---------------------------------------------------------------------------
-   Recorded response: read-only
---------------------------------------------------------------------------- */
 function decisionLabel(v){
   return ({ 'Option A': 'Option A | Cost-Optimized', 'Option B - Specialist': 'Option B | Clinical Grade', 'Both': 'Both options quoted', 'Both Options': 'Both options quoted' })[v] || v || '';
 }
+
+/* renderRecorded — signature block appears here only */
 function renderRecorded(d, decision, date){
   const single = isSingle(d);
   setStatus('done', 'Response recorded');
-  setProgress(DOC.steps.length + 1);  // every step complete
+  setProgress(DOC.steps.length + 1);
   $('main').innerHTML = `
     <div class="section">
       <h2>Your response has been recorded</h2>
@@ -626,7 +572,8 @@ function renderRecorded(d, decision, date){
     <div class="section">
       <h2>What ${single ? 'your proposal includes' : 'each option includes'}</h2>
       ${comparison(d, single)}
-    </div>`;
+    </div>
+    ${SIG_BLOCK}`;
   highlight(decision);
 }
 
