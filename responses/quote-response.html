@@ -3,15 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pre-Order Confirmation | Essential Cures</title>
+<title>Respond to Your Quotation | Essential Cures</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<!--
-  Response Page Master Template (document number to be assigned in the ISO re-sync)
-  Every customer and supplier response page is built on this shell.
-  Page-specific values live in DOC below. Nothing else in the shell changes per page.
--->
 <style>
 :root{
   --blue:#005090;--navy:#003060;--green:#4A8B2C;--lime:#8FC23C;--sky:#0070B0;
@@ -27,10 +22,7 @@ a{color:var(--blue);}
 :focus-visible{outline:2px solid var(--sky);outline-offset:2px;}
 .page{max-width:var(--shell);margin:0 auto;padding:0 24px;width:100%;}
 .shell{padding:0 28px;}
-
-/* Header: logo | identity | controlled document block */
 .site-head{background:var(--white);box-shadow:0 2px 10px rgba(0,48,96,.08);}
-/* Header and controlled-document strip stay fixed together while the page scrolls */
 .top-fixed{position:sticky;top:0;z-index:50;background:var(--surface);padding-bottom:4px;}
 .head-grid{display:grid;grid-template-columns:auto 1fr auto;align-items:stretch;min-height:96px;}
 .head-logo{display:flex;align-items:center;padding-right:24px;border-right:1px solid var(--line);}
@@ -43,8 +35,6 @@ a{color:var(--blue);}
 .head-ctrl dt{color:var(--faint);}
 .head-ctrl dd{color:var(--ink);font-weight:600;text-align:right;}
 .stripes{height:8px;background:linear-gradient(var(--blue) 0 4px,var(--lime) 4px 8px);}
-
-/* Title band */
 .title-band{background:var(--white);border:1px solid var(--line);border-radius:var(--r);margin-top:16px;}
 .title-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:28px 0 22px;}
 .title-row h1{font-size:26px;font-weight:600;letter-spacing:-.01em;color:var(--ink);line-height:1.2;}
@@ -55,26 +45,23 @@ a{color:var(--blue);}
 .status.done{color:var(--green);background:var(--ok-bg);}
 .status.hold{color:var(--amber);background:var(--amber-bg);}
 .status.closed{color:var(--muted);background:var(--line-soft);}
-
-/* Progress */
 .progress{display:grid;grid-template-columns:repeat(var(--steps),1fr);}
 .progress li{list-style:none;position:relative;padding:14px 16px 16px 0;font-size:13px;color:var(--faint);}
 .progress li::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--line);}
-.progress li{display:flex;align-items:center;gap:8px;}.progress li .n{flex:none;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:1.5px solid var(--line);color:var(--faint);background:var(--white);}.progress li.done .n{background:var(--green);border-color:var(--green);color:var(--white);}.progress li.now .n{background:var(--blue);border-color:var(--blue);color:var(--white);}
+.progress li{display:flex;align-items:center;gap:8px;}
+.progress li .n{flex:none;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:1.5px solid var(--line);color:var(--faint);background:var(--white);}
+.progress li.done .n{background:var(--green);border-color:var(--green);color:var(--white);}
+.progress li.now .n{background:var(--blue);border-color:var(--blue);color:var(--white);}
 .progress li.done{color:var(--green);}
 .progress li.done::before{background:var(--green);}
 .progress li.now{color:var(--ink);font-weight:600;}
 .progress li.now::before{background:var(--blue);}
-
-/* Workspace */
 .workspace{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:24px;padding-top:24px;padding-bottom:40px;align-items:start;}
 .main{background:var(--white);border:1px solid var(--line);border-radius:var(--r);}
 .section{padding:28px 32px;border-top:1px solid var(--line-soft);}
 .section:first-child{border-top:0;}
 .section h2{font-size:17px;font-weight:600;color:var(--ink);}
 .section .lede{font-size:14px;color:var(--muted);margin-top:4px;max-width:68ch;}
-
-/* Notices */
 .notice{display:grid;grid-template-columns:4px 1fr;border-radius:var(--r);overflow:hidden;margin-top:18px;}
 .notice::before{content:"";}
 .notice .body{padding:14px 18px;font-size:14px;}
@@ -83,8 +70,6 @@ a{color:var(--blue);}
 .notice.ok{background:var(--ok-bg);}.notice.ok::before{background:var(--green);}
 .notice.warn{background:var(--amber-bg);}.notice.warn::before{background:var(--amber);}
 .notice.stop{background:var(--red-bg);}.notice.stop::before{background:var(--red);}
-
-/* Line items */
 .lines{margin-top:20px;border:1px solid var(--line);border-radius:var(--r);}
 .line{padding:20px 22px;border-top:1px solid var(--line);}
 .line:first-child{border-top:0;}
@@ -102,21 +87,17 @@ a{color:var(--blue);}
 .fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px;}
 .field label{display:block;font-size:13px;font-weight:600;color:var(--ink);}
 .field .hint{display:block;font-size:12px;color:var(--faint);margin:1px 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.field input,.field textarea,.field select{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--white);border:1px solid #C9D2DA;border-radius:var(--r);padding:10px 12px;}
+.field input,.field textarea,.field select{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--white);border:1px solid #C9D2DA;border-radius:var(--r);padding:10px 12px;overflow-wrap:break-word;word-break:break-word;}
 .field input:focus,.field textarea:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(0,80,144,.12);}
 .field input[readonly]{background:var(--surface);color:var(--muted);}
 .total{margin-top:12px;font-size:13px;color:var(--muted);}
 .total b{color:var(--ink);}
-
-/* Actions */
 .actions{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 32px;border-top:1px solid var(--line);background:#FAFBFC;border-radius:0 0 var(--r) var(--r);}
 .actions .note{font-size:13px;color:var(--muted);}
 .btn{font:inherit;font-size:15px;font-weight:600;padding:12px 24px;border-radius:var(--r);border:1px solid transparent;cursor:pointer;}
 .btn.primary{background:var(--green);color:var(--white);}
 .btn.primary:disabled{background:#B9CCB0;cursor:not-allowed;}
 .btn.ghost{background:var(--white);color:var(--slate);border-color:#C9D2DA;}
-
-/* Rail */
 .rail{display:flex;flex-direction:column;gap:20px;position:sticky;top:190px;}
 .panel{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;}
 .panel h3{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px;}
@@ -128,12 +109,6 @@ a{color:var(--blue);}
 .guide-card{border-left:3px solid var(--blue);}
 .guide-btn{display:block;margin-top:14px;padding:10px 14px;text-align:center;font-size:14px;font-weight:600;text-decoration:none;color:var(--blue);border:1px solid var(--blue);border-radius:var(--r);}
 .guide-btn:hover{background:var(--blue);color:var(--white);}
-
-  .sig-block{padding:28px 0 20px;text-align:center;}
-.sig-block p{font-size:13px;color:var(--muted);line-height:1.7;}
-.sig-block .sig-name{font-size:13px;font-weight:600;color:var(--slate);margin-top:4px;}
-
-/* Footer */
 body>.page>footer{margin-top:auto;}
 .page{display:flex;flex-direction:column;flex:1;}
 footer{margin-bottom:24px;}
@@ -146,13 +121,9 @@ footer{margin-bottom:24px;}
 .foot-line{height:3px;background:linear-gradient(90deg,var(--blue) 60%,var(--faint));}
 .foot-row .urls{font-size:13px;color:var(--muted);}
 .foot-row .copy{font-size:11px;font-style:italic;color:#9EA8B1;margin-top:2px;}
-/* Document control strip, between header and page */
 .ctrl-strip{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 28px;margin-top:16px;padding:10px 20px;background:#F9FBFC;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:var(--r);font-size:12.5px;color:var(--muted);}
 .ctrl-strip .id{font-weight:600;color:var(--ink);white-space:nowrap;}
-.ctrl-strip .id span{color:var(--faint);font-weight:500;margin:0 8px;}
 .ctrl-strip .stmt{text-align:right;}
-
-/* Technical support tab and panel. A ticketing form will replace the email link later. */
 .it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:60;}
 .it-tab{writing-mode:vertical-rl;transform:rotate(180deg);background:var(--navy);color:var(--white);font:600 12px "Inter",sans-serif;padding:14px 8px;border:0;border-radius:4px 0 0 4px;cursor:pointer;}
 .it-panel{display:none;position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);width:280px;background:var(--white);border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 28px rgba(0,48,96,.14);padding:20px 22px;}
@@ -162,9 +133,11 @@ footer{margin-bottom:24px;}
 .it-panel a{display:inline-block;margin-top:14px;font-size:14px;font-weight:600;color:var(--blue);}
 .it-close{position:absolute;top:14px;right:14px;width:24px;height:24px;border:0;background:none;color:var(--faint);font-size:18px;line-height:1;cursor:pointer;}
 .it-close:hover{color:var(--ink);}
-
 .skeleton{color:var(--faint);font-size:14px;padding:48px 32px;}
-
+/* Signature block — final state only */
+.sig-block{padding:28px 32px 8px;text-align:center;border-top:1px solid var(--line-soft);}
+.sig-block p{font-size:13px;color:var(--muted);line-height:1.7;}
+.sig-block .sig-name{font-size:13px;font-weight:600;color:var(--slate);margin-top:5px;}
 @media (max-width:980px){
   .workspace{grid-template-columns:1fr;}
   .rail{display:contents;}
@@ -188,6 +161,7 @@ footer{margin-bottom:24px;}
   .workspace{padding-left:12px;padding-right:12px;}
   footer{margin-bottom:0;}
   .it-float{display:none;}
+  .sig-block{padding-left:16px;padding-right:16px;}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
 /* Quote Response specifics */
@@ -196,12 +170,12 @@ footer{margin-bottom:24px;}
 .qtable th{padding:10px 12px;text-align:left;font-size:12px;font-weight:600;color:var(--white);background:var(--blue);}
 .qtable th.r,.qtable td.r{text-align:right;}
 .qtable th.c,.qtable td.c{text-align:center;}
-.qtable td{padding:11px 12px;border-top:1px solid var(--line-soft);vertical-align:top;color:var(--slate);}
+.qtable td{padding:11px 12px;border-top:1px solid var(--line-soft);vertical-align:top;color:var(--slate);overflow-wrap:break-word;word-break:break-word;}
 .qtable .pn{font-weight:600;color:var(--ink);}
 .qtable .pk{font-size:12px;color:var(--muted);margin-top:2px;}
 .qtable .br{font-style:italic;color:var(--muted);}
 .optband{margin-top:22px;padding:10px 14px;color:var(--white);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;}
-.optband.a{background:var(--blue);} .optband.b{background:var(--green);}
+.optband.a{background:var(--blue);}.optband.b{background:var(--green);}
 .totals{margin:12px 0 0 auto;width:320px;max-width:100%;font-size:13px;}
 .totals div{display:flex;justify-content:space-between;padding:7px 10px;border-bottom:1px solid var(--line-soft);}
 .totals div span:first-child{color:var(--muted);}
@@ -220,7 +194,7 @@ footer{margin-bottom:24px;}
 .pay-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #CFE3C2;}
 .pay-row:last-child{border-bottom:0;font-weight:600;padding-top:8px;}
 .addr{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
-.addr div{padding:12px 14px;background:#F4F7FA;border-left:3px solid var(--blue);font-size:13px;line-height:1.6;}
+.addr div{padding:12px 14px;background:#F4F7FA;border-left:3px solid var(--blue);font-size:13px;line-height:1.6;overflow-wrap:break-word;word-break:break-word;}
 .addr h4{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--blue);margin-bottom:4px;}
 .choice{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
 .choice button{font:inherit;padding:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--white);cursor:pointer;text-align:left;}
@@ -232,7 +206,7 @@ footer{margin-bottom:24px;}
 .terms{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.6;}
 #decisionError{display:none;}
 @media (max-width:720px){.addr,.choice{grid-template-columns:1fr;}}
-/* Order hub (approved design, Oct 2026), inside the template main panel */
+/* Order hub */
 .hb{color:#1F2B37;font-variant-numeric:tabular-nums;}
 .hb-sec{padding:24px 28px 8px;}
 .hb-h1{margin:0 0 6px;font-size:22px;font-weight:600;color:#00294D;line-height:1.25;}
@@ -240,7 +214,7 @@ footer{margin-bottom:24px;}
 .hb-lead{margin:0 0 20px;font-size:14px;line-height:1.6;color:#3D4B58;}
 .hb-sum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:0;padding:16px 18px;background:#F4F6F8;border-radius:4px;}
 .hb-sum dt{font-size:12px;color:#556472;margin:0 0 4px;}
-.hb-sum dd{margin:0;font-size:14px;font-weight:500;}
+.hb-sum dd{margin:0;font-size:14px;font-weight:500;overflow-wrap:break-word;word-break:break-word;}
 .hb-h2{margin:0 0 18px;font-size:16px;font-weight:600;color:#00294D;}
 .hb-road{list-style:none;margin:0;padding:0;display:flex;}
 .hb-step{flex:1 1 0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;position:relative;}
@@ -254,7 +228,7 @@ footer{margin-bottom:24px;}
 .hb-stxt{display:flex;flex-direction:column;align-items:center;gap:3px;}
 .hb-sname{font-size:13px;font-weight:600;}
 .hb-sstat{font-size:12px;}
-.hb-sstat.complete{color:#2F6B1A;} .hb-sstat.await{color:#005090;font-weight:500;} .hb-sstat.review{color:#8A4B00;font-weight:500;} .hb-sstat.muted{color:#556472;}
+.hb-sstat.complete{color:#2F6B1A;}.hb-sstat.await{color:#005090;font-weight:500;}.hb-sstat.review{color:#8A4B00;font-weight:500;}.hb-sstat.muted{color:#556472;}
 .hb-sdate{font-size:12px;color:#556472;}
 .hb-alert{margin:16px 28px 0;padding:12px 14px;border:1px solid #E7C17A;background:#FFF8E8;border-radius:4px;font-size:13px;line-height:1.55;color:#5C3D00;}
 .hb-panels{display:grid;grid-template-columns:1fr;gap:20px;padding:24px 28px 8px;}
@@ -278,21 +252,21 @@ footer{margin-bottom:24px;}
 .hb-pick{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:1px solid #005090;border-radius:4px;color:#005090;font-size:14px;font-weight:500;cursor:pointer;background:#FFFFFF;}
 .hb-file{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;}
 .hb-hint{font-size:12px;color:#556472;}
-.hb-fname{font-size:13px;font-weight:500;color:#00294D;} .hb-fname:empty{display:none;}
+.hb-fname{font-size:13px;font-weight:500;color:#00294D;}.hb-fname:empty{display:none;}
 .hb-btn{height:46px;border:none;border-radius:4px;background:#005090;color:#FFFFFF;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;}
 .hb-btn:disabled{background:#8FA9C2;cursor:not-allowed;}
-.hb-err{margin:0;font-size:13px;color:#B42318;} .hb-err:empty{display:none;}
+.hb-err{margin:0;font-size:13px;color:#B42318;}.hb-err:empty{display:none;}
 .hb-kv{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 16px;padding:12px 14px;background:#F4F6F8;border-radius:4px;font-size:14px;}
-.hb-kv dt{color:#556472;} .hb-kv dd{margin:0;font-weight:500;overflow-wrap:anywhere;}
-.hb-kv dd.review{color:#8A4B00;} .hb-kv dd.complete{color:#2F6B1A;}
+.hb-kv dt{color:#556472;}.hb-kv dd{margin:0;font-weight:500;overflow-wrap:anywhere;}
+.hb-kv dd.review{color:#8A4B00;}.hb-kv dd.complete{color:#2F6B1A;}
 .hb-amt{margin:10px 0 0;display:grid;grid-template-columns:1fr auto;gap:6px 16px;font-size:14px;}
-.hb-amt dt{color:#3D4B58;} .hb-amt dd{margin:0;} .hb-amt dd.due{font-weight:600;color:#00294D;}
+.hb-amt dt{color:#3D4B58;}.hb-amt dd{margin:0;}.hb-amt dd.due{font-weight:600;color:#00294D;}
 .hb-tbox{overflow-x:auto;border:1px solid #D8DEE4;border-radius:6px;}
 .hb-table{width:100%;min-width:520px;border-collapse:collapse;font-size:14px;}
 .hb-table th{text-align:left;padding:11px 16px;font-size:12px;font-weight:600;color:#3D4B58;background:#F4F6F8;border-bottom:1px solid #D8DEE4;}
 .hb-table td{padding:13px 16px;border-bottom:1px solid #E6EAEE;color:#3D4B58;overflow-wrap:anywhere;}
 .hb-table tr:last-child td{border-bottom:none;}
-.hb-table td.hb-tl{font-weight:500;color:#1F2B37;} .hb-table td.review{color:#8A4B00;font-weight:500;} .hb-table td.complete{color:#2F6B1A;font-weight:500;} .hb-table td.muted{color:#556472;}
+.hb-table td.hb-tl{font-weight:500;color:#1F2B37;}.hb-table td.review{color:#8A4B00;font-weight:500;}.hb-table td.complete{color:#2F6B1A;font-weight:500;}.hb-table td.muted{color:#556472;}
 .hb [hidden]{display:none !important;}
 .hb input:focus-visible,.hb select:focus-visible,.hb button:focus-visible,.hb a:focus-visible,.hb .hb-drop:focus-within .hb-pick{outline:2px solid #005090;outline-offset:2px;}
 @media (max-width:640px){
@@ -305,9 +279,6 @@ footer{margin-bottom:24px;}
   .hb-line{display:none;}
   .hb-stxt{align-items:flex-start;}
 }
-
-
-/* Submission overlay (shared by every response page) */
 .wait-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(0,48,96,.55);align-items:center;justify-content:center;padding:20px;}
 .wait-overlay.open{display:flex;}
 .wait-card{background:var(--white);border-radius:10px;box-shadow:0 8px 40px rgba(0,48,96,.25);max-width:440px;width:100%;overflow:hidden;}
@@ -319,7 +290,6 @@ footer{margin-bottom:24px;}
 .wait-text{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px;}
 .wait-warn{background:var(--amber-bg);border-left:3px solid var(--amber);padding:10px 12px;font-size:12px;color:#7D5A00;text-align:left;font-weight:600;}
 .wait-step{font-size:12px;color:var(--blue);font-weight:600;margin-top:12px;min-height:16px;}
-
 .accept-card{margin-top:16px;border:1px solid var(--line);border-left:3px solid var(--navy);background:#F7F9FB;padding:16px 18px;}
 .accept-card h3{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:10px;}
 .accept-card ol{margin:0 0 10px 18px;padding:0;font-size:13px;line-height:1.65;color:var(--slate);}
@@ -351,7 +321,6 @@ footer{margin-bottom:24px;}
   </div>
   <div class="stripes"></div>
 </header>
-
 <div class="ctrl-strip" role="note" aria-label="Document control">
   <div class="id" id="ctrlId"></div>
   <div class="stmt">This online version is the current approved issue. Printed or downloaded copies are uncontrolled.</div>
@@ -375,7 +344,6 @@ footer{margin-bottom:24px;}
   <main class="main" id="main" aria-live="polite">
     <div class="skeleton">Loading your order details.</div>
   </main>
-
   <aside class="rail">
     <section class="panel guide-card">
       <h3>Ordering guide</h3>
@@ -435,14 +403,8 @@ footer{margin-bottom:24px;}
 </div>
 
 <script>
-/* ---------------------------------------------------------------------------
-   Page definition
---------------------------------------------------------------------------- */
 const DOC = {
-  // Document control is assigned in the ISO re-sync after full deal testing.
-  number: '',
-  revision: '',
-  effective: '',
+  number: '', revision: '', effective: '',
   title: 'Respond to Your Quotation',
   contact: 'sales@essentialcures.com',
   guide: 'https://essentialcures.com/guides/customer-ordering-guide',
@@ -452,11 +414,10 @@ const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
 const RESPONSE_BASE = 'https://ec-customer-response-worker.faisal-khan-e13.workers.dev';
 const CARE = 'customercare@essentialcures.com';
 
-/* ---------------------------------------------------------------------------
-   Shared helpers (master template)
---------------------------------------------------------------------------- */
+/* Signature block — Customer Care variant, rendered on the hub (final) state only */
+const SIG_BLOCK_CARE = `<div class="sig-block"><p>Thank you for your order. We are committed to fulfilling it with care and precision.</p><p class="sig-name">Customer Care Team | Essential Cures Inc.</p></div>`;
+
 const $ = (id) => document.getElementById(id);
-/* Submission overlay (shared) */
 let waitStepTimer = null;
 function warnOnLeave(e){ e.preventDefault(); e.returnValue = ''; }
 function openWait(title, text, steps){
@@ -475,7 +436,6 @@ function closeWait(){
   if(waitStepTimer){ clearInterval(waitStepTimer); waitStepTimer = null; }
   window.removeEventListener('beforeunload', warnOnLeave);
 }
-
 function toggleIT(){
   const panel = $('itPanel');
   const open = panel.classList.toggle('open');
@@ -530,22 +490,12 @@ function renderError(message){
   setProgress(0);
   $('main').innerHTML = `<div class="section"><h2>This link could not be opened</h2><div class="notice stop"><div class="body">${linkContact(message)}</div></div></div>`;
 }
-
-/* ---------------------------------------------------------------------------
-   Pack wording: "120 Box" with "Box of 100, 12,000 units in total"
---------------------------------------------------------------------------- */
 function qtyLabel(li){ return `${fmtQty(li.quantity)} ${esc(li.packUom || 'Each')}`; }
 function packNote(li){
   const upp = parseInt(li.unitsPerPack, 10);
   if(!upp || upp <= 1) return '';
   return `${esc(li.packUom || 'Pack')} of ${upp.toLocaleString('en-CA')}, ${(Math.round(num(li.quantity)) * upp).toLocaleString('en-CA')} units in total`;
 }
-
-/* ---------------------------------------------------------------------------
-   Contact cards
---------------------------------------------------------------------------- */
-/* Customer and EC contact cards. The EC contact is the Deal owner while the deal is
-   with sales; once the quotation is accepted, contact moves to Customer Care. */
 const SALES = 'sales@essentialcures.com';
 function mailLink(e){ return e ? `<a href="mailto:${esc(e)}">${esc(e)}</a>` : ''; }
 function setContactCards(d, accepted){
@@ -563,9 +513,6 @@ function setContactCards(d, accepted){
   $('ecFacts').innerHTML = rows.filter(r => r[1]).map(r => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
 }
 
-/* ---------------------------------------------------------------------------
-   Load
---------------------------------------------------------------------------- */
 const params = new URLSearchParams(location.search);
 const token = params.get('token');
 const quoteId = params.get('id');
@@ -602,9 +549,6 @@ async function loadQuote(){
   }
 }
 
-/* ---------------------------------------------------------------------------
-   Quotation view
---------------------------------------------------------------------------- */
 function lineTable(lines){
   const rows = (lines || []).map((li, i) => {
     const note = packNote(li);
@@ -661,9 +605,6 @@ function optionBlock(o, band, cls, label){
     ${instructions(o.deliveryInstructions)}
     ${payment(o.deliverySummary, o.grandTotal)}`;
 }
-
-// Short terms with a link to the full online Terms and Conditions of Sale.
-// Falls back to the full text held on the quotation when no summary is configured.
 function termsBlock(d){
   const link = d.termsUrl ? ` <a href="${esc(d.termsUrl)}" target="_blank" rel="noopener">Read the full Terms and Conditions of Sale</a>.` : '';
   if(d.termsSummary) return `<div class="blk"><h4>Terms and conditions</h4><p>${esc(d.termsSummary)}${link}</p></div>`;
@@ -713,7 +654,6 @@ function renderQuote(d){
       <button class="btn primary" id="submitBtn" type="button" disabled onclick="submitResponse()">${dual ? 'Select an option to continue' : 'Accept this quotation to continue'}</button>
     </div>`;
 }
-
 function choose(v){
   selectedDecision = v;
   document.querySelectorAll('.choice button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v ? 'true' : 'false'));
@@ -727,9 +667,6 @@ function updateSubmit(){
   btn.textContent = !selectedDecision ? 'Select an option to continue' : (!auth ? 'Confirm your authority to continue' : 'Submit my acceptance');
 }
 
-/* ---------------------------------------------------------------------------
-   Decision submit (customer response worker)
---------------------------------------------------------------------------- */
 async function sendRequest(path, body, isForm, timeoutMs){
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs || 45000);
@@ -777,9 +714,6 @@ function showDeclined(){
   $('main').innerHTML = `<div class="section"><h2>Your response has been recorded</h2><div class="notice warn"><div class="body">Your response declining quotation ${esc(quoteData.quoteNumber)} has been recorded. Should you wish to revisit this quotation, please contact <a href="mailto:${DOC.contact}">${DOC.contact}</a>.</div></div></div>`;
 }
 
-/* ---------------------------------------------------------------------------
-   Order hub (approved design, Oct 2026)
---------------------------------------------------------------------------- */
 let hub = null;
 let hubFile = null;
 const DOC_TYPES = { 'application/pdf': true, 'image/jpeg': true, 'image/png': true };
@@ -896,6 +830,7 @@ function payPanelBody(){
     <div id="pay-email" hidden>${emailBox('Advance Payment, ' + h.quoteNumber, 'Once payment has been sent, please email your remittance advice to the address below, quoting your quotation number.', 'Emailed remittances are matched manually and may take longer to appear on this page.')}</div>`;
 }
 
+/* renderHub — signature block (Customer Care) appears at the bottom of the hub, final state only */
 function renderHub(){
   const h = hub, d = quoteData;
   const poDone = h.poState === 'verified';
@@ -917,8 +852,6 @@ function renderHub(){
   const lineAfter3 = poDone || h.poState === 'none' ? 'done' : '';
   const lineAfter4 = payClear ? 'done' : '';
 
-  // Page progress bar and status follow the hub
-  // Payment still to be made: step 3. Submissions under review: step 4. Cleared: step 5.
   let barStep = 5, barKind = 'done', barText = 'Order confirmed';
   if(h.advanceRequired && h.payState === 'none'){ barStep = 3; barKind = 'open'; barText = 'Order accepted'; }
   else if(h.payState === 'pending' || h.poState === 'received'){ barStep = 4; barKind = 'hold'; barText = 'Under review'; }
@@ -1003,6 +936,7 @@ function renderHub(){
         <p class="hb-hint" style="margin:0">Submits each section you have completed online. Sections set to Send by Email are not included.</p>
       </div>
     </section>` : ''}
+    ${SIG_BLOCK_CARE}
   </div>`;
   bindHub();
   window.scrollTo(0, 0);
