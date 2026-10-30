@@ -191,6 +191,46 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
   .step-name{display:none;}
   .step-nav .secondary-btn{flex:0 0 100px;}
 }
+
+/* ===== Financials: Order Settlement and Account Reconciliation ===== */
+.price-table td{overflow-wrap:break-word;word-break:break-word;}
+.fin-block{margin-top:32px;padding-top:24px;border-top:2px solid #E8ECF0;}
+.fin-title{font-size:15px;font-weight:700;color:var(--dark-navy);margin-bottom:2px;}
+.fin-lede{font-size:12px;color:var(--cool-gray);line-height:1.6;}
+.fin-sub{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:22px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
+.fin-sub .asof{font-size:11px;font-weight:600;color:var(--cool-gray);text-transform:none;letter-spacing:0;}
+.fin-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));border:1px solid #D4DAE0;border-radius:8px;overflow:hidden;margin-bottom:14px;background:var(--light-bg);}
+.fin-kv > div{padding:10px 14px;border-right:1px solid #D4DAE0;min-width:0;}
+.fin-kv > div:last-child{border-right:none;}
+.fin-kv .k{display:block;font-size:10.5px;font-weight:700;color:var(--cool-gray);text-transform:uppercase;letter-spacing:0.5px;}
+.fin-kv .v{display:block;font-size:14px;font-weight:700;color:var(--dark-navy);font-variant-numeric:tabular-nums;overflow-wrap:break-word;word-break:break-word;}
+.fin-kv .v.over{color:var(--red);}
+.fin-kv .v.ok{color:#276414;}
+.fin-kv .v small{display:block;font-size:11px;font-weight:600;color:var(--cool-gray);}
+.fin-pill{display:inline-block;font-size:11px;font-weight:700;border-radius:20px;padding:1px 9px;white-space:nowrap;}
+.fin-pill.paid{background:#EBF5E8;color:#276414;}
+.fin-pill.due{background:#EAF2FB;color:var(--deep-blue);}
+.fin-pill.wait{background:#F1F3F5;color:var(--cool-gray);}
+.fin-pill.over{background:#FDECEC;color:var(--red);}
+.fin-note{font-size:12px;color:var(--cool-gray);line-height:1.6;margin:8px 0 4px;}
+.fin-standing{margin:4px 0 0;}
+
+/* ===== Policies and Guidelines ===== */
+.policy-strip{margin-top:28px;background:#EAF2FB;border-left:4px solid var(--deep-blue);padding:14px 16px;border-radius:0 6px 6px 0;}
+.policy-strip .ps-title{font-size:13px;font-weight:700;color:var(--dark-navy);}
+.policy-strip .ps-text{font-size:12px;color:var(--cool-gray);margin-bottom:10px;line-height:1.6;}
+.policy-links{display:flex;gap:8px;flex-wrap:wrap;}
+
+/* ===== Page availability ===== */
+.valid-card{margin-top:20px;border:1px solid #D4DAE0;border-radius:8px;background:var(--light-bg);padding:14px 18px;}
+.valid-card .vc-title{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+.valid-card p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-top:8px;}
+.valid-card a{color:var(--deep-blue);font-weight:600;text-decoration:none;}
+
+/* ===== Signature block (final states only) ===== */
+.sig-block{margin-top:28px;padding:24px 0 4px;text-align:left;border-top:1px solid #E8ECF0;}
+.sig-block p{font-size:13px;color:var(--cool-gray);line-height:1.7;}
+.sig-block .sig-name{font-size:13px;font-weight:600;color:var(--slate);margin-top:5px;}
 </style>
 </head>
 <body>
@@ -323,7 +363,18 @@ function cfg(){
 function adv(){
   return (poData && poData.advance) ? poData.advance : {};
 }
+function fin(){
+  return (poData && poData.financials) ? poData.financials : {};
+}
 const SUPPLIER_GUIDE_URL = 'https://essentialcures.com/guides/supplier-ordering-guide';
+// Supplier terms and conditions page. The link appears once this URL is set.
+const SUPPLIER_TERMS_URL = '';
+
+const SIG_BLOCK = `
+  <div class="sig-block">
+    <p>Thank you for partnering with Essential Cures. We look forward to a consistent and reliable supply relationship.</p>
+    <p class="sig-name">Procurement Team | Essential Cures Inc.</p>
+  </div>`;
 
 async function loadPO(){
   if(!token){
@@ -345,6 +396,198 @@ async function loadPO(){
   }
 }
 
+/* ===== Financials =====
+   Read from poData.financials, supplied by the gate. Every value renders
+   gracefully when the gate has not yet supplied it. Payments are recorded by
+   Essential Cures finance only; this page displays them and never captures them. */
+function numOrNull(v){
+  return (v === null || v === undefined || v === '') ? null : Number(v);
+}
+function cad(v){ return v == null ? 'Not specified' : `${money(v)} CAD`; }
+function finPill(kind, text){ return `<span class="fin-pill ${kind}">${esc(text)}</span>`; }
+function kvGrid(rows){
+  return `<div class="fin-kv">` + rows.map(r =>
+    `<div><span class="k">${r[0]}</span><span class="v${r[2] ? ' ' + r[2] : ''}">${r[1]}</span></div>`
+  ).join('') + `</div>`;
+}
+function goodsSubtotal(){
+  if(poData.subTotal != null) return Number(poData.subTotal);
+  return (poData.lineItems || []).reduce((s, l) => s + (Number(l.lineTotal) || 0), 0);
+}
+function advancePaidAmount(){
+  const a = adv();
+  return a.status === 'Paid' ? (Number(a.paidAmount) || 0) : 0;
+}
+
+function advanceRow(){
+  const a = adv();
+  if(!a.proformaRequired && !a.status) return null;
+  const paid = a.status === 'Paid';
+  let status;
+  if(paid) status = finPill('paid', 'Paid');
+  else if(a.proformaReceived) status = finPill('due', 'In process');
+  else status = finPill('wait', 'Awaiting proforma');
+  return {
+    label: 'Advance',
+    amount: paid ? numOrNull(a.paidAmount) : numOrNull(a.expectedAmount),
+    due: a.dueDate ? fmtDate(a.dueDate) : 'On receipt of proforma',
+    status,
+    paidOn: paid ? fmtDate(a.paidDate) : '',
+    ref: paid ? [a.transactionRef, a.paymentMethod].filter(Boolean).map(esc).join('<br>') : '',
+  };
+}
+
+function balanceRow(){
+  const f = fin();
+  const b = f.balance || {};
+  const total = numOrNull(f.orderTotal);
+  let amount = numOrNull(b.amount);
+  if(amount == null && total != null) amount = Math.max(0, total - advancePaidAmount());
+  const paid = b.status === 'Paid';
+  let due;
+  if(b.dueDate) due = fmtDate(b.dueDate);
+  else if(f.creditDays) due = `${esc(f.creditDays)} days from ${esc(f.termsBasis || 'invoice date')}`;
+  else due = 'Per agreed terms';
+  let status;
+  if(paid) status = finPill('paid', 'Paid');
+  else if(b.dueDate && String(b.dueDate).slice(0, 10) < today()) status = finPill('over', 'Overdue');
+  else if(b.status === 'Part Paid') status = finPill('due', 'Part paid');
+  else if(b.dueDate) status = finPill('due', 'Scheduled');
+  else status = finPill('wait', 'Awaiting invoice');
+  return {
+    label: 'Balance',
+    amount,
+    due,
+    status,
+    paidOn: paid ? fmtDate(b.paidDate) : '',
+    ref: paid ? [b.transactionRef, b.paymentMethod].filter(Boolean).map(esc).join('<br>') : '',
+  };
+}
+
+function scheduleTable(){
+  const rows = [advanceRow(), balanceRow()].filter(Boolean);
+  return `
+    <div class="price-wrap">
+      <table class="price-table">
+        <thead><tr>
+          <th>Instalment</th><th class="num">Amount (CAD)</th><th>Due</th><th>Status</th><th>Paid On</th><th>Reference</th>
+        </tr></thead>
+        <tbody>${rows.map(r => `
+          <tr>
+            <td>${r.label}</td>
+            <td class="num">${r.amount != null ? money(r.amount) : 'On invoice'}</td>
+            <td>${r.due}</td>
+            <td>${r.status}</td>
+            <td>${r.paidOn}</td>
+            <td>${r.ref}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function paymentsLedger(){
+  const list = Array.isArray(fin().payments) ? fin().payments : [];
+  if(list.length === 0) return '';
+  const paid = list.reduce((s, p) => s + (Number(p.amount) || 0), 0);
+  const total = numOrNull(fin().orderTotal);
+  return `
+    <div class="price-wrap" style="margin-top:12px;">
+      <table class="price-table">
+        <thead><tr>
+          <th>Payment Date</th><th>Instalment</th><th>Method</th><th>Reference</th><th class="num">Amount (CAD)</th>
+        </tr></thead>
+        <tbody>${list.map(p => `
+          <tr>
+            <td>${fmtDate(p.date)}</td>
+            <td>${esc(p.type || '')}</td>
+            <td>${esc(p.method || '')}</td>
+            <td>${esc(p.reference || '')}</td>
+            <td class="num">${money(p.amount)}</td>
+          </tr>`).join('')}
+        </tbody>
+        <tfoot>
+          <tr><td colspan="4" class="num">Paid to date</td><td class="num">${money(paid)}</td></tr>
+          ${total != null ? `<tr><td colspan="4" class="num">Outstanding on this order</td><td class="num">${money(Math.max(0, total - paid))}</td></tr>` : ''}
+        </tfoot>
+      </table>
+    </div>`;
+}
+
+function orderSettlement(){
+  const f = fin();
+  const rows = [
+    ['Goods Subtotal', cad(goodsSubtotal())],
+    ['Tax', f.taxAmount != null ? cad(f.taxAmount) : 'As applicable'],
+  ];
+  if(f.freightAmount != null) rows.push(['Freight', cad(f.freightAmount)]);
+  rows.push(['Order Total', f.orderTotal != null ? cad(f.orderTotal) : 'On invoice']);
+  rows.push(['Payment Terms', esc(f.paymentTerms || 'Per agreed terms')]);
+  return `
+    <div class="fin-sub"><span>Order Settlement</span></div>
+    ${kvGrid(rows)}
+    ${scheduleTable()}
+    ${paymentsLedger()}
+    <div class="fin-note">Please submit your invoice to <a href="mailto:${FINANCE_EMAIL}">${FINANCE_EMAIL}</a>, quoting purchase order ${esc(poData.poNumber || '')}. The balance due date is set from your invoice and the agreed payment terms.</div>`;
+}
+
+function accountReconciliation(){
+  const ac = fin().account;
+  if(!ac){
+    return `
+      <div class="fin-sub"><span>Account Reconciliation</span></div>
+      <div class="fin-note">Your consolidated account position with Essential Cures appears here once invoicing begins on your account.</div>`;
+  }
+  const over = Number(ac.overdue) || 0;
+  const outstanding = Number(ac.totalOutstanding) || 0;
+  const notDue = ac.notYetDue != null ? Number(ac.notYetDue) : Math.max(0, outstanding - over);
+  const rows = [
+    ['Open Orders', esc(ac.openOrders != null ? ac.openOrders : 0)],
+    ['Total Outstanding', cad(outstanding)],
+    ['Not Yet Due', cad(notDue)],
+    ['Overdue', cad(over), over > 0 ? 'over' : 'ok'],
+  ];
+  if(ac.lastPaymentDate){
+    rows.push(['Last Payment', `${fmtDate(ac.lastPaymentDate)}${ac.lastPaymentAmount != null ? `<small>${cad(ac.lastPaymentAmount)}</small>` : ''}`]);
+  }
+  let standing;
+  if(over > 0){
+    standing = `<div class="ack-note fin-standing"><span class="ack-title">Amount past due: ${cad(over)}</span>Our finance team has been notified and is addressing this. To reconcile, please contact <a href="mailto:${FINANCE_EMAIL}">${FINANCE_EMAIL}</a>, quoting the invoice numbers concerned.</div>`;
+  }else if(outstanding === 0){
+    standing = `<div class="ack-note done fin-standing"><span class="ack-title">Account fully reconciled</span>No amounts are outstanding on your account.</div>`;
+  }else{
+    standing = `<div class="ack-note done fin-standing"><span class="ack-title">Account in good standing</span>No amounts are overdue. Outstanding amounts will be settled on their due dates.</div>`;
+  }
+  return `
+    <div class="fin-sub"><span>Account Reconciliation</span>${ac.asOf ? `<span class="asof">As of ${fmtDate(ac.asOf)}</span>` : ''}</div>
+    ${kvGrid(rows)}
+    ${standing}`;
+}
+
+function buildFinancials(){
+  return `
+    <div class="fin-block">
+      <div class="fin-title">Financials</div>
+      <div class="fin-lede">Settlement of this purchase order and your overall account position with Essential Cures. Payments are released by our finance team and recorded here with their date, method and reference.</div>
+      ${orderSettlement()}
+      ${accountReconciliation()}
+    </div>`;
+}
+
+/* ===== Page availability ===== */
+function buildValidityCard(){
+  const v = (poData && poData.linkValidity) || {};
+  const rows = [];
+  if(v.issuedDate) rows.push(['Issued', fmtDate(v.issuedDate)]);
+  rows.push(['Available Until', v.activeUntil ? fmtDate(v.activeUntil) : 'Order delivered and fully settled']);
+  return `
+    <div class="valid-card">
+      <div class="vc-title">Page Availability</div>
+      ${rows.map(r => `<div class="pay-row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('')}
+      <p>This page remains active until the order is delivered and fully settled, so delivery notes and payment records stay available to you throughout. After the date shown, please request copies from <a href="mailto:${PROCUREMENT_EMAIL}">${PROCUREMENT_EMAIL}</a>.</p>
+    </div>`;
+}
+
 /* ===== Recorded shipments list, shared by Step 4 and the completed view ===== */
 function shipmentsList(){
   if(!(poData.existingShipments && poData.existingShipments.length)){
@@ -364,10 +607,9 @@ function completePanel(){
   return `
     <div class="complete-panel">
       <div class="cp-title">Fulfilment Complete</div>
-      <p>All lines on purchase order ${esc(poData.poNumber || '')} have been dispatched and recorded. Your response is complete, and no further action is required on this page.</p>
-      <p>The delivery note for each shipment remains available below for your records.</p>
+      <p>All lines on purchase order ${esc(poData.poNumber || '')} have been dispatched and recorded. No further shipment entry is required.</p>
+      <p>This page remains available so you can follow settlement of this order in the Financials section below. The delivery note for each shipment also remains available for your records.</p>
       <p>Should you have any questions regarding this order, please contact Essential Cures Inc. at <a href="mailto:${PROCUREMENT_EMAIL}">${PROCUREMENT_EMAIL}</a>, quoting the purchase order number.</p>
-      <p>Please submit your invoice to <a href="mailto:${FINANCE_EMAIL}">${FINANCE_EMAIL}</a> once the goods have been dispatched, quoting purchase order ${esc(poData.poNumber || '')}, so that payment can be processed promptly.</p>
     </div>`;
 }
 
@@ -377,7 +619,10 @@ function renderComplete(){
     <p class="deal-name">${esc(poData.poNumber || '')} &middot; ${esc(poData.supplierName || '')}</p>
     ${completePanel()}
     ${shipmentsList()}
+    ${buildFinancials()}
     ${guideStrip()}
+    ${buildValidityCard()}
+    ${SIG_BLOCK}
   `;
 }
 
@@ -394,7 +639,10 @@ function renderNotice(n){
       <p>${esc(n.message).replace(PROCUREMENT_EMAIL, `<a href="mailto:${PROCUREMENT_EMAIL}">${PROCUREMENT_EMAIL}</a>`)}</p>
     </div>
     ${withShipments ? shipmentsList() : ''}
+    ${withShipments ? buildFinancials() : ''}
     ${guideStrip()}
+    ${withShipments ? buildValidityCard() : ''}
+    ${SIG_BLOCK}
   `;
 }
 
@@ -407,8 +655,8 @@ function renderPage(stayOnStep){
     return;
   }
 
-  // A fully shipped order is closed to further entry. The supplier sees the
-  // completion notice and their delivery notes only.
+  // A fully shipped order is closed to further shipment entry. The supplier
+  // sees the completion notice, delivery notes and Financials until settled.
   if(poData.allFullyShipped){
     renderComplete();
     return;
@@ -422,6 +670,9 @@ function renderPage(stayOnStep){
     <div class="step-panel" id="panel2">${buildStep2()}</div>
     <div class="step-panel" id="panel3">${buildStep3()}</div>
     <div class="step-panel" id="panel4">${buildStep4()}</div>
+    ${buildFinancials()}
+    ${guideStrip()}
+    ${buildValidityCard()}
   `;
 
   const dd = document.getElementById('dispatchDate');
@@ -439,14 +690,19 @@ function buildStepBar(){
   }).join('') + `</div>`;
 }
 
+/* ===== Policies and Guidelines: appears once, below Financials ===== */
 function guideStrip(){
+  const terms = SUPPLIER_TERMS_URL
+    ? `<a class="guide-strip-link" href="${SUPPLIER_TERMS_URL}" target="_blank" rel="noopener">Supplier Terms and Conditions</a>`
+    : '';
   return `
-    <div class="guide-strip" style="margin-top:20px;margin-bottom:0;">
-      <div class="guide-strip-text">
-        <strong>Supplier Ordering Guide</strong>
-        How Essential Cures orders, confirms, dispatches and pays. Opens in a new tab.
+    <div class="policy-strip">
+      <div class="ps-title">Policies and Guidelines</div>
+      <div class="ps-text">The guide and terms that govern orders placed with you by Essential Cures. Each document opens in a new tab.</div>
+      <div class="policy-links">
+        <a class="guide-strip-link" href="${SUPPLIER_GUIDE_URL}" target="_blank" rel="noopener">Supplier Ordering Guide</a>
+        ${terms}
       </div>
-      <a class="guide-strip-link" href="${SUPPLIER_GUIDE_URL}" target="_blank" rel="noopener">Open Guide</a>
     </div>`;
 }
 
@@ -515,12 +771,10 @@ function buildStep1(){
     <div class="section-label">Acknowledgement</div>
     ${ackBlock}
     ${buildProformaBlock()}
-    ${buildPaymentBlock()}
     <div class="validation-msg" id="validationMsg1"></div>
     <div class="step-nav">
       <button class="submit-btn" id="next1" disabled onclick="goToStep(2, true)">Continue to Dispatch</button>
     </div>
-    ${guideStrip()}
   `;
 }
 
@@ -570,7 +824,7 @@ function buildProformaBlock(){
   if(a.proformaReceived){
     return `
       <div class="section-label">Proforma Invoice</div>
-      <div class="ack-note done"><span class="ack-title">Proforma Invoice Received</span>${a.proformaNumber ? 'Proforma ' + esc(a.proformaNumber) + ' r' : 'R'}eceived on ${fmtDate(a.proformaReceivedDate)}. Essential Cures will process the advance payment and confirm here.</div>`;
+      <div class="ack-note done"><span class="ack-title">Proforma Invoice Received</span>${a.proformaNumber ? 'Proforma ' + esc(a.proformaNumber) + ' r' : 'R'}eceived on ${fmtDate(a.proformaReceivedDate)}. Essential Cures will process the advance payment. Its status appears in the Financials section below.</div>`;
   }
   const pctText = a.pct != null ? `${esc(a.pct)}% of the goods subtotal` : 'the agreed percentage of the goods subtotal';
   return `
@@ -602,20 +856,6 @@ function buildProformaBlock(){
       </label>
       <div class="validation-msg" id="pfMsg"></div>
       <button class="submit-btn" id="pfSubmitBtn" disabled onclick="submitProforma()">Submit Proforma Invoice</button>
-    </div>`;
-}
-
-function buildPaymentBlock(){
-  const a = adv();
-  if(a.status !== 'Paid') return '';
-  return `
-    <div class="section-label">Advance Payment</div>
-    <div class="all-done">
-      <strong>Advance payment sent</strong>
-      <div class="pay-row"><span>Amount</span><span>${money(a.paidAmount)} CAD</span></div>
-      <div class="pay-row"><span>Payment date</span><span>${fmtDate(a.paidDate)}</span></div>
-      <div class="pay-row"><span>Transaction reference</span><span>${esc(a.transactionRef || 'Not specified')}</span></div>
-      <div class="pay-row"><span>Payment method</span><span>${esc(a.paymentMethod || 'Not specified')}</span></div>
     </div>`;
 }
 
@@ -777,7 +1017,6 @@ function buildStep2(){
       <button class="secondary-btn" onclick="goToStep(1, false)">Back</button>
       <button class="submit-btn" id="next2" disabled onclick="goToStep(3, true)">Select lines above to continue</button>
     </div>
-    ${guideStrip()}
   `;
 }
 
@@ -840,7 +1079,6 @@ function buildStep3(){
       <button class="secondary-btn" onclick="goToStep(2, false)">Back</button>
       <button class="submit-btn" id="submitBtn" disabled onclick="submitShipment()">Complete every field above to submit</button>
     </div>
-    ${guideStrip()}
   `;
 }
 
@@ -850,7 +1088,6 @@ function buildStep4(){
     <div id="step4New"></div>
     ${shipmentsList()}
     <div class="step-nav" id="nav4"><button class="secondary-btn" onclick="goToStep(1, false)">Back</button></div>
-    ${guideStrip()}
   `;
 }
 
@@ -1180,14 +1417,14 @@ function showShipmentDone(data){
     <div class="guide-note">Print the delivery note and include it with the parcel. No supplier invoice or packing list is required.</div>
     <a class="download-btn" href="${pdfUrl}" target="_blank">Download Delivery Note</a>`;
 
-  // The final shipment closes the order: no further shipments can be recorded.
+  // The final shipment closes the order to further shipments. Financials stay visible below.
   const next = lastShipmentCompletesOrder
     ? `
     <div class="complete-panel" style="margin-top:20px;">
       <div class="cp-title">Fulfilment Complete</div>
       <p>This shipment completes purchase order ${esc(poData.poNumber || '')}. Every line has now been dispatched, and no further shipments are required.</p>
       <p>Should you have any questions regarding this order, please contact Essential Cures Inc. at <a href="mailto:${PROCUREMENT_EMAIL}">${PROCUREMENT_EMAIL}</a>, quoting the purchase order number.</p>
-      <p>Please submit your invoice to <a href="mailto:${FINANCE_EMAIL}">${FINANCE_EMAIL}</a> once the goods have been dispatched, quoting purchase order ${esc(poData.poNumber || '')}, so that payment can be processed promptly.</p>
+      <p>Please submit your invoice to <a href="mailto:${FINANCE_EMAIL}">${FINANCE_EMAIL}</a> once the goods have been dispatched, quoting purchase order ${esc(poData.poNumber || '')}. Settlement of this order is shown in the Financials section below.</p>
     </div>`
     : `<button class="secondary-btn" onclick="location.reload()">Record Another Shipment</button>`;
 
@@ -1196,6 +1433,8 @@ function showShipmentDone(data){
   document.getElementById('nav4').style.display = 'none';
   if(lastShipmentCompletesOrder){
     poData.allFullyShipped = true;
+    // Final state: the signature block closes the document body
+    contentEl.insertAdjacentHTML('beforeend', SIG_BLOCK);
   }
   goToStep(4, true);
 }
