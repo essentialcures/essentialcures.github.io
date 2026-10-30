@@ -164,6 +164,11 @@ footer{margin-bottom:24px;}
 .it-close{position:absolute;top:14px;right:14px;width:24px;height:24px;border:0;background:none;color:var(--faint);font-size:18px;line-height:1;cursor:pointer;}
 .it-close:hover{color:var(--ink);}
 
+.outcome{margin-top:18px;}
+.outcome-btn{display:inline-block;margin-top:12px;padding:10px 20px;font-size:14px;font-weight:600;text-decoration:none;color:var(--white);background:var(--blue);border:1px solid var(--blue);border-radius:var(--r);transition:background .15s,box-shadow .15s;}
+.outcome-btn:hover{background:var(--navy);border-color:var(--navy);box-shadow:0 4px 12px rgba(0,48,96,.18);}
+.outcome .po-ref{display:block;margin-top:4px;font-size:13px;color:var(--muted);}
+
 /* Signature block: recorded (final) state only */
 .sig-block{padding:28px 32px 8px;text-align:left;border-top:1px solid var(--line-soft);}
 .sig-block p{font-size:13px;color:var(--muted);line-height:1.7;}
@@ -357,7 +362,7 @@ const DOC = {
   guide: 'https://essentialcures.com/guides/supplier-ordering-guide',
   // Supplier terms and conditions page. The link appears once this URL is set.
   terms: '',
-  steps: ['Review order', 'Confirm line items', 'Submit', 'Confirmed'],
+  steps: ['Review order', 'Confirm line items', 'Submit', 'Confirmed', 'Outcome'],
 };
 const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
 const MODE_INSTOCK = 'In Stock - Ready to Ship';
@@ -454,10 +459,13 @@ function linkContact(text){ return esc(text).replace(DOC.contact, `<a href="mail
 
 function renderNotice(kind, title, message){
   // Completed orders (closed_won, or access_limited after the retention period) show the green completion tone
+  // Outcome notices (closed_lost, closed_won, access_limited) show green with every step complete.
+  // Other notices (on hold, withdrawn) show amber with no progress.
   const complete = kind === 'closed_won' || kind === 'access_limited';
-  const tone = complete ? 'ok' : (kind === 'closed_lost' ? 'stop' : 'warn');
+  const outcome = complete || kind === 'closed_lost';
+  const tone = outcome ? 'ok' : 'warn';
   setStatus(kind === 'on_hold' ? 'hold' : (complete ? 'done' : 'closed'), title);
-  setProgress(0);
+  setProgress(outcome ? DOC.steps.length + 1 : 0);
   $('main').innerHTML = `
     <div class="section">
       <h2>${esc(title)}</h2>
@@ -750,9 +758,42 @@ function answerBlock(line){
 }
 
 /* renderRecorded: final state. The Procurement signature block closes the document body. */
+/* Outcome step. The gate supplies outcome { state, poNumber, poUrl }:
+     pending      the customer has not yet decided
+     awarded      a purchase order has been issued to this supplier (poUrl is the
+                  same tokenised link sent by email, never a new token)
+     not_awarded  the order proceeded with another supplier
+   A Closed Lost deal arrives as a notice, not as a recorded state. */
+function outcomeBlock(o){
+  const state = (o && o.state) || 'pending';
+  if(state === 'awarded'){
+    return `
+      <div class="notice ok outcome"><div class="body">
+        <strong>Order confirmed</strong>
+        This request has been converted to an order, and a purchase order has been issued to you. Please refer to the purchase order for acknowledgement, dispatch and delivery.
+        ${o.poNumber ? `<span class="po-ref">Purchase order ${esc(o.poNumber)}</span>` : ''}
+        ${o.poUrl ? `<a class="outcome-btn" href="${esc(o.poUrl)}" target="_blank" rel="noopener">Open Purchase Order</a>` : ''}
+      </div></div>`;
+  }
+  if(state === 'not_awarded'){
+    return `
+      <div class="notice ok outcome"><div class="body">
+        <strong>Request closed</strong>
+        This request did not proceed to an order with you. Thank you for your prompt response. We look forward to working with you on future requirements.
+      </div></div>`;
+  }
+  return `
+    <div class="notice info outcome"><div class="body">
+      <strong>Outcome pending</strong>
+      Our customer has not yet confirmed the order. We will notify you of the outcome, and if a purchase order is issued to you, it will also be linked here.
+    </div></div>`;
+}
+
 function renderRecorded(d, recordedOn){
-  setStatus('done', 'Response recorded');
-  setProgress(DOC.steps.length + 1);  // every step complete
+  const o = d.outcome || {};
+  const decided = o.state === 'awarded' || o.state === 'not_awarded';
+  setStatus('done', o.state === 'awarded' ? 'Order confirmed' : (o.state === 'not_awarded' ? 'Request closed' : 'Response recorded'));
+  setProgress(decided ? DOC.steps.length + 1 : DOC.steps.length);  // Outcome step completes once decided
   setAvailability(d, true);
   const extra = [
     ['Comments', d.existingComments],
@@ -762,8 +803,9 @@ function renderRecorded(d, recordedOn){
   $('main').innerHTML = `
     <div class="section">
       <h2>Your confirmation has been recorded</h2>
+      ${outcomeBlock(o)}
       <div class="notice ok"><div class="body">
-        <strong>No further action is required.</strong>
+        <strong>${o.state === 'awarded' ? 'Your confirmation is on record.' : 'No further action is required on this request.'}</strong>
         Your confirmation for ${esc(d.dealReference)}${recordedOn ? ` was recorded on ${fmtDate(recordedOn)} and` : ''} is now with our procurement team. One response is accepted per request. To change any part of it, please contact Essential Cures Inc. at <a href="mailto:${DOC.contact}">${DOC.contact}</a>, quoting the reference.
       </div></div>
       <div class="lines">${(d.lines || []).map(answerBlock).join('')}</div>
