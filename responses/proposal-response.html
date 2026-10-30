@@ -109,6 +109,10 @@ a{color:var(--blue);}
 .guide-card{border-left:3px solid var(--blue);}
 .guide-btn{display:block;margin-top:14px;padding:10px 14px;text-align:center;font-size:14px;font-weight:600;text-decoration:none;color:var(--blue);border:1px solid var(--blue);border-radius:var(--r);}
 .guide-btn:hover{background:var(--blue);color:var(--white);}
+.guide-btn + .guide-btn{margin-top:8px;}
+.avail-card{background:#F9FBFC;}
+.avail-card p{font-size:12.5px;margin-top:12px;line-height:1.6;}
+.avail-card a{font-weight:600;text-decoration:none;}
 body>.page>footer{margin-top:auto;}
 .page{display:flex;flex-direction:column;flex:1;}
 footer{margin-bottom:24px;}
@@ -251,9 +255,10 @@ footer{margin-bottom:24px;}
   </main>
   <aside class="rail">
     <section class="panel guide-card">
-      <h3>Ordering guide</h3>
-      <p>How Essential Cures orders, confirms, dispatches and pays, set out step by step.</p>
-      <a class="guide-btn" id="guideLink" href="#" target="_blank" rel="noopener">Open the guide</a>
+      <h3>Policies and guidelines</h3>
+      <p>The guide and terms that govern orders placed with Essential Cures. Each document opens in a new tab.</p>
+      <a class="guide-btn" id="guideLink" href="#" target="_blank" rel="noopener">Customer Ordering Guide</a>
+      <a class="guide-btn" id="termsLink" href="#" target="_blank" rel="noopener" hidden>Sales Terms and Conditions</a>
     </section>
     <section class="panel summary">
       <h3>Proposal summary</h3>
@@ -266,6 +271,11 @@ footer{margin-bottom:24px;}
     <section class="panel">
       <h3 id="ecTitle">Your Essential Cures contact</h3>
       <dl class="facts" id="ecFacts"></dl>
+    </section>
+    <section class="panel avail-card" id="availCard" hidden>
+      <h3>Page availability</h3>
+      <dl class="facts" id="availFacts"></dl>
+      <p id="availNote"></p>
     </section>
     <a id="contactLink" href="#" hidden></a>
   </aside>
@@ -313,6 +323,8 @@ const DOC = {
   title: 'Respond to Your Proposal',
   contact: 'sales@essentialcures.com',
   guide: 'https://essentialcures.com/guides/customer-ordering-guide',
+  // Sales terms and conditions page. The link appears once this URL is set.
+  terms: '',
   steps: ['Review proposal', 'Choose option', 'Submit', 'Recorded'],
 };
 const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
@@ -372,6 +384,7 @@ function applyDocControl(){
   $('contactLink').textContent = DOC.contact;
   $('contactLink').href = `mailto:${DOC.contact}`;
   $('guideLink').href = DOC.guide;
+  if(DOC.terms){ $('termsLink').href = DOC.terms; $('termsLink').hidden = false; }
 }
 function setProgress(current){
   const ol = $('progress');
@@ -421,6 +434,22 @@ function setSummary(d){
   const ecRows = [['Name', esc(d.ownerName || 'Sales team')], ['Email', mailLink(d.ownerEmail || 'sales@essentialcures.com')]];
   if(d.ownerEmail && d.ownerEmail.toLowerCase() !== 'sales@essentialcures.com') ecRows.push(['Sales team', mailLink('sales@essentialcures.com')]);
   $('ecFacts').innerHTML = rowsHtml(ecRows);
+  setAvailability(d);
+}
+
+/* Page availability: read from the gate (linkValidity { issuedDate, activeUntil }). */
+function setAvailability(d){
+  const v = d.linkValidity || {};
+  const issued = v.issuedDate || d.proposalDate;
+  $('availFacts').innerHTML = rowsHtml([
+    ['Issued', issued ? fmtDate(issued) : ''],
+    ['Available until', v.activeUntil ? fmtDate(v.activeUntil) : 'Until you respond'],
+  ]);
+  const mail = `<a href="mailto:${DOC.contact}">${DOC.contact}</a>`;
+  $('availNote').innerHTML = v.activeUntil
+    ? `This page remains available for your response until the date shown. After that date, please contact ${mail} for a refreshed proposal.`
+    : `This page remains available until your response is recorded. For any questions, please contact ${mail}.`;
+  $('availCard').hidden = false;
 }
 
 async function load(){
