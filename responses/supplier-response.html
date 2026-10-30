@@ -202,6 +202,11 @@ footer{margin-bottom:24px;}
 .seg button.sel-instock{background:var(--green);color:var(--white);}
 .seg button.sel-backorder{background:var(--amber);color:var(--white);}
 .seg button.sel-unable{background:var(--red);color:var(--white);}
+/* Hover previews each tab in its own status colour; the colour stays once clicked */
+.seg button{transition:background .15s,color .15s;}
+.seg button[data-mode="In Stock - Ready to Ship"]:hover{background:var(--green);color:var(--white);}
+.seg button[data-mode="Backorder"]:hover{background:var(--amber);color:var(--white);}
+.seg button[data-mode="Unable to Supply"]:hover{background:var(--red);color:var(--white);}
 .fields.two{grid-template-columns:repeat(2,minmax(0,1fr));}
 .answer{display:grid;grid-template-columns:auto 1fr;gap:4px 18px;margin-top:12px;font-size:13px;}
 .answer dt{color:var(--faint);}
