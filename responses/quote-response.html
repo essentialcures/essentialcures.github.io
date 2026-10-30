@@ -109,6 +109,11 @@ a{color:var(--blue);}
 .guide-card{border-left:3px solid var(--blue);}
 .guide-btn{display:block;margin-top:14px;padding:10px 14px;text-align:center;font-size:14px;font-weight:600;text-decoration:none;color:var(--blue);border:1px solid var(--blue);border-radius:var(--r);}
 .guide-btn:hover{background:var(--blue);color:var(--white);}
+.guide-btn + .guide-btn{margin-top:8px;}
+.guide-btn[hidden],.panel[hidden]{display:none;}
+.avail-card{background:#F9FBFC;}
+.avail-card p{font-size:12.5px;margin-top:12px;line-height:1.6;}
+.avail-card a{font-weight:600;text-decoration:none;}
 body>.page>footer{margin-top:auto;}
 .page{display:flex;flex-direction:column;flex:1;}
 footer{margin-bottom:24px;}
@@ -230,6 +235,27 @@ footer{margin-bottom:24px;}
 .hb-sstat{font-size:12px;}
 .hb-sstat.complete{color:#2F6B1A;}.hb-sstat.await{color:#005090;font-weight:500;}.hb-sstat.review{color:#8A4B00;font-weight:500;}.hb-sstat.muted{color:#556472;}
 .hb-sdate{font-size:12px;color:#556472;}
+/* Financials: Order Settlement and Account Reconciliation */
+.fin-intro{margin:-10px 0 4px;font-size:13px;color:#556472;line-height:1.6;}
+.fin-sub{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:22px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--lime);font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#00294D;}
+.fin-sub .asof{font-size:12px;font-weight:500;letter-spacing:0;text-transform:none;color:#556472;}
+.fin-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:0 0 14px;padding:16px 18px;background:#F4F6F8;border-radius:4px;}
+.fin-sum dt{font-size:12px;color:#556472;margin:0 0 4px;}
+.fin-sum dd{margin:0;font-size:14px;font-weight:600;color:#1F2B37;overflow-wrap:break-word;word-break:break-word;}
+.fin-sum dd.over{color:#B03A2E;}.fin-sum dd.ok{color:#2F6B1A;}
+.fin-sum dd small{display:block;font-size:12px;font-weight:500;color:#556472;}
+.hb-table td.num,.hb-table th.num{text-align:right;white-space:nowrap;}
+.hb-table.fin-tbl{min-width:560px;}
+.hb-table.fin-tbl td small{display:block;font-size:12px;color:#556472;margin-top:2px;}
+.hb-table.fin-tbl td{overflow-wrap:normal;word-break:normal;}
+.hb-table.fin-tbl td.st,.hb-table.fin-tbl td.dt{white-space:nowrap;}
+.hb-table td.over{color:#B03A2E;font-weight:500;}.hb-table td.due{color:#005090;font-weight:500;}
+.hb-table tfoot td{font-weight:600;color:#1F2B37;background:#FAFBFC;border-top:1px solid #D8DEE4;}
+.fin-standing{margin:4px 0 0;padding:12px 14px;border-radius:4px;font-size:13px;line-height:1.6;}
+.fin-standing strong{display:block;font-size:14px;margin-bottom:2px;}
+.fin-standing.ok{background:var(--ok-bg);border-left:3px solid var(--green);color:#1F4A12;}
+.fin-standing.warn{background:#FFF8E8;border-left:3px solid #D4A017;color:#5C3D00;}
+.fin-note{margin:10px 0 0;font-size:12px;color:#556472;line-height:1.6;}
 .hb-alert{margin:16px 28px 0;padding:12px 14px;border:1px solid #E7C17A;background:#FFF8E8;border-radius:4px;font-size:13px;line-height:1.55;color:#5C3D00;}
 .hb-panels{display:grid;grid-template-columns:1fr;gap:20px;padding:24px 28px 8px;}
 .hb-panel{border:1px solid #D8DEE4;border-radius:6px;display:flex;flex-direction:column;}
@@ -346,9 +372,10 @@ footer{margin-bottom:24px;}
   </main>
   <aside class="rail">
     <section class="panel guide-card">
-      <h3>Ordering guide</h3>
-      <p>How Essential Cures orders, confirms, dispatches and pays, set out step by step.</p>
-      <a class="guide-btn" id="guideLink" href="#" target="_blank" rel="noopener">Open the guide</a>
+      <h3>Policies and guidelines</h3>
+      <p>The guide and terms that govern orders placed with Essential Cures. Each document opens in a new tab.</p>
+      <a class="guide-btn" id="guideLink" href="#" target="_blank" rel="noopener">Customer Ordering Guide</a>
+      <a class="guide-btn" id="termsLink" href="#" target="_blank" rel="noopener" hidden>Sales Terms and Conditions</a>
     </section>
     <section class="panel summary">
       <h3>Order summary</h3>
@@ -361,6 +388,11 @@ footer{margin-bottom:24px;}
     <section class="panel">
       <h3 id="ecTitle">Your Essential Cures contact</h3>
       <dl class="facts" id="ecFacts"></dl>
+    </section>
+    <section class="panel avail-card" id="availCard" hidden>
+      <h3>Page availability</h3>
+      <dl class="facts" id="availFacts"></dl>
+      <p id="availNote"></p>
     </section>
     <a id="contactLink" href="#" hidden></a>
   </aside>
@@ -408,6 +440,8 @@ const DOC = {
   title: 'Respond to Your Quotation',
   contact: 'sales@essentialcures.com',
   guide: 'https://essentialcures.com/guides/customer-ordering-guide',
+  // Sales terms and conditions page (repo: essentialcures.github.io/policies/terms-of-sale.html)
+  terms: 'https://essentialcures.com/policies/terms-of-sale.html',
   steps: ['Review quotation', 'Select option', 'Purchase order', 'Advance payment', 'Fulfilment'],
 };
 const WORKER_BASE = 'https://cm27-gate-proxy.faisal-khan-e13.workers.dev';
@@ -466,6 +500,7 @@ function applyDocControl(){
   $('contactLink').textContent = DOC.contact;
   $('contactLink').href = `mailto:${DOC.contact}`;
   $('guideLink').href = DOC.guide;
+  if(DOC.terms){ $('termsLink').href = DOC.terms; $('termsLink').hidden = false; }
 }
 function setProgress(current){
   const ol = $('progress');
@@ -480,9 +515,11 @@ function setStatus(kind, text){ const el = $('pageStatus'); el.className = `stat
 function setFacts(rows){ $('facts').innerHTML = rows.filter(r => r[1]).map(r => `<dt>${esc(r[0])}</dt><dd>${r[1]}</dd>`).join(''); }
 function linkContact(text){ return esc(text).replace(DOC.contact, `<a href="mailto:${DOC.contact}">${DOC.contact}</a>`); }
 function renderNotice(kind, title, message){
-  const tone = kind === 'closed_won' ? 'ok' : (kind === 'closed_lost' ? 'stop' : 'warn');
-  setStatus(kind === 'on_hold' ? 'hold' : 'closed', title);
-  setProgress(0);
+  // Completed orders (closed_won, or access_limited after the retention period) show the green completion tone
+  const complete = kind === 'closed_won' || kind === 'access_limited';
+  const tone = complete ? 'ok' : (kind === 'closed_lost' ? 'stop' : 'warn');
+  setStatus(kind === 'on_hold' ? 'hold' : (complete ? 'done' : 'closed'), title);
+  setProgress(complete ? DOC.steps.length + 1 : 0);
   $('main').innerHTML = `<div class="section"><h2>${esc(title)}</h2><div class="notice ${tone}"><div class="body">${linkContact(message)}</div></div></div>`;
 }
 function renderError(message){
@@ -538,6 +575,7 @@ async function loadQuote(){
       ['Valid through', fmtDate(d.validTill)],
     ]);
     setContactCards(d, !!d.decisionRecorded);
+    setAvailability(d);
     if(d.decisionRecorded){
       if(d.customerDecision === 'Declined'){ showDeclined(); return; }
       initHub(d, d.customerDecision);
@@ -729,6 +767,148 @@ function getOptionFigures(decision){
   return { advance: num(ds.totalAdvanceAmount), total: num(d.grandTotal) };
 }
 
+/* ---------------------------------------------------------------------------
+   Page availability. Governed by CM-36 EC-CFG-10054 (Customer Link Retention Days
+   After Final Payment). Before a decision the quotation is open until its validity
+   date. After acceptance the gate supplies linkValidity { retentionDays, activeUntil }:
+   activeUntil is set once the final customer payment is recorded. The proposal page
+   for the same Deal shares this end date.
+--------------------------------------------------------------------------- */
+function setAvailability(d){
+  const v = d.linkValidity || {};
+  const mail = `<a href="mailto:${CARE}">${CARE}</a>`;
+  let until, note;
+  if(!d.decisionRecorded){
+    until = d.validTill ? fmtDate(d.validTill) : 'Until you respond';
+    note = 'This quotation remains open for your response until the date shown.';
+  }else if(v.activeUntil){
+    until = fmtDate(v.activeUntil);
+    note = 'This order is complete. This page closes automatically on the date shown.';
+  }else{
+    until = v.retentionDays ? `${esc(v.retentionDays)} days after final payment` : 'A limited period after final payment';
+    note = `This page remains available until your order is delivered and fully paid${v.retentionDays ? `, and for ${esc(v.retentionDays)} days after the final payment` : ''}. It then closes automatically. For any question, please contact ${mail}.`;
+  }
+  $('availFacts').innerHTML = [['Issued', fmtDate(v.issuedDate || d.quoteDate)], ['Available until', until]]
+    .filter(r => r[1]).map(r => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
+  $('availNote').innerHTML = note;
+  $('availCard').hidden = false;
+}
+
+/* ---------------------------------------------------------------------------
+   Financials. Read from quoteData.financials, supplied by the quote gate:
+     { paymentTerms, creditDays, termsBasis, taxAmount, freightAmount, orderTotal,
+       advance { dueDate, paidDate, method },
+       balance { amount, dueDate, status, paidDate, reference, method },
+       payments [ { date, type, method, reference, amount } ],
+       account { asOf, openOrders, totalOutstanding, notYetDue, overdue,
+                 lastPaymentDate, lastPaymentAmount } }
+   Every value falls back to what the hub already knows, so the section renders
+   before the gate supplies it. Payments are confirmed by Essential Cures finance
+   and displayed here; the customer never records a payment in this section.
+--------------------------------------------------------------------------- */
+function cad(v){ return v == null ? 'Not specified' : `CAD ${fmt(v)}`; }
+function finSum(rows){
+  return `<dl class="fin-sum">${rows.map(r => `<div><dt>${r[0]}</dt><dd${r[2] ? ` class="${r[2]}"` : ''}>${r[1]}</dd></div>`).join('')}</dl>`;
+}
+// Received column: the date, with the reference and method beneath
+function receivedCell(date, refParts){
+  const ref = (refParts || []).filter(Boolean).map(esc).join(', ');
+  if(!date && !ref) return '';
+  return `${date ? `<span class="dt" style="white-space:nowrap">${esc(fmtDate(date))}</span>` : ''}${ref ? `<small>${ref}</small>` : ''}`;
+}
+function financialsSection(){
+  const h = hub, f = (quoteData && quoteData.financials) || {};
+  const fa = f.advance || {}, fb = f.balance || {};
+  const total = f.orderTotal != null ? num(f.orderTotal) : h.total;
+  const advReceived = h.advanceRequired && h.payState === 'verified' ? h.advance : 0;
+  const payments = Array.isArray(f.payments) ? f.payments : [];
+  const paidToDate = payments.length ? payments.reduce((t, p) => t + num(p.amount), 0) : advReceived;
+  const outstanding = Math.max(0, total - paidToDate);
+  const today = todayIso();
+
+  // Order Settlement summary
+  const sumRows = [
+    ['Order Total', cad(total)],
+    ['Tax', f.taxAmount != null ? cad(f.taxAmount) : 'As applicable'],
+  ];
+  if(f.freightAmount != null) sumRows.push(['Freight', cad(f.freightAmount)]);
+  sumRows.push(['Payment Terms', esc(f.paymentTerms || (h.advanceRequired ? 'Advance on confirmation, balance on delivery' : 'Per agreed terms'))]);
+  sumRows.push(['Paid to Date', cad(paidToDate)]);
+  sumRows.push(['Outstanding', cad(outstanding), outstanding === 0 ? 'ok' : '']);
+
+  // Instalment schedule
+  const sched = [];
+  if(h.advanceRequired){
+    let st;
+    if(h.payState === 'verified') st = ['Received', 'complete'];
+    else if(h.payState === 'pending') st = ['Under review', 'review'];
+    else st = ['Awaiting payment', 'due'];
+    sched.push(`<tr><td class="hb-tl">Advance</td><td class="num">${fmt(h.advance)}</td><td class="${fa.dueDate ? 'dt' : ''}">${fa.dueDate ? esc(fmtDate(fa.dueDate)) : 'On confirmation'}</td><td class="st ${st[1]}">${st[0]}</td><td>${receivedCell(fa.paidDate, h.payState === 'verified' ? [h.payRef, fa.method] : [])}</td></tr>`);
+  }
+  // Balance is the order total less the scheduled advance, whether or not the advance has arrived,
+  // so the two instalments always add up to the order total.
+  const balAmount = fb.amount != null ? num(fb.amount) : Math.max(0, total - (h.advanceRequired ? h.advance : 0));
+  let balDue;
+  if(fb.dueDate) balDue = esc(fmtDate(fb.dueDate));
+  else if(f.creditDays) balDue = `${esc(f.creditDays)} days from ${esc(f.termsBasis || 'invoice date')}`;
+  else balDue = h.advanceRequired ? 'On delivery' : 'Per agreed terms';
+  let bst;
+  if(fb.status === 'Paid') bst = ['Received', 'complete'];
+  else if(fb.dueDate && String(fb.dueDate).slice(0, 10) < today) bst = ['Overdue', 'over'];
+  else if(fb.status === 'Part Paid') bst = ['Part received', 'review'];
+  else if(fb.dueDate) bst = ['Scheduled', 'due'];
+  else bst = ['On invoice', 'muted'];
+  sched.push(`<tr><td class="hb-tl">${h.advanceRequired ? 'Balance' : 'Payment'}</td><td class="num">${fmt(balAmount)}</td><td class="${fb.dueDate ? 'dt' : ''}">${balDue}</td><td class="st ${bst[1]}">${bst[0]}</td><td>${fb.status === 'Paid' ? receivedCell(fb.paidDate, [fb.reference, fb.method]) : ''}</td></tr>`);
+
+  const scheduleTable = `<div class="hb-tbox"><table class="hb-table fin-tbl">
+      <thead><tr><th scope="col">Instalment</th><th scope="col" class="num">Amount (CAD)</th><th scope="col">Due</th><th scope="col">Status</th><th scope="col">Received</th></tr></thead>
+      <tbody>${sched.join('')}</tbody></table></div>`;
+
+  const ledger = payments.length ? `<div class="hb-tbox" style="margin-top:14px"><table class="hb-table fin-tbl">
+      <thead><tr><th scope="col">Payment Date</th><th scope="col">Instalment</th><th scope="col">Method</th><th scope="col">Reference</th><th scope="col" class="num">Amount (CAD)</th></tr></thead>
+      <tbody>${payments.map(p => `<tr><td class="dt">${esc(fmtDate(p.date))}</td><td>${esc(p.type || '')}</td><td>${esc(p.method || '')}</td><td>${esc(p.reference || '')}</td><td class="num">${fmt(p.amount)}</td></tr>`).join('')}</tbody>
+      <tfoot><tr><td colspan="4">Received to date</td><td class="num">${fmt(paidToDate)}</td></tr><tr><td colspan="4">Outstanding on this order</td><td class="num">${fmt(outstanding)}</td></tr></tfoot>
+    </table></div>` : '';
+
+  // Account Reconciliation
+  const ac = f.account;
+  let account;
+  if(!ac){
+    account = `<p class="fin-note" style="margin-top:0">Your consolidated account position with Essential Cures appears here once invoicing begins on your account.</p>`;
+  }else{
+    const over = num(ac.overdue), out = num(ac.totalOutstanding);
+    const notDue = ac.notYetDue != null ? num(ac.notYetDue) : Math.max(0, out - over);
+    const rows = [
+      ['Open Orders', esc(ac.openOrders != null ? ac.openOrders : 0)],
+      ['Total Outstanding', cad(out)],
+      ['Not Yet Due', cad(notDue)],
+      ['Overdue', cad(over), over > 0 ? 'over' : 'ok'],
+    ];
+    if(ac.lastPaymentDate) rows.push(['Last Payment', `${esc(fmtDate(ac.lastPaymentDate))}${ac.lastPaymentAmount != null ? `<small>${cad(ac.lastPaymentAmount)}</small>` : ''}`]);
+    let standing;
+    if(over > 0){
+      standing = `<div class="fin-standing warn"><strong>Amount past due: ${cad(over)}</strong>We would be grateful if you could arrange settlement at your earliest convenience. Should you believe this amount is incorrect, please contact <a href="mailto:${CARE}">${CARE}</a>, quoting your invoice numbers, and we will reconcile it with you promptly.</div>`;
+    }else if(out === 0){
+      standing = `<div class="fin-standing ok"><strong>Account fully reconciled</strong>No amounts are outstanding on your account. Thank you for your prompt settlement.</div>`;
+    }else{
+      standing = `<div class="fin-standing ok"><strong>Account in good standing</strong>No amounts are overdue. Outstanding amounts fall due on the dates shown on your invoices.</div>`;
+    }
+    account = finSum(rows) + standing;
+  }
+
+  return `<section class="hb-sec" aria-labelledby="hb-fin-h">
+      <h2 class="hb-h2" id="hb-fin-h">Financials</h2>
+      <p class="fin-intro">Settlement of this order and your overall account position with Essential Cures. Payments are confirmed by our finance team and recorded here with their date, method and reference.</p>
+      <div class="fin-sub"><span>Order Settlement</span></div>
+      ${finSum(sumRows)}
+      ${scheduleTable}
+      ${ledger}
+      <div class="fin-sub"><span>Account Reconciliation</span>${ac && ac.asOf ? `<span class="asof">As of ${esc(fmtDate(ac.asOf))}</span>` : ''}</div>
+      ${account}
+      <p class="fin-note">For any question about this order or your account, please contact <a href="mailto:${CARE}">${CARE}</a>, quoting ${esc(h.quoteNumber)}.</p>
+    </section>`;
+}
+
 function initHub(data, decision){
   setContactCards(data, true);
   const fig = getOptionFigures(decision);
@@ -861,8 +1041,7 @@ function renderHub(){
   let title, lead;
   if(h.advanceRequired && h.payState === 'none'){
     title = 'Your Order Has Been Accepted';
-    const validNote = d.validTill ? ` This page remains available through the link in your quotation email until ${esc(fmtDate(d.validTill))}.` : '';
-    lead = `Thank you for selecting ${esc(h.optionShort)}. To release your order to fulfilment, please complete the advance payment below. If your organization issues purchase orders, you may also provide yours. Each item can be submitted online or sent by email.${validNote}`;
+    lead = `Thank you for selecting ${esc(h.optionShort)}. To release your order to fulfilment, please complete the advance payment below. If your organization issues purchase orders, you may also provide yours. Each item can be submitted online or sent by email.`;
   }else if(h.payState === 'pending' || h.poState === 'received'){
     title = 'Your Submissions Are Under Review';
     lead = 'Thank you. Our team will confirm your submissions, normally within one business day, and you will receive an email once your order moves to fulfilment.';
@@ -936,6 +1115,7 @@ function renderHub(){
         <p class="hb-hint" style="margin:0">Submits each section you have completed online. Sections set to Send by Email are not included.</p>
       </div>
     </section>` : ''}
+    ${financialsSection()}
     ${SIG_BLOCK_CARE}
   </div>`;
   bindHub();
