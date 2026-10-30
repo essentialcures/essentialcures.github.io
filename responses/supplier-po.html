@@ -574,17 +574,29 @@ function buildFinancials(){
     </div>`;
 }
 
-/* ===== Page availability ===== */
+/* ===== Page availability =====
+   Governed by CM-36 EC-CFG-10053 (Supplier Link Retention Days After Final Payment).
+   The gate supplies linkValidity { issuedDate, retentionDays, activeUntil }. activeUntil is
+   set once the final supplier payment is recorded, as that date plus retentionDays. The
+   supplier confirmation page for this order shares the same end date. After it, and
+   immediately on a lost deal, the gate returns a notice instead of the page. */
 function buildValidityCard(){
   const v = (poData && poData.linkValidity) || {};
   const rows = [];
   if(v.issuedDate) rows.push(['Issued', fmtDate(v.issuedDate)]);
-  rows.push(['Available Until', v.activeUntil ? fmtDate(v.activeUntil) : 'Order delivered and fully settled']);
+  let note;
+  if(v.activeUntil){
+    rows.push(['Available Until', fmtDate(v.activeUntil)]);
+    note = 'This order is complete. This page closes automatically on the date shown.';
+  }else{
+    rows.push(['Available Until', v.retentionDays ? `${esc(v.retentionDays)} days after final payment` : 'A limited period after final payment']);
+    note = `This page remains available until the order is delivered and fully paid${v.retentionDays ? `, and for ${esc(v.retentionDays)} days after the final payment` : ''}, so delivery notes and payment records stay available to you throughout. It then closes automatically.`;
+  }
   return `
     <div class="valid-card">
       <div class="vc-title">Page Availability</div>
       ${rows.map(r => `<div class="pay-row"><span>${r[0]}</span><span>${r[1]}</span></div>`).join('')}
-      <p>This page remains active until the order is delivered and fully settled, so delivery notes and payment records stay available to you throughout. After the date shown, please request copies from <a href="mailto:${PROCUREMENT_EMAIL}">${PROCUREMENT_EMAIL}</a>.</p>
+      <p>${note}</p>
     </div>`;
 }
 
@@ -629,8 +641,10 @@ function renderComplete(){
 /* ===== Order notice: withdrawn, cancelled, on hold or closed ===== */
 function renderNotice(n){
   const withShipments = !!poData;
-  const tone = (n.kind === 'closed_won') ? '' : ' style="background:#FFF8E1;border-left-color:#D4A017;"';
-  const titleTone = (n.kind === 'closed_won') ? '' : ' style="color:#7D5A00;"';
+  // Completed orders (closed_won, or access_limited after the retention period) show the green completion tone
+  const complete = n.kind === 'closed_won' || n.kind === 'access_limited';
+  const tone = complete ? '' : ' style="background:#FFF8E1;border-left-color:#D4A017;"';
+  const titleTone = complete ? '' : ' style="color:#7D5A00;"';
   contentEl.innerHTML = `
     <h2>Purchase Order Fulfilment</h2>
     ${withShipments ? `<p class="deal-name">${esc(poData.poNumber || '')} &middot; ${esc(poData.supplierName || '')}</p>` : ''}
