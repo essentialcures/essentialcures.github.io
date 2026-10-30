@@ -453,8 +453,10 @@ function setFacts(rows){ $('facts').innerHTML = rows.filter(r => r[1]).map(r => 
 function linkContact(text){ return esc(text).replace(DOC.contact, `<a href="mailto:${DOC.contact}">${DOC.contact}</a>`); }
 
 function renderNotice(kind, title, message){
-  const tone = kind === 'closed_won' ? 'ok' : (kind === 'closed_lost' ? 'stop' : 'warn');
-  setStatus(kind === 'on_hold' ? 'hold' : 'closed', title);
+  // Completed orders (closed_won, or access_limited after the retention period) show the green completion tone
+  const complete = kind === 'closed_won' || kind === 'access_limited';
+  const tone = complete ? 'ok' : (kind === 'closed_lost' ? 'stop' : 'warn');
+  setStatus(kind === 'on_hold' ? 'hold' : (complete ? 'done' : 'closed'), title);
   setProgress(0);
   $('main').innerHTML = `
     <div class="section">
@@ -494,20 +496,26 @@ function setSummary(d){
   ]);
 }
 
-/* Page availability: read from the gate (linkValidity { activeUntil }).
-   Request and respond-by dates already sit in the summary card above. */
+/* Page availability. Governed by CM-36 EC-CFG-10053 (Supplier Link Retention Days After
+   Final Payment). The gate supplies linkValidity { retentionDays, activeUntil }:
+   activeUntil is set once the final supplier payment is recorded, as that date plus
+   retentionDays. This page and the supplier PO page share the same end date.
+   After it, and immediately on a lost deal, the gate returns a notice instead of the page. */
+function retentionPhrase(v){
+  return v.retentionDays ? `${esc(v.retentionDays)} days after final payment` : 'A limited period after final payment';
+}
 function setAvailability(d, recorded){
   const v = d.linkValidity || {};
-  const mail = `<a href="mailto:${DOC.contact}">${DOC.contact}</a>`;
   let until, note;
-  if(recorded){
-    until = v.activeUntil ? fmtDate(v.activeUntil) : 'Until the order is placed';
-    note = v.activeUntil
-      ? `Your recorded response remains viewable on this page until the date shown. For a copy after that date, please contact ${mail}.`
-      : `Your recorded response remains viewable on this page. For a copy at any time, please contact ${mail}.`;
+  if(!recorded){
+    until = d.respondByDate ? fmtDate(d.respondByDate) : 'Until you respond';
+    note = 'This request remains open for your response until the date shown.';
+  }else if(v.activeUntil){
+    until = fmtDate(v.activeUntil);
+    note = 'This order is complete. This page closes automatically on the date shown.';
   }else{
-    until = v.activeUntil ? fmtDate(v.activeUntil) : (d.respondByDate ? fmtDate(d.respondByDate) : 'Until you respond');
-    note = `This request remains open for your response until the date shown. After that date, please contact ${mail} to confirm availability.`;
+    until = retentionPhrase(v);
+    note = `This page remains available until the order is delivered and fully paid${v.retentionDays ? `, and for ${esc(v.retentionDays)} days after the final payment` : ''}. It then closes automatically.`;
   }
   $('availFacts').innerHTML = rowsHtml([['Available until', until]]);
   $('availNote').innerHTML = note;
