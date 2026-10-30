@@ -459,10 +459,10 @@ function linkContact(text){ return esc(text).replace(DOC.contact, `<a href="mail
 
 function renderNotice(kind, title, message){
   // Completed orders (closed_won, or access_limited after the retention period) show the green completion tone
-  // Outcome notices (closed_lost, closed_won, access_limited) show green with every step complete.
+  // Outcome notices (closed_lost, not_awarded, closed_won, access_limited) show green with every step complete.
   // Other notices (on hold, withdrawn) show amber with no progress.
   const complete = kind === 'closed_won' || kind === 'access_limited';
-  const outcome = complete || kind === 'closed_lost';
+  const outcome = complete || kind === 'closed_lost' || kind === 'not_awarded';
   const tone = outcome ? 'ok' : 'warn';
   setStatus(kind === 'on_hold' ? 'hold' : (complete ? 'done' : 'closed'), title);
   setProgress(outcome ? DOC.steps.length + 1 : 0);
