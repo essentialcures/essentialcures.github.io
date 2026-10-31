@@ -180,10 +180,6 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 .proforma-box .pf-text{font-size:12px;color:var(--cool-gray);margin-bottom:12px;line-height:1.6;}
 .expected-box{background:#FFF8E1;border-radius:6px;padding:10px 12px;font-size:13px;color:var(--slate);margin-bottom:14px;}
 .expected-box strong{color:var(--dark-navy);}
-.upload-box{display:block;border:1.5px dashed #D4DAE0;border-radius:6px;padding:14px;text-align:center;font-size:12px;color:var(--cool-gray);cursor:pointer;margin-top:10px;}
-.upload-box:hover{border-color:var(--deep-blue);}
-.upload-box.has-file{border-color:var(--leaf-green);background:#EBF5E8;color:#276414;font-weight:600;}
-.upload-box input{display:none;}
 .pay-row{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:3px 0;}
 .pay-row span:first-child{color:var(--cool-gray);}
 .pay-row span:last-child{font-weight:600;color:var(--dark-navy);}
@@ -192,7 +188,7 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
   .step-nav .secondary-btn{flex:0 0 100px;}
 }
 
-/* ===== Financials: Order Settlement and Account Reconciliation ===== */
+/* ===== Financials ===== */
 .price-table td{overflow-wrap:break-word;word-break:break-word;}
 .fin-block{margin-top:32px;padding-top:24px;border-top:2px solid #E8ECF0;}
 .fin-title{font-size:15px;font-weight:700;color:var(--dark-navy);margin-bottom:2px;}
@@ -227,7 +223,7 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 .valid-card p{font-size:12px;color:var(--cool-gray);line-height:1.6;margin-top:8px;}
 .valid-card a{color:var(--deep-blue);font-weight:600;text-decoration:none;}
 
-/* ===== Signature block (final states only) ===== */
+/* ===== Signature block ===== */
 .sig-block{margin-top:28px;padding:24px 0 4px;text-align:left;border-top:1px solid #E8ECF0;}
 .sig-block p{font-size:13px;color:var(--cool-gray);line-height:1.7;}
 .sig-block .sig-name{font-size:13px;font-weight:600;color:var(--slate);margin-top:5px;}
@@ -286,15 +282,22 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 </div>
 
 <script>
-function toggleIT(){document.getElementById("itPanel").classList.toggle("open");}
+function toggleIT(){ document.getElementById('itPanel').classList.toggle('open'); }
 
 const WORKER_BASE = 'https://ec-supplier-po-worker.faisal-khan-e13.workers.dev';
 const METHOD_COURIER = 'Courier';
 const METHOD_OWN = 'Own Vehicle';
 const STEP_NAMES = ['Order Confirmation', 'Dispatch', 'Shipping', 'Delivery Note'];
-const MAX_PROFORMA_BYTES = 10 * 1024 * 1024;
 const PROCUREMENT_EMAIL = 'procurement@essentialcures.com';
 const FINANCE_EMAIL = 'finance@essentialcures.com';
+
+// Proforma wait overlay steps. No file upload step — the worker accepts
+// reference fields only (number, date, amount) via JSON.
+const PROFORMA_STEPS = [
+  'Submitting your proforma details.',
+  'Recording to your order.',
+  'Almost there, finishing up.',
+];
 
 const params = new URLSearchParams(window.location.search);
 const token = params.get('token');
@@ -302,24 +305,24 @@ const contentEl = document.getElementById('content');
 let poData = null;
 let selectedMethod = null;
 let currentStep = 1;
-let proformaFile = null;
 
 const DEFAULT_WAIT_TEXT = 'We are recording your shipment against this purchase order and preparing your delivery note. This usually takes a few seconds.';
 const SHIPMENT_STEPS = [
   'Validating your lot and batch details.',
   'Recording the shipment against this order.',
   'Generating delivery note.',
-  'Almost there, finishing up.'
+  'Almost there, finishing up.',
 ];
 
 function esc(v){
-  return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  return String(v == null ? '' : v).replace(/[&<>"']/g,
+    c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 function showError(msg){
   contentEl.innerHTML = `<div class="status-msg error">${esc(msg)}</div>`;
 }
-// EC date standard (23 Oct 2026). Date strings are parsed as calendar dates,
-// never through new Date(), which shifts a date-only value back a day west of UTC.
+// EC date standard (23 Oct 2026). Parsed as a calendar date — never through
+// new Date() which shifts a date-only value back a day west of UTC.
 function fmtDate(d){
   if(!d) return 'Not specified';
   const p = String(d).slice(0, 10).split('-');
@@ -331,16 +334,13 @@ function money(n){
   const v = Math.round((Number(n) || 0) * 100) / 100;
   return v.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
-// "Other" carrier: a free-text name is required and saved to CM-53 Other_Carrier
 function toggleOtherCarrier(){
   const sel = document.getElementById('carrier');
   const fld = document.getElementById('fldOtherCarrier');
   if(!sel || !fld) return;
-  const show = selectedMethod === METHOD_COURIER && sel.value === 'Other';
-  fld.style.display = show ? '' : 'none';
+  fld.style.display = (selectedMethod === METHOD_COURIER && sel.value === 'Other') ? '' : 'none';
 }
 function today(){ return new Date().toISOString().split('T')[0]; }
-// Pack wording used on every supplier document
 function qtyInt(n){ return Math.round(Number(n) || 0).toLocaleString('en-CA'); }
 function unitOf(l){ return l.uom || 'Each'; }
 function packNote(l, qty){
@@ -348,26 +348,12 @@ function packNote(l, qty){
   if(upp <= 1) return '';
   return `${esc(unitOf(l))} of ${upp.toLocaleString('en-CA')}, ${(Math.round(Number(qty) || 0) * upp).toLocaleString('en-CA')} units in total`;
 }
-function shiftDays(n){
-  const d = new Date();
-  d.setDate(d.getDate() + n);
-  return d.toISOString().split('T')[0];
-}
-// All date rules come from CM-36 via the gate. Nothing is hardcoded here.
-function bounds(){
-  return (poData && poData.dateBounds) ? poData.dateBounds : {};
-}
-function cfg(){
-  return (poData && poData.configs) ? poData.configs : {};
-}
-function adv(){
-  return (poData && poData.advance) ? poData.advance : {};
-}
-function fin(){
-  return (poData && poData.financials) ? poData.financials : {};
-}
+function bounds(){ return (poData && poData.dateBounds) ? poData.dateBounds : {}; }
+function cfg(){ return (poData && poData.configs) ? poData.configs : {}; }
+function adv(){ return (poData && poData.advance) ? poData.advance : {}; }
+function fin(){ return (poData && poData.financials) ? poData.financials : {}; }
+
 const SUPPLIER_GUIDE_URL = 'https://essentialcures.com/guides/supplier-ordering-guide';
-// Supplier terms and conditions page. The link appears once this URL is set.
 const SUPPLIER_TERMS_URL = '';
 
 const SIG_BLOCK = `
@@ -396,10 +382,7 @@ async function loadPO(){
   }
 }
 
-/* ===== Financials =====
-   Read from poData.financials, supplied by the gate. Every value renders
-   gracefully when the gate has not yet supplied it. Payments are recorded by
-   Essential Cures finance only; this page displays them and never captures them. */
+/* ===== Financials ===== */
 function numOrNull(v){
   return (v === null || v === undefined || v === '') ? null : Number(v);
 }
@@ -421,11 +404,12 @@ function advancePaidAmount(){
 
 function advanceRow(){
   const a = adv();
+  // proformaAlreadyReceived is the authoritative key returned by the gate.
   if(!a.proformaRequired && !a.status) return null;
   const paid = a.status === 'Paid';
   let status;
   if(paid) status = finPill('paid', 'Paid');
-  else if(a.proformaReceived) status = finPill('due', 'In process');
+  else if(a.proformaAlreadyReceived) status = finPill('due', 'In process');
   else status = finPill('wait', 'Awaiting proforma');
   return {
     label: 'Advance',
@@ -488,7 +472,7 @@ function scheduleTable(){
 
 function paymentsLedger(){
   const list = Array.isArray(fin().payments) ? fin().payments : [];
-  if(list.length === 0) return '';
+  if(!list.length) return '';
   const paid = list.reduce((s, p) => s + (Number(p.amount) || 0), 0);
   const total = numOrNull(fin().orderTotal);
   return `
@@ -553,9 +537,9 @@ function accountReconciliation(){
   let standing;
   if(over > 0){
     standing = `<div class="ack-note fin-standing"><span class="ack-title">Amount past due: ${cad(over)}</span>Our finance team has been notified and is addressing this. To reconcile, please contact <a href="mailto:${FINANCE_EMAIL}">${FINANCE_EMAIL}</a>, quoting the invoice numbers concerned.</div>`;
-  }else if(outstanding === 0){
+  } else if(outstanding === 0){
     standing = `<div class="ack-note done fin-standing"><span class="ack-title">Account fully reconciled</span>No amounts are outstanding on your account.</div>`;
-  }else{
+  } else {
     standing = `<div class="ack-note done fin-standing"><span class="ack-title">Account in good standing</span>No amounts are overdue. Outstanding amounts will be settled on their due dates.</div>`;
   }
   return `
@@ -574,12 +558,7 @@ function buildFinancials(){
     </div>`;
 }
 
-/* ===== Page availability =====
-   Governed by CM-36 EC-CFG-10053 (Supplier Link Retention Days After Final Payment).
-   The gate supplies linkValidity { issuedDate, retentionDays, activeUntil }. activeUntil is
-   set once the final supplier payment is recorded, as that date plus retentionDays. The
-   supplier confirmation page for this order shares the same end date. After it, and
-   immediately on a lost deal, the gate returns a notice instead of the page. */
+/* ===== Page availability ===== */
 function buildValidityCard(){
   const v = (poData && poData.linkValidity) || {};
   const rows = [];
@@ -588,7 +567,7 @@ function buildValidityCard(){
   if(v.activeUntil){
     rows.push(['Available Until', fmtDate(v.activeUntil)]);
     note = 'This order is complete. This page closes automatically on the date shown.';
-  }else{
+  } else {
     rows.push(['Available Until', v.retentionDays ? `${esc(v.retentionDays)} days after final payment` : 'A limited period after final payment']);
     note = `This page remains available until the order is delivered and fully paid${v.retentionDays ? `, and for ${esc(v.retentionDays)} days after the final payment` : ''}, so delivery notes and payment records stay available to you throughout. It then closes automatically.`;
   }
@@ -600,21 +579,21 @@ function buildValidityCard(){
     </div>`;
 }
 
-/* ===== Recorded shipments list, shared by Step 4 and the completed view ===== */
+/* ===== Shipments list ===== */
 function shipmentsList(){
   if(!(poData.existingShipments && poData.existingShipments.length)){
     return `<div class="guide-note">No shipments have been recorded on this purchase order yet.</div>`;
   }
   return `<div class="section-label">Shipments Recorded</div>` + poData.existingShipments.map(s => `
-        <div class="prev-ship-row">
-          <span class="prev-dn">${esc(s.dnNumber)}</span>
-          <span>${fmtDate(s.dispatchDate)}</span>
-          <span class="prev-status${s.status === 'Delivered' ? ' delivered' : ''}">${esc(s.status)}</span>
-          <a class="prev-link" href="${WORKER_BASE}/api/po/pdf?token=${encodeURIComponent(token)}&dn=${esc(s.id)}" target="_blank">Delivery Note</a>
-        </div>`).join('');
+    <div class="prev-ship-row">
+      <span class="prev-dn">${esc(s.dnNumber)}</span>
+      <span>${fmtDate(s.dispatchDate)}</span>
+      <span class="prev-status${s.status === 'Delivered' ? ' delivered' : ''}">${esc(s.status)}</span>
+      <a class="prev-link" href="${WORKER_BASE}/api/po/pdf?token=${encodeURIComponent(token)}&dn=${esc(s.id)}" target="_blank">Delivery Note</a>
+    </div>`).join('');
 }
 
-/* ===== Completed view: every line on the order has been dispatched ===== */
+/* ===== Completed view ===== */
 function completePanel(){
   return `
     <div class="complete-panel">
@@ -638,10 +617,9 @@ function renderComplete(){
   `;
 }
 
-/* ===== Order notice: withdrawn, cancelled, on hold or closed ===== */
+/* ===== Order notice ===== */
 function renderNotice(n){
   const withShipments = !!poData;
-  // Completed orders (closed_won, or access_limited after the retention period) show the green completion tone
   const complete = n.kind === 'closed_won' || n.kind === 'access_limited';
   const tone = complete ? '' : ' style="background:#FFF8E1;border-left-color:#D4A017;"';
   const titleTone = complete ? '' : ' style="color:#7D5A00;"';
@@ -663,18 +641,8 @@ function renderNotice(n){
 /* ===== Page shell ===== */
 function renderPage(stayOnStep){
   if(poData.lineFetchNote){ console.warn('EC line fetch:', poData.lineFetchNote); }
-
-  if(poData.orderNotice){
-    renderNotice(poData.orderNotice);
-    return;
-  }
-
-  // A fully shipped order is closed to further shipment entry. The supplier
-  // sees the completion notice, delivery notes and Financials until settled.
-  if(poData.allFullyShipped){
-    renderComplete();
-    return;
-  }
+  if(poData.orderNotice){ renderNotice(poData.orderNotice); return; }
+  if(poData.allFullyShipped){ renderComplete(); return; }
 
   contentEl.innerHTML = `
     <h2>Purchase Order Fulfilment</h2>
@@ -704,7 +672,7 @@ function buildStepBar(){
   }).join('') + `</div>`;
 }
 
-/* ===== Policies and Guidelines: appears once, below Financials ===== */
+/* ===== Policies and Guidelines ===== */
 function guideStrip(){
   const terms = SUPPLIER_TERMS_URL
     ? `<a class="guide-strip-link" href="${SUPPLIER_TERMS_URL}" target="_blank" rel="noopener">Supplier Terms and Conditions</a>`
@@ -720,10 +688,12 @@ function guideStrip(){
     </div>`;
 }
 
+// step1Ready: acknowledged AND (no proforma required OR proforma already received)
+// Uses advance.proformaAlreadyReceived — the key the worker gate returns.
 function step1Ready(){
   if(!poData.acknowledged) return false;
   const a = adv();
-  if(a.proformaRequired && !a.proformaReceived) return false;
+  if(a.proformaRequired && !a.proformaAlreadyReceived) return false;
   return true;
 }
 
@@ -759,7 +729,7 @@ async function saveStep(step){
     const resp = await fetch(`${WORKER_BASE}/api/po/submit`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, action: 'save_step', step }),
+      body: JSON.stringify({ token, action: 'save_step', payload: { step } }),
     });
     const data = await resp.json();
     if(!data.success) console.warn('EC save_step failed:', data.error || data);
@@ -794,16 +764,13 @@ function buildStep1(){
 
 function buildPriceTable(){
   const lines = poData.lineItems || [];
-  if(lines.length === 0){
+  if(!lines.length){
     return `
       <div class="ack-note"><span class="ack-title">No order lines found on this purchase order</span>
       We could not load the product lines for this order. Please contact ${PROCUREMENT_EMAIL} and quote reference ${esc(poData.poNumber || '')}.
       <div style="margin-top:10px;font-size:11px;color:#6B7C8C;font-family:monospace;word-break:break-all;">${esc(poData.lineFetchNote || 'no diagnostic returned')}</div></div>`;
   }
   const hasPrices = lines.some(l => l.unitPrice != null);
-  if(!hasPrices){
-    console.warn('EC gate returned no unitPrice on lineItems. Worker gate must supply unitPrice, lineTotal, brand and subTotal.');
-  }
   const rows = lines.map((l, i) => `
     <tr>
       <td>${i + 1}</td>
@@ -832,21 +799,29 @@ function buildPriceTable(){
   `;
 }
 
+// buildProformaBlock: checks advance.proformaAlreadyReceived (the worker key).
+// The proforma section collects three optional reference fields only.
+// No file upload — the worker handles reference data only via JSON.
 function buildProformaBlock(){
   const a = adv();
   if(!a.proformaRequired) return '';
-  if(a.proformaReceived){
+
+  if(a.proformaAlreadyReceived){
     return `
       <div class="section-label">Proforma Invoice</div>
       <div class="ack-note done"><span class="ack-title">Proforma Invoice Received</span>${a.proformaNumber ? 'Proforma ' + esc(a.proformaNumber) + ' r' : 'R'}eceived on ${fmtDate(a.proformaReceivedDate)}. Essential Cures will process the advance payment. Its status appears in the Financials section below.</div>`;
   }
-  const pctText = a.pct != null ? `${esc(a.pct)}% of the goods subtotal` : 'the agreed percentage of the goods subtotal';
+
+  const pctText = a.advancePctDisplay != null
+    ? `${esc(a.advancePctDisplay)}% of the goods subtotal`
+    : 'the agreed percentage of the goods subtotal';
+
   return `
     <div class="section-label">Proforma Invoice</div>
     <div class="proforma-box">
       <div class="pf-title">An advance payment applies to this order</div>
-      <div class="pf-text">Please upload your proforma invoice for the advance. The PDF is required. The reference fields are optional. Freight is not included in the advance and is settled with the balance at actual cost.</div>
-      <div class="expected-box">Expected advance: <strong>${money(a.expectedAmount)} CAD</strong>, being ${pctText}${a.gstOnAdvance ? ' plus applicable GST or HST' : ''}.</div>
+      <div class="pf-text">Please submit your proforma invoice reference details below. All fields are optional but the advance cannot be processed until your proforma details are received. Freight is not included in the advance and is settled with the balance at actual cost.</div>
+      <div class="expected-box">Expected advance: <strong>${money(a.expectedAmount)} CAD</strong>, being ${pctText}.</div>
       <div class="day-fields">
         <div class="day-field">
           <label for="pfNumber">Proforma Number</label>
@@ -860,47 +835,17 @@ function buildProformaBlock(){
         </div>
         <div class="day-field">
           <label for="pfAmount">Proforma Amount (CAD)</label>
-          <span class="hint">Optional, checked against the expected advance</span>
+          <span class="hint">Optional — checked against the expected advance</span>
           <input type="number" id="pfAmount" min="0" step="0.01" oninput="updateStep1State()">
         </div>
       </div>
-      <label class="upload-box" id="pfUploadBox">
-        <input type="file" id="pfFile" accept="application/pdf,.pdf" onchange="onProformaFile(this)">
-        <span id="pfUploadText">Select your proforma invoice (PDF, required)</span>
-      </label>
       <div class="validation-msg" id="pfMsg"></div>
-      <button class="submit-btn" id="pfSubmitBtn" disabled onclick="submitProforma()">Submit Proforma Invoice</button>
+      <button class="submit-btn" id="pfSubmitBtn" disabled onclick="submitProforma()">Submit Proforma Details</button>
     </div>`;
 }
 
-function onProformaFile(input){
-  const f = input.files && input.files[0];
-  const box = document.getElementById('pfUploadBox');
-  const txt = document.getElementById('pfUploadText');
-  proformaFile = null;
-  box.classList.remove('has-file');
-  txt.textContent = 'Select your proforma invoice (PDF, required)';
-  if(f){
-    const isPdf = f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf');
-    if(!isPdf){
-      input.value = '';
-      showMsg('pfMsg', 'Only PDF files are accepted. Please select the proforma invoice as a PDF.');
-      updateStep1State();
-      return;
-    }
-    if(f.size > MAX_PROFORMA_BYTES){
-      input.value = '';
-      showMsg('pfMsg', 'This file is larger than 10 MB. Please upload a smaller PDF or contact ' + PROCUREMENT_EMAIL + '.');
-      updateStep1State();
-      return;
-    }
-    proformaFile = f;
-    box.classList.add('has-file');
-    txt.textContent = f.name;
-  }
-  updateStep1State();
-}
-
+// proformaVarianceMsg: called by updateStep1State and submitProforma.
+// Returns a non-empty string when the entered amount exceeds the expected figure.
 function proformaVarianceMsg(){
   const a = adv();
   const el = document.getElementById('pfAmount');
@@ -908,55 +853,56 @@ function proformaVarianceMsg(){
   const entered = Math.round(Number(el.value));
   const expected = Math.round(Number(a.expectedAmount) || 0);
   if(entered > expected){
-    return `The proforma amount is higher than the advance held on file. The agreed advance is ${a.pct != null ? esc(a.pct) + '% of the goods subtotal, ' : ''}${money(a.expectedAmount)} CAD. Please issue the proforma for this amount or lower, or contact ${PROCUREMENT_EMAIL} to review the agreed percentage.`;
+    const pct = a.advancePctDisplay != null ? esc(a.advancePctDisplay) + '% of the goods subtotal, ' : '';
+    return `The proforma amount is higher than the advance held on file. The agreed advance is ${pct}${money(a.expectedAmount)} CAD. Please issue the proforma for this amount or lower, or contact ${PROCUREMENT_EMAIL} to review the agreed percentage.`;
   }
   return '';
 }
 
+// updateStep1State: controls the Continue button and the proforma submit button.
+// proformaFile is removed. The proforma submit button requires:
+//   - PO acknowledged
+//   - No variance error on the optional amount field
 function updateStep1State(){
   const next = document.getElementById('next1');
   if(next){
     next.disabled = !step1Ready();
     next.textContent = step1Ready()
       ? 'Continue to Dispatch'
-      : (!poData.acknowledged ? 'Acknowledge the purchase order to continue' : 'Submit the proforma invoice to continue');
+      : (!poData.acknowledged
+          ? 'Acknowledge the purchase order to continue'
+          : 'Submit the proforma details to continue');
   }
   const pfBtn = document.getElementById('pfSubmitBtn');
   if(pfBtn){
     const variance = proformaVarianceMsg();
     if(variance){ showMsg('pfMsg', variance); }
-    else{ hideMsg('pfMsg'); }
-    let ok = !!proformaFile && !variance && poData.acknowledged;
+    else { hideMsg('pfMsg'); }
+    // Enable once PO is acknowledged and no variance error.
+    // The fields are all optional so no field-completion gate here.
+    const ok = poData.acknowledged && !variance;
     pfBtn.disabled = !ok;
     pfBtn.textContent = !poData.acknowledged
       ? 'Acknowledge the purchase order first'
-      : (!proformaFile ? 'Select the proforma PDF to submit' : 'Submit Proforma Invoice');
+      : 'Submit Proforma Details';
   }
 }
 
-function readFileBase64(file){
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(String(r.result).split(',')[1] || '');
-    r.onerror = () => reject(new Error('The file could not be read. Please select it again.'));
-    r.readAsDataURL(file);
-  });
-}
-
+// submitProforma: sends reference fields to the worker as JSON.
+// No file reading — the worker does not accept a file on this action.
 async function submitProforma(){
   const variance = proformaVarianceMsg();
-  if(variance || !proformaFile) return;
+  if(variance) return;
   const btn = document.getElementById('pfSubmitBtn');
   btn.disabled = true;
-  openWait('Submitting your proforma invoice',
-    'We are attaching your proforma invoice to this purchase order and notifying our finance team.',
-    ['Reading your file.', 'Uploading the proforma invoice.', 'Notifying finance.', 'Almost there, finishing up.']);
+  openWait(
+    'Submitting your proforma details',
+    'We are recording your proforma invoice details against this purchase order.',
+    PROFORMA_STEPS
+  );
   try{
-    const fileBase64 = await readFileBase64(proformaFile);
     const amtEl = document.getElementById('pfAmount');
     const payload = {
-      fileName: proformaFile.name,
-      fileBase64,
       proformaNumber: (document.getElementById('pfNumber').value || '').trim(),
       proformaDate: document.getElementById('pfDate').value || '',
       proformaAmount: amtEl.value === '' ? null : Number(amtEl.value),
@@ -967,14 +913,16 @@ async function submitProforma(){
       body: JSON.stringify({ token, action: 'submit_proforma', payload }),
     });
     const data = await resp.json();
-    if(!data.success) throw new Error(data.error || 'Your proforma invoice could not be submitted.');
+    if(!data.success) throw new Error(data.error || 'Your proforma details could not be submitted.');
+
+    // Patch poData.advance so the page re-renders in the received state
+    // without a full reload. proformaReceivedDate is yyyy-mm-dd to match fmtDate().
     poData.advance = Object.assign({}, adv(), {
-      proformaReceived: true,
+      proformaAlreadyReceived: true,
       proformaNumber: payload.proformaNumber,
-      proformaReceivedDate: new Date().toISOString(),
+      proformaReceivedDate: today(),
       status: 'Proforma Received',
     });
-    proformaFile = null;
     closeWait();
     renderPage(1);
   }catch(err){
@@ -995,13 +943,12 @@ function buildStep2(){
           <div class="line-meta">Ordered ${qtyInt(line.quantityOrdered)} ${esc(unitOf(line))} &middot; Shipped ${qtyInt(line.quantityShipped)} ${esc(unitOf(line))} &middot; <span class="shipped-badge">Fully Shipped</span>${brand}</div>
         </div>`;
     }
-    const disabled = poData.acknowledged ? '' : 'disabled';
     return `
       <div class="line-item" data-idx="${idx}" data-lineid="${esc(line.id)}">
         <div class="line-title">${esc(line.productName)}</div>
         <div class="line-meta">Ordered ${qtyInt(line.quantityOrdered)} ${esc(unitOf(line))} &middot; Previously shipped ${qtyInt(line.quantityShipped)} &middot; Outstanding ${qtyInt(line.quantityOutstanding)} ${esc(unitOf(line))}${brand}${packNote(line, line.quantityOrdered) ? `<br>${packNote(line, line.quantityOrdered)}` : ''}</div>
         <div class="ship-toggle">
-          <input type="checkbox" id="cb_${idx}" ${disabled} onchange="toggleLine(${idx})">
+          <input type="checkbox" id="cb_${idx}" onchange="toggleLine(${idx})">
           <label for="cb_${idx}">Include this line in the shipment</label>
         </div>
         <div id="lineBody_${idx}" style="display:none;">
@@ -1024,7 +971,7 @@ function buildStep2(){
 
   return `
     <div class="section-label">Lines to Dispatch</div>
-    <div class="guide-note">Select each line you are dispatching today, enter the quantity in the selling unit shown (for example, boxes), and record the lot or batch number with its expiry date. Lot quantities must add up to the quantity shipped. Partial shipments are supported, return to this page for each dispatch.</div>
+    <div class="guide-note">Select each line you are dispatching today, enter the quantity in the selling unit shown, and record the lot or batch number with its expiry date. Lot quantities must add up to the quantity shipped. Partial shipments are supported — return to this page for each dispatch.</div>
     ${lines}
     <div class="validation-msg" id="validationMsg2"></div>
     <div class="step-nav">
@@ -1186,7 +1133,7 @@ function updateLotTotal(idx){
   if(total === shipQty && shipQty > 0){
     el.className = 'lot-total ok';
     el.textContent = `Lot quantities match the quantity shipped: ${total}`;
-  }else{
+  } else {
     el.className = 'lot-total bad';
     el.textContent = `Lot quantities total ${total} and must equal ${shipQty}`;
   }
@@ -1214,11 +1161,11 @@ function setMethod(method){
   updateSubmitState();
 }
 
-/* ===== Validation, split by step ===== */
+/* ===== Validation ===== */
 function linesCheck(){
   if(!poData || poData.allFullyShipped) return { ok: false, msg: '' };
   const idxs = selectedLineIdxs();
-  if(idxs.length === 0) return { ok: false, msg: '', empty: true };
+  if(!idxs.length) return { ok: false, msg: '', empty: true };
   const minExpiry = bounds().expiryMin || '';
   const c = cfg();
   for(const i of idxs){
@@ -1261,7 +1208,6 @@ function shipmentCheck(){
 
 function updateSubmitState(){
   const lines = linesCheck();
-
   const next2 = document.getElementById('next2');
   if(next2){
     next2.disabled = !lines.ok;
@@ -1280,7 +1226,7 @@ function updateSubmitState(){
     const units = idxs.reduce((s, i) => s + (parseInt(document.getElementById('qty_' + i).value, 10) || 0), 0);
     btn.textContent = `Submit Shipment and Generate Delivery Note (${idxs.length} line${idxs.length > 1 ? 's' : ''}, ${units} unit${units !== 1 ? 's' : ''})`;
     hideMsg('validationMsg');
-  }else{
+  } else {
     btn.textContent = 'Complete every field above to submit';
     if(ship.msg){ showMsg('validationMsg', ship.msg); } else { hideMsg('validationMsg'); }
   }
@@ -1312,8 +1258,8 @@ function openWait(title, text, steps){
   o.classList.add('open');
   let i = 0;
   waitStepTimer = setInterval(function(){
-    i = i + 1;
-    if(i < list.length){ stepEl.textContent = list[i]; }
+    i += 1;
+    if(i < list.length) stepEl.textContent = list[i];
   }, 2500);
   window.addEventListener('beforeunload', warnOnLeave);
 }
@@ -1347,7 +1293,7 @@ async function acknowledgeOrder(){
     const data = await resp.json();
     if(!data.success) throw new Error(data.error || 'Your acknowledgement could not be saved.');
     poData.acknowledged = true;
-    poData.acknowledgedDate = new Date().toISOString();
+    poData.acknowledgedDate = today();
     closeWait();
     renderPage(1);
   }catch(err){
@@ -1381,7 +1327,6 @@ async function submitShipment(){
     };
   });
 
-  // After this shipment, does any line on the order still have quantity outstanding?
   const shippingNow = {};
   selectedLines.forEach(l => { shippingNow[l.dliId] = l.quantityThisShipment; });
   lastShipmentCompletesOrder = (poData.lineItems || []).length > 0 &&
@@ -1431,7 +1376,6 @@ function showShipmentDone(data){
     <div class="guide-note">Print the delivery note and include it with the parcel. No supplier invoice or packing list is required.</div>
     <a class="download-btn" href="${pdfUrl}" target="_blank">Download Delivery Note</a>`;
 
-  // The final shipment closes the order to further shipments. Financials stay visible below.
   const next = lastShipmentCompletesOrder
     ? `
     <div class="complete-panel" style="margin-top:20px;">
@@ -1447,7 +1391,6 @@ function showShipmentDone(data){
   document.getElementById('nav4').style.display = 'none';
   if(lastShipmentCompletesOrder){
     poData.allFullyShipped = true;
-    // Final state: the signature block closes the document body
     contentEl.insertAdjacentHTML('beforeend', SIG_BLOCK);
   }
   goToStep(4, true);
