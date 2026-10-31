@@ -689,8 +689,9 @@ function renderQuote(d){
     </div>
     <div class="actions">
       <span class="note">Your response is final once submitted.</span>
-      <button class="btn primary" id="submitBtn" type="button" disabled onclick="submitResponse()">${dual ? 'Select an option to continue' : 'Accept this quotation to continue'}</button>
+      <button class="btn primary" id="submitBtn" type="button" disabled onclick="submitResponse()">${dual ? 'Select an option to continue' : 'Confirm this quotation to continue'}</button>
     </div>`;
+  if(!dual){ choose('Option A'); }
 }
 function choose(v){
   selectedDecision = v;
@@ -701,8 +702,11 @@ function choose(v){
 function updateSubmit(){
   const btn = $('submitBtn');
   const auth = $('authConfirm') && $('authConfirm').checked;
-  btn.disabled = !(selectedDecision && auth);
-  btn.textContent = !selectedDecision ? 'Select an option to continue' : (!auth ? 'Confirm your authority to continue' : 'Submit my acceptance');
+  const dual = quoteData && quoteData.siblingQuote != null;
+  btn.disabled = !((selectedDecision || !dual) && auth);
+  if(!selectedDecision && dual) btn.textContent = 'Select an option to continue';
+  else if(!auth) btn.textContent = 'Confirm your authority to continue';
+  else btn.textContent = 'Submit my acceptance';
 }
 
 async function sendRequest(path, body, isForm, timeoutMs){
