@@ -33,6 +33,12 @@ body{font-family:"Inter",sans-serif;color:var(--slate);line-height:1.7;backgroun
 .form-card{background:var(--white);border-radius:12px;box-shadow:0 4px 24px rgba(0,48,96,0.08);border:1px solid #E8ECF0;padding:40px;}
 .status-msg{text-align:center;padding:40px 20px;font-size:14px;color:var(--cool-gray);}
 .status-msg.error{color:var(--red);}
+@keyframes sk-shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}
+.sk-bar,.sk-block{background:linear-gradient(90deg,#E8ECF0 25%,#F4F6F8 50%,#E8ECF0 75%);background-size:1200px 100%;animation:sk-shimmer 1.4s infinite linear;border-radius:6px;}
+.sk-bar{height:14px;margin-bottom:10px;width:70%;}
+.sk-title{height:18px;width:55%;}
+.sk-sub{height:12px;width:40%;}
+.sk-block{border-radius:8px;}
 h2{font-size:15px;color:var(--dark-navy);margin:0 0 8px;}
 p.deal-name{font-size:13px;color:var(--cool-gray);margin:0 0 16px;}
 .section-label{font-size:12px;font-weight:700;color:var(--dark-navy);text-transform:uppercase;letter-spacing:0.5px;margin:24px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--lime);}
@@ -247,7 +253,15 @@ footer{background:var(--white);padding:24px 40px;margin-top:48px;margin-bottom:2
 
 <main class="main"><div class="form-card boxed-760">
   <div id="content">
-    <div class="status-msg">Loading your purchase order.</div>
+    <div id="skeleton">
+      <div class="sk-bar sk-title"></div>
+      <div class="sk-bar sk-sub"></div>
+      <div class="sk-block" style="height:80px;margin-bottom:16px;"></div>
+      <div class="sk-bar sk-title" style="width:40%;margin-top:24px;"></div>
+      <div class="sk-block" style="height:120px;margin-bottom:16px;"></div>
+      <div class="sk-bar sk-title" style="width:35%;margin-top:24px;"></div>
+      <div class="sk-block" style="height:160px;"></div>
+    </div>
   </div>
   <div style="margin-top:24px;"><table style="width:100%;border-collapse:collapse;"><tr>
     <td style="width:50%;background-color:#4A8B2C;padding:8px 0;text-align:center;"><span style="font-size:12px;font-style:italic;font-weight:700;color:#FFFFFF;font-family:Calibri,Arial,sans-serif;">Compliant Solutions. Confident Care.</span></td>
@@ -319,6 +333,8 @@ function esc(v){
     c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 function showError(msg){
+  const sk = document.getElementById('skeleton');
+  if(sk) sk.style.display = 'none';
   contentEl.innerHTML = `<div class="status-msg error">${esc(msg)}</div>`;
 }
 // EC date standard (23 Oct 2026). Parsed as a calendar date — never through
@@ -640,6 +656,8 @@ function renderNotice(n){
 
 /* ===== Page shell ===== */
 function renderPage(stayOnStep){
+  const sk = document.getElementById('skeleton');
+  if(sk) sk.style.display = 'none';
   if(poData.lineFetchNote){ console.warn('EC line fetch:', poData.lineFetchNote); }
   if(poData.orderNotice){ renderNotice(poData.orderNotice); return; }
   if(poData.allFullyShipped){ renderComplete(); return; }
