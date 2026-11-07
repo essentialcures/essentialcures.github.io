@@ -869,10 +869,10 @@ async function acknowledgeProforma(){
   if(btn){btn.disabled=true;btn.textContent='Processing, please wait';}
   openWait('Acknowledging proforma invoice','Recording your acknowledgement. This usually takes a few seconds.',['Recording acknowledgement.','Unlocking advance payment.']);
   try{
-    await postJson(GATE_BASE,'/api/proforma/acknowledge',{quoteId:QUOTE_ID,token:TOKEN});
+    const ackData=await postJson(GATE_BASE,'/api/proforma/acknowledge',{quoteId:QUOTE_ID,token:TOKEN});
     closeWait();
     QD.proformaAcknowledged=true;
-    // TODO: open PI PDF download once URL is wired — data.proformaUrl will be non-null at that point
+    if(ackData&&ackData.proformaUrl){window.open(ackData.proformaUrl,'_blank');}
     renderHub();
   }catch(e){
     closeWait();
