@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Order Hub | Essential Cures</title>
+<title>EC Order Console | Essential Cures</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -189,6 +189,8 @@ a{color:var(--blue);}
 .hb-kv dd{margin:0;font-weight:500;overflow-wrap:anywhere;}
 .hb-kv dd.review{color:#8A4B00;}
 .hb-kv dd.complete{color:#2F6B1A;}
+.hb-kv dd.complete-card{display:block;margin-top:2px;padding:6px 10px;background:#E8F5E2;border-left:3px solid #2F6B1A;border-radius:3px;color:#2F6B1A;font-weight:600;font-size:13px;}
+.hb-kv dd.review-card{display:block;margin-top:2px;padding:6px 10px;background:#FFF3E0;border-left:3px solid #B45000;border-radius:3px;color:#8A4B00;font-weight:600;font-size:13px;}
 .hb-rec{margin:0;font-size:13px;color:#2F6B1A;}
 .hb-btn{height:46px;border:none;border-radius:4px;background:var(--blue);color:#FFFFFF;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;padding:0 24px;}
 .hb-btn:disabled{background:#8FA9C2;cursor:not-allowed;}
@@ -307,7 +309,7 @@ footer{margin-bottom:24px;}
     <div class="head-id">
       <div class="org">ESSENTIAL CURES INC.</div>
       <div class="tag">Compliant Solutions. Confident Care.</div>
-      <div class="title" id="docTitle">Order Hub</div>
+      <div class="title" id="docTitle">EC Order Console</div>
     </div>
     <dl class="head-ctrl" aria-label="Document control">
       <dt>Document</dt><dd id="ctrlNo"><span style="color:var(--faint);font-weight:500">Pending</span></dd>
@@ -327,7 +329,7 @@ footer{margin-bottom:24px;}
   <div class="shell">
     <div class="title-row">
       <div>
-        <h1 id="pageTitle">Order Hub</h1>
+        <h1 id="pageTitle">EC Order Console</h1>
         <div class="ref" id="pageRef"></div>
       </div>
       <span class="status open" id="pageStatus">Loading</span>
@@ -726,9 +728,9 @@ function renderHub(){
     if(verified)badge=`<span class="sp-badge verified">Verified</span>`;
     let body='';
     if(verified){
-      body=`<dl class="hb-kv"><dt>PO Number</dt><dd>${esc(d.poNumber||'Not provided')}</dd><dt>PO Date</dt><dd>${esc(fmtDate(d.poDate)||'Not provided')}</dd><dt>Status</dt><dd class="complete">Verified by Essential Cures</dd></dl>`;
+      body=`<dl class="hb-kv"><dt>PO Number</dt><dd>${esc(d.poNumber||'Not provided')}</dd><dt>PO Date</dt><dd>${esc(fmtDate(d.poDate)||'Not provided')}</dd><dt>Submitted On</dt><dd>${esc(fmtDate(d.poDate)||todayIso())}</dd><dt>Status</dt><dd class="complete-card">Verified by Essential Cures</dd></dl>`;
     }else if(received){
-      body=`<dl class="hb-kv"><dt>PO Number</dt><dd>${esc(d.poNumber||'Not provided')}</dd><dt>PO Date</dt><dd>${esc(fmtDate(d.poDate)||'Not provided')}</dd><dt>Status</dt><dd class="review">Under review — Essential Cures will verify within one business day</dd></dl>`;
+      body=`<dl class="hb-kv"><dt>PO Number</dt><dd>${esc(d.poNumber||'Not provided')}</dd><dt>PO Date</dt><dd>${esc(fmtDate(d.poDate)||'Not provided')}</dd><dt>Submitted On</dt><dd>${esc(fmtDate(d.poDate)||todayIso())}</dd><dt>Status</dt><dd class="review-card">Under Review — Essential Cures will verify within one business day</dd></dl>`;
     }else{
       body=`<div class="hb-seg" role="group"><button type="button" data-seg="po" data-mode="online" aria-pressed="true">Submit Online</button><button type="button" data-seg="po" data-mode="email" aria-pressed="false">Send by Email</button></div>
       <div id="po-online" style="display:flex;flex-direction:column;gap:12px">
@@ -763,9 +765,9 @@ function renderHub(){
       body=`<div class="notice info"><div class="body"><strong>Proforma invoice in preparation</strong>Your proforma invoice will be issued once Essential Cures has verified your purchase order. You will receive it by email and it will appear here for download.</div></div>`;
     }else if(proformaAcknowledged){
       badge=`<span class="sp-badge verified">Acknowledged</span>`;
-      body=`<dl class="hb-kv"><dt>Proforma Number</dt><dd>${esc(d.proformaNumber||'Issued')}</dd><dt>Issued</dt><dd>${esc(fmtDate(d.proformaSentDate)||'')}</dd><dt>Status</dt><dd class="complete">Acknowledged — advance payment stage unlocked</dd></dl>`;
+      body=`<dl class="hb-kv"><dt>Proforma Number</dt><dd>${esc(d.proformaNumber||'Issued')}</dd><dt>Issued</dt><dd>${esc(fmtDate(d.proformaSentDate)||'')}</dd><dt>Acknowledged On</dt><dd>${todayIso()}</dd><dt>Status</dt><dd class="complete-card">Acknowledged — Advance Payment Stage Unlocked</dd></dl>`;
     }else{
-      badge=`<span class="sp-badge required">Action required</span>`;
+      badge=`<span class="sp-badge required">Next Queued Step</span>`;
       body=`<dl class="hb-kv"><dt>Proforma Number</dt><dd>${esc(d.proformaNumber||'Issued')}</dd><dt>Issued</dt><dd>${esc(fmtDate(d.proformaSentDate)||'')}</dd></dl>
       <p style="font-size:13px;color:var(--slate);margin:12px 0 4px;line-height:1.6">Please review your proforma invoice and click below to confirm you have received it. This releases the advance payment stage of your order. Your proforma invoice was also sent to your email address.</p>
       <p class="hb-err" id="pi-err" role="alert"></p>
@@ -784,7 +786,7 @@ function renderHub(){
   let paymentHtml='';
   if(advRequired){
     const canPay=!proformaRequired||proformaAcknowledged;
-    let badge=canPay?`<span class="sp-badge required">Action required</span>`:`<span class="sp-badge pending">Pending proforma</span>`;
+    let badge=canPay?`<span class="sp-badge required">Next Queued Step</span>`:`<span class="sp-badge pending">Pending proforma</span>`;
     let body='';
     if(payState==='verified'){
       badge=`<span class="sp-badge verified">Verified</span>`;
