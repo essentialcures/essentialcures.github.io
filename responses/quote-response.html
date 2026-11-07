@@ -790,10 +790,10 @@ function renderHub(){
     let body='';
     if(payState==='verified'){
       badge=`<span class="sp-badge verified">Verified</span>`;
-      body=`<dl class="hb-kv"><dt>Reference</dt><dd>${esc(d.paymentRef||'Recorded')}</dd><dt>Amount</dt><dd>CAD ${fmt(fig.advance)}</dd><dt>Status</dt><dd class="complete">Verified by Essential Cures Finance</dd></dl>`;
+      body=`<dl class="hb-kv"><dt>Reference</dt><dd>${esc(d.paymentRef||'Recorded')}</dd><dt>Amount</dt><dd>CAD ${fmt(fig.advance)}</dd><dt>Verified On</dt><dd>${esc(fmtDate(d.paymentDate)||todayIso())}</dd><dt>Status</dt><dd class="complete-card">Verified by Essential Cures Finance</dd></dl>`;
     }else if(payState==='pending'){
-      badge=`<span class="sp-badge review">Under review</span>`;
-      body=`<dl class="hb-kv"><dt>Reference</dt><dd>${esc(d.paymentRef||'Recorded')}</dd><dt>Amount</dt><dd>CAD ${fmt(fig.advance)}</dd><dt>Status</dt><dd class="review">Under review — Essential Cures Finance will verify within one business day</dd></dl>`;
+      badge=`<span class="sp-badge review">Under Review</span>`;
+      body=`<dl class="hb-kv"><dt>Reference</dt><dd>${esc(d.paymentRef||'Recorded')}</dd><dt>Amount</dt><dd>CAD ${fmt(fig.advance)}</dd><dt>Submitted On</dt><dd>${esc(fmtDate(d.paymentDate)||todayIso())}</dd><dt>Status</dt><dd class="review-card">Under Review — Essential Cures Finance will verify within one business day</dd></dl>`;
     }else if(!canPay){
       body=`<div class="notice warn"><div class="body"><strong>Waiting for proforma acknowledgement</strong>This step will be available once you have acknowledged your proforma invoice above.</div></div>`;
     }else{
@@ -802,7 +802,7 @@ function renderHub(){
       <div id="pay-online" style="display:flex;flex-direction:column;gap:12px">
         <p class="hb-rec">Once your payment has been sent, record its details here so our team can match it promptly.</p>
         <div class="hb-grid2">
-          <div class="hb-field"><label class="hb-lbl" for="pay-amt">Amount Paid, CAD</label><input class="hb-in" id="pay-amt" type="text" inputmode="decimal" autocomplete="off" value="${fmt(fig.advance)}"></div>
+          <div class="hb-field"><label class="hb-lbl" for="pay-amt">Amount Due, CAD</label><input class="hb-in" id="pay-amt" type="text" inputmode="decimal" autocomplete="off" value="${fmt(fig.advance)}" readonly style="background:var(--surface);color:var(--faint);cursor:not-allowed;"></div>
           <div class="hb-field"><label class="hb-lbl" for="pay-date">Payment Date</label><input class="hb-in" id="pay-date" type="date" value="${todayIso()}" max="${todayIso()}"></div>
         </div>
         <div class="hb-grid2">
