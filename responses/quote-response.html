@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EC Order Console | Essential Cures</title>
+<title>Customer Order Console | Essential Cures</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -309,7 +309,7 @@ footer{margin-bottom:24px;}
     <div class="head-id">
       <div class="org">ESSENTIAL CURES INC.</div>
       <div class="tag">Compliant Solutions. Confident Care.</div>
-      <div class="title" id="docTitle">EC Order Console</div>
+      <div class="title" id="docTitle">Customer Order Console</div>
     </div>
     <dl class="head-ctrl" aria-label="Document control">
       <dt>Document</dt><dd id="ctrlNo"><span style="color:var(--faint);font-weight:500">Pending</span></dd>
@@ -329,7 +329,7 @@ footer{margin-bottom:24px;}
   <div class="shell">
     <div class="title-row">
       <div>
-        <h1 id="pageTitle">EC Order Console</h1>
+        <h1 id="pageTitle">Customer Order Console</h1>
         <div class="ref" id="pageRef"></div>
       </div>
       <span class="status open" id="pageStatus">Loading</span>
@@ -767,7 +767,7 @@ function renderHub(){
       badge=`<span class="sp-badge verified">Acknowledged</span>`;
       body=`<dl class="hb-kv"><dt>Proforma Number</dt><dd>${esc(d.proformaNumber||'Issued')}</dd><dt>Issued</dt><dd>${esc(fmtDate(d.proformaSentDate)||'')}</dd><dt>Acknowledged On</dt><dd>${todayIso()}</dd><dt>Status</dt><dd class="complete-card">Acknowledged — Advance Payment Stage Unlocked</dd></dl>`;
     }else{
-      badge=`<span class="sp-badge required">Next Queued Step</span>`;
+      badge=`<span class="sp-badge required">Next Step In Queue</span>`;
       body=`<dl class="hb-kv"><dt>Proforma Number</dt><dd>${esc(d.proformaNumber||'Issued')}</dd><dt>Issued</dt><dd>${esc(fmtDate(d.proformaSentDate)||'')}</dd></dl>
       <p style="font-size:13px;color:var(--slate);margin:12px 0 4px;line-height:1.6">Please review your proforma invoice and click below to confirm you have received it. This releases the advance payment stage of your order. Your proforma invoice was also sent to your email address.</p>
       <p class="hb-err" id="pi-err" role="alert"></p>
@@ -786,7 +786,7 @@ function renderHub(){
   let paymentHtml='';
   if(advRequired){
     const canPay=!proformaRequired||proformaAcknowledged;
-    let badge=canPay?`<span class="sp-badge required">Next Queued Step</span>`:`<span class="sp-badge pending">Pending proforma</span>`;
+    let badge=canPay?`<span class="sp-badge required">Next Step In Queue</span>`:`<span class="sp-badge pending">Pending proforma</span>`;
     let body='';
     if(payState==='verified'){
       badge=`<span class="sp-badge verified">Verified</span>`;
