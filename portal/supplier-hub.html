@@ -1,377 +1,4 @@
-/**
- * cm27-supplier-hub v2.0.0
- * Portal-ready supplier hub worker for Essential Cures Inc.
- * Serves the supplier hub HTML page AND handles all API routes.
- * Same-origin — no CORS issues.
- *
- * Routes:
- *   GET  /                   — redirect to /po
- *   GET  /po                 — serve supplier hub HTML page
- *   POST /api/v1/po/gate     — validate token, return full PO data
- *   POST /api/v1/po/acknowledge
- *   POST /api/v1/po/proforma
- *   POST /api/v1/po/dispatch
- *   POST /api/v1/po/delivery-notes
- *   POST /api/v1/po/balance-invoice
- *
- * KV: SUPPLIER_HUB_KV
- * Env: ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET, ZOHO_REFRESH_TOKEN, ZOHO_ORG_ID
- */
-
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-const ZOHO_API   = 'https://www.zohoapis.com/crm/v7';
-const ZOHO_TOKEN = 'https://accounts.zoho.com/oauth/v2/token';
-const TOKEN_KV_KEY = 'zoho_access_token';
-const TOKEN_TTL    = 3300;
-const MAX_FILE_MB  = 10;
-const ALLOWED_TYPES = ['application/pdf','image/jpeg','image/png'];
-
-const MOD_PO      = 'Purchase_Orders';
-const MOD_DEALS   = 'Deals';
-const MOD_VENDORS = 'Vendors';
-
-const PO_FIELDS = [
-  'id','Subject','Status','Due_Date',
-  'Grand_Total','Discount','Freight_Cost','Insurance_Cost','Excise_Duty',
-  'Payment_Method','Shipping_Street','Shipping_City','Shipping_State',
-  'Shipping_Code','Shipping_Country',
-  'PO_Number_EC','Vendor_Name','Deal','Quote',
-  'Response_Token','Page_Step_Completed','Final_Payment_Date',
-  'Advance_Required','Advance_Expected_Amount','Advance_Status',
-  'Advance_Paid_Amount','Advance_Paid_Date','Advance_Transaction_Ref',
-  'Advance_Payment',
-  'Proforma_Required','Proforma_Number','Proforma_Date',
-  'Proforma_Amount','Proforma_Received_Date',
-  'Delivery_Confirmed',
-  'Proforma_Verified','Proforma_Verified_Date','Proforma_Notes',
-  'Advance_Pay_Method','Advance_Paid',
-  'Supplier_Balance_Due','Supplier_Bal_Paid','Supplier_Bal_Paid_Amt',
-  'Supplier_Bal_Paid_Date','Supplier_Bal_Txn_Ref','Supplier_Bal_Pay_Method',
-  'Supplier_Invoice_Ref','Supplier_Invoice_Date','Supplier_Invoice_Amt',
-  'Supplier_Payment_Status',
-].join(',');
-
-const VENDOR_FIELDS = [
-  'id','Vendor_Name','ASL_Status',
-  'Contact_First_Name','Contact_Last_Name','Contact_Email',
-  'Country','City','Street',
-].join(',');
-
-const DEAL_FIELDS = [
-  'id','Deal_Name','Stage','Required_By_Date',
-  'Shipping_Street','Shipping_City','Shipping_State',
-  'Shipping_Code','Shipping_Country',
-].join(',');
-
-// ---------------------------------------------------------------------------
-// OAuth token management
-// ---------------------------------------------------------------------------
-async function getAccessToken(env) {
-  const cached = await env.SUPPLIER_HUB_KV.get(TOKEN_KV_KEY, { type: 'json' });
-  if (cached && cached.token && cached.expires > Date.now()) return cached.token;
-  const resp = await fetch(ZOHO_TOKEN, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      grant_type:    'refresh_token',
-      client_id:     env.ZOHO_CLIENT_ID,
-      client_secret: env.ZOHO_CLIENT_SECRET,
-      refresh_token: env.ZOHO_REFRESH_TOKEN,
-    }),
-  });
-  const data = await resp.json();
-  if (!data.access_token) throw new Error('Zoho token refresh failed: ' + (data.error || JSON.stringify(data)));
-  await env.SUPPLIER_HUB_KV.put(TOKEN_KV_KEY, JSON.stringify({
-    token: data.access_token, expires: Date.now() + TOKEN_TTL * 1000,
-  }));
-  return data.access_token;
-}
-
-// ---------------------------------------------------------------------------
-// Zoho API helpers
-// ---------------------------------------------------------------------------
-async function zohoGet(token, path) {
-  const resp = await fetch(`${ZOHO_API}${path}`, {
-    headers: { Authorization: `Zoho-oauthtoken ${token}` },
-  });
-  if (!resp.ok) throw new Error(`Zoho GET ${path} failed: HTTP ${resp.status}`);
-  const data = await resp.json();
-  if (data.status === 'error') throw new Error(data.message || `Zoho error on ${path}`);
-  return data;
-}
-
-async function zohoSearch(token, module, criteria, fields) {
-  const url = `${ZOHO_API}/${module}/search?criteria=${encodeURIComponent(criteria)}&fields=${encodeURIComponent(fields)}&per_page=1`;
-  const resp = await fetch(url, { headers: { Authorization: `Zoho-oauthtoken ${token}` } });
-  if (resp.status === 204) return null;
-  if (!resp.ok) throw new Error(`Zoho search ${module} failed: HTTP ${resp.status}`);
-  const data = await resp.json();
-  return data.data && data.data.length > 0 ? data.data[0] : null;
-}
-
-async function zohoPut(token, module, id, fields) {
-  const resp = await fetch(`${ZOHO_API}/${module}/${id}`, {
-    method: 'PUT',
-    headers: { Authorization: `Zoho-oauthtoken ${token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ data: [fields] }),
-  });
-  const data = await resp.json();
-  if (!resp.ok || (data.data && data.data[0] && data.data[0].status === 'error')) {
-    const detail = data.data?.[0]?.message || data.message || `HTTP ${resp.status}`;
-    throw new Error(`Zoho PUT ${module}/${id} failed: ${detail}`);
-  }
-  return data;
-}
-
-async function zohoAttach(token, module, id, file, filename) {
-  const formData = new FormData();
-  formData.append('file', file, filename);
-  const resp = await fetch(`${ZOHO_API}/${module}/${id}/Attachments`, {
-    method: 'POST',
-    headers: { Authorization: `Zoho-oauthtoken ${token}` },
-    body: formData,
-  });
-  const data = await resp.json();
-  if (!resp.ok || (data.data && data.data[0] && data.data[0].status === 'error')) {
-    const detail = data.data?.[0]?.message || data.message || `HTTP ${resp.status}`;
-    throw new Error(`Zoho attach ${module}/${id} failed: ${detail}`);
-  }
-  return data;
-}
-
-// ---------------------------------------------------------------------------
-// Response helpers
-// ---------------------------------------------------------------------------
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
-  });
-}
-function err(message, status = 400) { return json({ status: 'error', message }, status); }
-function ok(data = {})              { return json({ status: 'ok', ...data }); }
-
-// ---------------------------------------------------------------------------
-// File validation
-// ---------------------------------------------------------------------------
-function validateFile(file) {
-  if (!file) return 'No file received.';
-  if (!ALLOWED_TYPES.includes(file.type)) return 'File must be a PDF, JPG or PNG.';
-  if (file.size > MAX_FILE_MB * 1024 * 1024) return `File exceeds the ${MAX_FILE_MB} MB limit.`;
-  return null;
-}
-
-// ---------------------------------------------------------------------------
-// Token lookup
-// ---------------------------------------------------------------------------
-async function resolvePoByToken(token, responseToken) {
-  return zohoSearch(token, MOD_PO, `(Response_Token:equals:${responseToken})`, 'id,Subject,PO_Number_EC,Vendor_Name,Deal');
-}
-
-// ---------------------------------------------------------------------------
-// Gate assembler
-// ---------------------------------------------------------------------------
-async function assembleGateData(zohoToken, po) {
-  const poId     = po.id;
-  const vendorId = po.Vendor_Name?.id;
-  const dealId   = po.Deal?.id;
-
-  const [poFull, vendorData, dealData] = await Promise.all([
-    zohoGet(zohoToken, `/${MOD_PO}/${poId}?fields=${PO_FIELDS}`),
-    vendorId ? zohoGet(zohoToken, `/${MOD_VENDORS}/${vendorId}?fields=${VENDOR_FIELDS}`) : Promise.resolve(null),
-    dealId   ? zohoGet(zohoToken, `/${MOD_DEALS}/${dealId}?fields=${DEAL_FIELDS}`)      : Promise.resolve(null),
-  ]);
-
-  const p = poFull.data?.[0]  || {};
-  const v = vendorData?.data?.[0] || {};
-  const d = dealData?.data?.[0]   || {};
-
-  let lineItems = [];
-  try {
-    const liResp = await zohoGet(zohoToken, `/${MOD_PO}/${poId}/Invoiced_Items`);
-    lineItems = (liResp.data || []).map(li => ({
-      description: li.Product_Name?.name || li.Description || '',
-      quantity:    li.Quantity   || 0,
-      unit:        li.Usage_Unit || 'Each',
-      unitPrice:   li.Unit_Price || 0,
-      lineTotal:   li.Total      || 0,
-    }));
-  } catch (_) {}
-
-  const acknowledged     = !!p.Page_Step_Completed && p.Page_Step_Completed >= 1;
-  const proformaReq      = p.Proforma_Required  === true;
-  const proformaUploaded = !!p.Proforma_Received_Date;
-  const proformaVerified = p.Proforma_Verified  === true;
-  const advanceReq       = p.Advance_Required   === true;
-  const advancePaid      = p.Advance_Paid        === true;
-  const dispatchConfirmed    = !!p.Delivery_Confirmed;
-  const deliveryNotesAttached = p.Page_Step_Completed >= 4;
-  const balanceReq = p.Supplier_Payment_Status === 'Balance Due' ||
-                     (p.Supplier_Balance_Due && parseFloat(p.Supplier_Balance_Due) > 0);
-  const balancePaid = p.Supplier_Bal_Paid === true;
-  const complete    = p.Supplier_Payment_Status === 'Fully Paid' ||
-                      (!balanceReq && advancePaid && dispatchConfirmed);
-
-  return {
-    status: 'allow',
-    poId, poNumber: p.PO_Number_EC || p.Subject || '',
-    poSubject: p.Subject || '', poStatus: p.Status || '',
-    dueDate: p.Due_Date || '', pageStepCompleted: p.Page_Step_Completed || 0,
-    paymentMethod: p.Payment_Method || '',
-    supplier: {
-      id: vendorId || '', name: v.Vendor_Name || p.Vendor_Name?.name || '',
-      aslStatus: v.ASL_Status || '',
-      contactFirst: v.Contact_First_Name || '', contactLast: v.Contact_Last_Name || '',
-      contactEmail: v.Contact_Email || '',
-      country: v.Country || '', city: v.City || '', street: v.Street || '',
-    },
-    deal: {
-      id: dealId || '', name: d.Deal_Name || p.Deal?.name || '',
-      stage: d.Stage || '', requiredBy: d.Required_By_Date || p.Due_Date || '',
-    },
-    shippingStreet:  p.Shipping_Street  || d.Shipping_Street  || '',
-    shippingCity:    p.Shipping_City    || d.Shipping_City    || '',
-    shippingState:   p.Shipping_State   || d.Shipping_State   || '',
-    shippingCode:    p.Shipping_Code    || d.Shipping_Code    || '',
-    shippingCountry: p.Shipping_Country || d.Shipping_Country || '',
-    grandTotal:    p.Grand_Total    || 0, discount:      p.Discount      || 0,
-    freightCost:   p.Freight_Cost   || 0, insuranceCost: p.Insurance_Cost || 0,
-    exciseDuty:    p.Excise_Duty    || 0,
-    lineItems,
-    advanceRequired: advanceReq, advanceExpected: p.Advance_Expected_Amount || 0,
-    advancePct: p.Advance_Payment || 0, advanceStatus: p.Advance_Status || '',
-    advancePaid, advancePaidAmt: p.Advance_Paid_Amount || 0,
-    advancePaidDate: p.Advance_Paid_Date || '', advanceTxnRef: p.Advance_Transaction_Ref || '',
-    proformaRequired: proformaReq, proformaUploaded, proformaVerified,
-    proformaNumber: p.Proforma_Number || '', proformaDate: p.Proforma_Date || '',
-    proformaAmount: p.Proforma_Amount || 0, proformaReceivedDate: p.Proforma_Received_Date || '',
-    proformaVerifiedDate: p.Proforma_Verified_Date || '', proformaNotes: p.Proforma_Notes || '',
-    supplierPaymentStatus: p.Supplier_Payment_Status || '',
-    balanceRequired: balanceReq, balanceDue: p.Supplier_Balance_Due || 0,
-    balancePaid, balancePaidAmt: p.Supplier_Bal_Paid_Amt || 0,
-    balancePaidDate: p.Supplier_Bal_Paid_Date || '', balanceTxnRef: p.Supplier_Bal_Txn_Ref || '',
-    supplierInvoiceRef: p.Supplier_Invoice_Ref || '',
-    supplierInvoiceDate: p.Supplier_Invoice_Date || '',
-    supplierInvoiceAmt: p.Supplier_Invoice_Amt || 0,
-    stages: {
-      snapshot:        'done',
-      acknowledgement: acknowledged ? 'done' : 'active',
-      proforma:        !proformaReq   ? 'skip'
-                       : proformaVerified ? 'done'
-                       : proformaUploaded ? 'active'
-                       : acknowledged    ? 'active' : 'locked',
-      dispatch:        dispatchConfirmed ? 'done'
-                       : (acknowledged && (!proformaReq || proformaVerified) && (!advanceReq || advancePaid)) ? 'active' : 'locked',
-      deliveryNotes:   deliveryNotesAttached ? 'done' : dispatchConfirmed ? 'active' : 'locked',
-      balanceInvoice:  !balanceReq  ? 'skip'
-                       : balancePaid ? 'done'
-                       : dispatchConfirmed ? 'active' : 'locked',
-      complete:        complete ? 'done' : 'locked',
-    },
-    viewer: { type: 'token', supplierName: v.Vendor_Name || '', contactEmail: v.Contact_Email || '', poId },
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Route handlers
-// ---------------------------------------------------------------------------
-async function handleGate(request, env) {
-  let body; try { body = await request.json(); } catch { return err('Invalid request body.'); }
-  const { token: responseToken } = body;
-  if (!responseToken) return err('Missing token.');
-  const zohoToken = await getAccessToken(env);
-  const poStub = await resolvePoByToken(zohoToken, responseToken);
-  if (!poStub) return json({ status: 'invalid', message: 'This link is invalid or has expired. Please use the link from your purchase order email.' });
-  const data = await assembleGateData(zohoToken, poStub);
-  return ok(data);
-}
-
-async function handleAcknowledge(request, env) {
-  let body; try { body = await request.json(); } catch { return err('Invalid request body.'); }
-  const { token: responseToken, poId } = body;
-  if (!responseToken || !poId) return err('Missing required fields.');
-  const zohoToken = await getAccessToken(env);
-  const poStub = await resolvePoByToken(zohoToken, responseToken);
-  if (!poStub || poStub.id !== poId) return err('Token mismatch. Please reload the page.');
-  await zohoPut(zohoToken, MOD_PO, poId, { Page_Step_Completed: 1, Advance_Status: 'Acknowledged' });
-  return ok({ acknowledgedAt: new Date().toISOString() });
-}
-
-async function handleProforma(request, env) {
-  let formData; try { formData = await request.formData(); } catch { return err('Invalid form data.'); }
-  const responseToken = formData.get('token'), poId = formData.get('poId');
-  const proformaNum = formData.get('proformaNumber') || '', proformaDate = formData.get('proformaDate') || '';
-  const proformaAmt = formData.get('proformaAmount') || '', file = formData.get('proformaFile');
-  if (!responseToken || !poId) return err('Missing required fields.');
-  const fileErr = validateFile(file); if (fileErr) return err(fileErr);
-  const zohoToken = await getAccessToken(env);
-  const poStub = await resolvePoByToken(zohoToken, responseToken);
-  if (!poStub || poStub.id !== poId) return err('Token mismatch. Please reload the page.');
-  await zohoPut(zohoToken, MOD_PO, poId, {
-    Proforma_Received_Date: proformaDate || new Date().toISOString().slice(0, 10),
-    Proforma_Number: proformaNum,
-    Proforma_Amount: proformaAmt ? parseFloat(proformaAmt) : undefined,
-    Supplier_Payment_Status: 'Proforma Received', Page_Step_Completed: 2,
-  });
-  const filename = `Supplier-Proforma-${proformaNum||poId}-${new Date().toISOString().slice(0,10)}.${file.name.split('.').pop()}`;
-  await zohoAttach(zohoToken, MOD_PO, poId, file, filename);
-  return ok({ proformaReceivedDate: proformaDate });
-}
-
-async function handleDispatch(request, env) {
-  let body; try { body = await request.json(); } catch { return err('Invalid request body.'); }
-  const { token: responseToken, poId, dispatchDate, trackingRef, courier } = body;
-  if (!responseToken || !poId) return err('Missing required fields.');
-  if (!dispatchDate) return err('Dispatch date is required.');
-  const zohoToken = await getAccessToken(env);
-  const poStub = await resolvePoByToken(zohoToken, responseToken);
-  if (!poStub || poStub.id !== poId) return err('Token mismatch. Please reload the page.');
-  await zohoPut(zohoToken, MOD_PO, poId, { Delivery_Confirmed: true, Status: 'Dispatched', Page_Step_Completed: 3 });
-  return ok({ dispatchDate, trackingRef: trackingRef || '' });
-}
-
-async function handleDeliveryNotes(request, env) {
-  let formData; try { formData = await request.formData(); } catch { return err('Invalid form data.'); }
-  const responseToken = formData.get('token'), poId = formData.get('poId'), file = formData.get('deliveryNotesFile');
-  if (!responseToken || !poId) return err('Missing required fields.');
-  const fileErr = validateFile(file); if (fileErr) return err(fileErr);
-  const zohoToken = await getAccessToken(env);
-  const poStub = await resolvePoByToken(zohoToken, responseToken);
-  if (!poStub || poStub.id !== poId) return err('Token mismatch. Please reload the page.');
-  await zohoPut(zohoToken, MOD_PO, poId, { Page_Step_Completed: 4 });
-  const filename = `Delivery-Notes-${poId}-${new Date().toISOString().slice(0,10)}.${file.name.split('.').pop()}`;
-  await zohoAttach(zohoToken, MOD_PO, poId, file, filename);
-  return ok({ deliveryNotesAttached: true });
-}
-
-async function handleBalanceInvoice(request, env) {
-  let formData; try { formData = await request.formData(); } catch { return err('Invalid form data.'); }
-  const responseToken = formData.get('token'), poId = formData.get('poId');
-  const invoiceRef = formData.get('invoiceRef') || '', invoiceDate = formData.get('invoiceDate') || '';
-  const invoiceAmt = formData.get('invoiceAmount') || '', file = formData.get('invoiceFile');
-  if (!responseToken || !poId) return err('Missing required fields.');
-  const fileErr = validateFile(file); if (fileErr) return err(fileErr);
-  const zohoToken = await getAccessToken(env);
-  const poStub = await resolvePoByToken(zohoToken, responseToken);
-  if (!poStub || poStub.id !== poId) return err('Token mismatch. Please reload the page.');
-  await zohoPut(zohoToken, MOD_PO, poId, {
-    Supplier_Invoice_Ref: invoiceRef,
-    Supplier_Invoice_Date: invoiceDate || new Date().toISOString().slice(0, 10),
-    Supplier_Invoice_Amt: invoiceAmt ? parseFloat(invoiceAmt) : undefined,
-    Supplier_Payment_Status: 'Balance Due', Page_Step_Completed: 5,
-  });
-  const filename = `Supplier-Invoice-${invoiceRef||poId}-${new Date().toISOString().slice(0,10)}.${file.name.split('.').pop()}`;
-  await zohoAttach(zohoToken, MOD_PO, poId, file, filename);
-  return ok({ invoiceRef, invoiceDate });
-}
-
-// ---------------------------------------------------------------------------
-// HTML page — served directly from worker (same-origin, no CORS needed)
-// ---------------------------------------------------------------------------
-function getHtmlPage() {
-  return `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -381,8 +8,249 @@ function getHtmlPage() {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--blue:#005090;--navy:#003060;--green:#4A8B2C;--lime:#8FC23C;--sky:#0070B0;--ink:#1F2D3A;--slate:#2C3E50;--muted:#5F6F7E;--faint:#8A97A3;--line:#DDE3E9;--line-soft:#ECF0F3;--surface:#F4F6F8;--white:#FFFFFF;--amber:#B7860B;--amber-bg:#FFF8E6;--red:#B03A2E;--red-bg:#FCEFED;--ok-bg:#EEF6EA;--shell:1100px;--rail:320px;--r:4px;}
-*{box-sizing:border-box;margin:0;padding:0;}html{-webkit-text-size-adjust:100%;}body{font-family:"Inter",system-ui,sans-serif;font-size:15px;line-height:1.6;color:var(--slate);background:var(--surface);min-height:100vh;display:flex;flex-direction:column;font-feature-settings:"tnum" 1;}a{color:var(--blue);}:focus-visible{outline:2px solid var(--sky);outline-offset:2px;}.page{max-width:var(--shell);margin:0 auto;padding:0 24px;width:100%;display:flex;flex-direction:column;flex:1;}.shell{padding:0 28px;}.site-head{background:var(--white);box-shadow:0 2px 10px rgba(0,48,96,.08);}.top-fixed{position:sticky;top:0;z-index:50;background:var(--surface);padding-bottom:4px;}.head-grid{display:grid;grid-template-columns:auto 1fr auto;align-items:stretch;min-height:96px;}.head-logo{display:flex;align-items:center;padding-right:24px;border-right:1px solid var(--line);}.head-logo img{height:64px;width:auto;display:block;}.head-id{display:flex;flex-direction:column;justify-content:center;padding:12px 24px;}.head-id .org{font-size:16px;font-weight:700;letter-spacing:.06em;color:var(--blue);}.head-id .tag{font-size:12px;font-style:italic;font-weight:600;color:var(--green);margin-top:1px;}.head-id .title{font-size:14px;font-weight:600;color:var(--navy);margin-top:5px;}.head-ctrl{display:grid;grid-template-columns:auto auto;align-content:center;column-gap:16px;row-gap:2px;padding-left:24px;border-left:1px solid var(--line);font-size:11.5px;}.head-ctrl dt{color:var(--faint);}.head-ctrl dd{color:var(--ink);font-weight:600;text-align:right;}.stripes{height:8px;background:linear-gradient(var(--blue) 0 4px,var(--lime) 4px 8px);}.ctrl-strip{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 28px;margin-top:16px;padding:10px 20px;background:#F9FBFC;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:var(--r);font-size:12.5px;color:var(--muted);}.ctrl-strip .id{font-weight:600;color:var(--ink);white-space:nowrap;}.ctrl-strip .stmt{text-align:right;}.title-band{background:var(--white);border:1px solid var(--line);border-radius:var(--r);margin-top:16px;}.title-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:28px 0 22px;}.title-row h1{font-size:26px;font-weight:600;letter-spacing:-.01em;color:var(--ink);line-height:1.2;}.title-row .ref{font-size:14px;color:var(--muted);margin-top:6px;}.status{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;padding:6px 12px;border-radius:var(--r);white-space:nowrap;}.status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;}.status.open{color:var(--blue);background:#E8F1F9;}.status.done{color:var(--green);background:var(--ok-bg);}.status.hold{color:var(--amber);background:var(--amber-bg);}.status.closed{color:var(--muted);background:var(--line-soft);}.progress-nav{display:flex;align-items:stretch;margin-top:20px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface);}.pstep{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 6px;font-size:12px;font-weight:600;color:var(--faint);border-right:1px solid var(--line);position:relative;cursor:default;user-select:none;transition:background .15s;text-align:center;line-height:1.3;}.pstep:last-child{border-right:0;}.pstep.done{color:var(--green);cursor:pointer;}.pstep.done:hover{background:#f0f8ea;}.pstep.active{background:var(--white);color:var(--blue);}.pstep.active::after{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--blue);}.pstep.done::after{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--green);}.pstep.locked{color:#c8d2da;cursor:not-allowed;}.pstep-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:1.5px solid currentColor;font-size:11px;flex-shrink:0;}.pstep.done .pstep-num{background:var(--green);border-color:var(--green);color:#fff;}.pstep-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;padding:0 2px;}.workspace{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:24px;padding-top:24px;padding-bottom:40px;align-items:start;}.main{background:var(--white);border:1px solid var(--line);border-radius:var(--r);}.sp{padding:28px 32px;}.sp-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:6px;}.sp-head h2{font-size:20px;font-weight:600;color:var(--ink);}.sp-badge{font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px;white-space:nowrap;}.sp-badge.pending{background:var(--surface);color:var(--faint);}.sp-badge.required{background:#FFF3E0;color:#B45000;}.sp-badge.review{background:var(--amber-bg);color:var(--amber);}.sp-badge.verified,.sp-badge.done{background:var(--ok-bg);color:var(--green);}.sp-lead{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6;max-width:68ch;}.sp-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 32px;border-top:1px solid var(--line-soft);background:#FAFBFC;border-radius:0 0 var(--r) var(--r);}.sp-nav .nav-hint{font-size:13px;color:var(--muted);}.btn-next{font:inherit;font-size:15px;font-weight:600;padding:11px 28px;border-radius:var(--r);border:none;background:var(--green);color:#fff;cursor:pointer;}.btn-next:hover{background:#3B6D11;}.btn-next:disabled{background:#B9CCB0;cursor:not-allowed;}.btn-back{font:inherit;font-size:14px;font-weight:500;padding:10px 18px;border-radius:var(--r);border:1px solid #C9D2DA;background:#fff;color:var(--slate);cursor:pointer;}.btn-back:hover{background:var(--surface);}.hb-kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;padding:14px 16px;background:#F4F6F8;border-radius:var(--r);font-size:13px;margin-bottom:14px;}.hb-kv dt{color:#556472;font-weight:400;white-space:nowrap;}.hb-kv dd{margin:0;font-weight:500;color:#1F2B37;text-align:right;overflow-wrap:anywhere;}.hb-kv dd.complete-card{display:block;margin-top:4px;padding:8px 12px;background:#E8F5E2;border-left:3px solid #2F6B1A;border-radius:0 3px 3px 0;color:#2F6B1A;font-weight:600;font-size:13px;line-height:1.4;}.hb-kv dd.review-card{display:block;margin-top:4px;padding:8px 12px;background:#FFF3E0;border-left:3px solid #B45000;border-radius:0 3px 3px 0;color:#8A4B00;font-weight:600;font-size:13px;line-height:1.4;}.notice{display:grid;grid-template-columns:4px 1fr;border-radius:var(--r);overflow:hidden;margin-bottom:16px;}.notice::before{content:"";}.notice .body{padding:14px 18px;font-size:14px;line-height:1.6;}.notice .body strong{display:block;color:var(--ink);margin-bottom:2px;}.notice.info{background:#EEF4FA;}.notice.info::before{background:var(--blue);}.notice.ok{background:var(--ok-bg);}.notice.ok::before{background:var(--green);}.notice.warn{background:var(--amber-bg);}.notice.warn::before{background:var(--amber);}.notice.stop{background:var(--red-bg);}.notice.stop::before{background:var(--red);}.hb-grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:12px;}.hb-field{display:flex;flex-direction:column;gap:6px;}.hb-lbl{font-size:13px;font-weight:500;color:var(--ink);}.hb-in{height:44px;width:100%;padding:0 12px;border:1px solid #9AA8B5;border-radius:4px;font-family:inherit;font-size:15px;color:#1F2B37;background:#fff;}.hb-in:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(0,80,144,.12);}.hb-drop{border:1px dashed #9AA8B5;border-radius:4px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px;background:#F9FAFB;text-align:center;}.hb-drop.over{border-color:var(--blue);background:#EEF5FB;}.hb-pick{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:1px solid var(--blue);border-radius:4px;color:var(--blue);font-size:14px;font-weight:500;cursor:pointer;background:#fff;}.hb-file{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;}.hb-hint{font-size:12px;color:#556472;}.hb-fname{font-size:13px;font-weight:500;color:#00294D;}.hb-fname:empty{display:none;}.hb-err{font-size:13px;color:#B42318;min-height:18px;margin:4px 0;}.confirm{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:13px;line-height:1.55;color:var(--slate);}.confirm input{margin-top:3px;width:16px;height:16px;flex:none;accent-color:var(--blue);}.hb-tbox{overflow-x:auto;border:1px solid #D8DEE4;border-radius:4px;margin-bottom:12px;}.hb-table{width:100%;min-width:420px;border-collapse:collapse;font-size:13px;}.hb-table th{text-align:left;padding:9px 14px;font-size:11px;font-weight:600;color:#fff;background:var(--blue);}.hb-table th.r,.hb-table td.r{text-align:right;}.hb-table td{padding:11px 14px;border-bottom:1px solid #E6EAEE;color:#3D4B58;overflow-wrap:anywhere;}.hb-table tr:last-child td{border-bottom:none;}.hb-table td.hb-tl{font-weight:500;color:#1F2B37;}.hb-table tfoot td{font-weight:600;color:#1F2B37;background:#FAFBFC;border-top:1px solid #D8DEE4;}.rail{display:flex;flex-direction:column;gap:20px;position:sticky;top:190px;}.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;}.panel h3{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px;}.panel[hidden]{display:none;}.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px;}.facts dt{color:var(--faint);white-space:nowrap;}.facts dd{color:var(--ink);font-weight:500;text-align:right;overflow-wrap:anywhere;word-break:break-word;}.facts dd a{color:var(--blue);text-decoration:none;word-break:break-all;}.guide-card{border-left:3px solid var(--blue);}.guide-btn{display:block;margin-top:14px;padding:10px 14px;text-align:center;font-size:14px;font-weight:600;text-decoration:none;color:var(--blue);border:1px solid var(--blue);border-radius:var(--r);}.guide-btn:hover{background:var(--blue);color:#fff;}.guide-btn+.guide-btn{margin-top:8px;}.avail-card{background:#F9FBFC;}.avail-card p{font-size:12.5px;margin-top:12px;line-height:1.6;}.sup-profile-head{display:flex;align-items:center;justify-content:space-between;}.sup-profile-head h3{margin-bottom:0;}.sup-asl{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;}.sup-asl::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;}.sup-asl.approved{color:var(--green);}.sup-asl.pending{color:var(--amber);}.sup-asl.none{color:var(--faint);}.sig-block{padding:20px 28px 12px;border-top:1px solid var(--line-soft);}.sig-block p{font-size:13px;color:var(--muted);line-height:1.7;}.sig-block .sig-name{font-size:13px;font-weight:600;color:var(--slate);margin-top:5px;}.tagbar{display:grid;grid-template-columns:1fr 1fr;}.tagbar div{padding:10px 0;text-align:center;font-size:12px;font-style:italic;font-weight:700;color:#fff;}.tagbar div:first-child{background:var(--green);}.tagbar div:last-child{background:var(--sky);}.site-foot{background:#fff;padding-top:14px;}.foot-line{height:3px;background:linear-gradient(90deg,var(--blue) 60%,var(--faint));}.foot-row{padding-top:14px;padding-bottom:22px;}.foot-row .urls{font-size:13px;color:var(--muted);}.foot-row .copy{font-size:11px;font-style:italic;color:#9EA8B1;margin-top:2px;}.wait-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(0,48,96,.55);align-items:center;justify-content:center;padding:20px;}.wait-overlay.open{display:flex;}.wait-card{background:#fff;border-radius:10px;box-shadow:0 8px 40px rgba(0,48,96,.25);max-width:440px;width:100%;overflow:hidden;}.wait-stripes{height:4px;background:var(--blue);border-bottom:4px solid #8FC23C;box-sizing:content-box;}.wait-body{padding:30px 28px;text-align:center;}.wait-spinner{width:38px;height:38px;border:3px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:ecspin .8s linear infinite;margin:0 auto 18px;}@keyframes ecspin{to{transform:rotate(360deg);}}.wait-title{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:8px;}.wait-text{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px;}.wait-warn{background:var(--amber-bg);border-left:3px solid var(--amber);padding:10px 12px;font-size:12px;color:#7D5A00;text-align:left;font-weight:600;}.wait-step{font-size:12px;color:var(--blue);font-weight:600;margin-top:12px;min-height:16px;}.it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:60;}.it-tab{writing-mode:vertical-rl;transform:rotate(180deg);background:var(--navy);color:#fff;font:600 12px "Inter",sans-serif;padding:14px 8px;border:0;border-radius:4px 0 0 4px;cursor:pointer;}.it-panel{display:none;position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);width:280px;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 28px rgba(0,48,96,.14);padding:20px 22px;}.it-panel.open{display:block;}.it-panel h4{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:8px;padding-right:24px;}.it-panel p{font-size:13px;color:var(--muted);line-height:1.6;}.it-panel a{display:inline-block;margin-top:14px;font-size:14px;font-weight:600;color:var(--blue);}.it-close{position:absolute;top:14px;right:14px;width:24px;height:24px;border:0;background:none;color:var(--faint);font-size:18px;line-height:1;cursor:pointer;}.it-close:hover{color:var(--ink);}.skeleton{color:var(--faint);font-size:14px;padding:48px 32px;}@media(max-width:980px){.workspace{grid-template-columns:1fr;}.rail{display:contents;}.hb-grid2{grid-template-columns:1fr;}}@media(max-width:720px){.shell{padding:0 16px;}.head-grid{grid-template-columns:1fr;min-height:0;}.head-logo,.head-ctrl{display:none;}.head-id{padding:14px 0;text-align:center;}.title-row{flex-direction:column;align-items:flex-start;}.pstep-label{display:none;}.pstep{padding:10px 4px;}.sp,.sp-nav{padding-left:18px;padding-right:18px;}.page{padding:0;}.ctrl-strip{grid-template-columns:1fr;margin:8px 12px 0;padding:8px 14px;font-size:11.5px;gap:2px;}.ctrl-strip .stmt{text-align:left;}.title-band{margin:12px 12px 0;}.workspace{padding-left:12px;padding-right:12px;}.it-float{display:none;}}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+:root{
+  --blue:#005090;--navy:#003060;--green:#4A8B2C;--lime:#8FC23C;--sky:#0070B0;
+  --ink:#1F2D3A;--slate:#2C3E50;--muted:#5F6F7E;--faint:#8A97A3;
+  --line:#DDE3E9;--line-soft:#ECF0F3;--surface:#F4F6F8;--white:#FFFFFF;
+  --amber:#B7860B;--amber-bg:#FFF8E6;--red:#B03A2E;--red-bg:#FCEFED;--ok-bg:#EEF6EA;
+  --shell:1100px;--rail:320px;--r:4px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{font-family:"Inter",system-ui,sans-serif;font-size:15px;line-height:1.6;color:var(--slate);background:var(--surface);min-height:100vh;display:flex;flex-direction:column;font-feature-settings:"tnum" 1;}
+a{color:var(--blue);}
+:focus-visible{outline:2px solid var(--sky);outline-offset:2px;}
+.page{max-width:var(--shell);margin:0 auto;padding:0 24px;width:100%;display:flex;flex-direction:column;flex:1;}
+.shell{padding:0 28px;}
+
+/* ── HEADER ── */
+.site-head{background:var(--white);box-shadow:0 2px 10px rgba(0,48,96,.08);}
+.top-fixed{position:sticky;top:0;z-index:50;background:var(--surface);padding-bottom:4px;}
+.head-grid{display:grid;grid-template-columns:auto 1fr auto;align-items:stretch;min-height:96px;}
+.head-logo{display:flex;align-items:center;padding-right:24px;border-right:1px solid var(--line);}
+.head-logo img{height:64px;width:auto;display:block;}
+.head-id{display:flex;flex-direction:column;justify-content:center;padding:12px 24px;}
+.head-id .org{font-size:16px;font-weight:700;letter-spacing:.06em;color:var(--blue);}
+.head-id .tag{font-size:12px;font-style:italic;font-weight:600;color:var(--green);margin-top:1px;}
+.head-id .title{font-size:14px;font-weight:600;color:var(--navy);margin-top:5px;}
+.head-ctrl{display:grid;grid-template-columns:auto auto;align-content:center;column-gap:16px;row-gap:2px;padding-left:24px;border-left:1px solid var(--line);font-size:11.5px;}
+.head-ctrl dt{color:var(--faint);}
+.head-ctrl dd{color:var(--ink);font-weight:600;text-align:right;}
+.stripes{height:8px;background:linear-gradient(var(--blue) 0 4px,var(--lime) 4px 8px);}
+.ctrl-strip{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 28px;margin-top:16px;padding:10px 20px;background:#F9FBFC;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:var(--r);font-size:12.5px;color:var(--muted);}
+.ctrl-strip .id{font-weight:600;color:var(--ink);white-space:nowrap;}
+.ctrl-strip .stmt{text-align:right;}
+
+/* ── TITLE BAND ── */
+.title-band{background:var(--white);border:1px solid var(--line);border-radius:var(--r);margin-top:16px;}
+.title-row{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding:28px 0 22px;}
+.title-row h1{font-size:26px;font-weight:600;letter-spacing:-.01em;color:var(--ink);line-height:1.2;}
+.title-row .ref{font-size:14px;color:var(--muted);margin-top:6px;}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;padding:6px 12px;border-radius:var(--r);white-space:nowrap;}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;}
+.status.open{color:var(--blue);background:#E8F1F9;}
+.status.done{color:var(--green);background:var(--ok-bg);}
+.status.hold{color:var(--amber);background:var(--amber-bg);}
+.status.closed{color:var(--muted);background:var(--line-soft);}
+
+/* ── PROGRESS BAR ── */
+.progress-nav{display:flex;align-items:stretch;margin-top:20px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface);}
+.pstep{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 6px;font-size:12px;font-weight:600;color:var(--faint);border-right:1px solid var(--line);position:relative;cursor:default;user-select:none;transition:background .15s;text-align:center;line-height:1.3;}
+.pstep:last-child{border-right:0;}
+.pstep.done{color:var(--green);cursor:pointer;}
+.pstep.done:hover{background:#f0f8ea;}
+.pstep.active{background:var(--white);color:var(--blue);}
+.pstep.active::after{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--blue);}
+.pstep.done::after{content:"";position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--green);}
+.pstep.locked{color:#c8d2da;cursor:not-allowed;}
+.pstep-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:1.5px solid currentColor;font-size:11px;flex-shrink:0;}
+.pstep.done .pstep-num{background:var(--green);border-color:var(--green);color:#fff;}
+.pstep-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;padding:0 2px;}
+
+/* ── WORKSPACE ── */
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) var(--rail);gap:24px;padding-top:24px;padding-bottom:40px;align-items:start;}
+.main{background:var(--white);border:1px solid var(--line);border-radius:var(--r);}
+
+/* ── STAGE PAGE ── */
+.sp{padding:28px 32px;}
+.sp-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:6px;}
+.sp-head h2{font-size:20px;font-weight:600;color:var(--ink);}
+.sp-badge{font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px;white-space:nowrap;}
+.sp-badge.pending{background:var(--surface);color:var(--faint);}
+.sp-badge.required{background:#FFF3E0;color:#B45000;}
+.sp-badge.review{background:var(--amber-bg);color:var(--amber);}
+.sp-badge.verified{background:var(--ok-bg);color:var(--green);}
+.sp-badge.done{background:var(--ok-bg);color:var(--green);}
+.sp-lead{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6;max-width:68ch;}
+.sp-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 32px;border-top:1px solid var(--line-soft);background:#FAFBFC;border-radius:0 0 var(--r) var(--r);}
+.sp-nav .nav-hint{font-size:13px;color:var(--muted);}
+.btn-next{font:inherit;font-size:15px;font-weight:600;padding:11px 28px;border-radius:var(--r);border:none;background:var(--green);color:#fff;cursor:pointer;}
+.btn-next:hover{background:#3B6D11;}
+.btn-next:disabled{background:#B9CCB0;cursor:not-allowed;}
+.btn-next.blue{background:var(--blue);}
+.btn-next.blue:hover{background:var(--navy);}
+.btn-back{font:inherit;font-size:14px;font-weight:500;padding:10px 18px;border-radius:var(--r);border:1px solid #C9D2DA;background:#fff;color:var(--slate);cursor:pointer;}
+.btn-back:hover{background:var(--surface);}
+
+/* ── INFO KV ── */
+.hb-kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;padding:14px 16px;background:#F4F6F8;border-radius:var(--r);font-size:13px;margin-bottom:14px;}
+.hb-kv dt{color:#556472;font-weight:400;white-space:nowrap;}
+.hb-kv dd{margin:0;font-weight:500;color:#1F2B37;text-align:right;overflow-wrap:anywhere;}
+.hb-kv dd.complete-card{display:block;margin-top:4px;padding:8px 12px;background:#E8F5E2;border-left:3px solid #2F6B1A;border-radius:0 3px 3px 0;color:#2F6B1A;font-weight:600;font-size:13px;line-height:1.4;}
+.hb-kv dd.review-card{display:block;margin-top:4px;padding:8px 12px;background:#FFF3E0;border-left:3px solid #B45000;border-radius:0 3px 3px 0;color:#8A4B00;font-weight:600;font-size:13px;line-height:1.4;}
+
+/* ── NOTICES ── */
+.notice{display:grid;grid-template-columns:4px 1fr;border-radius:var(--r);overflow:hidden;margin-bottom:16px;}
+.notice::before{content:"";}
+.notice .body{padding:14px 18px;font-size:14px;line-height:1.6;}
+.notice .body strong{display:block;color:var(--ink);margin-bottom:2px;}
+.notice.info{background:#EEF4FA;}.notice.info::before{background:var(--blue);}
+.notice.ok{background:var(--ok-bg);}.notice.ok::before{background:var(--green);}
+.notice.warn{background:var(--amber-bg);}.notice.warn::before{background:var(--amber);}
+.notice.stop{background:var(--red-bg);}.notice.stop::before{background:var(--red);}
+
+/* ── FORMS ── */
+.hb-grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:12px;}
+.hb-field{display:flex;flex-direction:column;gap:6px;}
+.hb-lbl{font-size:13px;font-weight:500;color:var(--ink);}
+.hb-in{height:44px;width:100%;padding:0 12px;border:1px solid #9AA8B5;border-radius:4px;font-family:inherit;font-size:15px;color:#1F2B37;background:#fff;}
+.hb-in:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(0,80,144,.12);}
+.hb-in[readonly]{background:var(--surface);color:var(--faint);cursor:not-allowed;}
+.hb-drop{border:1px dashed #9AA8B5;border-radius:4px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px;background:#F9FAFB;text-align:center;}
+.hb-drop.over{border-color:var(--blue);background:#EEF5FB;}
+.hb-pick{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border:1px solid var(--blue);border-radius:4px;color:var(--blue);font-size:14px;font-weight:500;cursor:pointer;background:#fff;}
+.hb-file{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;}
+.hb-hint{font-size:12px;color:#556472;}
+.hb-fname{font-size:13px;font-weight:500;color:#00294D;}
+.hb-fname:empty{display:none;}
+.hb-err{font-size:13px;color:#B42318;min-height:18px;margin:4px 0;}
+.confirm{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:13px;line-height:1.55;color:var(--slate);}
+.confirm input{margin-top:3px;width:16px;height:16px;flex:none;accent-color:var(--blue);}
+
+/* ── LINE ITEMS TABLE ── */
+.hb-tbox{overflow-x:auto;border:1px solid #D8DEE4;border-radius:4px;margin-bottom:12px;}
+.hb-table{width:100%;min-width:420px;border-collapse:collapse;font-size:13px;}
+.hb-table th{text-align:left;padding:9px 14px;font-size:11px;font-weight:600;color:#fff;background:var(--blue);}
+.hb-table th.r,.hb-table td.r{text-align:right;}
+.hb-table td{padding:11px 14px;border-bottom:1px solid #E6EAEE;color:#3D4B58;overflow-wrap:anywhere;}
+.hb-table tr:last-child td{border-bottom:none;}
+.hb-table td.hb-tl{font-weight:500;color:#1F2B37;}
+.hb-table tfoot td{font-weight:600;color:#1F2B37;background:#FAFBFC;border-top:1px solid #D8DEE4;}
+
+/* ── TOTALS ── */
+.po-totals{margin:12px 0 0 auto;width:280px;max-width:100%;font-size:13px;}
+.po-totals div{display:flex;justify-content:space-between;padding:7px 10px;border-bottom:1px solid var(--line-soft);}
+.po-totals div span:first-child{color:var(--muted);}
+.po-totals div.grand{background:var(--navy);color:#fff;font-weight:600;border:0;}
+.po-totals div.grand span:first-child{color:#fff;}
+
+/* ── FINANCIALS ── */
+.fin-wrap{padding:28px 32px;}
+.fin-sub{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--lime);}
+.fin-sub .label{font-size:13px;font-weight:600;color:#00294D;}
+.fin-sub .asof{font-size:12px;color:#556472;}
+.fin-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;padding:14px 16px;background:#F4F6F8;border-radius:4px;margin-bottom:14px;}
+.fin-sum dt{font-size:11px;font-weight:400;color:#556472;margin:0 0 3px;text-transform:uppercase;letter-spacing:.04em;}
+.fin-sum dd{margin:0;font-size:15px;font-weight:600;color:#1F2B37;}
+.fin-sum dd.ok{color:#2F6B1A;}
+.fin-sum dd.over{color:var(--red);}
+.fin-standing{padding:12px 14px;border-radius:0 3px 3px 0;font-size:13px;line-height:1.6;margin-bottom:12px;}
+.fin-standing strong{display:block;font-size:13px;font-weight:600;margin-bottom:2px;}
+.fin-standing p{font-size:13px;font-weight:400;}
+.fin-standing.ok{background:var(--ok-bg);border-left:3px solid var(--green);color:#1F4A12;}
+.fin-standing.warn{background:#FFF8E8;border-left:3px solid #D4A017;color:#5C3D00;}
+.fin-note{font-size:12px;color:#556472;line-height:1.6;}
+
+/* ── RAIL ── */
+.rail{display:flex;flex-direction:column;gap:20px;position:sticky;top:190px;}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;}
+.panel h3{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px;}
+.panel[hidden]{display:none;}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:13px;}
+.facts dt{color:var(--faint);white-space:nowrap;}
+.facts dd{color:var(--ink);font-weight:500;text-align:right;overflow-wrap:anywhere;word-break:break-word;}
+.facts dd a{color:var(--blue);text-decoration:none;word-break:break-all;}
+.guide-card{border-left:3px solid var(--blue);}
+.guide-btn{display:block;margin-top:14px;padding:10px 14px;text-align:center;font-size:14px;font-weight:600;text-decoration:none;color:var(--blue);border:1px solid var(--blue);border-radius:var(--r);}
+.guide-btn:hover{background:var(--blue);color:#fff;}
+.guide-btn+.guide-btn{margin-top:8px;}
+.avail-card{background:#F9FBFC;}
+.avail-card p{font-size:12.5px;margin-top:12px;line-height:1.6;}
+
+/* Supplier profile panel */
+.sup-profile{cursor:pointer;}
+.sup-profile-head{display:flex;align-items:center;justify-content:space-between;}
+.sup-profile-head h3{margin-bottom:0;}
+.sup-asl{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;}
+.sup-asl::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;}
+.sup-asl.approved{color:var(--green);}
+.sup-asl.pending{color:var(--amber);}
+.sup-asl.none{color:var(--faint);}
+
+/* ── SIGNATURE ── */
+.sig-block{padding:20px 28px 12px;border-top:1px solid var(--line-soft);}
+.sig-block p{font-size:13px;color:var(--muted);line-height:1.7;}
+.sig-block .sig-name{font-size:13px;font-weight:600;color:var(--slate);margin-top:5px;}
+
+/* ── FOOTER ── */
+.tagbar{display:grid;grid-template-columns:1fr 1fr;}
+.tagbar div{padding:10px 0;text-align:center;font-size:12px;font-style:italic;font-weight:700;color:#fff;}
+.tagbar div:first-child{background:var(--green);}
+.tagbar div:last-child{background:var(--sky);}
+.site-foot{background:#fff;padding-top:14px;}
+.foot-line{height:3px;background:linear-gradient(90deg,var(--blue) 60%,var(--faint));}
+.foot-row{padding-top:14px;padding-bottom:22px;}
+.foot-row .urls{font-size:13px;color:var(--muted);}
+.foot-row .copy{font-size:11px;font-style:italic;color:#9EA8B1;margin-top:2px;}
+
+/* ── WAIT OVERLAY ── */
+.wait-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(0,48,96,.55);align-items:center;justify-content:center;padding:20px;}
+.wait-overlay.open{display:flex;}
+.wait-card{background:#fff;border-radius:10px;box-shadow:0 8px 40px rgba(0,48,96,.25);max-width:440px;width:100%;overflow:hidden;}
+.wait-stripes{height:4px;background:var(--blue);border-bottom:4px solid #8FC23C;box-sizing:content-box;}
+.wait-body{padding:30px 28px;text-align:center;}
+.wait-spinner{width:38px;height:38px;border:3px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:ecspin .8s linear infinite;margin:0 auto 18px;}
+@keyframes ecspin{to{transform:rotate(360deg);}}
+.wait-title{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:8px;}
+.wait-text{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:14px;}
+.wait-warn{background:var(--amber-bg);border-left:3px solid var(--amber);padding:10px 12px;font-size:12px;color:#7D5A00;text-align:left;font-weight:600;}
+.wait-step{font-size:12px;color:var(--blue);font-weight:600;margin-top:12px;min-height:16px;}
+
+/* ── TECH SUPPORT FLOAT ── */
+.it-float{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:60;}
+.it-tab{writing-mode:vertical-rl;transform:rotate(180deg);background:var(--navy);color:#fff;font:600 12px "Inter",sans-serif;padding:14px 8px;border:0;border-radius:4px 0 0 4px;cursor:pointer;}
+.it-panel{display:none;position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);width:280px;background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 28px rgba(0,48,96,.14);padding:20px 22px;}
+.it-panel.open{display:block;}
+.it-panel h4{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:8px;padding-right:24px;}
+.it-panel p{font-size:13px;color:var(--muted);line-height:1.6;}
+.it-panel a{display:inline-block;margin-top:14px;font-size:14px;font-weight:600;color:var(--blue);}
+.it-close{position:absolute;top:14px;right:14px;width:24px;height:24px;border:0;background:none;color:var(--faint);font-size:18px;line-height:1;cursor:pointer;}
+.skeleton{color:var(--faint);font-size:14px;padding:48px 32px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:980px){
+  .workspace{grid-template-columns:1fr;}
+  .rail{display:contents;}
+  .panel.guide-card{order:-1;}
+  .hb-grid2{grid-template-columns:1fr;}
+}
+@media(max-width:720px){
+  .shell{padding:0 16px;}
+  .head-grid{grid-template-columns:1fr;min-height:0;}
+  .head-logo,.head-ctrl{display:none;}
+  .head-id{padding:14px 0;text-align:center;}
+  .title-row{flex-direction:column;align-items:flex-start;}
+  .pstep-label{display:none;}
+  .pstep{padding:10px 4px;}
+  .sp,.fin-wrap,.sp-nav{padding-left:18px;padding-right:18px;}
+  .page{padding:0;}
+  .ctrl-strip{grid-template-columns:1fr;margin:8px 12px 0;padding:8px 14px;font-size:11.5px;gap:2px;}
+  .ctrl-strip .stmt{text-align:left;}
+  .title-band{margin:12px 12px 0;}
+  .workspace{padding-left:12px;padding-right:12px;}
+  .it-float{display:none;}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
 </style>
 </head>
 <body>
@@ -391,125 +259,764 @@ function getHtmlPage() {
   <header class="site-head">
     <div class="shell head-grid">
       <div class="head-logo"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></div>
-      <div class="head-id"><div class="org">ESSENTIAL CURES INC.</div><div class="tag">Compliant Solutions. Confident Care.</div><div class="title">Supplier Order Hub</div></div>
-      <dl class="head-ctrl"><dt>Document</dt><dd id="ctrlNo"><span style="color:var(--faint);font-weight:500">Pending</span></dd><dt>Revision</dt><dd id="ctrlRev"><span style="color:var(--faint);font-weight:500">Pending</span></dd><dt>Effective</dt><dd id="ctrlEff"><span style="color:var(--faint);font-weight:500">Pending</span></dd></dl>
+      <div class="head-id">
+        <div class="org">ESSENTIAL CURES INC.</div>
+        <div class="tag">Compliant Solutions. Confident Care.</div>
+        <div class="title">Supplier Order Hub</div>
+      </div>
+      <dl class="head-ctrl" aria-label="Document control">
+        <dt>Document</dt><dd id="ctrlNo"><span style="color:var(--faint);font-weight:500">Pending</span></dd>
+        <dt>Revision</dt><dd id="ctrlRev"><span style="color:var(--faint);font-weight:500">Pending</span></dd>
+        <dt>Effective</dt><dd id="ctrlEff"><span style="color:var(--faint);font-weight:500">Pending</span></dd>
+      </dl>
     </div>
     <div class="stripes"></div>
   </header>
-  <div class="ctrl-strip" role="note"><div class="id">Controlled document</div><div class="stmt">This online version is the current approved issue. Printed or downloaded copies are uncontrolled.</div></div>
+  <div class="ctrl-strip" role="note">
+    <div class="id">Controlled document</div>
+    <div class="stmt">This online version is the current approved issue. Printed or downloaded copies are uncontrolled.</div>
+  </div>
 </div>
+
 <section class="title-band">
   <div class="shell">
-    <div class="title-row"><div><h1>Supplier Order Hub</h1><div class="ref" id="pageRef"></div></div><span class="status open" id="pageStatus">Loading</span></div>
+    <div class="title-row">
+      <div>
+        <h1>Supplier Order Hub</h1>
+        <div class="ref" id="pageRef"></div>
+      </div>
+      <span class="status open" id="pageStatus">Loading</span>
+    </div>
     <nav id="progressNav" class="progress-nav" aria-label="Order stages"></nav>
   </div>
 </section>
+
 <div class="workspace">
-  <main class="main" id="main" aria-live="polite"><div class="skeleton">Loading your purchase order details.</div></main>
+  <main class="main" id="main" aria-live="polite">
+    <div class="skeleton">Loading your purchase order details.</div>
+  </main>
   <aside class="rail" id="rail">
-    <section class="panel guide-card" id="railGuide" hidden><h3>Policies and guidelines</h3><a class="guide-btn" href="https://essentialcures.com/guides/supplier-guide" target="_blank" rel="noopener">Supplier ordering guide</a><a class="guide-btn" href="https://essentialcures.com/policies/supplier-terms.html" target="_blank" rel="noopener">Supplier terms and conditions</a></section>
-    <section class="panel" id="railSupplier" hidden><div class="sup-profile-head"><h3>Your organization</h3><span class="sup-asl none" id="aslBadge">Status pending</span></div><dl class="facts" id="supplierFacts" style="margin-top:10px"></dl></section>
-    <section class="panel" id="railSummary" hidden><h3>Order summary</h3><dl class="facts" id="summaryFacts"></dl></section>
-    <section class="panel" id="railContact" hidden><h3>Your EC contact</h3><dl class="facts" id="contactFacts"></dl></section>
-    <section class="panel avail-card" id="availCard" hidden><h3>Page availability</h3><dl class="facts" id="availFacts"></dl><p id="availNote"></p></section>
+    <section class="panel guide-card" id="railGuide" hidden>
+      <h3>Policies and guidelines</h3>
+      <a class="guide-btn" href="https://essentialcures.com/guides/supplier-guide" target="_blank" rel="noopener">Supplier ordering guide</a>
+      <a class="guide-btn" href="https://essentialcures.com/policies/supplier-terms.html" target="_blank" rel="noopener">Supplier terms and conditions</a>
+    </section>
+    <section class="panel sup-profile" id="railSupplier" hidden>
+      <div class="sup-profile-head">
+        <h3>Your organization</h3>
+        <span class="sup-asl none" id="aslBadge">Not on file</span>
+      </div>
+      <dl class="facts" id="supplierFacts" style="margin-top:10px"></dl>
+    </section>
+    <section class="panel" id="railSummary" hidden>
+      <h3>Order summary</h3>
+      <dl class="facts" id="summaryFacts"></dl>
+    </section>
+    <section class="panel" id="railContact" hidden>
+      <h3>Your EC contact</h3>
+      <dl class="facts" id="contactFacts"></dl>
+    </section>
+    <section class="panel avail-card" id="availCard" hidden>
+      <h3>Page availability</h3>
+      <dl class="facts" id="availFacts"></dl>
+      <p id="availNote"></p>
+    </section>
   </aside>
 </div>
+
 <footer>
   <div class="tagbar"><div>Compliant Solutions. Confident Care.</div><div>Quality Built In. Not Bolted On.</div></div>
-  <div class="site-foot"><div class="foot-line"></div><div class="shell foot-row"><div class="urls">essentialcures.com | essentialcures.ca</div><div class="copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</div></div></div>
+  <div class="site-foot">
+    <div class="foot-line"></div>
+    <div class="shell foot-row">
+      <div class="urls">essentialcures.com | essentialcures.ca</div>
+      <div class="copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</div>
+    </div>
+  </div>
 </footer>
 </div>
-<div class="wait-overlay" id="waitOverlay" role="status" aria-live="polite"><div class="wait-card"><div class="wait-stripes"></div><div class="wait-body"><div class="wait-spinner"></div><div class="wait-title" id="waitTitle">Please wait</div><p class="wait-text" id="waitText">We are recording your submission.</p><div class="wait-warn">Please do not close or refresh this page until it is finished.</div><div class="wait-step" id="waitStep"></div></div></div></div>
-<div class="it-float"><button class="it-tab" type="button" aria-expanded="false" aria-controls="itPanel" onclick="toggleIT()">Technical Support</button><div class="it-panel" id="itPanel" role="dialog" aria-label="Technical support"><button class="it-close" type="button" aria-label="Close" onclick="toggleIT()">&times;</button><h4>Technical issues?</h4><p>Having trouble with the form? Please email our EC-IT team with a description of the problem. We apologize for the inconvenience in advance.</p><a href="mailto:itsupport@essentialcures.com">Email IT support</a></div></div>
+
+<!-- Wait overlay -->
+<div class="wait-overlay" id="waitOverlay" role="status" aria-live="polite">
+  <div class="wait-card">
+    <div class="wait-stripes"></div>
+    <div class="wait-body">
+      <div class="wait-spinner"></div>
+      <div class="wait-title" id="waitTitle">Please wait</div>
+      <p class="wait-text" id="waitText">We are recording your submission.</p>
+      <div class="wait-warn">Please do not close or refresh this page until it is finished.</div>
+      <div class="wait-step" id="waitStep"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Tech support float -->
+<div class="it-float">
+  <button class="it-tab" type="button" aria-expanded="false" aria-controls="itPanel" onclick="toggleIT()">Technical Support</button>
+  <div class="it-panel" id="itPanel" role="dialog" aria-label="Technical support">
+    <button class="it-close" type="button" aria-label="Close" onclick="toggleIT()">&times;</button>
+    <h4>Technical issues?</h4>
+    <p>Having trouble with the form? Please email our EC-IT team with a description of the problem. We apologize for the inconvenience in advance.</p>
+    <a href="mailto:itsupport@essentialcures.com">Email IT support</a>
+  </div>
+</div>
+
 <script>
-const HUB_BASE='';
-const PROC_EMAIL='procurement@essentialcures.com';
-const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const $=id=>document.getElementById(id);
-function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function fmtDate(d){const p=String(d||'').slice(0,10).split('-');if(p.length!==3||!MONTHS[+p[1]-1])return '';return (+p[2])+' '+MONTHS[+p[1]-1]+' '+p[0];}
-function fmt(v){const n=parseFloat(String(v==null?'':v).replace(/[^0-9.\-]/g,''));return isFinite(n)?n.toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2}):'0.00';}
-function fmtQty(v){return Math.round(parseFloat(v)||0).toLocaleString('en-CA');}
-function todayIso(){return new Date().toISOString().slice(0,10);}
-function mailLink(e){return e?'<a href="mailto:'+esc(e)+'">'+esc(e)+'</a>':'';}
+// ---------------------------------------------------------------------------
+// Config
+// ---------------------------------------------------------------------------
+const HUB_BASE = 'https://supplier.essentialcures.com';
+const PROC_EMAIL = 'procurement@essentialcures.com';
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+const $ = id => document.getElementById(id);
+function esc(v){ return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtDate(d){ const p=String(d||'').slice(0,10).split('-'); if(p.length!==3||!MONTHS[+p[1]-1]) return ''; return `${+p[2]} ${MONTHS[+p[1]-1]} ${p[0]}`; }
+function fmt(v){ const n=parseFloat(String(v==null?'':v).replace(/[^0-9.\-]/g,'')); return isFinite(n)?n.toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2}):'0.00'; }
+function fmtQty(v){ return Math.round(parseFloat(v)||0).toLocaleString('en-CA'); }
+function todayIso(){ return new Date().toISOString().slice(0,10); }
+function mailLink(e){ return e?`<a href="mailto:${esc(e)}">${esc(e)}</a>`:''; }
+
 let waitTimer=null;
 function warnLeave(e){e.preventDefault();e.returnValue='';}
-function openWait(title,text,steps){$('waitTitle').textContent=title;$('waitText').textContent=text;const list=steps&&steps.length?steps:[''];const el=$('waitStep');el.textContent=list[0];$('waitOverlay').classList.add('open');let i=0;waitTimer=setInterval(()=>{i++;if(i<list.length)el.textContent=list[i];},2500);window.addEventListener('beforeunload',warnLeave);}
-function closeWait(){$('waitOverlay').classList.remove('open');if(waitTimer){clearInterval(waitTimer);waitTimer=null;}window.removeEventListener('beforeunload',warnLeave);}
-function toggleIT(){const p=$('itPanel'),open=p.classList.toggle('open');document.querySelector('.it-tab').setAttribute('aria-expanded',open?'true':'false');}
+function openWait(title,text,steps){
+  $('waitTitle').textContent=title; $('waitText').textContent=text;
+  const list=steps&&steps.length?steps:[''];
+  const el=$('waitStep'); el.textContent=list[0];
+  $('waitOverlay').classList.add('open');
+  let i=0; waitTimer=setInterval(()=>{i++;if(i<list.length)el.textContent=list[i];},2500);
+  window.addEventListener('beforeunload',warnLeave);
+}
+function closeWait(){
+  $('waitOverlay').classList.remove('open');
+  if(waitTimer){clearInterval(waitTimer);waitTimer=null;}
+  window.removeEventListener('beforeunload',warnLeave);
+}
+function toggleIT(){
+  const p=$('itPanel'),open=p.classList.toggle('open');
+  document.querySelector('.it-tab').setAttribute('aria-expanded',open?'true':'false');
+}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('itPanel').classList.contains('open'))toggleIT();});
-function setStatus(kind,text){const el=$('pageStatus');el.className='status '+kind;el.textContent=text;}
-const params=new URLSearchParams(location.search);
-const TOKEN=params.get('token');
-let PO=null,STAGES=[],ACTIVE_ID=null,uploadFile=null;
-const DOC_TYPES={'application/pdf':true,'image/jpeg':true,'image/png':true};
-const DOC_MAX=10*1024*1024;
+function setStatus(kind,text){const el=$('pageStatus');el.className=`status ${kind}`;el.textContent=text;}
+
+// ---------------------------------------------------------------------------
+// URL params
+// ---------------------------------------------------------------------------
+const params = new URLSearchParams(location.search);
+const TOKEN  = params.get('token');
+
+// ---------------------------------------------------------------------------
+// Gate data
+// ---------------------------------------------------------------------------
+let PO = null;
+let STAGES = [];
+let ACTIVE_ID = null;
+let uploadFile = null;
+const DOC_TYPES = {'application/pdf':true,'image/jpeg':true,'image/png':true};
+const DOC_MAX   = 10*1024*1024;
+
+// ---------------------------------------------------------------------------
+// Rail setup
+// ---------------------------------------------------------------------------
 function showRail(po){
-  const s=po.supplier||{};
-  const aslEl=$('aslBadge');
-  if(s.aslStatus&&s.aslStatus.toLowerCase().includes('approv')){aslEl.className='sup-asl approved';aslEl.textContent='Approved supplier';}
-  else if(s.aslStatus){aslEl.className='sup-asl pending';aslEl.textContent=esc(s.aslStatus);}
-  else{aslEl.className='sup-asl none';aslEl.textContent='Status pending';}
-  $('supplierFacts').innerHTML=[['Organization',esc(s.name)],['Contact',[esc(s.contactFirst),esc(s.contactLast)].filter(Boolean).join(' ')],['Email',mailLink(s.contactEmail)],['Country',esc(s.country)]].filter(r=>r[1]).map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('');
-  $('summaryFacts').innerHTML=[['PO number',esc(po.poNumber)],['Deal',esc(po.deal&&po.deal.name)],['Required by',fmtDate(po.deal&&po.deal.requiredBy||po.dueDate)],['Order value','CAD '+fmt(po.grandTotal)],['Status',esc(po.poStatus)]].filter(r=>r[1]).map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('');
-  $('contactFacts').innerHTML=[['Team','Procurement'],['Email',mailLink(PROC_EMAIL)]].map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('');
-  $('availFacts').innerHTML=[['Issued',fmtDate(todayIso())],['Available until',po.dueDate?fmtDate(po.dueDate):'Until order is complete']].filter(r=>r[1]).map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('');
+  // Supplier profile
+  const s = po.supplier||{};
+  const aslEl = $('aslBadge');
+  if(s.aslStatus&&s.aslStatus.toLowerCase().includes('approv')){
+    aslEl.className='sup-asl approved'; aslEl.textContent='Approved supplier';
+  } else if(s.aslStatus){
+    aslEl.className='sup-asl pending'; aslEl.textContent=esc(s.aslStatus);
+  } else {
+    aslEl.className='sup-asl none'; aslEl.textContent='Status pending';
+  }
+  $('supplierFacts').innerHTML=[
+    ['Organization', esc(s.name)],
+    ['Contact', [esc(s.contactFirst),esc(s.contactLast)].filter(Boolean).join(' ')],
+    ['Email', mailLink(s.contactEmail)],
+    ['Country', esc(s.country)],
+  ].filter(r=>r[1]).map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
+
+  // Order summary
+  $('summaryFacts').innerHTML=[
+    ['PO number', esc(po.poNumber)],
+    ['Deal', esc(po.deal&&po.deal.name)],
+    ['Required by', fmtDate(po.deal&&po.deal.requiredBy||po.dueDate)],
+    ['Order value', `CAD ${fmt(po.grandTotal)}`],
+    ['Status', esc(po.poStatus)],
+  ].filter(r=>r[1]).map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
+
+  // EC contact
+  $('contactFacts').innerHTML=[
+    ['Team','Procurement'],
+    ['Email', mailLink(PROC_EMAIL)],
+  ].map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
+
+  // Page availability
+  $('availFacts').innerHTML=[
+    ['Issued', fmtDate(todayIso())],
+    ['Available until', po.dueDate?fmtDate(po.dueDate):'Until order is complete'],
+  ].filter(r=>r[1]).map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
   $('availNote').textContent='This page remains active until the order is fully delivered and settled.';
-  ['railGuide','railSupplier','railSummary','railContact','availCard'].forEach(id=>{const el=$(id);if(el)el.hidden=false;});
-  $('pageRef').textContent=[po.poNumber,po.supplier&&po.supplier.name].filter(Boolean).join(' | ');
+
+  ['railGuide','railSupplier','railSummary','railContact','availCard'].forEach(id=>{
+    const el=$(id); if(el) el.hidden=false;
+  });
+  $('pageRef').textContent=[po.poNumber, po.supplier&&po.supplier.name].filter(Boolean).join(' | ');
 }
+
+// ---------------------------------------------------------------------------
+// Stage builder
+// ---------------------------------------------------------------------------
 function buildStages(po){
-  const st=po.stages||{};
-  const all=[{id:'snapshot',label:'Order details'},{id:'acknowledgement',label:'Acknowledge'},{id:'proforma',label:'Proforma',skip:st.proforma==='skip'},{id:'dispatch',label:'Dispatch'},{id:'deliveryNotes',label:'Delivery notes'},{id:'balanceInvoice',label:'Balance invoice',skip:st.balanceInvoice==='skip'},{id:'complete',label:'Complete'}];
-  return all.filter(s=>!s.skip).map(s=>({...s,state:st[s.id]==='done'?'done':st[s.id]==='active'?'active':'locked'}));
+  const st = po.stages||{};
+  const all = [
+    {id:'snapshot',      label:'Order details'},
+    {id:'acknowledgement',label:'Acknowledge'},
+    {id:'proforma',      label:'Proforma',   skip: st.proforma==='skip'},
+    {id:'dispatch',      label:'Dispatch'},
+    {id:'deliveryNotes', label:'Delivery notes'},
+    {id:'balanceInvoice',label:'Balance invoice', skip: st.balanceInvoice==='skip'},
+    {id:'complete',      label:'Complete'},
+  ];
+  return all.filter(s=>!s.skip).map(s=>({...s, state: st[s.id]==='done'?'done': st[s.id]==='active'?'active':'locked'}));
 }
-function labelOf(id){const s=STAGES.find(x=>x.id===id);return s?s.label:id;}
+
+function labelOf(id){ const s=STAGES.find(x=>x.id===id); return s?s.label:id; }
+
+// ---------------------------------------------------------------------------
+// Progress bar
+// ---------------------------------------------------------------------------
 function renderProgressBar(){
   const nav=$('progressNav');
   nav.innerHTML=STAGES.map((s,i)=>{
     let cls='pstep';
-    if(s.state==='done')cls+=' done';
-    else if(s.id===ACTIVE_ID)cls+=' active';
-    else if(s.state==='locked')cls+=' locked';
+    if(s.state==='done') cls+=' done';
+    else if(s.id===ACTIVE_ID) cls+=' active';
+    else if(s.state==='locked') cls+=' locked';
     const clickable=s.state==='done'||(s.state!=='locked'&&s.id!==ACTIVE_ID);
     const numInner=s.state==='done'?'&#10003;':(i+1);
-    const handler=clickable?'onclick="goStage(\''+s.id+'\')" tabindex="0" role="button" aria-label="Go to '+s.label+'"':'aria-disabled="true"';
-    return '<div class="'+cls+'" '+handler+'><span class="pstep-num" aria-hidden="true">'+numInner+'</span><span class="pstep-label">'+esc(s.label)+'</span></div>';
+    const handler=clickable?`onclick="goStage('${s.id}')" tabindex="0" role="button" aria-label="Go to ${s.label}"`:'aria-disabled="true"';
+    return `<div class="${cls}" ${handler}><span class="pstep-num" aria-hidden="true">${numInner}</span><span class="pstep-label">${esc(s.label)}</span></div>`;
   }).join('');
 }
-function goStage(id){const s=STAGES.find(x=>x.id===id);if(!s||s.state==='locked')return;ACTIVE_ID=id;renderProgressBar();renderStage(id);window.scrollTo({top:0,behavior:'smooth'});}
-function nextStage(){const idx=STAGES.findIndex(s=>s.id===ACTIVE_ID);if(idx<0||idx>=STAGES.length-1)return;const next=STAGES[idx+1];if(next&&next.state!=='locked')goStage(next.id);}
-function navFooter(hint,backId,nextLabel,nextDisabled,submitId){
-  const backBtn=backId?'<button class="btn-back" onclick="goStage(\''+backId+'\')">&#8592; Back</button>':'<span></span>';
-  let nextBtn='';
-  if(nextLabel){const dis=nextDisabled?'disabled':'';if(submitId){nextBtn='<button class="btn-next" id="'+submitId+'" '+dis+' type="button">'+esc(nextLabel)+'</button>';}else{nextBtn='<button class="btn-next" '+dis+' onclick="nextStage()" type="button">'+esc(nextLabel)+'</button>';}}
-  return '<div class="sp-nav">'+backBtn+'<span class="nav-hint">'+esc(hint||'')+'</span>'+nextBtn+'</div>';
+
+// ---------------------------------------------------------------------------
+// Navigation
+// ---------------------------------------------------------------------------
+function goStage(id){
+  const s=STAGES.find(x=>x.id===id);
+  if(!s||s.state==='locked') return;
+  ACTIVE_ID=id;
+  renderProgressBar();
+  renderStage(id);
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-function validateFile(f){if(!f)return 'No file selected.';if(!DOC_TYPES[f.type])return 'File must be a PDF, JPG or PNG.';if(f.size>DOC_MAX)return 'File exceeds the 10 MB limit.';return null;}
+function nextStage(){
+  const idx=STAGES.findIndex(s=>s.id===ACTIVE_ID);
+  if(idx<0||idx>=STAGES.length-1) return;
+  const next=STAGES[idx+1];
+  if(next&&next.state!=='locked') goStage(next.id);
+}
+function prevStage(){
+  const idx=STAGES.findIndex(s=>s.id===ACTIVE_ID);
+  if(idx<=0) return;
+  goStage(STAGES[idx-1].id);
+}
+function navFooter(hint,backId,nextLabel,nextDisabled,submitId){
+  const backBtn=backId?`<button class="btn-back" onclick="goStage('${backId}')">&#8592; Back</button>`:`<span></span>`;
+  let nextBtn='';
+  if(nextLabel){
+    const dis=nextDisabled?'disabled':'';
+    if(submitId){
+      nextBtn=`<button class="btn-next" id="${submitId}" ${dis} type="button">${esc(nextLabel)}</button>`;
+    } else {
+      nextBtn=`<button class="btn-next" ${dis} onclick="nextStage()" type="button">${esc(nextLabel)}</button>`;
+    }
+  }
+  return `<div class="sp-nav">${backBtn}<span class="nav-hint">${esc(hint||'')}</span>${nextBtn}</div>`;
+}
+
+// ---------------------------------------------------------------------------
+// File helpers
+// ---------------------------------------------------------------------------
+function validateFile(f){
+  if(!f) return 'No file selected.';
+  if(!DOC_TYPES[f.type]) return 'File must be a PDF, JPG or PNG.';
+  if(f.size>DOC_MAX) return 'File exceeds the 10 MB limit.';
+  return null;
+}
 function bindFileDrop(dropId,fileId,fnameId,errId){
-  const fi=$(fileId),drop=$(dropId);if(!fi||!drop)return;
+  const fi=$(fileId),drop=$(dropId);
+  if(!fi||!drop) return;
   fi.addEventListener('change',()=>setUploadFile(fi.files&&fi.files[0],fnameId,errId));
   ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
   ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over');}));
   drop.addEventListener('drop',e=>{const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(f)setUploadFile(f,fnameId,errId);});
 }
-function setUploadFile(f,fnameId,errId){const err=$(errId),name=$(fnameId);if(err)err.textContent='';const v=validateFile(f);if(v){uploadFile=null;if(name)name.textContent='';if(err)err.textContent=v;return;}uploadFile=f;const kb=f.size/1024;if(name)name.textContent='Selected: '+f.name+' ('+(kb>=1024?(kb/1024).toFixed(1)+' MB':Math.max(1,Math.round(kb))+' KB')+')';}
-async function postJson(path,body,timeout=45000){const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),timeout);let resp;try{resp=await fetch(HUB_BASE+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ctrl.signal});}catch(e){clearTimeout(t);if(e.name==='AbortError')throw new Error('The request took too long. Please try again.');throw new Error('Unable to reach Essential Cures. Check your connection and try again.');}clearTimeout(t);let data;try{data=await resp.json();}catch{throw new Error('Unexpected server response (HTTP '+resp.status+').');}if(data.status!=='ok')throw new Error(data.message||'The request could not be completed.');return data;}
-async function postForm(path,fd,timeout=60000){const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),timeout);let resp;try{resp=await fetch(HUB_BASE+path,{method:'POST',body:fd,signal:ctrl.signal});}catch(e){clearTimeout(t);if(e.name==='AbortError')throw new Error('The request took too long. Please try again.');throw new Error('Unable to reach Essential Cures. Check your connection and try again.');}clearTimeout(t);let data;try{data=await resp.json();}catch{throw new Error('Unexpected server response (HTTP '+resp.status+').');}if(data.status!=='ok')throw new Error(data.message||'The request could not be completed.');return data;}
-function renderStage(id){switch(id){case 'snapshot':renderSnapshot();break;case 'acknowledgement':renderAcknowledge();break;case 'proforma':renderProforma();break;case 'dispatch':renderDispatch();break;case 'deliveryNotes':renderDeliveryNotes();break;case 'balanceInvoice':renderBalanceInvoice();break;case 'complete':renderComplete();break;default:$('main').innerHTML='<div class="sp"><p>Stage not found.</p></div>';}}
-function renderSnapshot(){const po=PO;const lines=(po.lineItems||[]);const lineRows=lines.length?lines.map((li,i)=>'<tr><td class="hb-tl">'+(i+1)+'</td><td class="hb-tl">'+esc(li.description)+'</td><td class="r">'+fmtQty(li.quantity)+' '+esc(li.unit||'Each')+'</td><td class="r">CAD '+fmt(li.unitPrice)+'</td><td class="r">CAD '+fmt(li.lineTotal)+'</td></tr>').join(''):'<tr><td colspan="5" style="color:var(--faint);text-align:center;padding:16px">Line item detail will appear here once the PO is fully processed.</td></tr>';const nextId=STAGES[1]&&STAGES[1].id||'acknowledgement';$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Purchase order details</h2><span class="sp-badge done">Issued</span></div><p class="sp-lead">The details below reflect your purchase order as issued by Essential Cures. Please review carefully before acknowledging.</p><dl class="hb-kv"><dt>PO number</dt><dd>'+esc(po.poNumber)+'</dd><dt>Issue date</dt><dd>'+fmtDate(todayIso())+'</dd><dt>Required by</dt><dd>'+fmtDate(po.deal&&po.deal.requiredBy||po.dueDate)+'</dd><dt>Payment method</dt><dd>'+esc(po.paymentMethod||'Per agreed terms')+'</dd></dl><div style="margin-bottom:14px"><div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px">Ship to</div><div style="padding:12px 14px;background:#F4F7FA;border-left:3px solid var(--blue);font-size:13px;line-height:1.7">'+[po.shippingStreet,po.shippingCity,po.shippingState,po.shippingCode,po.shippingCountry].filter(Boolean).map(esc).join(', ')+'</div></div><div class="hb-tbox"><table class="hb-table"><thead><tr><th>#</th><th>Description</th><th class="r">Quantity</th><th class="r">Unit price</th><th class="r">Total</th></tr></thead><tbody>'+lineRows+'</tbody><tfoot><tr><td colspan="4" style="text-align:right">Order total</td><td class="r">CAD '+fmt(po.grandTotal)+'</td></tr></tfoot></table></div>'+(po.freightCost>0?'<p class="hb-hint" style="margin-bottom:8px">Freight: CAD '+fmt(po.freightCost)+'</p>':'')+'</div>'+navFooter('','','Next: Acknowledge order &#8594;',false,null);}
-function renderAcknowledge(){const po=PO;const done=po.stages&&po.stages.acknowledgement==='done';const prevId='snapshot';const nextIdx=STAGES.findIndex(x=>x.id==='acknowledgement')+1;const nextId=STAGES[nextIdx]&&STAGES[nextIdx].id||'dispatch';if(done){$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Order acknowledgement</h2><span class="sp-badge done">Acknowledged</span></div><p class="sp-lead">You have confirmed receipt and acceptance of this purchase order.</p><dl class="hb-kv"><dt>Status</dt><dd class="complete-card">Order acknowledged — Essential Cures procurement notified</dd></dl></div>'+navFooter('',prevId,'Next: '+labelOf(nextId)+' &#8594;',false,null);document.querySelector('.btn-next')&&document.querySelector('.btn-next').addEventListener('click',()=>goStage(nextId));return;}$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Order acknowledgement</h2><span class="sp-badge required">Action required</span></div><p class="sp-lead">Please confirm receipt of this purchase order and your ability to fulfil it on the terms stated.</p><div class="notice info"><div class="body"><strong>What you are confirming</strong>By acknowledging below you confirm receipt of PO '+esc(po.poNumber)+', acceptance of the quantities and terms, and your commitment to deliver by the required date.</div></div><label class="confirm"><input type="checkbox" id="ackCheck" onchange="$(\'ack-btn\').disabled=!this.checked"><span>I confirm receipt of purchase order <strong>'+esc(po.poNumber)+'</strong> and accept the order on the terms stated.</span></label><p class="hb-err" id="ack-err" role="alert"></p></div>'+navFooter('Acknowledgement required to proceed',prevId,'Confirm and acknowledge order',true,'ack-btn');$('ack-btn')&&$('ack-btn').addEventListener('click',submitAcknowledge);}
-async function submitAcknowledge(){const btn=$('ack-btn'),err=$('ack-err');if(err)err.textContent='';if(btn){btn.disabled=true;btn.textContent='Submitting, please wait';}openWait('Recording acknowledgement','Notifying procurement team.',['Sending confirmation.','Updating your order.']);try{await postJson('/api/v1/po/acknowledge',{token:TOKEN,poId:PO.poId,acknowledgedAt:new Date().toISOString()});PO.stages.acknowledgement='done';const as=STAGES.find(s=>s.id==='acknowledgement');if(as)as.state='done';const ds=STAGES.find(s=>s.id==='dispatch'||s.id==='proforma');if(ds&&ds.state==='locked')ds.state='active';closeWait();renderProgressBar();renderAcknowledge();setStatus('open','Order acknowledged');}catch(e){closeWait();if(btn){btn.disabled=false;btn.textContent='Confirm and acknowledge order';}if(err)err.textContent=e.message;}}
-function renderProforma(){const po=PO;const uploaded=po.proformaUploaded;const verified=po.proformaVerified;const prevId='acknowledgement';const nextId='dispatch';if(verified){$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Proforma invoice</h2><span class="sp-badge done">Verified</span></div><p class="sp-lead">Your proforma invoice has been verified by Essential Cures Finance.</p><dl class="hb-kv"><dt>Proforma number</dt><dd>'+esc(po.proformaNumber||'On file')+'</dd><dt>Amount</dt><dd>CAD '+fmt(po.proformaAmount)+'</dd><dt>Status</dt><dd class="complete-card">Verified by Essential Cures Finance</dd></dl></div>'+navFooter('',prevId,'Next: '+labelOf(nextId)+' &#8594;',false,null);document.querySelector('.btn-next')&&document.querySelector('.btn-next').addEventListener('click',()=>goStage(nextId));return;}if(uploaded){$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Proforma invoice</h2><span class="sp-badge review">Under review</span></div><p class="sp-lead">Your proforma invoice has been received and is under review.</p><dl class="hb-kv"><dt>Status</dt><dd class="review-card">Under review — Essential Cures Finance will verify within one business day</dd></dl></div>'+navFooter('',prevId,'',false,null);return;}uploadFile=null;$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Proforma invoice</h2><span class="sp-badge required">Action required</span></div><p class="sp-lead">Please upload your proforma invoice for this order.</p><div class="hb-grid2"><div class="hb-field"><label class="hb-lbl" for="pf-num">Proforma number</label><input class="hb-in" id="pf-num" type="text" maxlength="60" autocomplete="off"></div><div class="hb-field"><label class="hb-lbl" for="pf-date">Proforma date</label><input class="hb-in" id="pf-date" type="date" value="'+todayIso()+'" max="'+todayIso()+'"></div></div><div class="hb-field" style="margin-bottom:12px"><label class="hb-lbl" for="pf-amt">Proforma amount (CAD)</label><input class="hb-in" id="pf-amt" type="text" value="'+fmt(po.grandTotal)+'" autocomplete="off"></div><div class="hb-field"><span class="hb-lbl" id="pf-doc-l">Proforma document</span><div class="hb-drop" id="pf-drop"><span style="font-size:14px;color:#3D4B58">Drag your file here, or</span><label class="hb-pick" for="pf-file">Select file</label><input class="hb-file" id="pf-file" type="file" accept=".pdf,.jpg,.jpeg,.png" aria-labelledby="pf-doc-l"><span class="hb-fname" id="pf-fname" aria-live="polite"></span><span class="hb-hint">PDF, JPG or PNG, up to 10 MB</span></div></div><p class="hb-err" id="pf-err" role="alert"></p></div>'+navFooter('',prevId,'Upload proforma invoice',false,'pf-btn');bindFileDrop('pf-drop','pf-file','pf-fname','pf-err');$('pf-btn')&&$('pf-btn').addEventListener('click',submitProforma);}
-async function submitProforma(){const btn=$('pf-btn'),err=$('pf-err');if(err)err.textContent='';const fv=validateFile(uploadFile);if(fv){if(err)err.textContent=fv;return;}if(btn){btn.disabled=true;btn.textContent='Uploading, please wait';}openWait('Uploading proforma invoice','Sending your document.',['Uploading document.','Recording details.','Notifying Finance team.']);try{const fd=new FormData();fd.append('token',TOKEN);fd.append('poId',PO.poId);fd.append('proformaNumber',$('pf-num').value.trim());fd.append('proformaDate',$('pf-date').value);fd.append('proformaAmount',$('pf-amt').value.replace(/[^0-9.]/g,''));fd.append('proformaFile',uploadFile,uploadFile.name);await postForm('/api/v1/po/proforma',fd);PO.proformaUploaded=true;PO.proformaNumber=$('pf-num').value.trim();PO.proformaReceivedDate=todayIso();const ps=STAGES.find(s=>s.id==='proforma');if(ps)ps.state='active';closeWait();renderProgressBar();renderProforma();}catch(e){closeWait();if(btn){btn.disabled=false;btn.textContent='Upload proforma invoice';}if(err)err.textContent=e.message;}}
-function renderDispatch(){const po=PO;const done=po.stages&&po.stages.dispatch==='done';const prevId=STAGES.find(s=>s.id==='proforma')?'proforma':'acknowledgement';const nextId='deliveryNotes';if(done){$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Dispatch confirmation</h2><span class="sp-badge done">Confirmed</span></div><p class="sp-lead">Dispatch has been confirmed.</p><dl class="hb-kv"><dt>Status</dt><dd class="complete-card">Dispatched — awaiting delivery confirmation</dd></dl></div>'+navFooter('',prevId,'Next: '+labelOf(nextId)+' &#8594;',false,null);document.querySelector('.btn-next')&&document.querySelector('.btn-next').addEventListener('click',()=>goStage(nextId));return;}$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Dispatch confirmation</h2><span class="sp-badge required">Action required</span></div><p class="sp-lead">Once goods have been dispatched please confirm the details below.</p><div class="hb-grid2"><div class="hb-field"><label class="hb-lbl" for="dp-date">Dispatch date</label><input class="hb-in" id="dp-date" type="date" value="'+todayIso()+'" max="'+todayIso()+'"></div><div class="hb-field"><label class="hb-lbl" for="dp-courier">Courier / carrier</label><input class="hb-in" id="dp-courier" type="text" maxlength="80" autocomplete="off"></div></div><div class="hb-field" style="margin-bottom:12px"><label class="hb-lbl" for="dp-track">Tracking reference</label><input class="hb-in" id="dp-track" type="text" maxlength="100" autocomplete="off"><span class="hb-hint" style="margin-top:4px">Waybill number, tracking number, or AWB.</span></div><p class="hb-err" id="dp-err" role="alert"></p></div>'+navFooter('',prevId,'Confirm dispatch',false,'dp-btn');$('dp-btn')&&$('dp-btn').addEventListener('click',submitDispatch);}
-async function submitDispatch(){const btn=$('dp-btn'),err=$('dp-err');if(err)err.textContent='';const dispatchDate=$('dp-date')&&$('dp-date').value;if(!dispatchDate){if(err)err.textContent='Please enter the dispatch date.';return;}if(btn){btn.disabled=true;btn.textContent='Submitting, please wait';}openWait('Confirming dispatch','Notifying Essential Cures.',['Recording dispatch details.','Updating your order.']);try{await postJson('/api/v1/po/dispatch',{token:TOKEN,poId:PO.poId,dispatchDate,trackingRef:$('dp-track').value.trim(),courier:$('dp-courier').value.trim()});PO.stages.dispatch='done';const ds=STAGES.find(s=>s.id==='dispatch');if(ds)ds.state='done';const dn=STAGES.find(s=>s.id==='deliveryNotes');if(dn&&dn.state==='locked')dn.state='active';closeWait();renderProgressBar();renderDispatch();setStatus('open','Goods dispatched');}catch(e){closeWait();if(btn){btn.disabled=false;btn.textContent='Confirm dispatch';}if(err)err.textContent=e.message;}}
-function renderDeliveryNotes(){const po=PO;const done=po.stages&&po.stages.deliveryNotes==='done';const prevId='dispatch';const nextIdx=STAGES.findIndex(s=>s.id==='deliveryNotes')+1;const nextId=STAGES[nextIdx]&&STAGES[nextIdx].id||'complete';if(done){$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Delivery notes</h2><span class="sp-badge done">Uploaded</span></div><p class="sp-lead">Your delivery notes have been received.</p><dl class="hb-kv"><dt>Status</dt><dd class="complete-card">Delivery notes received</dd></dl></div>'+navFooter('',prevId,'Next: '+labelOf(nextId)+' &#8594;',false,null);document.querySelector('.btn-next')&&document.querySelector('.btn-next').addEventListener('click',()=>goStage(nextId));return;}uploadFile=null;$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Delivery notes</h2><span class="sp-badge required">Action required</span></div><p class="sp-lead">Please upload your delivery note or packing list for this shipment.</p><div class="hb-field"><span class="hb-lbl" id="dn-doc-l">Delivery note document</span><div class="hb-drop" id="dn-drop"><span style="font-size:14px;color:#3D4B58">Drag your file here, or</span><label class="hb-pick" for="dn-file">Select file</label><input class="hb-file" id="dn-file" type="file" accept=".pdf,.jpg,.jpeg,.png" aria-labelledby="dn-doc-l"><span class="hb-fname" id="dn-fname" aria-live="polite"></span><span class="hb-hint">PDF, JPG or PNG, up to 10 MB</span></div></div><p class="hb-err" id="dn-err" role="alert"></p></div>'+navFooter('',prevId,'Upload delivery notes',false,'dn-btn');bindFileDrop('dn-drop','dn-file','dn-fname','dn-err');$('dn-btn')&&$('dn-btn').addEventListener('click',submitDeliveryNotes);}
-async function submitDeliveryNotes(){const btn=$('dn-btn'),err=$('dn-err');if(err)err.textContent='';const fv=validateFile(uploadFile);if(fv){if(err)err.textContent=fv;return;}if(btn){btn.disabled=true;btn.textContent='Uploading, please wait';}openWait('Uploading delivery notes','Sending your document.',['Uploading document.','Updating your order.']);try{const fd=new FormData();fd.append('token',TOKEN);fd.append('poId',PO.poId);fd.append('deliveryNotesFile',uploadFile,uploadFile.name);await postForm('/api/v1/po/delivery-notes',fd);PO.stages.deliveryNotes='done';const dn=STAGES.find(s=>s.id==='deliveryNotes');if(dn)dn.state='done';const nextIdx=STAGES.findIndex(s=>s.id==='deliveryNotes')+1;const next=STAGES[nextIdx];if(next&&next.state==='locked')next.state='active';closeWait();renderProgressBar();renderDeliveryNotes();}catch(e){closeWait();if(btn){btn.disabled=false;btn.textContent='Upload delivery notes';}if(err)err.textContent=e.message;}}
-function renderBalanceInvoice(){const po=PO;const done=po.stages&&po.stages.balanceInvoice==='done';const prevId='deliveryNotes';const nextId='complete';const balanceAmt=po.balanceDue||Math.max(0,po.grandTotal-(po.advancePaidAmt||0));if(done){$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Balance invoice</h2><span class="sp-badge done">Received</span></div><p class="sp-lead">Your balance invoice has been received.</p><dl class="hb-kv"><dt>Invoice reference</dt><dd>'+esc(po.supplierInvoiceRef||'On file')+'</dd><dt>Invoice amount</dt><dd>CAD '+fmt(po.supplierInvoiceAmt)+'</dd><dt>Status</dt><dd class="complete-card">Invoice received — payment being arranged</dd></dl></div>'+navFooter('',prevId,'Next: '+labelOf(nextId)+' &#8594;',false,null);document.querySelector('.btn-next')&&document.querySelector('.btn-next').addEventListener('click',()=>goStage(nextId));return;}uploadFile=null;$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Balance invoice</h2><span class="sp-badge required">Action required</span></div><p class="sp-lead">Please upload your final invoice for the balance amount due.</p><div class="hb-kv" style="margin-bottom:16px"><dt>Balance due</dt><dd>CAD '+fmt(balanceAmt)+'</dd><dt>Order total</dt><dd>CAD '+fmt(po.grandTotal)+'</dd></div><div class="hb-grid2"><div class="hb-field"><label class="hb-lbl" for="bi-ref">Invoice reference</label><input class="hb-in" id="bi-ref" type="text" maxlength="80" autocomplete="off"></div><div class="hb-field"><label class="hb-lbl" for="bi-date">Invoice date</label><input class="hb-in" id="bi-date" type="date" value="'+todayIso()+'" max="'+todayIso()+'"></div></div><div class="hb-field" style="margin-bottom:12px"><label class="hb-lbl" for="bi-amt">Invoice amount (CAD)</label><input class="hb-in" id="bi-amt" type="text" value="'+fmt(balanceAmt)+'" autocomplete="off"></div><div class="hb-field"><span class="hb-lbl" id="bi-doc-l">Invoice document</span><div class="hb-drop" id="bi-drop"><span style="font-size:14px;color:#3D4B58">Drag your file here, or</span><label class="hb-pick" for="bi-file">Select file</label><input class="hb-file" id="bi-file" type="file" accept=".pdf,.jpg,.jpeg,.png" aria-labelledby="bi-doc-l"><span class="hb-fname" id="bi-fname" aria-live="polite"></span><span class="hb-hint">PDF, JPG or PNG, up to 10 MB</span></div></div><p class="hb-err" id="bi-err" role="alert"></p></div>'+navFooter('',prevId,'Upload balance invoice',false,'bi-btn');bindFileDrop('bi-drop','bi-file','bi-fname','bi-err');$('bi-btn')&&$('bi-btn').addEventListener('click',submitBalanceInvoice);}
-async function submitBalanceInvoice(){const btn=$('bi-btn'),err=$('bi-err');if(err)err.textContent='';const fv=validateFile(uploadFile);if(fv){if(err)err.textContent=fv;return;}const ref=$('bi-ref').value.trim();if(!ref){if(err)err.textContent='Please enter your invoice reference.';return;}if(btn){btn.disabled=true;btn.textContent='Uploading, please wait';}openWait('Uploading balance invoice','Sending your invoice to Finance.',['Uploading document.','Recording invoice details.','Notifying Finance team.']);try{const fd=new FormData();fd.append('token',TOKEN);fd.append('poId',PO.poId);fd.append('invoiceRef',ref);fd.append('invoiceDate',$('bi-date').value);fd.append('invoiceAmount',$('bi-amt').value.replace(/[^0-9.]/g,''));fd.append('invoiceFile',uploadFile,uploadFile.name);await postForm('/api/v1/po/balance-invoice',fd);PO.supplierInvoiceRef=ref;PO.supplierInvoiceAmt=parseFloat($('bi-amt').value.replace(/[^0-9.]/g,''))||0;PO.stages.balanceInvoice='done';const bi=STAGES.find(s=>s.id==='balanceInvoice');if(bi)bi.state='done';const cp=STAGES.find(s=>s.id==='complete');if(cp&&cp.state==='locked')cp.state='active';closeWait();renderProgressBar();renderBalanceInvoice();}catch(e){closeWait();if(btn){btn.disabled=false;btn.textContent='Upload balance invoice';}if(err)err.textContent=e.message;}}
-function renderComplete(){$('main').innerHTML='<div class="sp"><div class="sp-head"><h2>Order complete</h2><span class="sp-badge done">Complete</span></div><p class="sp-lead">All steps for this purchase order have been completed. Thank you for your partnership.</p><div class="notice ok"><div class="body"><strong>Order fully settled</strong>All deliverables and documentation have been received. Payment will be processed per the agreed terms. For any queries contact <a href="mailto:'+PROC_EMAIL+'">'+PROC_EMAIL+'</a>.</div></div></div><div class="sig-block"><p>Thank you for partnering with Essential Cures. We look forward to a consistent and reliable supply relationship.</p><p class="sig-name">Procurement Team | Essential Cures Inc.</p></div>'+navFooter('','',null,false,null);}
-function renderError(msg){setStatus('closed','Link not available');$('progressNav').innerHTML='';['railGuide','railSupplier','railSummary','railContact','availCard'].forEach(id=>{const el=$(id);if(el)el.hidden=true;});$('main').innerHTML='<div class="sp"><h2>This link could not be opened</h2><div class="notice stop"><div class="body">'+esc(msg)+'</div></div></div>';}
+function setUploadFile(f,fnameId,errId){
+  const err=$(errId),name=$(fnameId);
+  if(err)err.textContent='';
+  const v=validateFile(f);
+  if(v){uploadFile=null;if(name)name.textContent='';if(err)err.textContent=v;return;}
+  uploadFile=f;
+  const kb=f.size/1024;
+  if(name)name.textContent=`Selected: ${f.name} (${kb>=1024?(kb/1024).toFixed(1)+' MB':Math.max(1,Math.round(kb))+' KB'})`;
+}
+
+// ---------------------------------------------------------------------------
+// Network
+// ---------------------------------------------------------------------------
+async function postJson(path,body,timeout=45000){
+  const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),timeout);
+  let resp;
+  try{resp=await fetch(HUB_BASE+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ctrl.signal});}
+  catch(e){clearTimeout(t);if(e.name==='AbortError')throw new Error('The request took too long. Please try again.');throw new Error('Unable to reach Essential Cures. Check your connection and try again.');}
+  clearTimeout(t);
+  let data;try{data=await resp.json();}catch{throw new Error('Unexpected server response (HTTP '+resp.status+').');}
+  if(data.status!=='ok')throw new Error(data.message||'The request could not be completed.');
+  return data;
+}
+async function postForm(path,fd,timeout=60000){
+  const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),timeout);
+  let resp;
+  try{resp=await fetch(HUB_BASE+path,{method:'POST',body:fd,signal:ctrl.signal});}
+  catch(e){clearTimeout(t);if(e.name==='AbortError')throw new Error('The request took too long. Please try again.');throw new Error('Unable to reach Essential Cures. Check your connection and try again.');}
+  clearTimeout(t);
+  let data;try{data=await resp.json();}catch{throw new Error('Unexpected server response (HTTP '+resp.status+').');}
+  if(data.status!=='ok')throw new Error(data.message||'The request could not be completed.');
+  return data;
+}
+
+// ---------------------------------------------------------------------------
+// Stage renderers
+// ---------------------------------------------------------------------------
+function renderStage(id){
+  switch(id){
+    case 'snapshot':      renderSnapshot();     break;
+    case 'acknowledgement': renderAcknowledge(); break;
+    case 'proforma':      renderProforma();     break;
+    case 'dispatch':      renderDispatch();     break;
+    case 'deliveryNotes': renderDeliveryNotes();break;
+    case 'balanceInvoice':renderBalanceInvoice();break;
+    case 'complete':      renderComplete();     break;
+    default: $('main').innerHTML=`<div class="sp"><p>Stage not found.</p></div>`;
+  }
+}
+
+// STAGE 1 — Order snapshot (read-only)
+function renderSnapshot(){
+  const po=PO;
+  const lines=(po.lineItems||[]);
+  const lineRows=lines.length?lines.map((li,i)=>`
+    <tr>
+      <td class="hb-tl">${i+1}</td>
+      <td class="hb-tl">${esc(li.description)}</td>
+      <td class="r">${fmtQty(li.quantity)} ${esc(li.unit||'Each')}</td>
+      <td class="r">CAD ${fmt(li.unitPrice)}</td>
+      <td class="r">CAD ${fmt(li.lineTotal)}</td>
+    </tr>`).join(''):`<tr><td colspan="5" style="color:var(--faint);text-align:center;padding:16px">Line item detail will appear here once the PO is fully processed.</td></tr>`;
+  const nextId=STAGES[1]&&STAGES[1].id||'acknowledgement';
+  $('main').innerHTML=`
+    <div class="sp">
+      <div class="sp-head"><h2>Purchase order details</h2><span class="sp-badge done">Issued</span></div>
+      <p class="sp-lead">The details below reflect your purchase order as issued by Essential Cures. Please review carefully before acknowledging.</p>
+      <dl class="hb-kv">
+        <dt>PO number</dt><dd>${esc(po.poNumber)}</dd>
+        <dt>Issue date</dt><dd>${fmtDate(todayIso())}</dd>
+        <dt>Required by</dt><dd>${fmtDate(po.deal&&po.deal.requiredBy||po.dueDate)}</dd>
+        <dt>Payment method</dt><dd>${esc(po.paymentMethod||'Per agreed terms')}</dd>
+      </dl>
+      <div style="margin-bottom:14px">
+        <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px">Ship to</div>
+        <div style="padding:12px 14px;background:#F4F7FA;border-left:3px solid var(--blue);font-size:13px;line-height:1.7">
+          ${[po.shippingStreet,po.shippingCity,(po.shippingState?po.shippingState:''),po.shippingCode,po.shippingCountry].filter(Boolean).map(esc).join(', ')}
+        </div>
+      </div>
+      <div class="hb-tbox"><table class="hb-table">
+        <thead><tr><th>#</th><th>Description</th><th class="r">Quantity</th><th class="r">Unit price</th><th class="r">Total</th></tr></thead>
+        <tbody>${lineRows}</tbody>
+        <tfoot><tr><td colspan="4" style="text-align:right">Order total</td><td class="r">CAD ${fmt(po.grandTotal)}</td></tr></tfoot>
+      </table></div>
+      ${po.freightCost>0?`<p class="hb-hint" style="margin-bottom:8px">Freight: CAD ${fmt(po.freightCost)} &nbsp;|&nbsp; Insurance: CAD ${fmt(po.insuranceCost||0)}</p>`:''}
+    </div>
+    ${navFooter('','',`Next: Acknowledge order &#8594;`,false,null)}`;
+}
+
+// STAGE 2 — Acknowledgement
+function renderAcknowledge(){
+  const po=PO;
+  const done=po.stages&&po.stages.acknowledgement==='done';
+  const prevId='snapshot';
+  const nextId=STAGES.find(s=>STAGES.indexOf(s)>STAGES.findIndex(x=>x.id==='acknowledgement'))&&STAGES[STAGES.findIndex(x=>x.id==='acknowledgement')+1]?.id||'dispatch';
+  if(done){
+    $('main').innerHTML=`
+      <div class="sp">
+        <div class="sp-head"><h2>Order acknowledgement</h2><span class="sp-badge done">Acknowledged</span></div>
+        <p class="sp-lead">You have confirmed receipt and acceptance of this purchase order.</p>
+        <dl class="hb-kv">
+          <dt>Status</dt><dd class="complete-card">Order acknowledged — Essential Cures procurement notified</dd>
+        </dl>
+      </div>
+      ${navFooter('',prevId,`Next: ${labelOf(nextId)} &#8594;`,false,null)}`;
+    document.querySelector('.btn-next')&&document.querySelector('.btn-next').addEventListener('click',()=>goStage(nextId));
+    return;
+  }
+  $('main').innerHTML=`
+    <div class="sp">
+      <div class="sp-head"><h2>Order acknowledgement</h2><span class="sp-badge required">Action required</span></div>
+      <p class="sp-lead">Please confirm that you have received this purchase order and are able to fulfil it on the terms stated. This notifies our procurement team immediately.</p>
+      <div class="notice info"><div class="body"><strong>What you are confirming</strong>By acknowledging below you confirm receipt of PO ${esc(po.poNumber)}, acceptance of the quantities and terms, and your commitment to deliver by the required date.</div></div>
+      <label class="confirm"><input type="checkbox" id="ackCheck" onchange="$('ack-btn').disabled=!this.checked"><span>I confirm receipt of purchase order <strong>${esc(po.poNumber)}</strong> and accept the order on the terms stated. I confirm my organization can fulfil this order by the required delivery date.</span></label>
+      <p class="hb-err" id="ack-err" role="alert"></p>
+    </div>
+    ${navFooter('Acknowledgement required to proceed',prevId,'Confirm and acknowledge order',true,'ack-btn')}`;
+  $('ack-btn')&&$('ack-btn').addEventListener('click', submitAcknowledge);
+}
+
+async function submitAcknowledge(){
+  const btn=$('ack-btn'),err=$('ack-err');
+  if(err)err.textContent='';
+  if(btn){btn.disabled=true;btn.textContent='Submitting, please wait';}
+  openWait('Recording acknowledgement','Notifying procurement team.',['Sending confirmation.','Updating your order.']);
+  try{
+    await postJson('/api/v1/po/acknowledge',{token:TOKEN,poId:PO.poId,acknowledgedAt:new Date().toISOString()});
+    PO.stages.acknowledgement='done';
+    const as=STAGES.find(s=>s.id==='acknowledgement');if(as)as.state='done';
+    const ds=STAGES.find(s=>s.id==='dispatch'||s.id==='proforma');
+    if(ds&&ds.state==='locked')ds.state='active';
+    closeWait();
+    renderProgressBar();
+    renderAcknowledge();
+    setStatus('open','Order acknowledged');
+  }catch(e){
+    closeWait();
+    if(btn){btn.disabled=false;btn.textContent='Confirm and acknowledge order';}
+    if(err)err.textContent=e.message;
+  }
+}
+
+// STAGE 3 — Proforma (conditional)
+function renderProforma(){
+  const po=PO;
+  const uploaded=po.proformaUploaded;
+  const verified=po.proformaVerified;
+  const prevId='acknowledgement';
+  const nextId='dispatch';
+  if(verified){
+    $('main').innerHTML=`
+      <div class="sp">
+        <div class="sp-head"><h2>Proforma invoice</h2><span class="sp-badge done">Verified</span></div>
+        <p class="sp-lead">Your proforma invoice has been received and verified by Essential Cures Finance.</p>
+        <dl class="hb-kv">
+          <dt>Proforma number</dt><dd>${esc(po.proformaNumber||'On file')}</dd>
+          <dt>Amount</dt><dd>CAD ${fmt(po.proformaAmount)}</dd>
+          <dt>Received</dt><dd>${fmtDate(po.proformaReceivedDate)}</dd>
+          <dt>Status</dt><dd class="complete-card">Verified by Essential Cures Finance</dd>
+        </dl>
+      </div>
+      ${navFooter('',prevId,`Next: ${labelOf(nextId)} &#8594;`,false,null)}`;
+    document.querySelector('.btn-next')&&document.querySelector('.btn-next').addEventListener('click',()=>goStage(nextId));
+    return;
+  }
+  if(uploaded){
+    $('main').innerHTML=`
+      <div class="sp">
+        <div class="sp-head"><h2>Proforma invoice</h2><span class="sp-badge review">Under review</span></div>
+        <p class="sp-lead">Your proforma invoice has been received and is under review by our Finance team. You will be notified once verified.</p>
+        <dl class="hb-kv">
+          <dt>Proforma number</dt><dd>${esc(po.proformaNumber||'Received')}</dd>
+          <dt>Received on</dt><dd>${fmtDate(po.proformaReceivedDate||todayIso())}</dd>
+          <dt>Status</dt><dd class="review-card">Under review — Essential Cures Finance will verify within one business day</dd>
+        </dl>
+      </div>
+      ${navFooter('',prevId,'',false,null)}`;
+    return;
+  }
+  uploadFile=null;
+  $('main').innerHTML=`
+    <div class="sp">
+      <div class="sp-head"><h2>Proforma invoice</h2><span class="sp-badge required">Action required</span></div>
+      <p class="sp-lead">Please upload your proforma invoice for this order. Our Finance team will verify it and release the advance payment.</p>
+      <div class="hb-grid2">
+        <div class="hb-field"><label class="hb-lbl" for="pf-num">Proforma number</label><input class="hb-in" id="pf-num" type="text" maxlength="60" autocomplete="off"></div>
+        <div class="hb-field"><label class="hb-lbl" for="pf-date">Proforma date</label><input class="hb-in" id="pf-date" type="date" value="${todayIso()}" max="${todayIso()}"></div>
+      </div>
+      <div class="hb-field" style="margin-bottom:12px"><label class="hb-lbl" for="pf-amt">Proforma amount (CAD)</label><input class="hb-in" id="pf-amt" type="text" value="${fmt(po.grandTotal)}" autocomplete="off"></div>
+      <div class="hb-field">
+        <span class="hb-lbl" id="pf-doc-l">Proforma document</span>
+        <div class="hb-drop" id="pf-drop">
+          <span style="font-size:14px;color:#3D4B58">Drag your file here, or</span>
+          <label class="hb-pick" for="pf-file">Select file</label>
+          <input class="hb-file" id="pf-file" type="file" accept=".pdf,.jpg,.jpeg,.png" aria-labelledby="pf-doc-l">
+          <span class="hb-fname" id="pf-fname" aria-live="polite"></span>
+          <span class="hb-hint">PDF, JPG or PNG, up to 10 MB</span>
+        </div>
+      </div>
+      <p class="hb-err" id="pf-err" role="alert"></p>
+    </div>
+    ${navFooter('',prevId,'Upload proforma invoice',false,'pf-btn')}`;
+  bindFileDrop('pf-drop','pf-file','pf-fname','pf-err');
+  $('pf-btn')&&$('pf-btn').addEventListener('click', submitProforma);
+}
+
+async function submitProforma(){
+  const btn=$('pf-btn'),err=$('pf-err');
+  if(err)err.textContent='';
+  const fv=validateFile(uploadFile);
+  if(fv){if(err)err.textContent=fv;return;}
+  if(btn){btn.disabled=true;btn.textContent='Uploading, please wait';}
+  openWait('Uploading proforma invoice','Sending your document to Essential Cures.',['Uploading document.','Recording details.','Notifying Finance team.']);
+  try{
+    const fd=new FormData();
+    fd.append('token',TOKEN);fd.append('poId',PO.poId);
+    fd.append('proformaNumber',$('pf-num').value.trim());
+    fd.append('proformaDate',$('pf-date').value);
+    fd.append('proformaAmount',$('pf-amt').value.replace(/[^0-9.]/g,''));
+    fd.append('proformaFile',uploadFile,uploadFile.name);
+    await postForm('/api/v1/po/proforma',fd);
+    PO.proformaUploaded=true;PO.proformaNumber=$('pf-num').value.trim();PO.proformaReceivedDate=todayIso();
+    const ps=STAGES.find(s=>s.id==='proforma');if(ps)ps.state='active';
+    closeWait(); renderProgressBar(); renderProforma();
+  }catch(e){
+    closeWait();
+    if(btn){btn.disabled=false;btn.textContent='Upload proforma invoice';}
+    if(err)err.textContent=e.message;
+  }
+}
+
+// STAGE 4 — Dispatch
+function renderDispatch(){
+  const po=PO;
+  const done=po.stages&&po.stages.dispatch==='done';
+  const prevId=STAGES.find(s=>s.id==='proforma')?'proforma':'acknowledgement';
+  const nextId='deliveryNotes';
+  if(done){
+    $('main').innerHTML=`
+      <div class="sp">
+        <div class="sp-head"><h2>Dispatch confirmation</h2><span class="sp-badge done">Confirmed</span></div>
+        <p class="sp-lead">Dispatch has been confirmed. Essential Cures is awaiting delivery.</p>
+        <dl class="hb-kv">
+          <dt>Status</dt><dd class="complete-card">Dispatched — awaiting delivery confirmation</dd>
+        </dl>
+      </div>
+      ${navFooter('',prevId,`Next: ${labelOf(nextId)} &#8594;`,false,null)}`;
+    document.querySelector('.btn-next')&&document.querySelector('.btn-next').addEventListener('click',()=>goStage(nextId));
+    return;
+  }
+  $('main').innerHTML=`
+    <div class="sp">
+      <div class="sp-head"><h2>Dispatch confirmation</h2><span class="sp-badge required">Action required</span></div>
+      <p class="sp-lead">Once goods have been dispatched, please confirm the details below. This notifies Essential Cures to expect delivery and starts the delivery confirmation process.</p>
+      <div class="hb-grid2">
+        <div class="hb-field"><label class="hb-lbl" for="dp-date">Dispatch date</label><input class="hb-in" id="dp-date" type="date" value="${todayIso()}" max="${todayIso()}"></div>
+        <div class="hb-field"><label class="hb-lbl" for="dp-courier">Courier / carrier</label><input class="hb-in" id="dp-courier" type="text" maxlength="80" autocomplete="off"></div>
+      </div>
+      <div class="hb-field" style="margin-bottom:12px"><label class="hb-lbl" for="dp-track">Tracking reference</label><input class="hb-in" id="dp-track" type="text" maxlength="100" autocomplete="off"><span class="hb-hint" style="margin-top:4px">Waybill number, tracking number, or AWB.</span></div>
+      <p class="hb-err" id="dp-err" role="alert"></p>
+    </div>
+    ${navFooter('',prevId,'Confirm dispatch',false,'dp-btn')}`;
+  $('dp-btn')&&$('dp-btn').addEventListener('click', submitDispatch);
+}
+
+async function submitDispatch(){
+  const btn=$('dp-btn'),err=$('dp-err');
+  if(err)err.textContent='';
+  const dispatchDate=$('dp-date')&&$('dp-date').value;
+  if(!dispatchDate){if(err)err.textContent='Please enter the dispatch date.';return;}
+  if(btn){btn.disabled=true;btn.textContent='Submitting, please wait';}
+  openWait('Confirming dispatch','Notifying Essential Cures.',['Recording dispatch details.','Updating your order.']);
+  try{
+    await postJson('/api/v1/po/dispatch',{token:TOKEN,poId:PO.poId,dispatchDate,trackingRef:$('dp-track').value.trim(),courier:$('dp-courier').value.trim()});
+    PO.stages.dispatch='done';
+    const ds=STAGES.find(s=>s.id==='dispatch');if(ds)ds.state='done';
+    const dn=STAGES.find(s=>s.id==='deliveryNotes');if(dn&&dn.state==='locked')dn.state='active';
+    closeWait(); renderProgressBar(); renderDispatch();
+    setStatus('open','Goods dispatched');
+  }catch(e){
+    closeWait();
+    if(btn){btn.disabled=false;btn.textContent='Confirm dispatch';}
+    if(err)err.textContent=e.message;
+  }
+}
+
+// STAGE 5 — Delivery notes
+function renderDeliveryNotes(){
+  const po=PO;
+  const done=po.stages&&po.stages.deliveryNotes==='done';
+  const prevId='dispatch';
+  const nextIdx=STAGES.findIndex(s=>s.id==='deliveryNotes')+1;
+  const nextId=STAGES[nextIdx]&&STAGES[nextIdx].id||'complete';
+  if(done){
+    $('main').innerHTML=`
+      <div class="sp">
+        <div class="sp-head"><h2>Delivery notes</h2><span class="sp-badge done">Uploaded</span></div>
+        <p class="sp-lead">Your delivery notes have been received by Essential Cures.</p>
+        <dl class="hb-kv"><dt>Status</dt><dd class="complete-card">Delivery notes received</dd></dl>
+      </div>
+      ${navFooter('',prevId,`Next: ${labelOf(nextId)} &#8594;`,false,null)}`;
+    document.querySelector('.btn-next')&&document.querySelector('.btn-next').addEventListener('click',()=>goStage(nextId));
+    return;
+  }
+  uploadFile=null;
+  $('main').innerHTML=`
+    <div class="sp">
+      <div class="sp-head"><h2>Delivery notes</h2><span class="sp-badge required">Action required</span></div>
+      <p class="sp-lead">Please upload your delivery note or packing list for this shipment. This is required to confirm receipt at our end.</p>
+      <div class="hb-field">
+        <span class="hb-lbl" id="dn-doc-l">Delivery note document</span>
+        <div class="hb-drop" id="dn-drop">
+          <span style="font-size:14px;color:#3D4B58">Drag your file here, or</span>
+          <label class="hb-pick" for="dn-file">Select file</label>
+          <input class="hb-file" id="dn-file" type="file" accept=".pdf,.jpg,.jpeg,.png" aria-labelledby="dn-doc-l">
+          <span class="hb-fname" id="dn-fname" aria-live="polite"></span>
+          <span class="hb-hint">PDF, JPG or PNG, up to 10 MB</span>
+        </div>
+      </div>
+      <p class="hb-err" id="dn-err" role="alert"></p>
+    </div>
+    ${navFooter('',prevId,'Upload delivery notes',false,'dn-btn')}`;
+  bindFileDrop('dn-drop','dn-file','dn-fname','dn-err');
+  $('dn-btn')&&$('dn-btn').addEventListener('click', submitDeliveryNotes);
+}
+
+async function submitDeliveryNotes(){
+  const btn=$('dn-btn'),err=$('dn-err');
+  if(err)err.textContent='';
+  const fv=validateFile(uploadFile);
+  if(fv){if(err)err.textContent=fv;return;}
+  if(btn){btn.disabled=true;btn.textContent='Uploading, please wait';}
+  openWait('Uploading delivery notes','Sending your document.',['Uploading document.','Updating your order.']);
+  try{
+    const fd=new FormData();
+    fd.append('token',TOKEN);fd.append('poId',PO.poId);
+    fd.append('deliveryNotesFile',uploadFile,uploadFile.name);
+    await postForm('/api/v1/po/delivery-notes',fd);
+    PO.stages.deliveryNotes='done';
+    const dn=STAGES.find(s=>s.id==='deliveryNotes');if(dn)dn.state='done';
+    const nextIdx=STAGES.findIndex(s=>s.id==='deliveryNotes')+1;
+    const next=STAGES[nextIdx];if(next&&next.state==='locked')next.state='active';
+    closeWait(); renderProgressBar(); renderDeliveryNotes();
+  }catch(e){
+    closeWait();
+    if(btn){btn.disabled=false;btn.textContent='Upload delivery notes';}
+    if(err)err.textContent=e.message;
+  }
+}
+
+// STAGE 6 — Balance invoice (conditional)
+function renderBalanceInvoice(){
+  const po=PO;
+  const done=po.stages&&po.stages.balanceInvoice==='done';
+  const prevId='deliveryNotes';
+  const nextId='complete';
+  if(done){
+    $('main').innerHTML=`
+      <div class="sp">
+        <div class="sp-head"><h2>Balance invoice</h2><span class="sp-badge done">Received</span></div>
+        <p class="sp-lead">Your balance invoice has been received and is being processed by Essential Cures Finance.</p>
+        <dl class="hb-kv">
+          <dt>Invoice reference</dt><dd>${esc(po.supplierInvoiceRef||'On file')}</dd>
+          <dt>Invoice amount</dt><dd>CAD ${fmt(po.supplierInvoiceAmt)}</dd>
+          <dt>Status</dt><dd class="complete-card">Invoice received — payment being arranged</dd>
+        </dl>
+      </div>
+      ${navFooter('',prevId,`Next: ${labelOf(nextId)} &#8594;`,false,null)}`;
+    document.querySelector('.btn-next')&&document.querySelector('.btn-next').addEventListener('click',()=>goStage(nextId));
+    return;
+  }
+  uploadFile=null;
+  const balanceAmt=po.balanceDue||Math.max(0,po.grandTotal-(po.advancePaidAmt||0));
+  $('main').innerHTML=`
+    <div class="sp">
+      <div class="sp-head"><h2>Balance invoice</h2><span class="sp-badge required">Action required</span></div>
+      <p class="sp-lead">Please upload your final invoice for the balance amount due. Essential Cures Finance will arrange payment upon receipt.</p>
+      <div class="hb-kv" style="margin-bottom:16px">
+        <dt>Balance due</dt><dd>CAD ${fmt(balanceAmt)}</dd>
+        <dt>Advance paid</dt><dd>CAD ${fmt(po.advancePaidAmt||0)}</dd>
+        <dt>Order total</dt><dd>CAD ${fmt(po.grandTotal)}</dd>
+      </div>
+      <div class="hb-grid2">
+        <div class="hb-field"><label class="hb-lbl" for="bi-ref">Invoice reference</label><input class="hb-in" id="bi-ref" type="text" maxlength="80" autocomplete="off"></div>
+        <div class="hb-field"><label class="hb-lbl" for="bi-date">Invoice date</label><input class="hb-in" id="bi-date" type="date" value="${todayIso()}" max="${todayIso()}"></div>
+      </div>
+      <div class="hb-field" style="margin-bottom:12px"><label class="hb-lbl" for="bi-amt">Invoice amount (CAD)</label><input class="hb-in" id="bi-amt" type="text" value="${fmt(balanceAmt)}" autocomplete="off"></div>
+      <div class="hb-field">
+        <span class="hb-lbl" id="bi-doc-l">Invoice document</span>
+        <div class="hb-drop" id="bi-drop">
+          <span style="font-size:14px;color:#3D4B58">Drag your file here, or</span>
+          <label class="hb-pick" for="bi-file">Select file</label>
+          <input class="hb-file" id="bi-file" type="file" accept=".pdf,.jpg,.jpeg,.png" aria-labelledby="bi-doc-l">
+          <span class="hb-fname" id="bi-fname" aria-live="polite"></span>
+          <span class="hb-hint">PDF, JPG or PNG, up to 10 MB</span>
+        </div>
+      </div>
+      <p class="hb-err" id="bi-err" role="alert"></p>
+    </div>
+    ${navFooter('',prevId,'Upload balance invoice',false,'bi-btn')}`;
+  bindFileDrop('bi-drop','bi-file','bi-fname','bi-err');
+  $('bi-btn')&&$('bi-btn').addEventListener('click', submitBalanceInvoice);
+}
+
+async function submitBalanceInvoice(){
+  const btn=$('bi-btn'),err=$('bi-err');
+  if(err)err.textContent='';
+  const fv=validateFile(uploadFile);
+  if(fv){if(err)err.textContent=fv;return;}
+  const ref=$('bi-ref').value.trim();
+  if(!ref){if(err)err.textContent='Please enter your invoice reference.';return;}
+  if(btn){btn.disabled=true;btn.textContent='Uploading, please wait';}
+  openWait('Uploading balance invoice','Sending your invoice to Finance.',['Uploading document.','Recording invoice details.','Notifying Finance team.']);
+  try{
+    const fd=new FormData();
+    fd.append('token',TOKEN);fd.append('poId',PO.poId);
+    fd.append('invoiceRef',ref);
+    fd.append('invoiceDate',$('bi-date').value);
+    fd.append('invoiceAmount',$('bi-amt').value.replace(/[^0-9.]/g,''));
+    fd.append('invoiceFile',uploadFile,uploadFile.name);
+    await postForm('/api/v1/po/balance-invoice',fd);
+    PO.supplierInvoiceRef=ref;PO.supplierInvoiceAmt=parseFloat($('bi-amt').value.replace(/[^0-9.]/g,''))||0;
+    PO.stages.balanceInvoice='done';
+    const bi=STAGES.find(s=>s.id==='balanceInvoice');if(bi)bi.state='done';
+    const cp=STAGES.find(s=>s.id==='complete');if(cp&&cp.state==='locked')cp.state='active';
+    closeWait(); renderProgressBar(); renderBalanceInvoice();
+  }catch(e){
+    closeWait();
+    if(btn){btn.disabled=false;btn.textContent='Upload balance invoice';}
+    if(err)err.textContent=e.message;
+  }
+}
+
+// STAGE 7 — Complete
+function renderComplete(){
+  $('main').innerHTML=`
+    <div class="sp">
+      <div class="sp-head"><h2>Order complete</h2><span class="sp-badge done">Complete</span></div>
+      <p class="sp-lead">All steps for this purchase order have been completed. Thank you for your partnership.</p>
+      <div class="notice ok"><div class="body"><strong>Order fully settled</strong>All deliverables and documentation have been received. Payment will be processed per the agreed terms. For any queries contact <a href="mailto:${PROC_EMAIL}">${PROC_EMAIL}</a>.</div></div>
+    </div>
+    <div class="sig-block">
+      <p>Thank you for partnering with Essential Cures. We look forward to a consistent and reliable supply relationship.</p>
+      <p class="sig-name">Procurement Team | Essential Cures Inc.</p>
+    </div>
+    ${navFooter('','',null,false,null)}`;
+}
+
+// ---------------------------------------------------------------------------
+// Error / notice pages
+// ---------------------------------------------------------------------------
+function renderError(msg){
+  setStatus('closed','Link not available');
+  $('progressNav').innerHTML='';
+  ['railGuide','railSupplier','railSummary','railContact','availCard'].forEach(id=>{const el=$(id);if(el)el.hidden=true;});
+  $('main').innerHTML=`<div class="sp"><h2>This link could not be opened</h2><div class="notice stop"><div class="body">${esc(msg)}</div></div></div>`;
+}
+
+// ---------------------------------------------------------------------------
+// Gate load
+// ---------------------------------------------------------------------------
 async function loadPO(){
   if(!TOKEN){renderError('This link is missing a required token. Please use the link from your purchase order email, or contact '+PROC_EMAIL+'.');return;}
   try{
@@ -517,83 +1024,25 @@ async function loadPO(){
     const data=await resp.json();
     if(data.status==='invalid'||data.status==='error'){renderError(data.message||'This link is invalid or has expired.');return;}
     if(data.status!=='allow'){renderError(data.message||'This purchase order could not be loaded.');return;}
-    PO=data;showRail(PO);STAGES=buildStages(PO);
+    PO=data;
+    showRail(PO);
+    STAGES=buildStages(PO);
+    // Set overall page status
     const st=PO.stages||{};
-    if(st.complete==='done')setStatus('done','Order complete');
-    else if(st.acknowledgement==='done')setStatus('open','In progress');
+    if(st.complete==='done') setStatus('done','Order complete');
+    else if(st.acknowledgement==='done') setStatus('open','In progress');
     else setStatus('open','Awaiting acknowledgement');
-    const first=STAGES.find(s=>s.state==='active')||STAGES[0];
-    ACTIVE_ID=first.id;renderProgressBar();renderStage(ACTIVE_ID);
-  }catch(e){renderError('Your purchase order could not be loaded. Please try again, or contact '+PROC_EMAIL+'.');}
+    // Go to first active stage
+    const first=STAGES.find(s=>s.id===ACTIVE_ID)||STAGES.find(s=>s.state==='active')||STAGES[0];
+    ACTIVE_ID=first.id;
+    renderProgressBar();
+    renderStage(ACTIVE_ID);
+  }catch(e){
+    renderError('Your purchase order could not be loaded. Please try again, or contact '+PROC_EMAIL+'.');
+  }
 }
+
 loadPO();
 </script>
 </body>
-</html>`;
-}
-
-// ---------------------------------------------------------------------------
-// Router
-// ---------------------------------------------------------------------------
-export default {
-  async fetch(request, env, ctx) {
-    const url    = new URL(request.url);
-    const path   = url.pathname;
-    const method = request.method;
-
-    // CORS preflight — same origin so minimal headers needed
-    if (method === 'OPTIONS') {
-      return new Response(null, {
-        headers: {
-          'Access-Control-Allow-Origin':  '*',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Max-Age':       '86400',
-        },
-      });
-    }
-
-    // ── HTML page routes ──
-    if (method === 'GET') {
-      if (path === '/' || path === '') {
-        return new Response(null, {
-          status: 302,
-          headers: { Location: '/po' + (url.search || '') },
-        });
-      }
-      if (path === '/po') {
-        return new Response(getHtmlPage(), {
-          headers: {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Cache-Control': 'no-store',
-            'X-Frame-Options': 'DENY',
-            'X-Content-Type-Options': 'nosniff',
-          },
-        });
-      }
-    }
-
-    // ── API routes ──
-    if (method !== 'POST') return new Response('Not found.', { status: 404 });
-
-    try {
-      switch (path) {
-        case '/api/v1/po/gate':            return await handleGate(request, env);
-        case '/api/v1/po/acknowledge':     return await handleAcknowledge(request, env);
-        case '/api/v1/po/proforma':        return await handleProforma(request, env);
-        case '/api/v1/po/dispatch':        return await handleDispatch(request, env);
-        case '/api/v1/po/delivery-notes':  return await handleDeliveryNotes(request, env);
-        case '/api/v1/po/balance-invoice': return await handleBalanceInvoice(request, env);
-        default:
-          return new Response(JSON.stringify({ status: 'error', message: 'Not found.' }), {
-            status: 404, headers: { 'Content-Type': 'application/json' },
-          });
-      }
-    } catch (e) {
-      console.error(`[cm27-supplier-hub] ${path} — ${e.message}`);
-      return new Response(JSON.stringify({
-        status: 'error', message: 'An unexpected error occurred. Please try again.', detail: e.message,
-      }), { status: 500, headers: { 'Content-Type': 'application/json' } });
-    }
-  },
-};
+</html>
