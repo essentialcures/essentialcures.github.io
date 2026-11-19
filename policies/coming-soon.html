@@ -125,7 +125,7 @@ html{scroll-padding-top:200px;scroll-behavior:smooth;}
 
   <aside class="rail">
     <section class="panel summary">
-      <h3>Document details</h3>
+      <h3>Document Details</h3>
       <dl class="facts" id="facts"></dl>
     </section>
     <section class="panel">
@@ -198,12 +198,13 @@ $('pageRef').textContent = 'This Essential Cures document is not yet published.'
 $('ctrlNo').innerHTML = DOC.number ? esc(DOC.number) : pending;
 $('ctrlRev').innerHTML = DOC.revision ? esc(DOC.revision) : pending;
 $('ctrlEff').innerHTML = DOC.effective ? esc(DOC.effective) : pending;
-$('ctrlId').textContent = 'Controlled document';
+$('ctrlId').textContent = 'Controlled Document';
 $('pageStatus').className = 'status hold';
 $('pageStatus').textContent = 'In Preparation';
 $('facts').innerHTML = `<dt>Document</dt><dd>${DOC.number ? esc(DOC.number) : pending}</dd><dt>Revision</dt><dd>${DOC.revision ? esc(DOC.revision) : pending}</dd><dt>Effective</dt><dd>${DOC.effective ? esc(DOC.effective) : pending}</dd><dt>Status</dt><dd>In Preparation</dd>`;
-$('ecFacts').innerHTML = `<dt>Customers</dt><dd class="email-val"><a href="mailto:customercare@essentialcures.com">customercare@<wbr>essentialcures.com</a></dd><dt>Suppliers</dt><dd class="email-val"><a href="mailto:procurement@essentialcures.com">procurement@<wbr>essentialcures.com</a></dd>`;
-$('main').innerHTML = `<div class="section"><div class="notice warn"><div class="body"><strong>This document is being prepared.</strong> The document you selected will be published on this page once it is approved.</div></div></div><div class="section terms-doc"><h3>What applies in the meantime</h3><p>Your order is not affected. Every order continues under the documents already issued with it, such as the quotation, the purchase order and the published policies.</p><p>For any question, please contact the team named in your order email, or use the addresses shown on this page.</p></div>`;
+$('ecFacts').innerHTML = `<dt>Customers</dt><dd class="email-val"><a href="mailto:customercare@essentialcures.com">customercare@essentialcures.com</a></dd><dt>Suppliers</dt><dd class="email-val"><a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a></dd>`;
+$('main').innerHTML = `<div class="section"><div class="notice warn"><div class="body"><strong>This document is being prepared.</strong> The document you selected will be published on this page once it is approved.</div></div></div><div class="section terms-doc"><h3>What Applies In The Meantime</h3><p>Your order is not affected. Every order continues under the documents already issued with it, such as the quotation, the purchase order and the published policies.</p><p>For any question, please contact the team named in your order email, or use the addresses shown on this page.</p></div>`;
 </script>
+<script src="https://essentialcures.com/assets/js/ec-layout.js"></script>
 </body>
 </html>
