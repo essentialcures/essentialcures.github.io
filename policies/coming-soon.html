@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document in Preparation | Essential Cures</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  Response Page Master Template (document number to be assigned in the ISO re-sync)
+  Every customer and supplier response page is built on this shell.
+  Page-specific values live in DOC below. Nothing else in the shell changes per page.
+-->
+<link rel="stylesheet" href="https://essentialcures.com/assets/css/ec-layout.css">
+<style>
+.progress{display:grid;grid-template-columns:repeat(var(--steps),1fr);}
+.progress li{list-style:none;position:relative;padding:14px 16px 16px 0;font-size:13px;color:var(--faint);}
+.progress li::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--line);}
+.progress li{display:flex;align-items:center;gap:8px;}
+.progress li .n{flex:none;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:1.5px solid var(--line);color:var(--faint);background:var(--white);}
+.progress li.done .n{background:var(--green);border-color:var(--green);color:var(--white);}
+.progress li.now .n{background:var(--blue);border-color:var(--blue);color:var(--white);}
+.progress li.done{color:var(--green);}
+.progress li.done::before{background:var(--green);}
+.progress li.now{color:var(--ink);font-weight:600;}
+.progress li.now::before{background:var(--blue);}
+.lines{margin-top:20px;border:1px solid var(--line);border-radius:var(--r);}
+.line{padding:20px 22px;border-top:1px solid var(--line);}
+.line:first-child{border-top:0;}
+.line-head{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:baseline;}
+.line-head .prod{font-size:16px;font-weight:600;color:var(--ink);}
+.line-head .qty{font-size:14px;color:var(--muted);text-align:right;}
+.line-head .qty b{color:var(--ink);font-weight:600;}
+.line-meta{display:flex;flex-wrap:wrap;gap:6px 24px;font-size:13px;color:var(--muted);margin-top:4px;}
+.line-meta span b{color:var(--slate);font-weight:600;}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;}
+.seg button{font:inherit;font-size:14px;font-weight:500;padding:11px 8px;background:var(--white);color:var(--slate);border:0;border-left:1px solid var(--line);cursor:pointer;}
+.seg button:first-child{border-left:0;}
+.seg button[aria-pressed="true"]{background:var(--navy);color:var(--white);}
+.seg button:disabled{cursor:default;}
+.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px;}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--ink);}
+.field .hint{display:block;font-size:12px;color:var(--faint);margin:1px 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.field input,.field textarea,.field select{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--white);border:1px solid #C9D2DA;border-radius:var(--r);padding:10px 12px;}
+.field input:focus,.field textarea:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px rgba(0,80,144,.12);}
+.field input[readonly]{background:var(--surface);color:var(--muted);}
+.total{margin-top:12px;font-size:13px;color:var(--muted);}
+.total b{color:var(--ink);}
+.actions{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 32px;border-top:1px solid var(--line);background:#FAFBFC;border-radius:0 0 var(--r) var(--r);}
+.actions .note{font-size:13px;color:var(--muted);}
+.btn{font:inherit;font-size:15px;font-weight:600;padding:12px 24px;border-radius:var(--r);border:1px solid transparent;cursor:pointer;}
+.btn.primary{background:var(--green);color:var(--white);}
+.btn.primary:disabled{background:#B9CCB0;cursor:not-allowed;}
+.btn.ghost{background:var(--white);color:var(--slate);border-color:#C9D2DA;}
+.panel .contact{display:block;margin-top:10px;font-size:14px;font-weight:600;text-decoration:none;}
+.guide-card{border-left:3px solid var(--blue);}
+.guide-btn{display:block;margin-top:14px;padding:10px 14px;text-align:center;font-size:14px;font-weight:600;text-decoration:none;color:var(--blue);border:1px solid var(--blue);border-radius:var(--r);}
+.guide-btn:hover{background:var(--blue);color:var(--white);}
+body>.page>footer{margin-top:auto;}
+.ctrl-strip .id span{color:var(--faint);font-weight:500;margin:0 8px;}
+.it-close:hover{color:var(--ink);}
+.skeleton{color:var(--faint);font-size:14px;padding:48px 32px;}
+@media (max-width:980px){.panel.summary{order:-2;}.panel.guide-card{order:-1;}.fields{grid-template-columns:1fr;}}
+@media (max-width:720px){.progress .label{display:none;}.actions{padding-left:18px;padding-right:18px;}.actions{flex-direction:column;align-items:stretch;}}
+@keyframes ecspin{to{transform:rotate(360deg);}
+}
+.wait-title{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:8px;}
+html{scroll-padding-top:200px;scroll-behavior:smooth;}
+.progress{display:none;}
+.terms-doc h3{font-size:15px;font-weight:600;color:var(--navy);margin:22px 0 6px;}
+.terms-doc h3:first-child{margin-top:0;}
+.terms-doc p{font-size:14px;line-height:1.75;color:var(--slate);margin:0 0 8px;}
+.terms-doc ol{margin:0 0 8px 20px;padding:0;font-size:14px;line-height:1.75;color:var(--slate);}
+.toc{columns:2;column-gap:28px;margin:12px 0 0;padding:0;list-style:none;font-size:13px;}
+.toc li{margin-bottom:6px;break-inside:avoid;}
+@media (max-width:720px){.toc{columns:1;}}
+@media print{.top-fixed{display:none !important;}.rail{display:none !important;}.it-float{display:none !important;}.ctrl-strip{display:none !important;}.workspace{display:block;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="top-fixed">
+<header class="site-head">
+  <div class="shell head-grid">
+    <div class="head-logo"><img src="https://essentialcures.com/assets/images/essential-cures-logo.png" alt="Essential Cures Inc."></div>
+    <div class="head-id">
+      <div class="org">ESSENTIAL CURES INC.</div>
+      <div class="tag">Compliant Solutions. Confident Care.</div>
+      <div class="title" id="docTitle"></div>
+    </div>
+    <dl class="head-ctrl" aria-label="Document control">
+      <dt>Document</dt><dd id="ctrlNo"></dd>
+      <dt>Revision</dt><dd id="ctrlRev"></dd>
+      <dt>Effective</dt><dd id="ctrlEff"></dd>
+    </dl>
+  </div>
+  <div class="stripes"></div>
+</header>
+
+<div class="ctrl-strip" role="note" aria-label="Document control">
+  <div class="id" id="ctrlId"></div>
+  <div class="stmt">This online version is the current approved issue. Printed or downloaded copies are uncontrolled.</div>
+</div>
+</div>
+
+<section class="title-band">
+  <div class="shell">
+    <div class="title-row">
+      <div>
+        <h1 id="pageTitle"></h1>
+        <div class="ref" id="pageRef"></div>
+      </div>
+      <span class="status open" id="pageStatus">Awaiting your response</span>
+    </div>
+    <ol class="progress" id="progress"></ol>
+  </div>
+</section>
+
+<div class="workspace">
+  <main class="main" id="main" aria-live="polite">
+    <div class="skeleton">Loading your order details.</div>
+  </main>
+
+  <aside class="rail">
+    <section class="panel summary">
+      <h3>Document details</h3>
+      <dl class="facts" id="facts"></dl>
+    </section>
+    <section class="panel">
+      <h3>Questions</h3>
+      <dl class="facts" id="ecFacts"></dl>
+    </section>
+    <a id="guideLink" href="#" hidden></a>
+    <a id="contactLink" href="#" hidden></a>
+  </aside>
+</div>
+
+<footer>
+  <div class="tagbar"><div>Compliant Solutions. Confident Care.</div><div>Quality Built In. Not Bolted On.</div></div>
+  <div class="site-foot">
+    <div class="foot-line"></div>
+    <div class="shell foot-row">
+      <div class="urls">essentialcures.com | essentialcures.ca</div>
+      <div class="copy">&copy; 2026 Essential Cures Inc. All Rights Reserved</div>
+    </div>
+  </div>
+</footer>
+
+</div>
+
+<div class="wait-overlay" id="waitOverlay" role="status" aria-live="polite">
+  <div class="wait-card">
+    <div class="wait-stripes"></div>
+    <div class="wait-body">
+      <div class="wait-spinner"></div>
+      <div class="wait-title" id="waitTitle">Submitting your response</div>
+      <p class="wait-text" id="waitText">We are recording your response. This usually takes a few seconds.</p>
+      <div class="wait-warn">Please do not close, refresh, or navigate away from this page until it is finished.</div>
+      <div class="wait-step" id="waitStep"></div>
+    </div>
+  </div>
+</div>
+
+<div class="it-float">
+  <button class="it-tab" type="button" aria-expanded="false" aria-controls="itPanel" onclick="toggleIT()">Technical Support</button>
+  <div class="it-panel" id="itPanel" role="dialog" aria-label="Technical support">
+    <button class="it-close" type="button" aria-label="Close" onclick="toggleIT()">&times;</button>
+    <h4>Technical Issues?</h4>
+    <p>Having trouble with the form? Please email our EC-IT team with a description of the problem. We apologize for the inconvenience in advance.</p>
+    <a href="mailto:itsupport@essentialcures.com">Email IT Support</a>
+  </div>
+</div>
+
+<script>
+const DOC = {
+  // Document control is assigned in the ISO re-sync after full deal testing.
+  number: '', revision: '', effective: '',
+  title: 'Document in Preparation',
+  contact: 'customercare@essentialcures.com',
+  guide: '#',
+  steps: [],
+};
+const $ = (id) => document.getElementById(id);
+function toggleIT(){
+  const panel = $('itPanel');
+  const open = panel.classList.toggle('open');
+  document.querySelector('.it-tab').setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && $('itPanel').classList.contains('open')) toggleIT(); });
+const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pending = '<span style="color:var(--faint);font-weight:500;">Pending</span>';
+document.title = `${DOC.title} | Essential Cures`;
+$('docTitle').textContent = DOC.title;
+$('pageTitle').textContent = DOC.title;
+$('pageRef').textContent = 'This Essential Cures document is not yet published.';
+$('ctrlNo').innerHTML = DOC.number ? esc(DOC.number) : pending;
+$('ctrlRev').innerHTML = DOC.revision ? esc(DOC.revision) : pending;
+$('ctrlEff').innerHTML = DOC.effective ? esc(DOC.effective) : pending;
+$('ctrlId').textContent = 'Controlled document';
+$('pageStatus').className = 'status hold';
+$('pageStatus').textContent = 'In Preparation';
+$('facts').innerHTML = `<dt>Document</dt><dd>${DOC.number ? esc(DOC.number) : pending}</dd><dt>Revision</dt><dd>${DOC.revision ? esc(DOC.revision) : pending}</dd><dt>Effective</dt><dd>${DOC.effective ? esc(DOC.effective) : pending}</dd><dt>Status</dt><dd>In Preparation</dd>`;
+$('ecFacts').innerHTML = `<dt>Customers</dt><dd class="email-val"><a href="mailto:customercare@essentialcures.com">customercare@essentialcures.com</a></dd><dt>Suppliers</dt><dd class="email-val"><a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a></dd>`;
+$('main').innerHTML = `<div class="section"><div class="notice warn"><div class="body"><strong>This document is being prepared.</strong> The document you selected will be published on this page once it is approved.</div></div></div><div class="section terms-doc"><h3>What applies in the meantime</h3><p>Your order is not affected. Every order continues under the documents already issued with it, such as the quotation, the purchase order and the published policies.</p><p>For any question, please contact the team named in your order email, or use the addresses shown on this page.</p></div>`;
+</script>
+</body>
+</html>
