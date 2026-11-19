@@ -62,7 +62,7 @@ a{color:var(--blue);}
 .facts dt{color:var(--faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .facts.wide-val{grid-template-columns:30% 70%;}
 .facts dd{color:var(--ink);font-weight:500;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.facts dd.email-val{overflow:visible;white-space:normal;overflow-wrap:anywhere;text-overflow:clip;}
+.facts dd.email-val{overflow:visible;white-space:normal;overflow-wrap:normal;word-break:normal;text-overflow:clip;}
 .panel p{font-size:13px;color:var(--muted);}
 .ctrl-strip{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 28px;margin-top:16px;padding:10px 20px;background:#F9FBFC;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:var(--r);font-size:12.5px;color:var(--muted);}
 .ctrl-strip .id{font-weight:600;color:var(--ink);white-space:nowrap;}
