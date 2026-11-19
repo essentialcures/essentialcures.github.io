@@ -2,7 +2,8 @@
    Loaded after ec-layout.css. */
 /* R1: column pinning. Native CSS sticky does the scrolling (smooth, compositor driven).
    This script only sets each column's sticky top, recalculated on resize or content change,
-   never on scroll. A held column pins so that it finishes at the footer with the other column. */
+   never on scroll. A held column freezes directly under the fixed header; a column taller than
+   the screen scrolls until its end is in view, then freezes. */
 (function() {
   var ws = document.querySelector('.workspace');
   var cols = [document.querySelector('.workspace > .main'), document.querySelector('.workspace > .rail')];
@@ -13,16 +14,10 @@
   function pinAll() {
     queued = false;
     if (mq.matches) { cols.forEach(function(c) { c.style.top = ''; }); return; }
-    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
-    var r = ws.getBoundingClientRect(), cs = window.getComputedStyle(ws);
-    var colTop = r.top + y + (parseFloat(cs.paddingTop) || 0);
-    var colBot = r.top + y + r.height - (parseFloat(cs.paddingBottom) || 0);
     var vh = window.innerHeight, hh = headH();
-    var footZone = Math.max(0, document.documentElement.scrollHeight - colBot);
     cols.forEach(function(c) {
       var h = c.offsetHeight, pin;
-      if (h > vh - hh - 24) pin = vh - 24 - h;
-      else pin = Math.max(hh, Math.min(vh - footZone - h, colTop));
+      pin = h > vh - hh - 24 ? vh - 24 - h : hh;
       c.style.top = Math.round(pin) + 'px';
     });
   }

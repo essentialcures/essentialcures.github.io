@@ -12,7 +12,7 @@
   Every customer and supplier response page is built on this shell.
   Page-specific values live in DOC below. Nothing else in the shell changes per page.
 -->
-<link rel="stylesheet" href="https://essentialcures.com/assets/css/ec-layout.css?v=r1-2">
+<link rel="stylesheet" href="https://essentialcures.com/assets/css/ec-layout.css?v=r1-3">
 <style>
 .progress{display:grid;grid-template-columns:repeat(var(--steps),1fr);}
 .progress li{list-style:none;position:relative;padding:14px 16px 16px 0;font-size:13px;color:var(--faint);}
@@ -205,6 +205,6 @@ $('facts').innerHTML = `<dt>Document</dt><dd>${DOC.number ? esc(DOC.number) : pe
 $('ecFacts').innerHTML = `<dt>Procurement</dt><dd class="email-val"><a href="mailto:procurement@essentialcures.com">procurement@essentialcures.com</a></dd>`;
 $('main').innerHTML = `<div class="section"><div class="notice warn"><div class="body"><strong>This document is being prepared.</strong> Essential Cures will publish its Supplier Terms and Conditions on this page once they are approved.</div></div></div><div class="section terms-doc"><h3>What Applies In The Meantime</h3><p>Until these terms are published, each order is governed by the Essential Cures purchase order, any supply agreement signed with Essential Cures, and the terms agreed during supplier qualification.</p><p>The <a href="https://essentialcures.com/guides/supplier-ordering-guide">Supplier Ordering Guide</a> explains each step of an order. The <a href="https://essentialcures.com/policies/returned-goods-policy">Returned Goods Policy</a> sets out how returns are handled.</p><p>For any question about the terms of an order, please contact our Procurement team.</p></div>`;
 </script>
-<script src="https://essentialcures.com/assets/js/ec-layout.js?v=r1-2"></script>
+<script src="https://essentialcures.com/assets/js/ec-layout.js?v=r1-3"></script>
 </body>
 </html>
